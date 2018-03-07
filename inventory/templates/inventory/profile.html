@@ -1,19 +1,14 @@
 {% extends 'base_site.html' %}
 
-{% block title %} / {{ user.username }}{% endblock %}
+{% block title %} / {{ owner.username }}{% endblock %}
 
 {% block content %}
-<h1>{{ user.username }}</h1>
+<h1>{{ owner.username }}</h1>
 
-{% if user.film_set.all|length > 0 %}
-<ul>
-    {% for film in user.film_set.all %}
-    <li><a href="">{{ film.name }} / {# count #}</a></li>
-    {% endfor %}
-</ul>
+{% if owner.film_set.all|length > 0 %}
 <ul>
     {% for film in film_counts %}
-    <li><a href="">{{ film }} / {{ film.count }}{# count #}</a></li>
+    <li><a href="">{{ film }} / {{ film.count }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
