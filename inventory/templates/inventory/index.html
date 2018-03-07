@@ -1,0 +1,17 @@
+{% extends 'base_site.html' %}
+
+{% block content %}
+{% if latest_film_list %}
+<h1>Recently added films</h1>
+<ul>
+{% for film in latest_film_list %}
+    <li>
+        <a href="">{{ film.owner }}&rsquo;s</a>
+        <a href="">{{ film.name }}</a>
+    </li>
+{% endfor %}
+</ul>
+{% else %}
+    <p>No films found.</p>
+{% endif %}
+{% endblock %}

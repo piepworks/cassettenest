@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Film inventory{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    <header>
+        <h1><a href="{% url 'index' %}">Film Inventory</a></h1>
+    </header>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>
