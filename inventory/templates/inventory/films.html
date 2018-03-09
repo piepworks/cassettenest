@@ -1,0 +1,13 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / {{ owner.username }} / {{ name }}{% endblock %}
+
+{% block content %}
+<h1>{{ owner.username }} / {{ name }}</h1>
+
+<ul>
+    {% for film in films %}
+    <li><a href="#">Added on {{ film.created_at|date:'Y-m-d' }}</a></li>
+    {% endfor %}
+</ul>
+{% endblock %}

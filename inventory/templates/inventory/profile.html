@@ -8,7 +8,7 @@
 {% if owner.film_set.all|length > 0 %}
 <ul>
     {% for film in film_counts %}
-    <li><a href="">{{ film }} / {{ film.count }}</a></li>
+    <li><a href="{% url 'profile-films' owner.username film.slug %}">{{ film }} / {{ film.count }}</a></li>
     {% endfor %}
 </ul>
 {% endif %}
