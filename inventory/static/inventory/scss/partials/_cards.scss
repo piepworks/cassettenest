@@ -1,0 +1,54 @@
+$e6: #6542f4;
+$c41: #419af4;
+$bw: #555;
+
+.cards {
+    padding: 0;
+
+    li { list-style: none; }
+}
+
+.card {
+    color: black;
+    background: blue;
+    cursor: pointer;
+    display: flex;
+    position: relative;
+    align-items: stretch;
+
+    &:hover { color: white; }
+
+    &__e6 {
+        background: $e6;
+
+        &:hover { background: darken($e6, 15%); }
+    }
+
+    &__c41 {
+        background: $c41;
+
+        &:hover { background: darken($c41, 15%); }
+    }
+
+    &__bw {
+        background: $bw;
+
+        &:hover { background: darken($bw, 15%); }
+    }
+
+    header {
+        padding: 0 20px;
+        flex-grow: 1;
+    }
+
+    .count {
+        background: rgba(0, 0, 0, .25);
+        display: flex;
+        padding: 0 10px;
+        min-width: 20px;
+
+        span {
+            margin: auto;
+        }
+    }
+}

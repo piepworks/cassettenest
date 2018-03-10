@@ -6,9 +6,14 @@
 <h1>{{ owner.username }}</h1>
 
 {% if owner.film_set.all|length > 0 %}
-<ul>
+<ul class="cards">
     {% for film in film_counts %}
-    <li><a href="{% url 'profile-films' owner.username film.slug %}">{{ film }} / {{ film.count }}</a></li>
+    <li>
+        <a class="card card__{{ film.type }}" href="{% url 'profile-films' owner.username film.slug %}">
+            <header><h1>{{ film }}</h1> </header>
+            <div class="count"><span>{{ film.count }}</span></div>
+        </a>
+    </li>
     {% endfor %}
 </ul>
 {% endif %}

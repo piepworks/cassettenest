@@ -11,6 +11,7 @@ def index(request):
     context = {'latest_film_list': latest_film_list}
     return render(request, 'inventory/index.html', context)
 
+
 def profile(request, username):
     owner = get_object_or_404(User, username=username)
     film_counts = FilmName.objects.filter(film__owner=owner.id).annotate(count=Count('film'))
