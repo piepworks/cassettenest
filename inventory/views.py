@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic.detail import DetailView
 from django.db.models import Count
 from django.contrib.auth.models import User
+from django.views.generic.detail import DetailView
 from .models import *
 
 
@@ -32,5 +33,5 @@ def profile_films(request, username, slug):
     return render(request, 'inventory/films.html', context)
 
 
-def profile_film_detail(request):
-    pass
+class FilmDetailView(DetailView):
+    model = Film

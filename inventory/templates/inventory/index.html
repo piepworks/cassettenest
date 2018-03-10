@@ -6,8 +6,8 @@
 <ul>
 {% for film in latest_film_list %}
     <li>
-        <a href="">{{ film.owner }}&rsquo;s</a>
-        <a href="">{{ film.name }}</a>
+        <a href="{% url 'profile' film.owner.username %}">{{ film.owner }}&rsquo;s</a>
+        <a href="{% url 'profile-films' film.owner.username film.name.slug %}">{{ film.name }}</a>
     </li>
 {% endfor %}
 </ul>

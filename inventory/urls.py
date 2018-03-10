@@ -6,5 +6,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<username>/', views.profile, name='profile'),
     path('<username>/<slug:slug>/', views.profile_films, name='profile-films'),
-    path('<username>/<slug:slug>/<int:pk>/', views.profile_film_detail, name='profile-film'),
+    path('<username>/<slug:slug>/<int:pk>/',
+        views.FilmDetailView.as_view(), name='profile-film'),
 ]

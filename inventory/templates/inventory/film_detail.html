@@ -1,0 +1,9 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / {{ film.owner.username }} / {{ film }}{% endblock %}
+
+{% block content %}
+<h1>{{ film.owner.username }} / {{ film }}</h1>
+
+<p>{{ film.notes }}</p>
+{% endblock %}
