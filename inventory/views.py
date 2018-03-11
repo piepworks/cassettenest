@@ -3,6 +3,7 @@ from django.views.generic.detail import DetailView
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
+from django.utils.encoding import force_text
 from .models import *
 
 
@@ -18,8 +19,20 @@ def profile(request, username):
         annotate(count=Count('film'))
     format_counts = FilmName.objects.filter(film__owner=owner.id).values('format').\
         annotate(count=Count('format')).distinct().order_by('format')
+
+    # Get the display name of formats choices.
+    format_choices = dict(FilmName._meta.get_field('format').flatchoices)
+    for format in format_counts:
+        format['format_display'] = force_text(format_choices[format['format']], strings_only=True)
+
     type_counts = FilmName.objects.filter(film__owner=owner.id).values('type').\
         annotate(count=Count('type')).distinct().order_by('type')
+
+    # Get the display name of types choices.
+    type_choices = dict(FilmName._meta.get_field('type').flatchoices)
+    for type in type_counts:
+        type['type_display'] = force_text(type_choices[type['type']], strings_only=True)
+
     context = {
         'film_counts': film_counts,
         'format_counts': format_counts,
