@@ -36,3 +36,23 @@ def profile_films(request, username, slug):
 
 class FilmDetailView(DetailView):
     model = Film
+
+
+def profile_format(request, username, format):
+    owner = get_object_or_404(User, username=username)
+    films = Film.objects.filter(owner=owner.id, name__format=format)
+    context = {
+        'films': films,
+        'owner': owner,
+    }
+    return render(request, 'inventory/format.html', context)
+
+
+def profile_type(request, username, type):
+    owner = get_object_or_404(User, username=username)
+    films = Film.objects.filter(owner=owner.id, name__type=type)
+    context = {
+        'films': films,
+        'owner': owner,
+    }
+    return render(request, 'inventory/type.html', context)
