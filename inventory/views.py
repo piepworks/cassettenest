@@ -14,9 +14,16 @@ def index(request):
 
 def profile(request, username):
     owner = get_object_or_404(User, username=username)
-    film_counts = FilmName.objects.filter(film__owner=owner.id).annotate(count=Count('film'))
+    film_counts = FilmName.objects.filter(film__owner=owner.id).\
+        annotate(count=Count('film'))
+    format_counts = FilmName.objects.filter(film__owner=owner.id).values('format').\
+        annotate(count=Count('format')).distinct().order_by('format')
+    type_counts = FilmName.objects.filter(film__owner=owner.id).values('type').\
+        annotate(count=Count('type')).distinct().order_by('type')
     context = {
         'film_counts': film_counts,
+        'format_counts': format_counts,
+        'type_counts': type_counts,
         'owner': owner,
     }
     return render(request, 'inventory/profile.html', context)

@@ -16,5 +16,21 @@
     </li>
     {% endfor %}
 </ul>
+
+<h2>Formats</h2>
+<ul>
+    {% for format in format_counts %}
+    <li><a href="{% url 'profile-format' owner.username format.format %}">{{ format.format }} / {{ format.count }}</a></li>
+    {% endfor %}
+</ul>
+
+<h2>Types</h2>
+<ul>
+    {% for type in type_counts %}
+    <li><a href="{% url 'profile-type' owner.username type.type %}">{{ type.type }} / {{ type.count }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No films found.</p>
 {% endif %}
 {% endblock %}
