@@ -61,7 +61,9 @@ class FilmDetailView(DetailView):
 def profile_format(request, username, format):
     owner = get_object_or_404(User, username=username)
     films = Film.objects.filter(owner=owner.id, name__format=format)
+    format_choices = dict(FilmName._meta.get_field('format').flatchoices)
     context = {
+        'format': force_text(format_choices[format], strings_only=True),
         'films': films,
         'owner': owner,
     }
@@ -71,7 +73,9 @@ def profile_format(request, username, format):
 def profile_type(request, username, type):
     owner = get_object_or_404(User, username=username)
     films = Film.objects.filter(owner=owner.id, name__type=type)
+    type_choices = dict(FilmName._meta.get_field('type').flatchoices)
     context = {
+        'type': force_text(type_choices[type], strings_only=True),
         'films': films,
         'owner': owner,
     }
