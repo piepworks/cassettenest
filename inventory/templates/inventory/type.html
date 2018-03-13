@@ -5,10 +5,15 @@
 {% block content %}
 <h1>{{ owner.username }} / {{ type }}</h1>
 
-{% if films %}
-<ul>
-    {% for film in films %}
-    <li><a href="{% url 'profile-film' owner.username film.name.slug film.id %}">{{ film }} added on {{ film.created_at|date:'Y-m-d' }}</a></li>
+{% if film_counts %}
+<ul class="cards">
+    {% for film in film_counts %}
+    <li>
+        <a class="card card__{{ film.type }}" href="{% url 'profile-films' owner.username film.slug %}">
+            <header><h1>{{ film }}</h1> </header>
+            <div class="count"><span>{{ film.count }}</span></div>
+        </a>
+    </li>
     {% endfor %}
 </ul>
 {% else %}

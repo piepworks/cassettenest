@@ -60,11 +60,12 @@ class FilmDetailView(DetailView):
 
 def profile_format(request, username, format):
     owner = get_object_or_404(User, username=username)
-    films = Film.objects.filter(owner=owner.id, name__format=format)
+    film_counts = FilmName.objects.filter(film__owner=owner.id, format=format).\
+        annotate(count=Count('film'))
     format_choices = dict(FilmName._meta.get_field('format').flatchoices)
     context = {
         'format': force_text(format_choices[format], strings_only=True),
-        'films': films,
+        'film_counts': film_counts,
         'owner': owner,
     }
     return render(request, 'inventory/format.html', context)
@@ -72,11 +73,12 @@ def profile_format(request, username, format):
 
 def profile_type(request, username, type):
     owner = get_object_or_404(User, username=username)
-    films = Film.objects.filter(owner=owner.id, name__type=type)
+    film_counts = FilmName.objects.filter(film__owner=owner.id, type=type).\
+        annotate(count=Count('film'))
     type_choices = dict(FilmName._meta.get_field('type').flatchoices)
     context = {
         'type': force_text(type_choices[type], strings_only=True),
-        'films': films,
+        'film_counts': film_counts,
         'owner': owner,
     }
     return render(request, 'inventory/type.html', context)
