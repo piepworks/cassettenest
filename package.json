@@ -8,7 +8,7 @@
     "build-task:autoprefixer": "postcss inventory/static/inventory/css/*.css --use autoprefixer -d inventory/static/inventory/css",
     "sass:build": "npm-run-all -p build-task:*",
     "sass:watch": "chokidar 'inventory/static/inventory/scss/**/*.scss' -c 'npm run sass:build'",
-    "browsersync": "browser-sync start --proxy 'localhost:8000' --files 'inventory/static/inventory/css/*.css'",
+    "browsersync": "browser-sync start --proxy 'localhost:8000' --files 'inventory/static/inventory/css/*.css' --no-open",
     "dev": "npm-run-all -p sass:* browsersync"
   },
   "repository": {
