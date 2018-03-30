@@ -48,6 +48,31 @@ class FilmName(models.Model):
         ordering = ['name']
 
 
+class Camera(models.Model):
+    """
+    A person's camera.
+    Not doing a manufacturer field because I want to leave this very freeform.
+    Call a camera "Bernice" if you want.
+    """
+
+    FORMAT_CHOICES = (
+        ('135', '35mm'),
+        ('120', '120'),
+    )
+    format = models.CharField(
+        max_length=20,
+        choices=FORMAT_CHOICES,
+        default='135',
+    )
+    name = models.CharField(max_length=50)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return '%s\'s %s' % (self.owner, self.name)
+
+
 class Film(models.Model):
     STATUS_CHOICES = (
         ('storage', 'Storage'),
@@ -60,6 +85,12 @@ class Film(models.Model):
     )
     name = models.ForeignKey(FilmName, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    camera = models.ForeignKey(
+        Camera,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
+    )
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,

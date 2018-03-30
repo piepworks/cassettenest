@@ -19,3 +19,4 @@ class FilmAdmin(admin.ModelAdmin):
 admin.site.register(Film, FilmAdmin)
 admin.site.register(FilmName, FilmNameAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
+admin.site.register(Camera)
