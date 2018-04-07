@@ -1,17 +1,17 @@
 {% extends 'base_site.html' %}
 
 {% block content %}
-{% if latest_film_list %}
-<h1>Recently added films</h1>
+{% if latest_roll_list %}
+<h1>Recently added rolls</h1>
 <ul>
-{% for film in latest_film_list %}
+{% for roll in latest_roll_list %}
     <li>
-        <a href="{% url 'profile' film.owner.username %}">{{ film.owner }}&rsquo;s</a>
-        <a href="{% url 'profile-films' film.owner.username film.name.slug %}">{{ film.name }}</a>
+        <a href="{% url 'profile' roll.owner.username %}">{{ roll.owner }}&rsquo;s</a>
+        <a href="{% url 'profile-rolls' roll.owner.username roll.film.slug %}">{{ roll.film }}</a>
     </li>
 {% endfor %}
 </ul>
 {% else %}
-<p>No films found.</p>
+<p>No rolls found.</p>
 {% endif %}
 {% endblock %}

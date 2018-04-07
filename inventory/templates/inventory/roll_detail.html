@@ -1,0 +1,9 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / {{ roll.owner.username }} / {{ roll }}{% endblock %}
+
+{% block content %}
+<h1>{{ roll.owner.username }} / {{ roll }}</h1>
+
+<p>{{ roll.notes }}</p>
+{% endblock %}

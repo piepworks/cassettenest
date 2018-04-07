@@ -5,13 +5,13 @@
 {% block content %}
 <h1>{{ owner.username }}</h1>
 
-{% if owner.film_set.all|length > 0 %}
+{% if owner.roll_set.all|length > 0 %}
 <ul class="cards">
-    {% for film in film_counts %}
+    {% for roll in roll_counts %}
     <li>
-        <a class="card card__{{ film.type }}" href="{% url 'profile-films' owner.username film.slug %}">
-            <header><h1>{{ film }}</h1> </header>
-            <div class="count"><span>{{ film.count }}</span></div>
+        <a class="card card__{{ roll.type }}" href="{% url 'profile-rolls' owner.username roll.slug %}">
+            <header><h1>{{ roll }}</h1> </header>
+            <div class="count"><span>{{ roll.count }}</span></div>
         </a>
     </li>
     {% endfor %}

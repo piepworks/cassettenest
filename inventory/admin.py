@@ -7,16 +7,16 @@ class ManufacturerAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
-class FilmNameAdmin(admin.ModelAdmin):
+class FilmAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'type', 'speed',)
     prepopulated_fields = {'slug': ('name', 'format',)}
 
 
-class FilmAdmin(admin.ModelAdmin):
-    list_display = ('name', 'owner', 'status', 'created_at')
+class RollAdmin(admin.ModelAdmin):
+    list_display = ('film', 'owner', 'status', 'created_at')
 
 
 admin.site.register(Film, FilmAdmin)
-admin.site.register(FilmName, FilmNameAdmin)
+admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Camera)

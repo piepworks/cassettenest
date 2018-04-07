@@ -9,7 +9,7 @@ urlpatterns = [
         views.profile_type, name='profile-type'),
     path('<username>/format/<format>/',
         views.profile_format, name='profile-format'),
-    path('<username>/film/<slug:slug>/', views.profile_films, name='profile-films'),
+    path('<username>/film/<slug:slug>/', views.profile_rolls, name='profile-rolls'),
     path('<username>/film/<slug:slug>/<int:pk>/',
-        views.FilmDetailView.as_view(), name='profile-film'),
+        views.RollDetailView.as_view(), name='profile-roll'),
 ]

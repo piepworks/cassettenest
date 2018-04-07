@@ -14,7 +14,7 @@ class Manufacturer(models.Model):
         return self.name
 
 
-class FilmName(models.Model):
+class Film(models.Model):
     TYPE_CHOICES = (
         ('c41', 'C41 Color'),
         ('bw', 'Black and White'),
@@ -73,7 +73,7 @@ class Camera(models.Model):
         return '%s\'s %s' % (self.owner, self.name)
 
 
-class Film(models.Model):
+class Roll(models.Model):
     STATUS_CHOICES = (
         ('storage', 'Storage'),
         ('loaded', 'Loaded'),
@@ -83,7 +83,7 @@ class Film(models.Model):
         ('scanned', 'Scanned'),
         ('archived', 'Archived'),
     )
-    name = models.ForeignKey(FilmName, on_delete=models.CASCADE)
+    film = models.ForeignKey(Film, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     camera = models.ForeignKey(
         Camera,
@@ -101,4 +101,4 @@ class Film(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '%s added on %s' % (self.name, self.created_at.strftime('%Y-%m-%d'))
+        return '%s added on %s' % (self.film, self.created_at.strftime('%Y-%m-%d'))

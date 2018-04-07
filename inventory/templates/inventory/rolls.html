@@ -1,0 +1,17 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / {{ owner.username }} / {{ film }}{% endblock %}
+
+{% block content %}
+<h1>{{ owner.username }} / {{ name }}</h1>
+
+{% if rolls %}
+<ul>
+    {% for roll in rolls %}
+    <li><a href="{% url 'profile-roll' owner.username roll.film.slug roll.id %}">Added on {{ roll.created_at|date:'Y-m-d' }}</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>{{ owner.username }} doesn't have any of this film.</p>
+{% endif %}
+{% endblock %}
