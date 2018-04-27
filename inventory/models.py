@@ -89,7 +89,13 @@ class Roll(models.Model):
         Camera,
         on_delete=models.SET_NULL,
         blank=True,
-        null=True
+        null=True,
+    )
+    code = models.CharField(
+        max_length=100,
+        help_text='A unique roll code (per year)',
+        unique_for_date='started_on',
+        blank=True,
     )
     status = models.CharField(
         max_length=20,
@@ -97,8 +103,12 @@ class Roll(models.Model):
         default='storage',
     )
     notes = models.TextField(blank=True)
+    started_on = models.DateField(null=True, blank=True)
+    ended_on = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '%s added on %s' % (self.film, self.created_at.strftime('%Y-%m-%d'))
+        return '%s added on %s' % (
+            self.film, self.created_at.strftime('%Y-%m-%d')
+        )
