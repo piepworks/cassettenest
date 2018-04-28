@@ -8,12 +8,14 @@ class ManufacturerAdmin(admin.ModelAdmin):
 
 
 class FilmAdmin(admin.ModelAdmin):
+    list_filter = ('format', 'type', 'iso',)
     list_display = ('__str__', 'type', 'iso',)
     prepopulated_fields = {'slug': ('name', 'format',)}
 
 
 class RollAdmin(admin.ModelAdmin):
-    list_display = ('film', 'owner', 'status', 'code', 'created_at')
+    list_filter = ('owner', 'film__format', 'film__type', 'film__iso',)
+    list_display = ('film', 'owner', 'status', 'code', 'created_at', 'started_on',)
 
 
 admin.site.register(Film, FilmAdmin)
