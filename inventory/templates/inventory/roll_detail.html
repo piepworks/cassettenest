@@ -5,5 +5,20 @@
 {% block content %}
 <h1>{{ roll.owner.username }} / {{ roll }}</h1>
 
+<p>Status: {{ roll.status }}</p>
+
+{% if roll.code %}
+<p>Code: {{ roll.code }}</p>
+{% endif %}
+
+{% if roll.started_on %}
+<p>Started on: {{ roll.started_on }}</p>
+{% endif %}
+
+{% if roll.ended_on %}
+<p>Started on: {{ roll.ended_on }}</p>
+{% endif %}
+
+<p>Notes:</p>
 <p>{{ roll.notes }}</p>
 {% endblock %}

@@ -7,7 +7,7 @@
 {% for roll in latest_roll_list %}
     <li>
         <a href="{% url 'profile' roll.owner.username %}">{{ roll.owner }}&rsquo;s</a>
-        <a href="{% url 'profile-rolls' roll.owner.username roll.film.slug %}">{{ roll.film }}</a>
+        <a href="{% url 'profile-roll' roll.owner.username roll.film.slug roll.id %}">{{ roll.film }}</a>
     </li>
 {% endfor %}
 </ul>
