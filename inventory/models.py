@@ -112,7 +112,7 @@ class Roll(models.Model):
         # If the started_on field has been populated and the `code` field has
         # not, populate the code field:
         #
-        # [format]-[type]-[number]
+        # [format]-[type]-[sequence]
         #
         # 1. Get the format from `film.format`
         # 2. Get the type from `film.type`
@@ -127,10 +127,7 @@ class Roll(models.Model):
                 .filter(owner=self.owner)\
                 .count() + 1
 
-            if self.film.format == '135':
-                format = '35'
-            else:
-                format = self.film.format
+            format = '35' if self.film.format == '135' else self.film.format
 
             self.code = '%s-%s-%d' % (format, self.film.type, sequence)
             self.status = 'loaded'
