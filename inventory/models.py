@@ -32,7 +32,7 @@ class Film(models.Model):
         choices=TYPE_CHOICES,
         default='c41',
     )
-    speed = models.IntegerField()
+    iso = models.IntegerField(verbose_name='ISO')
     format = models.CharField(
         max_length=20,
         choices=FORMAT_CHOICES,
