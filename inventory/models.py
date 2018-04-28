@@ -94,7 +94,7 @@ class Roll(models.Model):
     code = models.CharField(
         max_length=100,
         help_text='A unique roll code (per year)',
-        unique_for_date='started_on',
+        unique_for_year='started_on',
         blank=True,
     )
     status = models.CharField(
@@ -107,6 +107,37 @@ class Roll(models.Model):
     ended_on = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        # If the started_on field has been populated and the `code` field has
+        # not, populate the code field:
+        #
+        # [format]-[type]-[number]
+        #
+        # 1. Get the format from `film.format`
+        # 2. Get the type from `film.type`
+        # 3. Query the Roll table to count everything with that format and type
+        #    within the year of the `started_on` field. Add one to that number.
+
+        if not self.code and self.started_on:
+            sequence = Roll.objects\
+                .filter(film__type=self.film.type)\
+                .filter(film__format=self.film.format)\
+                .filter(started_on__year=self.started_on.year)\
+                .filter(owner=self.owner)\
+                .count() + 1
+
+            if self.film.format == '135':
+                format = '35'
+            else:
+                format = self.film.format
+
+            self.code = '%s-%s-%d' % (format, self.film.type, sequence)
+            self.status = 'loaded'
+
+        # Check for proper validation of the code field somehow?
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return '%s added on %s' % (

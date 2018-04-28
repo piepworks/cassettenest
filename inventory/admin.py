@@ -13,7 +13,7 @@ class FilmAdmin(admin.ModelAdmin):
 
 
 class RollAdmin(admin.ModelAdmin):
-    list_display = ('film', 'owner', 'status', 'created_at')
+    list_display = ('film', 'owner', 'status', 'code', 'created_at')
 
 
 admin.site.register(Film, FilmAdmin)
