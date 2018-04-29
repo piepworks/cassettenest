@@ -55,6 +55,11 @@ class Camera(models.Model):
     Call a camera "Bernice" if you want.
     """
 
+    STATUS_CHOICES = (
+        ('empty', 'Empty'),
+        ('loaded', 'Loaded'),
+        ('unavailable', 'Unavailable'),
+    )
     FORMAT_CHOICES = (
         ('135', '35mm'),
         ('120', '120'),
@@ -66,6 +71,11 @@ class Camera(models.Model):
     )
     name = models.CharField(max_length=50)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='empty',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
