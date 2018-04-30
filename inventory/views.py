@@ -82,3 +82,12 @@ def profile_type(request, username, type):
         'owner': owner,
     }
     return render(request, 'inventory/type.html', context)
+
+def load_roll(request, username):
+    owner = get_object_or_404(User, username=username)
+    cameras = Camera.objects.filter(owner=owner).filter(status='empty')
+    context = {
+        'owner': owner,
+        'cameras': cameras,
+    }
+    return render(request, 'inventory/load.html', context)
