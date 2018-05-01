@@ -12,5 +12,6 @@ urlpatterns = [
     path('<username>/film/<slug:slug>/', views.profile_rolls, name='profile-rolls'),
     path('<username>/film/<slug:slug>/<int:pk>/',
         views.RollDetailView.as_view(), name='profile-roll'),
-    path('<username>/load/', views.load_roll, name='load-roll'),
+    path('<username>/load/', views.load_cameras, name='load-cameras'),
+    path('<username>/load/<int:pk>/', views.load_camera, name='load-camera'),
 ]

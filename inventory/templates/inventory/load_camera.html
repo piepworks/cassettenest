@@ -1,0 +1,21 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / {{ owner.username }} / Load {{ camera.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ camera.name }}</h2>
+
+<h3>Pick a roll to load:</h3>
+{% if rolls %}
+{% regroup rolls by film.get_type_display as roll_list %}
+<select>
+    {% for type in roll_list %}
+    <optgroup label="{{ type.grouper }}">
+        {% for roll in type.list %}
+        <option>{{ roll.film.manufacturer }} {{ roll.film.name }}</option>
+        {% endfor %}
+    </optgroup>
+    {% endfor %}
+</select>
+{% endif %}
+{% endblock %}

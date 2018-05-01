@@ -11,7 +11,7 @@
 <h3>Pick a camera to load</h3>
 <ul>
     {% for camera in cameras %}
-    <li>{{ camera }}</li>
+    <li><a href="{% url 'load-camera' owner.username camera.id %}">{{ camera }}</a></li>
     {% endfor %}
 </ul>
 {% else %}

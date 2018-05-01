@@ -83,7 +83,8 @@ def profile_type(request, username, type):
     }
     return render(request, 'inventory/type.html', context)
 
-def load_roll(request, username):
+
+def load_cameras(request, username):
     owner = get_object_or_404(User, username=username)
     cameras = Camera.objects.filter(owner=owner).filter(status='empty')
     context = {
@@ -91,3 +92,18 @@ def load_roll(request, username):
         'cameras': cameras,
     }
     return render(request, 'inventory/load.html', context)
+
+
+def load_camera(request, username, pk):
+    owner = get_object_or_404(User, username=username)
+    camera = get_object_or_404(Camera, id=pk)
+    rolls = Roll.objects\
+        .filter(owner=owner)\
+        .filter(film__format=camera.format)\
+        .filter(status='storage')
+    context = {
+        'owner': owner,
+        'camera': camera,
+        'rolls': rolls,
+    }
+    return render(request, 'inventory/load_camera.html', context)
