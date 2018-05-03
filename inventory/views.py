@@ -97,13 +97,14 @@ def load_cameras(request, username):
 def load_camera(request, username, pk):
     owner = get_object_or_404(User, username=username)
     camera = get_object_or_404(Camera, id=pk)
-    rolls = Roll.objects\
-        .filter(owner=owner)\
-        .filter(film__format=camera.format)\
-        .filter(status='storage')
+    roll_counts = Film.objects\
+        .filter(roll__owner=owner, roll__status='storage')\
+        .filter(format=camera.format)\
+        .annotate(count=Count('name'))\
+        .order_by('type')
     context = {
         'owner': owner,
         'camera': camera,
-        'rolls': rolls,
+        'roll_counts': roll_counts,
     }
     return render(request, 'inventory/load_camera.html', context)
