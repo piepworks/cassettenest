@@ -14,8 +14,21 @@ class FilmAdmin(admin.ModelAdmin):
 
 
 class RollAdmin(admin.ModelAdmin):
-    list_filter = ('owner', 'status', 'film__format', 'film__type', 'film__iso',)
-    list_display = ('film', 'owner', 'status', 'code', 'created_at', 'started_on',)
+    list_filter = (
+        'owner',
+        'status',
+        'film__format',
+        'film__type',
+        'film__iso',
+    )
+    list_display = (
+        'film',
+        'owner',
+        'status',
+        'code',
+        'created_at',
+        'started_on',
+    )
 
 
 admin.site.register(Film, FilmAdmin)

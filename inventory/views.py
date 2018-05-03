@@ -15,23 +15,32 @@ def index(request):
 
 def profile(request, username):
     owner = get_object_or_404(User, username=username)
-    roll_counts = Film.objects.filter(roll__owner=owner.id).\
-        annotate(count=Count('roll'))
-    format_counts = Film.objects.filter(roll__owner=owner.id).values('format').\
-        annotate(count=Count('format')).distinct().order_by('format')
+    roll_counts = Film.objects\
+        .filter(roll__owner=owner, roll__status='storage')\
+        .annotate(count=Count('roll'))
+    format_counts = Film.objects\
+        .filter(roll__owner=owner, roll__status='storage')\
+        .values('format')\
+        .annotate(count=Count('format')).distinct().order_by('format')
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
     for format in format_counts:
-        format['format_display'] = force_text(format_choices[format['format']], strings_only=True)
+        format['format_display'] = \
+            force_text(format_choices[format['format']], strings_only=True)
 
-    type_counts = Film.objects.filter(roll__owner=owner.id).values('type').\
-        annotate(count=Count('type')).distinct().order_by('type')
+    type_counts = Film.objects\
+        .filter(roll__owner=owner, roll__status='storage')\
+        .values('type')\
+        .annotate(count=Count('type'))\
+        .distinct()\
+        .order_by('type')
 
     # Get the display name of types choices.
     type_choices = dict(Film._meta.get_field('type').flatchoices)
     for type in type_counts:
-        type['type_display'] = force_text(type_choices[type['type']], strings_only=True)
+        type['type_display'] = \
+            force_text(type_choices[type['type']], strings_only=True)
 
     context = {
         'roll_counts': roll_counts,
@@ -43,8 +52,11 @@ def profile(request, username):
 
 
 def profile_rolls(request, username, slug):
+    '''All the rolls of a particular film that someone has available.'''
     owner = get_object_or_404(User, username=username)
-    rolls = Roll.objects.filter(owner=owner.id, film__slug=slug)
+    rolls = Roll.objects\
+        .filter(owner=owner, status='storage')\
+        .filter(film__slug=slug)
     name = Film.objects.only('name').get(slug=slug)
     context = {
         'rolls': rolls,
@@ -59,9 +71,12 @@ class RollDetailView(DetailView):
 
 
 def profile_format(request, username, format):
+    '''All the rolls in a particular format that someone has available.'''
     owner = get_object_or_404(User, username=username)
-    roll_counts = Film.objects.filter(roll__owner=owner.id, format=format).\
-        annotate(count=Count('roll'))
+    roll_counts = Film.objects\
+        .filter(roll__owner=owner, roll__status='storage')\
+        .filter(format=format)\
+        .annotate(count=Count('roll'))
     format_choices = dict(Film._meta.get_field('format').flatchoices)
     context = {
         'format': force_text(format_choices[format], strings_only=True),
@@ -72,9 +87,12 @@ def profile_format(request, username, format):
 
 
 def profile_type(request, username, type):
+    '''All the rolls of a particular film type that someone has available.'''
     owner = get_object_or_404(User, username=username)
-    roll_counts = Film.objects.filter(roll__owner=owner.id, type=type).\
-        annotate(count=Count('roll'))
+    roll_counts = Film.objects\
+        .filter(roll__owner=owner, roll__status='storage')\
+        .filter(type=type)\
+        .annotate(count=Count('roll'))
     type_choices = dict(Film._meta.get_field('type').flatchoices)
     context = {
         'type': force_text(type_choices[type], strings_only=True),

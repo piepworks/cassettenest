@@ -42,7 +42,9 @@ class Film(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '%s %s in %s' % (self.manufacturer, self.name, self.get_format_display())
+        return '%s %s in %s' % (
+            self.manufacturer, self.name, self.get_format_display()
+        )
 
     class Meta:
         ordering = ['name']
