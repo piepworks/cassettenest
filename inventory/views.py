@@ -8,9 +8,24 @@ from .models import *
 
 
 def index(request):
-    latest_roll_list = Roll.objects.order_by('-created_at')[:5]
-    context = {'latest_roll_list': latest_roll_list}
-    return render(request, 'inventory/index.html', context)
+    if request.user.is_authenticated:
+        owner = request.user
+        latest_roll_list = Roll.objects.filter(owner=owner)\
+            .order_by('-created_at')[:5]
+        empty_camera_list = Camera.objects\
+            .filter(owner=owner, status='empty')
+        loaded_camera_list = Camera.objects\
+            .filter(owner=owner, status='loaded')
+        context = {
+            'latest_roll_list': latest_roll_list,
+            'empty_camera_list': empty_camera_list,
+            'loaded_camera_list': loaded_camera_list,
+        }
+        return render(request, 'inventory/index.html', context)
+    else:
+        latest_roll_list = Roll.objects.order_by('-created_at')[:5]
+        context = {'latest_roll_list': latest_roll_list}
+        return render(request, 'inventory/index_anonymous.html', context)
 
 
 def profile(request, username):

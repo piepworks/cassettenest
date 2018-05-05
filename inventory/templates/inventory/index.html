@@ -1,8 +1,35 @@
 {% extends 'base_site.html' %}
 
 {% block content %}
+
+<h2>Currently loaded cameras</h2>
+
+{% if loaded_camera_list %}
+<ul>
+{% for camera in loaded_camera_list %}
+    <li>{{ camera.name }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>You have no loaded cameras.</p>
+{% endif %}
+
+<h2>Cameras ready to load</h2>
+
+{% if empty_camera_list %}
+<ul>
+{% for camera in empty_camera_list %}
+    <li><a href="{% url 'load-camera' camera.owner camera.id %}">{{ camera.name }}</a></li>
+{% endfor %}
+</ul>
+{% else %}
+<p>You have no cameras ready to load.</p>
+{% endif %}
+
+<hr />
+
 {% if latest_roll_list %}
-<h1>Recently added rolls</h1>
+<h2>Recently added rolls</h2>
 <ul>
 {% for roll in latest_roll_list %}
     <li>
@@ -12,15 +39,7 @@
 {% endfor %}
 </ul>
 {% else %}
-<p>No rolls found.</p>
+<p>You have no film.</p>
 {% endif %}
 
-<hr />
-
-<h2>Currently loaded cameras</h2>
-
-<ul>
-    <li>[Camera 1]</li>
-    <li>[Camera 2]</li>
-</ul>
 {% endblock %}
