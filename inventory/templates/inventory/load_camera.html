@@ -5,18 +5,27 @@
 {% block content %}
 <h2>{{ camera.name }}</h2>
 
-<h3>Pick a roll to load:</h3>
+<h3>Pick a film to load:</h3>
+
 {% if roll_counts %}
-{% regroup roll_counts by get_type_display as roll_list %}
-<select>
-    <option>Select a film</option>
-    {% for type in roll_list %}
-    <optgroup label="{{ type.grouper }}">
-        {% for film in type.list %}
-        <option>{{ film.manufacturer }} {{ film.name }} ({{ film.count }})</option>
+<form action="{% url 'load-camera' user camera.id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <hr />
+    {% regroup roll_counts by get_type_display as roll_list %}
+    <select name="film">
+        <option>Select a film</option>
+        {% for type in roll_list %}
+        <optgroup label="{{ type.grouper }}">
+            {% for film in type.list %}
+            <option value="{{film.id}}">{{ film.manufacturer }} {{ film.name }} ({{ film.count }})</option>
+            {% endfor %}
+        </optgroup>
         {% endfor %}
-    </optgroup>
-    {% endfor %}
-</select>
+    </select>
+    <input type="submit" value="Load camera" />
+</form>
+{% else %}
+<p>No film to load.</p>
 {% endif %}
 {% endblock %}

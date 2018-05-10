@@ -4,7 +4,9 @@ from django.db.models import Count
 from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
 from django.utils.encoding import force_text
+from django.http import HttpResponseRedirect
 from .models import *
+from .forms import *
 
 
 def index(request):
@@ -128,16 +130,29 @@ def load_cameras(request, username):
 
 
 def load_camera(request, username, pk):
-    owner = get_object_or_404(User, username=username)
-    camera = get_object_or_404(Camera, id=pk)
-    roll_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status='storage')\
-        .filter(format=camera.format)\
-        .annotate(count=Count('name'))\
-        .order_by('type')
-    context = {
-        'owner': owner,
-        'camera': camera,
-        'roll_counts': roll_counts,
-    }
-    return render(request, 'inventory/load_camera.html', context)
+    # Modifying both roll and camera tables
+    # Set the roll to be associated with a particular camera
+    # Set the camera's status to 'loaded'
+
+    if request.method == 'POST':
+        # do the form thing
+        form = LoadCameraForm(request.POST)
+
+        if form.is_valid():
+            return HttpResponseRedirect('/inventory/')
+    else:
+        owner = get_object_or_404(User, username=username)
+        camera = get_object_or_404(Camera, id=pk)
+        roll_counts = Film.objects\
+            .filter(roll__owner=owner, roll__status='storage')\
+            .filter(format=camera.format)\
+            .annotate(count=Count('name'))\
+            .order_by('type')
+        form = LoadCameraForm(owner=owner, format=camera.format)
+        context = {
+            'owner': owner,
+            'camera': camera,
+            'roll_counts': roll_counts,
+            'form': form,
+        }
+        return render(request, 'inventory/load_camera.html', context)
