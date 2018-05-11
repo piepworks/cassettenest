@@ -4,6 +4,7 @@ from itertools import groupby
 from django.forms.models import (
     ModelChoiceIterator, ModelChoiceField, ModelMultipleChoiceField
 )
+from inventory.models import Film
 
 
 class Grouped(object):
@@ -38,13 +39,16 @@ class GroupedModelChoiceIterator(ModelChoiceIterator):
                     key=lambda row: getattr(row, self.field.group_by_field)):
             if self.field.group_label(group):
                 yield (
-                    self.field.group_label(group),
+                    dict(Film.TYPE_CHOICES)[group],
                     [self.choice(ch) for ch in choices]
                 )
 
 
 class GroupedModelChoiceField(Grouped, ModelChoiceField):
     choices = property(Grouped._get_choices, ModelChoiceField._set_choices)
+
+    def label_from_instance(self, obj):
+        return "%s %s (%s)" % (obj.manufacturer, obj.name, obj.count)
 
 
 class GroupedModelMultiChoiceField(Grouped, ModelMultipleChoiceField):
