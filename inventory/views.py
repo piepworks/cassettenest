@@ -7,6 +7,7 @@ from django.utils.encoding import force_text
 from django.http import HttpResponseRedirect
 from .models import *
 from .forms import *
+import datetime
 
 
 def index(request):
@@ -131,14 +132,32 @@ def load_cameras(request, username):
 
 def load_camera(request, username, pk):
     # Modifying both roll and camera tables
-    # Set the roll to be associated with a particular camera
     # Set the camera's status to 'loaded'
+    # Set the roll's status to 'loaded'
+    # Set the roll's started_on date to today
+    # Set the roll's camera to this camera
 
     if request.method == 'POST':
-        # do the form thing
-        form = LoadCameraForm(request.POST)
-
+        owner = get_object_or_404(User, username=username)
+        camera = get_object_or_404(Camera, id=pk)
+        form = LoadCameraForm(\
+            request.POST,
+            owner=owner,
+            format=camera.format
+        )
         if form.is_valid():
+            # The id of the film
+            film = form.cleaned_data['roll_counts']
+            # The the oldest roll we have of that film in storage.
+            roll = Roll.objects\
+                .filter(owner=owner, film=film, status='storage')\
+                .order_by('created_at')[0]
+            roll.status = 'loaded'
+            roll.camera = camera
+            roll.started_on = datetime.date.today()
+            roll.save()
+            camera.status = 'loaded'
+            camera.save()
             return HttpResponseRedirect('/inventory/')
     else:
         owner = get_object_or_404(User, username=username)
