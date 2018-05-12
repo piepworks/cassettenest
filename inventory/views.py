@@ -25,10 +25,12 @@ def index(request):
             'empty_camera_list': empty_camera_list,
             'loaded_camera_list': loaded_camera_list,
         }
+
         return render(request, 'inventory/index.html', context)
     else:
         latest_roll_list = Roll.objects.order_by('-created_at')[:5]
         context = {'latest_roll_list': latest_roll_list}
+
         return render(request, 'inventory/index_anonymous.html', context)
 
 
@@ -67,6 +69,7 @@ def profile(request, username):
         'type_counts': type_counts,
         'owner': owner,
     }
+
     return render(request, 'inventory/profile.html', context)
 
 
@@ -82,6 +85,7 @@ def profile_rolls(request, username, slug):
         'name': name,
         'owner': owner,
     }
+
     return render(request, 'inventory/rolls.html', context)
 
 
@@ -102,6 +106,7 @@ def profile_format(request, username, format):
         'roll_counts': roll_counts,
         'owner': owner,
     }
+
     return render(request, 'inventory/format.html', context)
 
 
@@ -118,6 +123,7 @@ def profile_type(request, username, type):
         'roll_counts': roll_counts,
         'owner': owner,
     }
+
     return render(request, 'inventory/type.html', context)
 
 
@@ -128,6 +134,7 @@ def load_cameras(request, username):
         'owner': owner,
         'cameras': cameras,
     }
+
     return render(request, 'inventory/load.html', context)
 
 
@@ -139,13 +146,15 @@ def load_camera(request, username, pk):
     # Set the roll's camera to this camera
 
     if request.method == 'POST':
+        # TODO: Check to make sure owner is the currently logged in user.
         owner = get_object_or_404(User, username=username)
         camera = get_object_or_404(Camera, id=pk)
-        form = LoadCameraForm(\
+        form = LoadCameraForm(
             request.POST,
             owner=owner,
             format=camera.format
         )
+
         if form.is_valid():
             # The id of the film
             film = form.cleaned_data['roll_counts']
@@ -159,7 +168,10 @@ def load_camera(request, username, pk):
             roll.save()
             camera.status = 'loaded'
             camera.save()
-            return HttpResponseRedirect(reverse('camera', args=(owner.username, camera.id,)))
+
+            return HttpResponseRedirect(
+                reverse('camera', args=(owner.username, camera.id,))
+            )
     else:
         owner = get_object_or_404(User, username=username)
         camera = get_object_or_404(Camera, id=pk)
@@ -175,21 +187,28 @@ def load_camera(request, username, pk):
             'roll_counts': roll_counts,
             'form': form,
         }
+
         return render(request, 'inventory/load_camera.html', context)
+
 
 def camera(request, username, pk):
     owner = get_object_or_404(User, username=username)
     camera = get_object_or_404(Camera, id=pk)
 
     if request.method == 'POST':
+        # TODO: Check to make sure owner is the currently logged in user.
         roll = get_object_or_404(Roll, id=request.POST.get('roll', ''))
         roll.status = 'shot'
         roll.ended_on = datetime.date.today()
         roll.save()
-        camera.status='empty'
+        camera.status = 'empty'
         camera.save()
 
-        return HttpResponseRedirect(reverse('profile-roll', args=(owner.username, roll.film.slug, roll.id,)))
+        return HttpResponseRedirect(
+            reverse('profile-roll', args=(
+                owner.username, roll.film.slug, roll.id,
+            ))
+        )
     else:
         roll = ''
         if camera.status == 'loaded':

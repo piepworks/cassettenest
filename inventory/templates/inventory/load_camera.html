@@ -5,10 +5,11 @@
 {% block content %}
 <h2>{{ camera.name }}</h2>
 
+{% if camera.status != 'loaded' %}
 <h3>Pick a film to load:</h3>
 
 {% if roll_counts %}
-<form action="{% url 'load-camera' owner camera.id %}" method="post">
+<form action="{% url 'load-camera' camera.owner camera.id %}" method="post">
     {% csrf_token %}
     {{ form }}
     <input type="submit" value="Load camera" />
@@ -16,4 +17,9 @@
 {% else %}
 <p>No film to load.</p>
 {% endif %}
+
+{% else %}
+<p><a href="{% url 'camera' camera.owner camera.id %}">This camera</a> is already loaded.</p>
+{% endif %}
+
 {% endblock %}

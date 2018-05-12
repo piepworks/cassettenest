@@ -11,6 +11,10 @@
 <p>Code: {{ roll.code }}</p>
 {% endif %}
 
+{% if roll.camera %}
+<p>Camera: {{ roll.camera.name }}</p>
+{% endif %}
+
 {% if roll.started_on %}
 <p>Started on: {{ roll.started_on }}</p>
 {% endif %}
