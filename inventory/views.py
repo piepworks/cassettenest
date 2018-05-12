@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
 from django.utils.encoding import force_text
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 from .models import *
 from .forms import *
 import datetime
@@ -158,7 +159,7 @@ def load_camera(request, username, pk):
             roll.save()
             camera.status = 'loaded'
             camera.save()
-            return HttpResponseRedirect('/inventory/')
+            return HttpResponseRedirect(reverse('camera', args=(owner.username, camera.id,)))
     else:
         owner = get_object_or_404(User, username=username)
         camera = get_object_or_404(Camera, id=pk)
@@ -188,7 +189,7 @@ def camera(request, username, pk):
         camera.status='empty'
         camera.save()
 
-        return HttpResponseRedirect('/inventory/')
+        return HttpResponseRedirect(reverse('profile-roll', args=(owner.username, roll.film.slug, roll.id,)))
     else:
         roll = ''
         if camera.status == 'loaded':
