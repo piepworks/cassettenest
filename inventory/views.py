@@ -175,3 +175,29 @@ def load_camera(request, username, pk):
             'form': form,
         }
         return render(request, 'inventory/load_camera.html', context)
+
+def camera(request, username, pk):
+    owner = get_object_or_404(User, username=username)
+    camera = get_object_or_404(Camera, id=pk)
+
+    if request.method == 'POST':
+        roll = get_object_or_404(Roll, id=request.POST.get('roll', ''))
+        roll.status = 'shot'
+        roll.ended_on = datetime.date.today()
+        roll.save()
+        camera.status='empty'
+        camera.save()
+
+        return HttpResponseRedirect('/inventory/')
+    else:
+        roll = ''
+        if camera.status == 'loaded':
+            roll = Roll.objects.filter(camera=camera, status='loaded')[0]
+
+        context = {
+            'owner': owner,
+            'camera': camera,
+            'roll': roll,
+        }
+
+        return render(request, 'inventory/camera.html', context)

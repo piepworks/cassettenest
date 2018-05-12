@@ -1,0 +1,18 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / {{ camera.owner.username }} / {{ camera.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ camera.name }}</h2>
+
+<h3>Status: {{ camera.status}}</h3>
+
+{% if camera.status == 'loaded' %}
+<p>Loaded with {{ roll.film.manufacturer }} {{ roll.film.name }}</p>
+<form action="{% url 'camera' camera.owner camera.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="roll" value="{{ roll.id }}">
+    <input type="submit" value="Finish roll" />
+</form>
+{% endif %}
+{% endblock %}

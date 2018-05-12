@@ -7,7 +7,7 @@
 {% if loaded_camera_list %}
 <ul>
 {% for camera in loaded_camera_list %}
-    <li>{{ camera.name }}</li>
+    <li><a href="{% url 'camera' camera.owner camera.id %}">{{ camera.name }}</a></li>
 {% endfor %}
 </ul>
 {% else %}
