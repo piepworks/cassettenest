@@ -95,6 +95,13 @@ class Roll(models.Model):
         ('scanned', 'Scanned'),
         ('archived', 'Archived'),
     )
+    PUSH_PULL_CHOICES = (
+        ('-2', 'Pull 2 stops'),
+        ('-1', 'Pull 1 stop'),
+        ('+1', 'Push 1 stop'),
+        ('+2', 'Push 2 stops'),
+        ('+3', 'Push 3 stops'),
+    )
     film = models.ForeignKey(Film, on_delete=models.CASCADE)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     camera = models.ForeignKey(
@@ -113,6 +120,12 @@ class Roll(models.Model):
         max_length=20,
         choices=STATUS_CHOICES,
         default='storage',
+    )
+    push_pull = models.CharField(
+        max_length=2,
+        choices=PUSH_PULL_CHOICES,
+        blank=True,
+        verbose_name='Push/Pull',
     )
     notes = models.TextField(blank=True)
     started_on = models.DateField(null=True, blank=True)
