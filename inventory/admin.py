@@ -26,8 +26,10 @@ class RollAdmin(admin.ModelAdmin):
         'owner',
         'status',
         'code',
+        'push_pull',
         'created_at',
         'started_on',
+        'ended_on',
     )
 
 

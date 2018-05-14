@@ -151,12 +151,14 @@ def load_camera(request, username, pk):
         camera = get_object_or_404(Camera, id=pk)
 
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
+        push_pull = request.POST.get('push_pull', '')
         # The the oldest roll we have of that film in storage.
         roll = Roll.objects\
             .filter(owner=owner, film=film, status='storage')\
             .order_by('created_at')[0]
         roll.status = 'loaded'
         roll.camera = camera
+        roll.push_pull = push_pull
         roll.started_on = datetime.date.today()
         roll.save()
         camera.status = 'loaded'

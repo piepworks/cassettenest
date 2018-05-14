@@ -8,10 +8,13 @@
 <h3>Status: {{ camera.status}}</h3>
 
 {% if camera.status == 'loaded' %}
-<p>Loaded with {{ roll.film.manufacturer }} {{ roll.film.name }}</p>
+<p>
+    Loaded with {{ roll.film.manufacturer }} {{ roll.film.name }}
+    {% if roll.push_pull %} / {{ roll.get_push_pull_display }}{% endif %}
+</p>
 <form action="{% url 'camera' camera.owner camera.id %}" method="post">
     {% csrf_token %}
-    <input type="hidden" name="roll" value="{{ roll.id }}">
+    <input type="hidden" name="roll" value="{{ roll.id }}" />
     <input type="submit" value="Finish roll" />
 </form>
 {% endif %}

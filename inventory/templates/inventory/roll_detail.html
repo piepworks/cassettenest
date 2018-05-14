@@ -15,6 +15,10 @@
 <p>Camera: {{ roll.camera.name }}</p>
 {% endif %}
 
+{% if roll.push_pull %}
+<p>{{ roll.get_push_pull_display }}</p>
+{% endif %}
+
 {% if roll.started_on %}
 <p>Started on: {{ roll.started_on }}</p>
 {% endif %}
