@@ -149,29 +149,22 @@ def load_camera(request, username, pk):
         # TODO: Check to make sure owner is the currently logged in user.
         owner = get_object_or_404(User, username=username)
         camera = get_object_or_404(Camera, id=pk)
-        form = LoadCameraForm(
-            request.POST,
-            owner=owner,
-            format=camera.format
+
+        film = get_object_or_404(Film, id=request.POST.get('film', ''))
+        # The the oldest roll we have of that film in storage.
+        roll = Roll.objects\
+            .filter(owner=owner, film=film, status='storage')\
+            .order_by('created_at')[0]
+        roll.status = 'loaded'
+        roll.camera = camera
+        roll.started_on = datetime.date.today()
+        roll.save()
+        camera.status = 'loaded'
+        camera.save()
+
+        return HttpResponseRedirect(
+            reverse('camera', args=(owner.username, camera.id,))
         )
-
-        if form.is_valid():
-            # The id of the film
-            film = form.cleaned_data['roll_counts']
-            # The the oldest roll we have of that film in storage.
-            roll = Roll.objects\
-                .filter(owner=owner, film=film, status='storage')\
-                .order_by('created_at')[0]
-            roll.status = 'loaded'
-            roll.camera = camera
-            roll.started_on = datetime.date.today()
-            roll.save()
-            camera.status = 'loaded'
-            camera.save()
-
-            return HttpResponseRedirect(
-                reverse('camera', args=(owner.username, camera.id,))
-            )
     else:
         owner = get_object_or_404(User, username=username)
         camera = get_object_or_404(Camera, id=pk)
@@ -180,12 +173,10 @@ def load_camera(request, username, pk):
             .filter(format=camera.format)\
             .annotate(count=Count('name'))\
             .order_by('type')
-        form = LoadCameraForm(owner=owner, format=camera.format)
         context = {
             'owner': owner,
             'camera': camera,
             'roll_counts': roll_counts,
-            'form': form,
         }
 
         return render(request, 'inventory/load_camera.html', context)
