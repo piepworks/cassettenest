@@ -6,6 +6,7 @@ from django.views.generic.detail import DetailView
 from django.utils.encoding import force_text
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 import datetime
@@ -138,6 +139,7 @@ def load_cameras(request, username):
     return render(request, 'inventory/load.html', context)
 
 
+@login_required
 def load_camera(request, username, pk):
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
@@ -184,6 +186,7 @@ def load_camera(request, username, pk):
         return render(request, 'inventory/load_camera.html', context)
 
 
+@login_required
 def camera(request, username, pk):
     owner = get_object_or_404(User, username=username)
     camera = get_object_or_404(Camera, id=pk)
