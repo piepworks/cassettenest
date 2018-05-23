@@ -13,7 +13,7 @@
     {% csrf_token %}
     {% regroup roll_counts by get_type_display as roll_list %}
     <select name="film">
-        <option>Select a film</option>
+        <option value="">Select a film</option>
         {% for type in roll_list %}
         <optgroup label="{{ type.grouper }}">
             {% for film in type.list %}
@@ -23,7 +23,7 @@
         {% endfor %}
     </select>
     <select name="push_pull">
-        <option>Push/Pull</option>
+        <option value="">Push/Pull</option>
         <option value="-2">Pull 2 stops</option>
         <option value="-1">Pull 1 stop</option>
         <option value="+1">Push 1 stop</option>
