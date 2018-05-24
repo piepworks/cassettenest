@@ -133,6 +133,20 @@ class Roll(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def effective_iso(self):
+        "Calculates the effective ISO for a pushed or pulled roll."
+
+        # Using a dictionary as a case/switch statement.
+        return {
+            '': self.film.iso,
+            '-2': int(self.film.iso * .25),
+            '-1': int(self.film.iso * .5),
+            '+1': self.film.iso * 2,
+            '+2': self.film.iso * 4,
+            '+3': self.film.iso * 8,
+        }[self.push_pull]
+
     def save(self, *args, **kwargs):
         # If the started_on field has been populated and the `code` field has
         # not, populate the code field:

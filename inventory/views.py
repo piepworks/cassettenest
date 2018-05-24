@@ -17,12 +17,16 @@ def index(request):
         owner = request.user
         latest_roll_list = Roll.objects.filter(owner=owner)\
             .order_by('-created_at')[:5]
+        latest_finished_rolls = Roll.objects.filter(
+            owner=owner, status='shot'
+        )
         empty_camera_list = Camera.objects\
             .filter(owner=owner, status='empty')
         loaded_camera_list = Camera.objects\
             .filter(owner=owner, status='loaded')
         context = {
             'latest_roll_list': latest_roll_list,
+            'latest_finished_rolls': latest_finished_rolls,
             'empty_camera_list': empty_camera_list,
             'loaded_camera_list': loaded_camera_list,
         }

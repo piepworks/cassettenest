@@ -16,7 +16,7 @@
 {% endif %}
 
 {% if roll.push_pull %}
-<p>{{ roll.get_push_pull_display }}</p>
+<p>{{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }})</p>
 {% endif %}
 
 {% if roll.started_on %}

@@ -10,7 +10,7 @@
 {% if camera.status == 'loaded' %}
 <p>
     Loaded with {{ roll.film.manufacturer }} {{ roll.film.name }}
-    {% if roll.push_pull %} / {{ roll.get_push_pull_display }}{% endif %}
+    {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}
 </p>
 <form action="{% url 'camera' camera.owner camera.id %}" method="post">
     {% csrf_token %}
