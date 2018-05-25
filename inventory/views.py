@@ -7,6 +7,7 @@ from django.utils.encoding import force_text
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import *
 from .forms import *
 import datetime
@@ -169,6 +170,14 @@ def load_camera(request, username, pk):
         roll.save()
         camera.status = 'loaded'
         camera.save()
+        messages.success(
+            request,
+            'Camera loaded with %s %s (code: %s)!' % (
+                roll.film.manufacturer,
+                roll.film.name,
+                roll.code
+            )
+        )
 
         return HttpResponseRedirect(
             reverse('camera', args=(owner.username, camera.id,))
@@ -203,6 +212,14 @@ def camera(request, username, pk):
         roll.save()
         camera.status = 'empty'
         camera.save()
+        messages.success(
+            request,
+            'Roll of %s %s (code: %s) finished!' % (
+                roll.film.manufacturer,
+                roll.film.name,
+                roll.code
+            )
+        )
 
         return HttpResponseRedirect(
             reverse('profile-roll', args=(
