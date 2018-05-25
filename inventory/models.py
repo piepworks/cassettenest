@@ -47,7 +47,7 @@ class Film(models.Model):
         )
 
     class Meta:
-        ordering = ['name']
+        ordering = ['manufacturer__name', 'name']
 
 
 class Camera(models.Model):
