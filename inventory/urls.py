@@ -17,5 +17,4 @@ urlpatterns = [
     path('<username>/camera/<int:pk>/', views.camera, name='camera'),
     path('<username>/camera/<int:pk>/load/',
          views.load_camera, name='load-camera'),
-    path('<username>/add-film', views.add_film, name='add-film'),
 ]
