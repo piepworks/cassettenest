@@ -4,12 +4,12 @@
 
 {% block content %}
 
-<h1>Add a camera</h1>
+<h1>Edit &ldquo;{{ camera.name }}&rdquo;</h1>
 
-<form action="{% url 'add-camera' owner.username %}" method="post">
+<form action="{% url 'edit-camera' owner.username camera.id %}" method="post">
     {% csrf_token %}
     {{ form }}
-    <input type="submit" value="Add camera">
+    <input type="submit" value="Update camera">
 </form>
 
 {% endblock %}

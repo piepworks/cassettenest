@@ -269,9 +269,7 @@ def add_camera(request, username):
     owner = request.user
 
     if request.method == 'POST':
-        form = AddCameraForm(
-            request.POST,
-        )
+        form = CameraForm(request.POST)
 
         if form.is_valid():
             name = form.cleaned_data['name']
@@ -282,16 +280,13 @@ def add_camera(request, username):
                 format=format,
             )
 
-            messages.success(
-                request,
-                'Camera added!'
-            )
+            messages.success(request, 'Camera added!')
 
             return HttpResponseRedirect(
                 reverse('camera', args=(owner.username, camera.id,))
             )
     else:
-        form = AddCameraForm()
+        form = CameraForm()
 
         context = {
             'owner': owner,
@@ -299,3 +294,35 @@ def add_camera(request, username):
         }
 
         return render(request, 'inventory/add_camera.html', context)
+
+
+@login_required
+def edit_camera(request, username, pk):
+    owner = request.user
+    camera = get_object_or_404(Camera, id=pk)
+
+    if request.method == 'POST':
+        form = CameraForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            format = form.cleaned_data['format']
+            camera.name = name
+            camera.format = format
+            camera.save()
+
+            messages.success(request, 'Camera updated!')
+
+            return HttpResponseRedirect(
+                reverse('camera', args=(owner.username, camera.id,))
+            )
+    else:
+        form = CameraForm(instance=camera)
+
+        context = {
+            'owner': owner,
+            'form': form,
+            'camera': camera,
+        }
+
+        return render(request, 'inventory/edit_camera.html', context)

@@ -3,7 +3,7 @@ from django.forms import ModelForm
 from .models import Film, Camera
 
 
-class AddCameraForm(ModelForm):
+class CameraForm(ModelForm):
     class Meta:
         model = Camera
         fields = ['name', 'format']
