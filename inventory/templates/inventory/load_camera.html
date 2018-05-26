@@ -8,6 +8,8 @@
 {% if camera.status != 'loaded' %}
 <h3>Pick a film to load:</h3>
 
+<p>Format: {{ camera.get_format_display }}</p>
+
 {% if roll_counts %}
 <form action="{% url 'load-camera' camera.owner camera.id %}" method="post">
     {% csrf_token %}

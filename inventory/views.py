@@ -22,6 +22,7 @@ def index(request):
             quantity = int(request.POST.get('quantity', ''))
             roll = Roll.objects.create(owner=owner, film=film)
 
+            # The first roll has already been created, this creates the rest.
             for x in range(1, quantity):
                 roll.pk = None
                 roll.save()
@@ -198,7 +199,7 @@ def load_camera(request, username, pk):
             'Camera loaded with %s %s (code: %s)!' % (
                 roll.film.manufacturer,
                 roll.film.name,
-                roll.code
+                roll.code,
             )
         )
 
@@ -240,7 +241,7 @@ def camera(request, username, pk):
             'Roll of %s %s (code: %s) finished!' % (
                 roll.film.manufacturer,
                 roll.film.name,
-                roll.code
+                roll.code,
             )
         )
 
@@ -261,3 +262,40 @@ def camera(request, username, pk):
         }
 
         return render(request, 'inventory/camera.html', context)
+
+
+@login_required
+def add_camera(request, username):
+    owner = request.user
+
+    if request.method == 'POST':
+        form = AddCameraForm(
+            request.POST,
+        )
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            format = form.cleaned_data['format']
+            camera = Camera.objects.create(
+                owner=owner,
+                name=name,
+                format=format,
+            )
+
+            messages.success(
+                request,
+                'Camera added!'
+            )
+
+            return HttpResponseRedirect(
+                reverse('camera', args=(owner.username, camera.id,))
+            )
+    else:
+        form = AddCameraForm()
+
+        context = {
+            'owner': owner,
+            'form': form,
+        }
+
+        return render(request, 'inventory/add_camera.html', context)

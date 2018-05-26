@@ -33,7 +33,18 @@ class RollAdmin(admin.ModelAdmin):
     )
 
 
+class CameraAdmin(admin.ModelAdmin):
+    list_filter = (
+        'owner',
+    )
+    list_display = (
+        'owner',
+        'name',
+        'format',
+    )
+
+
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
-admin.site.register(Camera)
+admin.site.register(Camera, CameraAdmin)
