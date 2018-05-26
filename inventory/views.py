@@ -43,7 +43,7 @@ def index(request):
             .order_by('-created_at')[:5]
         latest_finished_rolls = Roll.objects.filter(
             owner=owner, status='shot'
-        )
+        )[:5]
         empty_camera_list = Camera.objects\
             .filter(owner=owner, status='empty')
         loaded_camera_list = Camera.objects\
@@ -213,7 +213,7 @@ def load_camera(request, username, pk):
             .filter(roll__owner=owner, roll__status='storage')\
             .filter(format=camera.format)\
             .annotate(count=Count('name'))\
-            .order_by('type')
+            .order_by('type', 'manufacturer__name', 'name',)
         context = {
             'owner': owner,
             'camera': camera,
