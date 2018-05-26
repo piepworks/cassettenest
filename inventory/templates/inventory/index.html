@@ -2,6 +2,8 @@
 
 {% block content %}
 
+<h2><a href="{% url 'add-film' user.get_username %}">Add film</a></h2>
+
 <h2>Currently loaded cameras</h2>
 
 {% if loaded_camera_list %}
