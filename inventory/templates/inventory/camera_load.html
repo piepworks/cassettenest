@@ -1,10 +1,10 @@
 {% extends 'base_site.html' %}
 
-{% block title %} / {{ owner.username }} / Load {{ camera.name }}{% endblock %}
+{% block title %} / Load {{ camera.name }}{% endblock %}
 
 {% block content %}
 <h2>{{ camera.name }}</h2>
-<p><a href="{% url 'edit-camera' user.username camera.id %}">Edit this camera</a></p>
+<p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
 
 {% if camera.status != 'loaded' %}
 <h3>Pick a film to load:</h3>
@@ -12,7 +12,7 @@
 <p>Format: {{ camera.get_format_display }}</p>
 
 {% if roll_counts %}
-<form action="{% url 'load-camera' camera.owner camera.id %}" method="post">
+<form method="post">
     {% csrf_token %}
     {% regroup roll_counts by get_type_display as roll_list %}
     <select name="film">
@@ -40,7 +40,7 @@
 {% endif %}
 
 {% else %}
-<p><a href="{% url 'camera' camera.owner camera.id %}">This camera</a> is already loaded.</p>
+<p><a href="{% url 'camera-detail' camera.id %}">This camera</a> is already loaded.</p>
 {% endif %}
 
 {% endblock %}

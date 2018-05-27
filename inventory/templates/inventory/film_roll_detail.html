@@ -1,6 +1,6 @@
 {% extends 'base_site.html' %}
 
-{% block title %} / {{ roll.owner.username }} / {{ roll }}{% endblock %}
+{% block title %} / {{ roll }}{% endblock %}
 
 {% block content %}
 <h1>{{ roll.owner.username }} / {{ roll }}</h1>
@@ -12,7 +12,7 @@
 {% endif %}
 
 {% if roll.camera %}
-<p>Camera: {{ roll.camera.name }}</p>
+<p>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></p>
 {% endif %}
 
 {% if roll.push_pull %}

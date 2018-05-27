@@ -1,16 +1,16 @@
 {% extends 'base_site.html' %}
 
-{% block title %} / {{ owner.username }} / {{ type }}{% endblock %}
+{% block title %} / {{ format }}{% endblock %}
 
 {% block content %}
-<h1>{{ owner.username }} / {{ type }}</h1>
+<h1>{{ owner.username }} / {{ format }}</h1>
 
 {% if roll_counts %}
 <ul class="cards">
     {% for film in roll_counts %}
     <li>
-        <a class="card card__{{ film.type }}" href="{% url 'profile-rolls' owner.username film.slug %}">
-            <header><h1>{{ film }}</h1> </header>
+        <a class="card card__{{ film.type }}" href="{% url 'film-rolls' film.slug %}">
+            <header><h1>{{ film.manufacturer }} {{ film.name }}</h1> </header>
             <div class="count"><span>{{ film.count }}</span></div>
         </a>
     </li>

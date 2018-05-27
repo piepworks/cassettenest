@@ -4,9 +4,9 @@
 
 <h2>Add film</h2>
 
-<form action="{% url 'index' %}" method="post">
+<form method="post">
     {% csrf_token %}
-    <select name="film">
+    <select name="film" required>
         <option value="">Select a film</option>
         {% regroup films by manufacturer as films_list %}
         {% for manufacturer in films_list %}
@@ -17,18 +17,18 @@
         </optgroup>
         {% endfor %}
     </select>
-    <input type="number" name="quantity" placeholder="quantity" />
+    <input type="number" name="quantity" placeholder="quantity" required />
     <input type="submit" value="Add">
 </form>
 
-<h2><a href="{% url 'add-camera' user.username %}">Add a camera</a></h2>
+<h2><a href="{% url 'add-camera' %}">Add a camera</a></h2>
 
 <h2>Currently loaded cameras</h2>
 
 {% if loaded_camera_list %}
 <ul>
 {% for camera in loaded_camera_list %}
-    <li><a href="{% url 'camera' camera.owner camera.id %}">{{ camera.name }}</a></li>
+    <li><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></li>
 {% endfor %}
 </ul>
 {% else %}
@@ -40,7 +40,7 @@
 {% if empty_camera_list %}
 <ul>
 {% for camera in empty_camera_list %}
-    <li><a href="{% url 'load-camera' camera.owner camera.id %}">{{ camera.name }}</a></li>
+    <li><a href="{% url 'camera-load' camera.id %}">{{ camera.name }}</a></li>
 {% endfor %}
 </ul>
 {% else %}
@@ -54,7 +54,7 @@
 <ul>
 {% for roll in latest_finished_rolls %}
     <li>
-        <a href="{% url 'profile-roll' roll.owner.username roll.film.slug roll.id %}">{{ roll.film }}</a>
+        <a href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.film }}</a>
     </li>
 {% endfor %}
 </ul>
@@ -65,7 +65,7 @@
 <ul>
 {% for roll in latest_roll_list %}
     <li>
-        <a href="{% url 'profile-roll' roll.owner.username roll.film.slug roll.id %}">{{ roll.film }}</a>
+        <a href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.film }}</a>
     </li>
 {% endfor %}
 </ul>

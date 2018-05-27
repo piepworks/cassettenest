@@ -10,7 +10,12 @@
     <header>
         <h1><a href="{% url 'index' %}">Film Inventory</a></h1>
         {% if user.is_authenticated %}
-        <a href="{% url 'logout' %}">Log out</a>
+        <nav>
+            <ul>
+                <li><a href="{% url 'profile' %}">Your profile</a></li>
+                <li><a href="{% url 'logout' %}">Log out</a></li>
+            </ul>
+        </nav>
         {% endif %}
     </header>
     {% if messages %}

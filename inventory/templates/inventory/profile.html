@@ -9,7 +9,7 @@
 <ul class="cards">
     {% for roll in roll_counts %}
     <li>
-        <a class="card card__{{ roll.type }}" href="{% url 'profile-rolls' owner.username roll.slug %}">
+        <a class="card card__{{ roll.type }}" href="{% url 'film-rolls' roll.slug %}">
             <header><h1>{{ roll }}</h1> </header>
             <div class="count"><span>{{ roll.count }}</span></div>
         </a>
@@ -20,14 +20,14 @@
 <h2>Formats</h2>
 <ul>
     {% for format in format_counts %}
-    <li><a href="{% url 'profile-format' owner.username format.format %}">{{ format.format_display }} / {{ format.count }}</a></li>
+    <li><a href="{% url 'film-format' format.format %}">{{ format.format_display }} / {{ format.count }}</a></li>
     {% endfor %}
 </ul>
 
 <h2>Types</h2>
 <ul>
     {% for type in type_counts %}
-    <li><a href="{% url 'profile-type' owner.username type.type %}">{{ type.type_display }} / {{ type.count }}</a></li>
+    <li><a href="{% url 'film-type' type.type %}">{{ type.type_display }} / {{ type.count }}</a></li>
     {% endfor %}
 </ul>
 {% else %}

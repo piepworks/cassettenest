@@ -1,10 +1,10 @@
 {% extends 'base_site.html' %}
 
-{% block title %} / {{ camera.owner.username }} / {{ camera.name }}{% endblock %}
+{% block title %} / {{ camera.name }}{% endblock %}
 
 {% block content %}
 <h2>{{ camera.name }}</h2>
-<p><a href="{% url 'edit-camera' user.username camera.id %}">Edit this camera</a></p>
+<p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
 
 <h3>Status: {{ camera.status }}</h3>
 
@@ -15,12 +15,12 @@
     Loaded with {{ roll.film.manufacturer }} {{ roll.film.name }}
     {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}
 </p>
-<form action="{% url 'camera' camera.owner camera.id %}" method="post">
+<form method="post">
     {% csrf_token %}
     <input type="hidden" name="roll" value="{{ roll.id }}" />
     <input type="submit" value="Finish roll" />
 </form>
 {% else %}
-<p><a href="{% url 'load-camera' camera.owner camera.id %}">Load this camera</a></p>
+<p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
 {% endif %}
 {% endblock %}
