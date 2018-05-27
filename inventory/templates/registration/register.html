@@ -1,0 +1,13 @@
+{% extends 'base_site.html' %}
+
+{% block content %}
+
+<h2>Create an account to continue.</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Create your account</button>
+</form>
+
+{% endblock %}

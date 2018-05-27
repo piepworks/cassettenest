@@ -58,12 +58,10 @@ def index(request):
 
         return render(request, 'inventory/index.html', context)
     else:
-        latest_roll_list = Roll.objects.order_by('-created_at')[:5]
-        context = {'latest_roll_list': latest_roll_list}
-
-        return render(request, 'inventory/index_anonymous.html', context)
+        return render(request, 'inventory/landing.html')
 
 
+@login_required
 def profile(request, username):
     owner = get_object_or_404(User, username=username)
     roll_counts = Film.objects\
@@ -103,6 +101,7 @@ def profile(request, username):
     return render(request, 'inventory/profile.html', context)
 
 
+@login_required
 def profile_rolls(request, username, slug):
     '''All the rolls of a particular film that someone has available.'''
     owner = get_object_or_404(User, username=username)
@@ -123,6 +122,7 @@ class RollDetailView(DetailView):
     model = Roll
 
 
+@login_required
 def profile_format(request, username, format):
     '''All the rolls in a particular format that someone has available.'''
     owner = get_object_or_404(User, username=username)
@@ -140,6 +140,7 @@ def profile_format(request, username, format):
     return render(request, 'inventory/format.html', context)
 
 
+@login_required
 def profile_type(request, username, type):
     '''All the rolls of a particular film type that someone has available.'''
     owner = get_object_or_404(User, username=username)
@@ -157,6 +158,7 @@ def profile_type(request, username, type):
     return render(request, 'inventory/type.html', context)
 
 
+@login_required
 def load_cameras(request, username):
     owner = get_object_or_404(User, username=username)
     cameras = Camera.objects.filter(owner=owner).filter(status='empty')
