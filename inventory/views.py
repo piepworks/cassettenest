@@ -16,39 +16,6 @@ import datetime
 def index(request):
     if request.user.is_authenticated:
         owner = request.user
-
-        if request.method == 'POST':
-            film = get_object_or_404(Film, id=request.POST.get('film', ''))
-
-            try:
-                quantity = int(request.POST.get('quantity', ''))
-            except ValueError:
-                messages.error(request, 'Enter a valid quantity.')
-
-                return HttpResponseRedirect(reverse('index'))
-
-            if quantity > 0:
-                roll = Roll.objects.create(owner=owner, film=film)
-
-                # The first roll has already been created,
-                # this creates the rest.
-                for x in range(1, quantity):
-                    roll.pk = None
-                    roll.save()
-
-                if quantity > 1:
-                    plural = 's'
-                else:
-                    plural = ''
-                messages.success(
-                    request,
-                    'Added %s roll%s of %s!' % (quantity, plural, film)
-                )
-            else:
-                messages.error(request, 'Enter a quantity of 1 or more.')
-
-            return HttpResponseRedirect(reverse('index'))
-
         films = Film.objects.all()
         latest_roll_list = Roll.objects.filter(owner=owner)\
             .order_by('-created_at')[:5]
@@ -66,7 +33,6 @@ def index(request):
             'empty_camera_list': empty_camera_list,
             'loaded_camera_list': loaded_camera_list,
         }
-
         return render(request, 'inventory/index.html', context)
     else:
         return render(request, 'inventory/landing.html')
@@ -110,6 +76,42 @@ def profile(request):
     }
 
     return render(request, 'inventory/profile.html', context)
+
+
+@login_required
+def film_add(request):
+    owner = request.user
+
+    if request.method == 'POST':
+        film = get_object_or_404(Film, id=request.POST.get('film', ''))
+
+        try:
+            quantity = int(request.POST.get('quantity', ''))
+        except ValueError:
+            messages.error(request, 'Enter a valid quantity.')
+
+            return HttpResponseRedirect(reverse('index'))
+
+        if quantity > 0:
+            roll = Roll.objects.create(owner=owner, film=film)
+
+            # The first roll has already been created, this creates the rest.
+            for x in range(1, quantity):
+                roll.pk = None
+                roll.save()
+
+            if quantity > 1:
+                plural = 's'
+            else:
+                plural = ''
+            messages.success(
+                request,
+                'Added %s roll%s of %s!' % (quantity, plural, film)
+            )
+        else:
+            messages.error(request, 'Enter a quantity of 1 or more.')
+
+        return HttpResponseRedirect(reverse('index'))
 
 
 @login_required

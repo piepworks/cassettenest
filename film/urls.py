@@ -18,6 +18,7 @@ urlpatterns = [
     # Inventory
     path('', views.index, name='index'),
     path('profile/', views.profile, name='profile'),
+    path('film/add/', views.film_add, name='film-add'),
     path('film/type/<type>/', views.film_type, name='film-type'),
     path('film/format/<format>/', views.film_format, name='film-format'),
     path('film/<slug:slug>/', views.film_rolls, name='film-rolls'),
