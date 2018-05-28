@@ -1,0 +1,13 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / {{ roll }}{% endblock %}
+
+{% block content %}
+<h1>{{ roll }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div>{{ form.notes }}</div>
+    <div><input type="submit" value="Save notes"></div>
+</form>
+{% endblock %}

@@ -1,9 +1,15 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Film, Camera
+from .models import Camera, Roll
 
 
 class CameraForm(ModelForm):
     class Meta:
         model = Camera
         fields = ['name', 'format']
+
+
+class RollForm(ModelForm):
+    class Meta:
+        model = Roll
+        fields = ['notes']

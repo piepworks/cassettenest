@@ -1,9 +1,10 @@
 {% extends 'base_site.html' %}
+{% load markdown_deux_tags %}
 
 {% block title %} / {{ roll }}{% endblock %}
 
 {% block content %}
-<h1>{{ roll.owner.username }} / {{ roll }}</h1>
+<h1>{{ roll }}</h1>
 
 <p>Status: {{ roll.status }}</p>
 
@@ -28,5 +29,15 @@
 {% endif %}
 
 <p>Notes:</p>
-<p>{{ roll.notes }}</p>
+<p>{{ roll.notes|markdown }}</p>
+<p>
+    <a href="{% url 'film-roll-detail-notes' roll.film.slug roll.id %}">
+        {% if roll.notes %}
+        Edit
+        {% else %}
+        Add
+        {% endif %}
+        notes
+    </a>
+</p>
 {% endblock %}

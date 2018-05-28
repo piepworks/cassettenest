@@ -25,6 +25,9 @@ urlpatterns = [
          views.RollDetailView.as_view(
             template_name='inventory/film_roll_detail.html'
          ), name='film-roll-detail'),
+    path('film/<slug:slug>/<int:pk>/notes/',
+         views.film_roll_detail_notes,
+         name='film-roll-detail-notes'),
     path('camera/add', views.add_camera, name='add-camera'),
     path('camera/<int:pk>/', views.camera_detail, name='camera-detail'),
     path('camera/<int:pk>/load/', views.load_camera, name='camera-load'),

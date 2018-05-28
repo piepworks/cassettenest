@@ -159,6 +159,39 @@ def film_type(request, type):
 
 
 @login_required
+def film_roll_detail_notes(request, slug, pk):
+    owner = request.user
+    roll = get_object_or_404(Roll, pk=pk, owner=owner)
+
+    if request.method == 'POST':
+        form = RollForm(request.POST)
+
+        if form.is_valid():
+            roll.notes = form.cleaned_data['notes']
+            roll.save()
+
+            messages.success(request, 'Notes updated!')
+
+            return HttpResponseRedirect(
+                reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
+            )
+    else:
+        form = RollForm(instance=roll)
+
+        context = {
+            'owner': owner,
+            'roll': roll,
+            'form': form,
+        }
+
+        return render(
+            request,
+            'inventory/film_roll_detail_notes.html',
+            context
+        )
+
+
+@login_required
 def load_camera(request, pk):
     owner = request.user
     # Modifying both roll and camera tables
