@@ -29,7 +29,7 @@ urlpatterns = [
     path('film/<slug:slug>/<int:pk>/notes/',
          views.film_roll_detail_notes,
          name='film-roll-detail-notes'),
-    path('camera/add', views.camera_add, name='add-camera'),
+    path('camera/add/', views.camera_add, name='camera-add'),
     path('camera/<int:pk>/', views.camera_detail, name='camera-detail'),
     path('camera/<int:pk>/load/', views.camera_load, name='camera-load'),
     path('camera/<int:pk>/edit/', views.camera_edit, name='camera-edit'),
