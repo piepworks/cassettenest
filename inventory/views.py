@@ -192,7 +192,7 @@ def film_roll_detail_notes(request, slug, pk):
 
 
 @login_required
-def load_camera(request, pk):
+def camera_load(request, pk):
     owner = request.user
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
@@ -282,7 +282,7 @@ def camera_detail(request, pk):
 
 
 @login_required
-def add_camera(request):
+def camera_add(request):
     owner = request.user
 
     if request.method == 'POST':
@@ -314,7 +314,7 @@ def add_camera(request):
 
 
 @login_required
-def edit_camera(request, pk):
+def camera_edit(request, pk):
     owner = request.user
     camera = get_object_or_404(Camera, id=pk, owner=owner)
 
