@@ -6,7 +6,7 @@ from .models import Camera, Roll
 class CameraForm(ModelForm):
     class Meta:
         model = Camera
-        fields = ['name', 'format']
+        fields = ['name', 'format', 'owner']
 
 
 class RollForm(ModelForm):

@@ -81,6 +81,9 @@ class Camera(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = (('owner', 'name'),)
+
     def __str__(self):
         return '%s\'s %s' % (self.owner, self.name)
 

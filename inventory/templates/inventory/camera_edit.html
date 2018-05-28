@@ -8,7 +8,9 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form }}
+    {{ form.name }}
+    {{ form.format }}
+    <input type="hidden" name="owner" value="{{ owner.id }}">
     <input type="submit" value="Update camera">
 </form>
 

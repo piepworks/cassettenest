@@ -315,6 +315,9 @@ def camera_add(request):
             return HttpResponseRedirect(reverse(
                 'camera-detail', args=(camera.id,)
             ))
+        else:
+            messages.error(request, 'You already have that camera.')
+            return HttpResponseRedirect(reverse('camera-add'),)
     else:
         form = CameraForm()
 
@@ -332,7 +335,7 @@ def camera_edit(request, pk):
     camera = get_object_or_404(Camera, id=pk, owner=owner)
 
     if request.method == 'POST':
-        form = CameraForm(request.POST)
+        form = CameraForm(request.POST, instance=camera)
 
         if form.is_valid():
             name = form.cleaned_data['name']
