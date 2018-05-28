@@ -19,22 +19,33 @@ def index(request):
 
         if request.method == 'POST':
             film = get_object_or_404(Film, id=request.POST.get('film', ''))
-            quantity = int(request.POST.get('quantity', ''))
-            roll = Roll.objects.create(owner=owner, film=film)
 
-            # The first roll has already been created, this creates the rest.
-            for x in range(1, quantity):
-                roll.pk = None
-                roll.save()
+            try:
+                quantity = int(request.POST.get('quantity', ''))
+            except ValueError:
+                messages.error(request, 'Enter a valid quantity.')
 
-            if quantity > 1:
-                plural = 's'
+                return HttpResponseRedirect(reverse('index'))
+
+            if quantity > 0:
+                roll = Roll.objects.create(owner=owner, film=film)
+
+                # The first roll has already been created,
+                # this creates the rest.
+                for x in range(1, quantity):
+                    roll.pk = None
+                    roll.save()
+
+                if quantity > 1:
+                    plural = 's'
+                else:
+                    plural = ''
+                messages.success(
+                    request,
+                    'Added %s roll%s of %s!' % (quantity, plural, film)
+                )
             else:
-                plural = ''
-            messages.success(
-                request,
-                'Added %s roll%s of %s!' % (quantity, plural, film)
-            )
+                messages.error(request, 'Enter a quantity of 1 or more.')
 
             return HttpResponseRedirect(reverse('index'))
 
