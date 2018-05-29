@@ -115,6 +115,33 @@ def film_roll_add(request):
 
 
 @login_required
+def film_roll_update(request, pk):
+    owner = request.user
+
+    if request.method == 'POST':
+        roll = get_object_or_404(
+            Roll, id=pk, owner=owner
+        )
+        form = RollStatusForm(request.POST, instance=roll)
+
+        if form.is_valid():
+            roll.status = form.cleaned_data['status']
+            roll.save()
+
+            messages.success(request, 'Status updated!')
+
+            return HttpResponseRedirect(
+                reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
+            )
+    else:
+        messages.success(request, 'That\'s not right.')
+
+        return HttpResponseRedirect(
+            reverse('index')
+        )
+
+
+@login_required
 def film_rolls(request, slug):
     '''All the rolls of a particular film that someone has available.'''
     owner = request.user
@@ -129,10 +156,6 @@ def film_rolls(request, slug):
     }
 
     return render(request, 'inventory/film_rolls.html', context)
-
-
-class RollDetailView(DetailView):
-    model = Roll
 
 
 @login_required
@@ -172,12 +195,27 @@ def film_type(request, type):
 
 
 @login_required
+def film_roll_detail(request, slug, pk):
+    owner = request.user
+    roll = get_object_or_404(Roll, pk=pk, owner=owner)
+    form = RollStatusForm(instance=roll)
+
+    context = {
+        'owner': owner,
+        'roll': roll,
+        'form': form,
+    }
+
+    return render(request, 'inventory/film_roll_detail.html', context)
+
+
+@login_required
 def film_roll_detail_notes(request, slug, pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
 
     if request.method == 'POST':
-        form = RollForm(request.POST)
+        form = RollNotesForm(request.POST)
 
         if form.is_valid():
             roll.notes = form.cleaned_data['notes']
@@ -189,7 +227,7 @@ def film_roll_detail_notes(request, slug, pk):
                 reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
             )
     else:
-        form = RollForm(instance=roll)
+        form = RollNotesForm(instance=roll)
 
         context = {
             'owner': owner,

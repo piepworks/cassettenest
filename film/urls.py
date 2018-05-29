@@ -19,13 +19,15 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('profile/', views.profile, name='profile'),
     path('film/add/', views.film_roll_add, name='film-roll-add'),
+    path('film/update/<int:pk>/',
+         views.film_roll_update,
+         name='film-roll-update'),
     path('film/type/<type>/', views.film_type, name='film-type'),
     path('film/format/<format>/', views.film_format, name='film-format'),
     path('film/<slug:slug>/', views.film_rolls, name='film-rolls'),
     path('film/<slug:slug>/<int:pk>/',
-         views.RollDetailView.as_view(
-            template_name='inventory/film_roll_detail.html'
-         ), name='film-roll-detail'),
+         views.film_roll_detail,
+         name='film-roll-detail'),
     path('film/<slug:slug>/<int:pk>/notes/',
          views.film_roll_detail_notes,
          name='film-roll-detail-notes'),

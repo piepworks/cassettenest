@@ -6,7 +6,11 @@
 {% block content %}
 <h1>{{ roll }}</h1>
 
-<p>Status: {{ roll.status }}</p>
+<form action="{% url 'film-roll-update' roll.id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Update status">
+</form>
 
 {% if roll.code %}
 <p>Code: {{ roll.code }}</p>

@@ -9,7 +9,13 @@ class CameraForm(ModelForm):
         fields = ['name', 'format', 'owner']
 
 
-class RollForm(ModelForm):
+class RollNotesForm(ModelForm):
     class Meta:
         model = Roll
         fields = ['notes']
+
+
+class RollStatusForm(ModelForm):
+    class Meta:
+        model = Roll
+        fields = ['status']
