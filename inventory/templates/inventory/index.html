@@ -4,7 +4,7 @@
 
 <h2>Add film</h2>
 
-<form action="{% url 'film-add' %}" method="post">
+<form action="{% url 'film-roll-add' %}" method="post">
     {% csrf_token %}
     <select name="film" required>
         <option value="">Select a film</option>
@@ -54,7 +54,7 @@
 <ul>
 {% for roll in latest_finished_rolls %}
     <li>
-        <a href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.film }}</a>
+        <a title="{{ roll.code }}" href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.film }}</a>
     </li>
 {% endfor %}
 </ul>

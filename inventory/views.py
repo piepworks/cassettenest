@@ -79,7 +79,7 @@ def profile(request):
 
 
 @login_required
-def film_add(request):
+def film_roll_add(request):
     owner = request.user
 
     if request.method == 'POST':
