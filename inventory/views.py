@@ -1,10 +1,9 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.detail import DetailView
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
 from django.utils.encoding import force_text
-from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -90,7 +89,7 @@ def film_roll_add(request):
         except ValueError:
             messages.error(request, 'Enter a valid quantity.')
 
-            return HttpResponseRedirect(reverse('index'))
+            return redirect(reverse('index'))
 
         if quantity > 0:
             roll = Roll.objects.create(owner=owner, film=film)
@@ -111,7 +110,7 @@ def film_roll_add(request):
         else:
             messages.error(request, 'Enter a quantity of 1 or more.')
 
-        return HttpResponseRedirect(reverse('index'))
+        return redirect(reverse('index'))
 
 
 @login_required
@@ -130,15 +129,13 @@ def film_roll_update(request, pk):
 
             messages.success(request, 'Status updated!')
 
-            return HttpResponseRedirect(
+            return redirect(
                 reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
             )
     else:
         messages.success(request, 'That\'s not right.')
 
-        return HttpResponseRedirect(
-            reverse('index')
-        )
+        return redirect(reverse('index'))
 
 
 @login_required
@@ -223,7 +220,7 @@ def film_roll_detail_notes(request, slug, pk):
 
             messages.success(request, 'Notes updated!')
 
-            return HttpResponseRedirect(
+            return redirect(
                 reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
             )
     else:
@@ -275,9 +272,7 @@ def camera_load(request, pk):
             )
         )
 
-        return HttpResponseRedirect(
-            reverse('camera-detail', args=(camera.id,))
-        )
+        return redirect(reverse('camera-detail', args=(camera.id,)))
     else:
         camera = get_object_or_404(Camera, id=pk, owner=owner)
         roll_counts = Film.objects\
@@ -315,7 +310,7 @@ def camera_detail(request, pk):
             )
         )
 
-        return HttpResponseRedirect(
+        return redirect(
             reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
         )
     else:
@@ -350,12 +345,10 @@ def camera_add(request):
 
             messages.success(request, 'Camera added!')
 
-            return HttpResponseRedirect(reverse(
-                'camera-detail', args=(camera.id,)
-            ))
+            return redirect(reverse('camera-detail', args=(camera.id,)))
         else:
             messages.error(request, 'You already have that camera.')
-            return HttpResponseRedirect(reverse('camera-add'),)
+            return redirect(reverse('camera-add'),)
     else:
         form = CameraForm()
 
@@ -384,9 +377,7 @@ def camera_edit(request, pk):
 
             messages.success(request, 'Camera updated!')
 
-            return HttpResponseRedirect(
-                reverse('camera-detail', args=(camera.id,))
-            )
+            return redirect(reverse('camera-detail', args=(camera.id,)))
     else:
         form = CameraForm(instance=camera)
 
