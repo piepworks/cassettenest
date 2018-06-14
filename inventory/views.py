@@ -23,14 +23,13 @@ def index(request):
         )[:5]
         empty_camera_list = Camera.objects\
             .filter(owner=owner, status='empty')
-        loaded_camera_list = Camera.objects\
-            .filter(owner=owner, status='loaded')
+        loaded_roll_list = Roll.objects.filter(owner=owner, status='loaded')
         context = {
             'films': films,
             'latest_roll_list': latest_roll_list,
             'latest_finished_rolls': latest_finished_rolls,
             'empty_camera_list': empty_camera_list,
-            'loaded_camera_list': loaded_camera_list,
+            'loaded_roll_list': loaded_roll_list,
         }
         return render(request, 'inventory/index.html', context)
     else:

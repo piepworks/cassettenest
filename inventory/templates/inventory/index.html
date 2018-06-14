@@ -25,10 +25,13 @@
 
 <h2>Currently loaded cameras</h2>
 
-{% if loaded_camera_list %}
+{% if loaded_roll_list %}
 <ul>
-{% for camera in loaded_camera_list %}
-    <li><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></li>
+{% for roll in loaded_roll_list %}
+    <li>
+        <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a> with
+        <a href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.film.name }} {{ roll.push_pull }}</a>
+    </li>
 {% endfor %}
 </ul>
 {% else %}
