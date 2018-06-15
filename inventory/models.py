@@ -88,6 +88,24 @@ class Camera(models.Model):
         return '%s\'s %s' % (self.owner, self.name)
 
 
+class Project(models.Model):
+    """
+    A subset of rolls to use during a project or trip.
+    """
+
+    name = models.CharField(max_length=255)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    notes = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (('owner', 'name'),)
+
+    def __str__(self):
+        return '%s\'s %s' % (self.owner, self.name)
+
+
 class Roll(models.Model):
     STATUS_CHOICES = (
         ('storage', 'Storage'),
@@ -109,6 +127,12 @@ class Roll(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     camera = models.ForeignKey(
         Camera,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+    project = models.ForeignKey(
+        Project,
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
