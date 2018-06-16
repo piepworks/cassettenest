@@ -274,14 +274,29 @@ def camera_load(request, pk):
         return redirect(reverse('camera-detail', args=(camera.id,)))
     else:
         camera = get_object_or_404(Camera, id=pk, owner=owner)
-        roll_counts = Film.objects\
-            .filter(roll__owner=owner, roll__status='storage')\
-            .filter(format=camera.format)\
-            .annotate(count=Count('name'))\
-            .order_by('type', 'manufacturer__name', 'name',)
+        projects = Project.objects.filter(owner=owner)
+        current_project = int(request.GET.get('project'))
+        if current_project is not None and current_project != 0:
+            roll_counts = Film.objects\
+                .filter(
+                    roll__owner=owner,
+                    roll__status='storage',
+                    roll__project=current_project
+                )\
+                .filter(format=camera.format)\
+                .annotate(count=Count('name'))\
+                .order_by('type', 'manufacturer__name', 'name',)
+        else:
+            roll_counts = Film.objects\
+                .filter(roll__owner=owner, roll__status='storage')\
+                .filter(format=camera.format)\
+                .annotate(count=Count('name'))\
+                .order_by('type', 'manufacturer__name', 'name',)
         context = {
             'owner': owner,
             'camera': camera,
+            'current_project': current_project,
+            'projects': projects,
             'roll_counts': roll_counts,
         }
 

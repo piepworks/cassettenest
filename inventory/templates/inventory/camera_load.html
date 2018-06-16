@@ -11,6 +11,23 @@
 
 <p>Format: {{ camera.get_format_display }}</p>
 
+
+{% if projects %}
+<p>Filter by Project (optional):</p>
+<form method="get">
+    <select name="project">
+        <option value="0">All rolls</option>
+        {% for project in projects %}
+        <option value="{{ project.id }}" {% if project.id == current_project %} selected{% endif %}>
+            {{ project.name }}
+        </option>
+        {% endfor %}
+    </select>
+    <input type="submit" value="Go">
+</form>
+<hr />
+{% endif %}
+
 {% if roll_counts %}
 <form method="post">
     {% csrf_token %}
