@@ -20,6 +20,10 @@
 <p>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></p>
 {% endif %}
 
+{% if roll.project %}
+<p>Project: {{ roll.project.name }}</p>
+{% endif %}
+
 {% if roll.push_pull %}
 <p>{{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }})</p>
 {% endif %}

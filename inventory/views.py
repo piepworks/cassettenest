@@ -241,6 +241,16 @@ def film_roll_detail_notes(request, slug, pk):
 @login_required
 def camera_load(request, pk):
     owner = request.user
+    current_project = None
+    if request.GET.get('project'):
+        try:
+            current_project = Project.objects.get(
+                pk=request.GET.get('project'),
+                owner=owner
+            )
+        except Project.DoesNotExist:
+            current_project = None
+
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
     # Set the roll's status to 'loaded'
@@ -252,9 +262,19 @@ def camera_load(request, pk):
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
         push_pull = request.POST.get('push_pull', '')
         # The the oldest roll we have of that film in storage.
-        roll = Roll.objects\
-            .filter(owner=owner, film=film, status='storage')\
-            .order_by('created_at')[0]
+        if current_project is not None and current_project != 0:
+            roll = Roll.objects\
+                .filter(
+                    owner=owner,
+                    film=film,
+                    status='storage',
+                    project=current_project
+                )\
+                .order_by('created_at')[0]
+        else:
+            roll = Roll.objects\
+                .filter(owner=owner, film=film, status='storage')\
+                .order_by('created_at')[0]
         roll.status = 'loaded'
         roll.camera = camera
         roll.push_pull = push_pull
@@ -275,15 +295,6 @@ def camera_load(request, pk):
     else:
         camera = get_object_or_404(Camera, id=pk, owner=owner)
         projects = Project.objects.filter(owner=owner)
-        current_project = None
-        if request.GET.get('project'):
-            try:
-                current_project = Project.objects.get(
-                    pk=request.GET.get('project'),
-                    owner=owner
-                )
-            except Project.DoesNotExist:
-                current_project = None
         if current_project is not None and current_project != 0:
             roll_counts = Film.objects\
                 .filter(

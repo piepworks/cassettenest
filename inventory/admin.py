@@ -17,6 +17,7 @@ class RollAdmin(admin.ModelAdmin):
     list_filter = (
         'owner',
         'status',
+        'project',
         'film__format',
         'film__type',
         'film__iso',
@@ -27,6 +28,7 @@ class RollAdmin(admin.ModelAdmin):
         'status',
         'code',
         'push_pull',
+        'project',
         'created_at',
         'started_on',
         'ended_on',
