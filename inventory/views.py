@@ -275,7 +275,15 @@ def camera_load(request, pk):
     else:
         camera = get_object_or_404(Camera, id=pk, owner=owner)
         projects = Project.objects.filter(owner=owner)
-        current_project = int(request.GET.get('project'))
+        current_project = None
+        if request.GET.get('project'):
+            try:
+                current_project = Project.objects.get(
+                    pk=request.GET.get('project'),
+                    owner=owner
+                )
+            except Project.DoesNotExist:
+                current_project = None
         if current_project is not None and current_project != 0:
             roll_counts = Film.objects\
                 .filter(

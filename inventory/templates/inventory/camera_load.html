@@ -18,13 +18,14 @@
     <select name="project">
         <option value="0">All rolls</option>
         {% for project in projects %}
-        <option value="{{ project.id }}" {% if project.id == current_project %} selected{% endif %}>
+        <option value="{{ project.id }}" {% if project.id == current_project.id %} selected{% endif %}>
             {{ project.name }}
         </option>
         {% endfor %}
     </select>
-    <input type="submit" value="Go">
+    <input type="submit" value="Filter">
 </form>
+<p>Showing: {{ current_project.name|default:"All rolls" }}</p>
 <hr />
 {% endif %}
 
