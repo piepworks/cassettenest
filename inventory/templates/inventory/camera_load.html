@@ -38,7 +38,7 @@
         {% for type in roll_list %}
         <optgroup label="{{ type.grouper }}">
             {% for film in type.list %}
-            <option value="{{film.id}}">{{ film.manufacturer }} {{ film.name }} ({{ film.count }})</option>
+            <option value="{{ film.id }}">{{ film.manufacturer }} {{ film.name }} ({{ film.count }})</option>
             {% endfor %}
         </optgroup>
         {% endfor %}

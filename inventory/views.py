@@ -87,7 +87,6 @@ def film_roll_add(request):
             quantity = int(request.POST.get('quantity', ''))
         except ValueError:
             messages.error(request, 'Enter a valid quantity.')
-
             return redirect(reverse('index'))
 
         if quantity > 0:
@@ -127,13 +126,11 @@ def film_roll_update(request, pk):
             roll.save()
 
             messages.success(request, 'Status updated!')
-
             return redirect(
                 reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
             )
     else:
         messages.success(request, 'That\'s not right.')
-
         return redirect(reverse('index'))
 
 
@@ -195,7 +192,6 @@ def film_roll_detail(request, slug, pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
     form = RollStatusForm(instance=roll)
-
     context = {
         'owner': owner,
         'roll': roll,
@@ -224,7 +220,6 @@ def film_roll_detail_notes(request, slug, pk):
             )
     else:
         form = RollNotesForm(instance=roll)
-
         context = {
             'owner': owner,
             'roll': roll,
@@ -377,14 +372,12 @@ def camera_add(request):
             )
 
             messages.success(request, 'Camera added!')
-
             return redirect(reverse('camera-detail', args=(camera.id,)))
         else:
             messages.error(request, 'You already have that camera.')
             return redirect(reverse('camera-add'),)
     else:
         form = CameraForm()
-
         context = {
             'owner': owner,
             'form': form,
@@ -409,11 +402,9 @@ def camera_edit(request, pk):
             camera.save()
 
             messages.success(request, 'Camera updated!')
-
             return redirect(reverse('camera-detail', args=(camera.id,)))
     else:
         form = CameraForm(instance=camera)
-
         context = {
             'owner': owner,
             'form': form,
