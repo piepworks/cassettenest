@@ -237,6 +237,9 @@ def film_roll_detail_notes(request, slug, pk):
 def camera_load(request, pk):
     owner = request.user
     current_project = None
+    iso_range = None
+    iso_value = None
+
     if request.GET.get('project'):
         try:
             current_project = Project.objects.get(
@@ -245,6 +248,23 @@ def camera_load(request, pk):
             )
         except Project.DoesNotExist:
             current_project = None
+
+    if request.GET.get('iso_range') and request.GET.get('iso_value'):
+        ranges = (
+            'gte',
+            'lte',
+            'equals',
+        )
+        if request.GET.get('iso_range') in ranges:
+            iso_range = request.GET.get('iso_range')
+            try:
+                iso_value = int(request.GET.get('iso_value'))
+            except ValueError:
+                iso_range = None
+                iso_value = None
+        else:
+            iso_range = None
+            iso_value = None
 
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
@@ -306,12 +326,22 @@ def camera_load(request, pk):
                 .filter(format=camera.format)\
                 .annotate(count=Count('name'))\
                 .order_by('type', 'manufacturer__name', 'name',)
+
+        if iso_range == 'gte':
+            roll_counts = roll_counts.filter(iso__gte=iso_value)
+        elif iso_range == 'lte':
+            roll_counts = roll_counts.filter(iso__lte=iso_value)
+        elif iso_range == 'equals':
+            roll_counts = roll_counts.filter(iso=iso_value)
+
         context = {
             'owner': owner,
             'camera': camera,
             'current_project': current_project,
             'projects': projects,
             'roll_counts': roll_counts,
+            'iso_range': iso_range,
+            'iso_value': iso_value,
         }
 
         return render(request, 'inventory/camera_load.html', context)
