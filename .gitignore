@@ -1,5 +1,3 @@
 *.sqlite3
 *.css
-css/
-node_modules/
 tlapse/

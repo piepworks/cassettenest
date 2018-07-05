@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'inventory.apps.InventoryConfig',
+    'compressor',
     'markdown_deux',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -123,3 +124,19 @@ STATIC_URL = '/static/'
 
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
+
+# https://github.com/torchbox/django-libsass
+# https://github.com/django-compressor/django-compressor/
+
+COMPRESS_ROOT = 'static/inventory/scss/'
+
+COMPRESS_PRECOMPILERS = (
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # other finders..
+    'compressor.finders.CompressorFinder',
+)

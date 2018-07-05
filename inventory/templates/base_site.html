@@ -1,9 +1,12 @@
 {% load static %}
+{% load compress %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>Film inventory{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'inventory/css/main.css' %}" />
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'inventory/scss/main.scss' %}" />
+    {% endcompress %}
 </head>
 
 <body>
