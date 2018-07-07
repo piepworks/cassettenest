@@ -5,6 +5,17 @@
 {% block content %}
 <h1>{{ owner.username }}</h1>
 
+<h2>Projects</h2>
+<p><a href="{% url 'project-add' %}">Add a project</a></p>
+
+<ul>
+    {% for project in projects  %}
+    <li><a href="{% url 'project-detail' project.id %}">{{ project.name }}</a></li>
+    {% endfor %}
+</ul>
+
+<hr />
+
 {% if owner.roll_set.all|length > 0 %}
 <ul class="cards">
     {% for roll in roll_counts %}

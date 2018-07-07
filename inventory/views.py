@@ -46,6 +46,7 @@ def profile(request):
         .filter(roll__owner=owner, roll__status='storage')\
         .values('format')\
         .annotate(count=Count('format')).distinct().order_by('format')
+    projects = Project.objects.filter(owner=owner)
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
@@ -70,11 +71,61 @@ def profile(request):
         'roll_counts': roll_counts,
         'format_counts': format_counts,
         'type_counts': type_counts,
+        'projects': projects,
         'owner': owner,
     }
 
     return render(request, 'inventory/profile.html', context)
 
+
+@login_required
+def project_add(request):
+    owner = request.user
+
+    if request.method == 'POST':
+        form = ProjectForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            notes = form.cleaned_data['notes']
+            project = Project.objects.create(
+                owner=owner,
+                name=name,
+                notes=notes,
+            )
+
+            # film = get_object_or_404(Film, id=request.POST.get('film', ''))
+            # quantity = request.POST.get('quantity', '')
+
+            # Determine if the desired number of rolls are available.
+            # If not, return a message, but still create the project.
+
+            messages.success(request, 'Project added!')
+            return redirect(reverse('project-detail', args=(project.id,)))
+        else:
+            messages.error(request, 'You already have that project.')
+            return redirect(reverse('project-add'),)
+    else:
+        form = ProjectForm()
+        context = {
+            'owner': owner,
+            'form': form,
+        }
+
+        return render(request, 'inventory/project_add.html', context)
+
+
+@login_required
+def project_detail(request, pk):
+    owner = request.user
+    project = get_object_or_404(Project, id=pk, owner=owner)
+
+    context = {
+        'owner': owner,
+        'project': project,
+    }
+
+    return render(request, 'inventory/project_detail.html', context)
 
 @login_required
 def film_roll_add(request):

@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Camera, Roll
+from .models import Camera, Roll, Project
 
 
 class CameraForm(ModelForm):
@@ -19,3 +19,9 @@ class RollStatusForm(ModelForm):
     class Meta:
         model = Roll
         fields = ['status']
+
+
+class ProjectForm(ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name', 'notes', 'owner']

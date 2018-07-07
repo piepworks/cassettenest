@@ -1,0 +1,15 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / Add a project{% endblock %}
+
+{% block content %}
+<h1>Add a project</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <p>{{ form.name }}</p>
+    <p>{{ form.notes }}</p>
+    <input type="hidden" name="owner" value="{{ owner.id }}">
+    <input type="submit" value="Add project">
+</form>
+{% endblock %}
