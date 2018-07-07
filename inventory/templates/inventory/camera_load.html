@@ -11,10 +11,13 @@
 
 <p>Format: {{ camera.get_format_display }}</p>
 
-
 {% if projects %}
-<p>Filter by Project (optional):</p>
+<p>Filter by Project:</p>
 <form method="get">
+    {% if iso_range and iso_value %}
+    <input type="hidden" name="iso_range" value="{{ iso_range }}" />
+    <input type="hidden" name="iso_value" value="{{ iso_value }}" />
+    {% endif %}
     <select name="project">
         <option value="0">All rolls</option>
         {% for project in projects %}
@@ -30,6 +33,9 @@
 
 <p>Filter by ISO</p>
 <form method="get">
+    {% if current_project %}
+    <input type="hidden" name="project" value="{{ current_project.id }}" />
+    {% endif %}
     <select name="iso_range" required>
         <option value="0">All ISOs</option>
         <option value="lte" {% if iso_range == 'lte' %}selected{% endif %}>&lt;= Less than or equal to</option>
