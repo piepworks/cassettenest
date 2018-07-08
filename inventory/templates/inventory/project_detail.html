@@ -9,4 +9,45 @@
 <h3>Notes</h3>
 <div>{{ project.notes|markdown }}</div>
 {% endif %}
+
+<hr />
+
+<h3>Add rolls to this project</h3>
+
+{% if roll_available_count %}
+<form action="{% url 'project-rolls-add' project.id %}" method="post">
+    {% csrf_token %}
+    {% regroup roll_available_count by get_type_display as roll_list %}
+    <select name="film" required>
+        <option value="">Select a film</option>
+        {% for type in roll_list %}
+        <optgroup label="{{ type.grouper }}">
+            {% for film in type.list %}
+            <option value="{{ film.id }}">{{ film }} ({{ film.count }})</option>
+            {% endfor %}
+        </optgroup>
+        {% endfor %}
+    </select>
+    <input type="number" name="quantity" value="0" required />
+    <input type="submit" value="Add rolls" />
+</form>
+{% endif %}
+
+<hr />
+
+{% if roll_counts %}
+<ul class="cards">
+    {% for roll in roll_counts %}
+    <li>
+        <a class="card card__{{ roll.type }}" href="{% url 'film-rolls' roll.slug %}">
+            <header><h1>{{ roll }}</h1> </header>
+            <div class="count"><span>{{ roll.count }}</span></div>
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No rolls in this project.</p>
+{% endif %}
+
 {% endblock %}

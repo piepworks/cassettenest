@@ -94,12 +94,6 @@ def project_add(request):
                 notes=notes,
             )
 
-            # film = get_object_or_404(Film, id=request.POST.get('film', ''))
-            # quantity = request.POST.get('quantity', '')
-
-            # Determine if the desired number of rolls are available.
-            # If not, return a message, but still create the project.
-
             messages.success(request, 'Project added!')
             return redirect(reverse('project-detail', args=(project.id,)))
         else:
@@ -119,13 +113,55 @@ def project_add(request):
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
+    roll_counts = Film.objects\
+        .filter(roll__owner=owner, roll__project=project)\
+        .annotate(count=Count('roll'))\
+        .order_by('type', 'manufacturer__name', 'name',)
+
+    roll_available_count = Film.objects\
+        .filter(roll__owner=owner, roll__project=None, roll__status='storage')\
+        .annotate(count=Count('roll'))\
+        .order_by('type', 'manufacturer__name', 'name',)
 
     context = {
         'owner': owner,
         'project': project,
+        'roll_counts': roll_counts,
+        'roll_available_count': roll_available_count,
     }
 
     return render(request, 'inventory/project_detail.html', context)
+
+
+@login_required
+def project_rolls_add(request, pk):
+    owner = request.user
+
+    if request.method == 'POST':
+        project = get_object_or_404(Project, id=pk, owner=owner)
+        film = get_object_or_404(Film, id=request.POST.get('film', ''))
+        quantity = int(request.POST.get('quantity', ''))
+        available_quantity = Roll.objects.filter(
+            owner=owner,
+            film=film,
+            project=None,
+        ).count()
+
+        if quantity <= available_quantity:
+            rolls_queryset = Roll.objects.filter(
+                owner=owner,
+                film=film,
+                project=None,
+            ).order_by('-created_at')[:quantity]
+            Roll.objects.filter(id__in=rolls_queryset).update(project=project)
+            messages.success(request, 'Rolls added!')
+        else:
+            messages.error(
+                request,
+                'You don\'t have that many rolls available.'
+            )
+    return redirect(reverse('project-detail', args=(project.id,)))
+
 
 @login_required
 def film_roll_add(request):
