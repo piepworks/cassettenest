@@ -39,6 +39,12 @@
 <ul class="cards">
     {% for roll in roll_counts %}
     <li>
+        <form action="{% url 'project-rolls-remove' project.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="film" value="{{ roll.id }}" />
+            <input type="submit" value="Remove from project" />
+        </form>
+
         <a class="card card__{{ roll.type }}" href="{% url 'film-rolls' roll.slug %}">
             <header><h1>{{ roll }}</h1> </header>
             <div class="count"><span>{{ roll.count }}</span></div>

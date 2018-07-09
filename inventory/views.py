@@ -164,6 +164,24 @@ def project_rolls_add(request, pk):
 
 
 @login_required
+def project_rolls_remove(request, pk):
+    owner = request.user
+
+    if request.method == 'POST':
+        project = get_object_or_404(Project, id=pk, owner=owner)
+        film = get_object_or_404(Film, id=request.POST.get('film', ''))
+
+        Roll.objects.filter(owner=owner, film=film, project=project)\
+            .update(project=None)
+        messages.success(
+            request,
+            'Removed %s from this project!' % (film)
+        )
+
+    return redirect(reverse('project-detail', args=(project.id,)))
+
+
+@login_required
 def film_roll_add(request):
     owner = request.user
 
