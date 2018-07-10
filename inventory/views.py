@@ -134,11 +134,14 @@ def project_delete(request, pk):
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
+
+    # rolls already in this project
     roll_counts = Film.objects\
         .filter(roll__owner=owner, roll__project=project)\
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
 
+    # rolls available to be added to a project
     roll_available_count = Film.objects\
         .filter(roll__owner=owner, roll__project=None, roll__status='storage')\
         .annotate(count=Count('roll'))\
@@ -166,6 +169,7 @@ def project_rolls_add(request, pk):
             owner=owner,
             film=film,
             project=None,
+            status='storage',
         ).count()
 
         if quantity <= available_quantity:
@@ -173,9 +177,19 @@ def project_rolls_add(request, pk):
                 owner=owner,
                 film=film,
                 project=None,
+                status='storage',
             ).order_by('-created_at')[:quantity]
             Roll.objects.filter(id__in=rolls_queryset).update(project=project)
-            messages.success(request, 'Rolls added!')
+
+            if quantity > 1:
+                plural = 's'
+            else:
+                plural = ''
+
+            messages.success(
+                request,
+                '%s roll%s of %s added!' % (quantity, plural, film)
+            )
         else:
             messages.error(
                 request,
