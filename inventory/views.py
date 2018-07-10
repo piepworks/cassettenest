@@ -120,10 +120,15 @@ def project_delete(request, pk):
         rolls.update(project=None)
         project.delete()
 
+        if roll_count > 1:
+            plural = 's'
+        else:
+            plural = ''
+
         messages.success(
             request,
-            'Project deleted and %s rolls now available for other projects' %
-            roll_count
+            'Project deleted and %s roll%s now available for other projects.' %
+            (roll_count, plural)
         )
         return redirect(reverse('profile'))
     else:
