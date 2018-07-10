@@ -5,6 +5,10 @@
 
 {% block content %}
 <h2>{{ project.name }}</h2>
+<form action="{% url 'project-delete' project.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete this project." />
+</form>
 {% if project.notes %}
 <h3>Notes</h3>
 <div>{{ project.notes|markdown }}</div>

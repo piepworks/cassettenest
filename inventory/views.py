@@ -110,6 +110,27 @@ def project_add(request):
 
 
 @login_required
+def project_delete(request, pk):
+    owner = request.user
+    project = get_object_or_404(Project, id=pk, owner=owner)
+    rolls = Roll.objects.filter(owner=owner, project=project)
+    roll_count = rolls.count()
+
+    if request.method == 'POST':
+        rolls.update(project=None)
+        project.delete()
+
+        messages.success(
+            request,
+            'Project deleted and %s rolls now available for other projects' %
+            roll_count
+        )
+        return redirect(reverse('profile'))
+    else:
+        return redirect(reverse('project-detail', args=(project.id,)))
+
+
+@login_required
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
@@ -136,10 +157,10 @@ def project_detail(request, pk):
 @login_required
 def project_rolls_add(request, pk):
     owner = request.user
+    project = get_object_or_404(Project, id=pk, owner=owner)
+    film = get_object_or_404(Film, id=request.POST.get('film', ''))
 
     if request.method == 'POST':
-        project = get_object_or_404(Project, id=pk, owner=owner)
-        film = get_object_or_404(Film, id=request.POST.get('film', ''))
         quantity = int(request.POST.get('quantity', ''))
         available_quantity = Roll.objects.filter(
             owner=owner,
@@ -160,6 +181,7 @@ def project_rolls_add(request, pk):
                 request,
                 'You don\'t have that many rolls available.'
             )
+
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
