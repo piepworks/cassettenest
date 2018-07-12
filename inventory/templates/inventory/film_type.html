@@ -5,9 +5,9 @@
 {% block content %}
 <h1>{{ owner.username }} / {{ type }}</h1>
 
-{% if roll_counts %}
+{% if film_counts %}
 <ul class="cards">
-    {% for film in roll_counts %}
+    {% for film in film_counts %}
     <li>
         <a class="card card__{{ film.type }}" href="{% url 'film-rolls' film.slug %}">
             <header><h1>{{ film }}</h1> </header>

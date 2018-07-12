@@ -39,7 +39,7 @@ def index(request):
 @login_required
 def profile(request):
     owner = request.user
-    roll_counts = Film.objects\
+    film_counts = Film.objects\
         .filter(roll__owner=owner, roll__status='storage')\
         .annotate(count=Count('roll'))
     format_counts = Film.objects\
@@ -68,7 +68,7 @@ def profile(request):
             force_text(type_choices[type['type']], strings_only=True)
 
     context = {
-        'roll_counts': roll_counts,
+        'film_counts': film_counts,
         'format_counts': format_counts,
         'type_counts': type_counts,
         'projects': projects,
@@ -141,13 +141,13 @@ def project_detail(request, pk):
     project = get_object_or_404(Project, id=pk, owner=owner)
 
     # rolls already in this project
-    roll_counts = Film.objects\
+    film_counts = Film.objects\
         .filter(roll__owner=owner, roll__project=project)\
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
 
     # rolls available to be added to a project
-    roll_available_count = Film.objects\
+    film_available_count = Film.objects\
         .filter(roll__owner=owner, roll__project=None, roll__status='storage')\
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
@@ -155,8 +155,8 @@ def project_detail(request, pk):
     context = {
         'owner': owner,
         'project': project,
-        'roll_counts': roll_counts,
-        'roll_available_count': roll_available_count,
+        'film_counts': film_counts,
+        'film_available_count': film_available_count,
     }
 
     return render(request, 'inventory/project_detail.html', context)
@@ -301,14 +301,14 @@ def film_rolls(request, slug):
 def film_format(request, format):
     '''All the rolls in a particular format that someone has available.'''
     owner = request.user
-    roll_counts = Film.objects\
+    film_counts = Film.objects\
         .filter(roll__owner=owner, roll__status='storage')\
         .filter(format=format)\
         .annotate(count=Count('roll'))
     format_choices = dict(Film._meta.get_field('format').flatchoices)
     context = {
         'format': force_text(format_choices[format], strings_only=True),
-        'roll_counts': roll_counts,
+        'film_counts': film_counts,
         'owner': owner,
     }
 
@@ -319,14 +319,14 @@ def film_format(request, format):
 def film_type(request, type):
     '''All the rolls of a particular film type that someone has available.'''
     owner = request.user
-    roll_counts = Film.objects\
+    film_counts = Film.objects\
         .filter(roll__owner=owner, roll__status='storage')\
         .filter(type=type)\
         .annotate(count=Count('roll'))
     type_choices = dict(Film._meta.get_field('type').flatchoices)
     context = {
         'type': force_text(type_choices[type], strings_only=True),
-        'roll_counts': roll_counts,
+        'film_counts': film_counts,
         'owner': owner,
     }
 
@@ -457,7 +457,7 @@ def camera_load(request, pk):
         camera = get_object_or_404(Camera, id=pk, owner=owner)
         projects = Project.objects.filter(owner=owner)
         if current_project is not None and current_project != 0:
-            roll_counts = Film.objects\
+            film_counts = Film.objects\
                 .filter(
                     roll__owner=owner,
                     roll__status='storage',
@@ -467,25 +467,25 @@ def camera_load(request, pk):
                 .annotate(count=Count('name'))\
                 .order_by('type', 'manufacturer__name', 'name',)
         else:
-            roll_counts = Film.objects\
+            film_counts = Film.objects\
                 .filter(roll__owner=owner, roll__status='storage')\
                 .filter(format=camera.format)\
                 .annotate(count=Count('name'))\
                 .order_by('type', 'manufacturer__name', 'name',)
 
         if iso_range == 'gte':
-            roll_counts = roll_counts.filter(iso__gte=iso_value)
+            film_counts = film_counts.filter(iso__gte=iso_value)
         elif iso_range == 'lte':
-            roll_counts = roll_counts.filter(iso__lte=iso_value)
+            film_counts = film_counts.filter(iso__lte=iso_value)
         elif iso_range == 'equals':
-            roll_counts = roll_counts.filter(iso=iso_value)
+            film_counts = film_counts.filter(iso=iso_value)
 
         context = {
             'owner': owner,
             'camera': camera,
             'current_project': current_project,
             'projects': projects,
-            'roll_counts': roll_counts,
+            'film_counts': film_counts,
             'iso_range': iso_range,
             'iso_value': iso_value,
         }
