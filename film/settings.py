@@ -140,3 +140,5 @@ STATICFILES_FINDERS = (
     # other finders..
     'compressor.finders.CompressorFinder',
 )
+
+LOGIN_URL = '/login/'
