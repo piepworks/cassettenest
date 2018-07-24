@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import *
 from .forms import *
+from .utils import *
 import datetime
 
 
@@ -383,8 +384,7 @@ def film_roll_detail_notes(request, slug, pk):
 def camera_load(request, pk):
     owner = request.user
     current_project = None
-    iso_range = None
-    iso_value = None
+    iso = iso_variables(request)
 
     if request.GET.get('project'):
         try:
@@ -394,23 +394,6 @@ def camera_load(request, pk):
             )
         except Project.DoesNotExist:
             current_project = None
-
-    if request.GET.get('iso_range') and request.GET.get('iso_value'):
-        ranges = (
-            'gte',
-            'lte',
-            'equals',
-        )
-        if request.GET.get('iso_range') in ranges:
-            iso_range = request.GET.get('iso_range')
-            try:
-                iso_value = int(request.GET.get('iso_value'))
-            except ValueError:
-                iso_range = None
-                iso_value = None
-        else:
-            iso_range = None
-            iso_value = None
 
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
@@ -473,12 +456,7 @@ def camera_load(request, pk):
                 .annotate(count=Count('name'))\
                 .order_by('type', 'manufacturer__name', 'name',)
 
-        if iso_range == 'gte':
-            film_counts = film_counts.filter(iso__gte=iso_value)
-        elif iso_range == 'lte':
-            film_counts = film_counts.filter(iso__lte=iso_value)
-        elif iso_range == 'equals':
-            film_counts = film_counts.filter(iso=iso_value)
+        film_counts = iso_filter(iso, film_counts)
 
         context = {
             'owner': owner,
@@ -486,8 +464,8 @@ def camera_load(request, pk):
             'current_project': current_project,
             'projects': projects,
             'film_counts': film_counts,
-            'iso_range': iso_range,
-            'iso_value': iso_value,
+            'iso_range': iso['range'],
+            'iso_value': iso['value'],
         }
 
         return render(request, 'inventory/camera_load.html', context)
