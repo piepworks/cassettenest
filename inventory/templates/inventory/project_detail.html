@@ -19,6 +19,9 @@
 <h3>Add rolls to this project</h3>
 
 {% if film_available_count %}
+
+{% include 'inventory/form_iso.html' %}
+
 <form action="{% url 'project-rolls-add' project.id %}" method="post">
     {% csrf_token %}
     {% regroup film_available_count by get_type_display as film_list %}

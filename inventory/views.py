@@ -140,6 +140,7 @@ def project_delete(request, pk):
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
+    iso = iso_variables(request)
 
     # rolls already in this project
     film_counts = Film.objects\
@@ -153,11 +154,15 @@ def project_detail(request, pk):
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
 
+    film_available_count = iso_filter(iso, film_available_count)
+
     context = {
         'owner': owner,
         'project': project,
         'film_counts': film_counts,
         'film_available_count': film_available_count,
+        'iso_range': iso['range'],
+        'iso_value': iso['value'],
     }
 
     return render(request, 'inventory/project_detail.html', context)

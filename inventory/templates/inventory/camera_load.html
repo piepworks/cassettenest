@@ -31,29 +31,7 @@
 <p>Showing: {{ current_project.name|default:"All rolls" }}</p>
 {% endif %}
 
-<p>Filter by ISO</p>
-<form method="get">
-    {% if current_project %}
-    <input type="hidden" name="project" value="{{ current_project.id }}" />
-    {% endif %}
-    <select name="iso_range" required>
-        <option value="0">All ISOs</option>
-        <option value="lte" {% if iso_range == 'lte' %}selected{% endif %}>&lt;= Less than or equal to</option>
-        <option value="gte" {% if iso_range == 'gte' %}selected{% endif %}>&gt;= Greater than or equal to</option>
-        <option value="equals" {% if iso_range == 'equals' %}selected{% endif %}>= Equal to</option>
-    </select>
-    <input type="number" name="iso_value" placeholder="ISO" value="{{ iso_value }}" required />
-    <input type="submit" value="Filter" />
-</form>
-{% if iso_range and iso_value %}
-<p>Showing: ISO
-    {% ifequal iso_range 'gte' %}greater than or equal to{% endifequal %}
-    {% ifequal iso_range 'lte' %}less than or equal to{% endifequal %}
-    {% ifequal iso_range 'equals' %}equal to{% endifequal %}
-{{ iso_value }}</p>
-{% else %}
-<p>Showing: All ISOs</p>
-{% endif %}
+{% include 'inventory/form_iso.html' %}
 
 <hr />
 
