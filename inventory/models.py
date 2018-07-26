@@ -103,7 +103,7 @@ class Project(models.Model):
         unique_together = (('owner', 'name'),)
 
     def __str__(self):
-        return '%s\'s %s' % (self.owner, self.name)
+        return self.name
 
 
 class Roll(models.Model):

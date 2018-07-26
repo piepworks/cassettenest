@@ -8,7 +8,7 @@
 
 <form action="{% url 'film-roll-update' roll.id %}" method="post">
     {% csrf_token %}
-    {{ form }}
+    {{ statusForm }}
     <input type="submit" value="Update status">
 </form>
 
@@ -20,8 +20,12 @@
 <p>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></p>
 {% endif %}
 
-{% if roll.project %}
-<p>Project: {{ roll.project.name }}</p>
+{% if projects %}
+<form action="{% url 'film-roll-update-project' roll.id %}" method="post">
+    {% csrf_token %}
+    {{ projectForm }}
+    <input type="submit" value="Update project">
+</form>
 {% endif %}
 
 {% if roll.push_pull %}

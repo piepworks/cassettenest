@@ -3,8 +3,9 @@ from django.views.generic.detail import DetailView
 from django.db.models import Count
 from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
+from django.views.decorators.http import require_POST
 from django.utils.encoding import force_text
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import *
@@ -263,27 +264,28 @@ def film_roll_add(request):
         return redirect(reverse('index'))
 
 
+@require_POST
 @login_required
 def film_roll_update(request, pk):
     owner = request.user
+    roll = get_object_or_404(Roll, id=pk, owner=owner)
 
-    if request.method == 'POST':
-        roll = get_object_or_404(
-            Roll, id=pk, owner=owner
-        )
+    if 'project' in resolve(request.path).url_name:
+        form = RollProjectForm(request.POST, instance=roll)
+        if form.is_valid():
+            roll.project = form.cleaned_data['project']
+            roll.save()
+            messages.success(request, 'Project updated!')
+    else:
         form = RollStatusForm(request.POST, instance=roll)
-
         if form.is_valid():
             roll.status = form.cleaned_data['status']
             roll.save()
-
             messages.success(request, 'Status updated!')
-            return redirect(
-                reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
-            )
-    else:
-        messages.success(request, 'That\'s not right.')
-        return redirect(reverse('index'))
+
+    return redirect(
+        reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
+    )
 
 
 @login_required
@@ -343,11 +345,15 @@ def film_type(request, type):
 def film_roll_detail(request, slug, pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
-    form = RollStatusForm(instance=roll)
+    statusForm = RollStatusForm(instance=roll)
+    projectForm = RollProjectForm(instance=roll)
+    projects = Project.objects.filter(owner=owner)
     context = {
         'owner': owner,
         'roll': roll,
-        'form': form,
+        'statusForm': statusForm,
+        'projectForm': projectForm,
+        'projects': projects,
     }
 
     return render(request, 'inventory/film_roll_detail.html', context)

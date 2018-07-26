@@ -21,6 +21,12 @@ class RollStatusForm(ModelForm):
         fields = ['status']
 
 
+class RollProjectForm(ModelForm):
+    class Meta:
+        model = Roll
+        fields = ['project']
+
+
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
