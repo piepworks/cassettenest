@@ -144,8 +144,9 @@ def project_detail(request, pk):
     iso = iso_variables(request)
 
     # rolls already in this project
-    film_counts = Film.objects\
-        .filter(roll__owner=owner, roll__project=project)\
+    total_film_count = Film.objects\
+        .filter(roll__owner=owner, roll__project=project)
+    film_counts = total_film_count\
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
 
@@ -160,6 +161,7 @@ def project_detail(request, pk):
     context = {
         'owner': owner,
         'project': project,
+        'total_film_count': total_film_count,
         'film_counts': film_counts,
         'film_available_count': film_available_count,
         'iso_range': iso['range'],
