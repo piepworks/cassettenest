@@ -10,7 +10,7 @@
     {% for roll in rolls %}
     <li>
         <a href="{% url 'film-roll-detail' roll.film.slug roll.id %}">Added on {{ roll.created_at|date:'Y-m-d' }}</a>
-        {% include 'inventory/roll-project-link.html' %}
+        {% include 'inventory/_roll-project-link.html' %}
     </li>
     {% endfor %}
 </ul>

@@ -20,7 +20,7 @@
 
 {% if film_available_count %}
 
-{% include 'inventory/form_iso.html' %}
+{% include 'inventory/_form_iso.html' %}
 
 <form action="{% url 'project-rolls-add' project.id %}" method="post">
     {% csrf_token %}

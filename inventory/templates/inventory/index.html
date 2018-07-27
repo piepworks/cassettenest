@@ -59,7 +59,7 @@
 {% for roll in latest_finished_rolls %}
     <li>
         <a title="{{ roll.code }}" href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.film }}</a>
-        {% include 'inventory/roll-project-link.html' %}
+        {% include 'inventory/_roll-project-link.html' %}
     </li>
 {% endfor %}
 </ul>
@@ -71,7 +71,7 @@
 {% for roll in latest_roll_list %}
     <li>
         <a href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.film }}</a>
-        {% include 'inventory/roll-project-link.html' %}
+        {% include 'inventory/_roll-project-link.html' %}
     </li>
 {% endfor %}
 </ul>
