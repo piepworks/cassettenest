@@ -106,9 +106,37 @@ def project_add(request):
         context = {
             'owner': owner,
             'form': form,
+            'action': 'Add',
         }
 
-        return render(request, 'inventory/project_add.html', context)
+        return render(request, 'inventory/project_add_edit.html', context)
+
+
+@login_required
+def project_edit(request, pk):
+    owner = request.user
+    project = get_object_or_404(Project, id=pk, owner=owner)
+
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, instance=project)
+
+        if form.is_valid():
+            project.name = form.cleaned_data['name']
+            project.notes = form.cleaned_data['notes']
+            project.save()
+            messages.success(request, 'Project updated!')
+
+            return redirect(reverse('project-detail', args=(project.id,)))
+    else:
+        form = ProjectForm(instance=project)
+        context = {
+            'owner': owner,
+            'form': form,
+            'project': project,
+            'action': 'Edit',
+        }
+
+        return render(request, 'inventory/project_add_edit.html', context)
 
 
 @login_required

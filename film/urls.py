@@ -19,6 +19,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('profile/', views.profile, name='profile'),
     path('project/add/', views.project_add, name='project-add'),
+    path('project/<int:pk>/edit/', views.project_edit, name='project-edit'),
     path('project/<int:pk>/delete/',
          views.project_delete, name='project-delete'),
     path('project/<int:pk>/',
