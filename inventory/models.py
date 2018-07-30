@@ -92,10 +92,19 @@ class Project(models.Model):
     """
     A subset of rolls to use during a project or trip.
     """
+    STATUS_CHOICES = (
+        ('current', 'Current'),
+        ('archived', 'Archived'),
+    )
 
     name = models.CharField(max_length=255)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     notes = models.TextField(blank=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='current',
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

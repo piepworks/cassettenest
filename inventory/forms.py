@@ -30,4 +30,4 @@ class RollProjectForm(ModelForm):
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'notes', 'owner']
+        fields = ['name', 'status', 'notes', 'owner']

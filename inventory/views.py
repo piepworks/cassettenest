@@ -48,7 +48,7 @@ def profile(request):
         .filter(roll__owner=owner, roll__status='storage')\
         .values('format')\
         .annotate(count=Count('format')).distinct().order_by('format')
-    projects = Project.objects.filter(owner=owner)
+    projects = Project.objects.filter(owner=owner).order_by('-status')
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
@@ -479,7 +479,7 @@ def camera_load(request, pk):
         return redirect(reverse('camera-detail', args=(camera.id,)))
     else:
         camera = get_object_or_404(Camera, id=pk, owner=owner)
-        projects = Project.objects.filter(owner=owner)
+        projects = Project.objects.filter(owner=owner, status='current')
         if current_project is not None and current_project != 0:
             film_counts = Film.objects\
                 .filter(
