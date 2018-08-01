@@ -81,6 +81,17 @@ def profile(request):
 
 
 @login_required
+def logbook(request):
+    owner = request.user
+
+    context = {
+        'owner': owner,
+    }
+
+    return render(request, 'inventory/logbook.html', context)
+
+
+@login_required
 def project_add(request):
     owner = request.user
 

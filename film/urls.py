@@ -18,6 +18,7 @@ urlpatterns = [
     # Inventory
     path('', views.index, name='index'),
     path('profile/', views.profile, name='profile'),
+    path('logbook/', views.logbook, name='logbook'),
     path('project/add/', views.project_add, name='project-add'),
     path('project/<int:pk>/edit/', views.project_edit, name='project-edit'),
     path('project/<int:pk>/delete/',

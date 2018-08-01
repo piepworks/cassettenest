@@ -5,6 +5,8 @@
 {% block content %}
 <h1>{{ owner.username }}</h1>
 
+<h2><a href="{% url 'logbook' %}">View Logbook</a></h2>
+
 <h2>Projects</h2>
 <p><a href="{% url 'project-add' %}">Add a project</a></p>
 
@@ -26,17 +28,6 @@
 <hr />
 
 {% if owner.roll_set.all|length > 0 %}
-<ul class="cards">
-    {% for film in film_counts %}
-    <li>
-        <a class="card card__{{ film.type }}" href="{% url 'film-rolls' film.slug %}">
-            <header><h1>{{ film }}</h1> </header>
-            <div class="count"><span>{{ film.count }}</span></div>
-        </a>
-    </li>
-    {% endfor %}
-</ul>
-
 <h2>Formats</h2>
 <ul>
     {% for format in format_counts %}
@@ -48,6 +39,17 @@
 <ul>
     {% for type in type_counts %}
     <li><a href="{% url 'film-type' type.type %}">{{ type.type_display }} / {{ type.count }}</a></li>
+    {% endfor %}
+</ul>
+
+<ul class="cards">
+    {% for film in film_counts %}
+    <li>
+        <a class="card card__{{ film.type }}" href="{% url 'film-rolls' film.slug %}">
+            <header><h1>{{ film }}</h1> </header>
+            <div class="count"><span>{{ film.count }}</span></div>
+        </a>
+    </li>
     {% endfor %}
 </ul>
 {% else %}
