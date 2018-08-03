@@ -117,13 +117,13 @@ class Project(models.Model):
 
 class Roll(models.Model):
     STATUS_CHOICES = (
-        ('storage', 'Storage'),
-        ('loaded', 'Loaded'),
-        ('shot', 'Shot'),
-        ('processing', 'Processing'),
-        ('processed', 'Processed'),
-        ('scanned', 'Scanned'),
-        ('archived', 'Archived'),
+        ('01_storage', 'Storage'),
+        ('02_loaded', 'Loaded'),
+        ('03_shot', 'Shot'),
+        ('04_processing', 'Processing'),
+        ('05_processed', 'Processed'),
+        ('06_scanned', 'Scanned'),
+        ('07_archived', 'Archived'),
     )
     PUSH_PULL_CHOICES = (
         ('-2', 'Pull 2 stops'),
@@ -155,7 +155,7 @@ class Roll(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='storage',
+        default='01_storage',
     )
     push_pull = models.CharField(
         max_length=2,

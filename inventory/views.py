@@ -21,11 +21,11 @@ def index(request):
         latest_roll_list = Roll.objects.filter(owner=owner)\
             .order_by('-created_at')[:5]
         latest_finished_rolls = Roll.objects.filter(
-            owner=owner, status='shot'
+            owner=owner, status='03_shot'
         )[:5]
         empty_camera_list = Camera.objects\
             .filter(owner=owner, status='empty')
-        loaded_roll_list = Roll.objects.filter(owner=owner, status='loaded')
+        loaded_roll_list = Roll.objects.filter(owner=owner, status='02_loaded')
         context = {
             'films': films,
             'latest_roll_list': latest_roll_list,
@@ -42,10 +42,10 @@ def index(request):
 def profile(request):
     owner = request.user
     film_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status='storage')\
+        .filter(roll__owner=owner, roll__status='01_storage')\
         .annotate(count=Count('roll'))
     format_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status='storage')\
+        .filter(roll__owner=owner, roll__status='01_storage')\
         .values('format')\
         .annotate(count=Count('format')).distinct().order_by('format')
     projects = Project.objects.filter(owner=owner).order_by('-status')
@@ -57,7 +57,7 @@ def profile(request):
             force_text(format_choices[format['format']], strings_only=True)
 
     type_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status='storage')\
+        .filter(roll__owner=owner, roll__status='01_storage')\
         .values('type')\
         .annotate(count=Count('type'))\
         .distinct()\
@@ -84,8 +84,13 @@ def profile(request):
 def logbook(request):
     owner = request.user
 
+    rolls = Roll.objects.filter(owner=owner)\
+        .exclude(status='01_storage')\
+        .order_by('status')
+
     context = {
         'owner': owner,
+        'rolls': rolls,
     }
 
     return render(request, 'inventory/logbook.html', context)
@@ -191,7 +196,11 @@ def project_detail(request, pk):
 
     # rolls available to be added to a project
     film_available_count = Film.objects\
-        .filter(roll__owner=owner, roll__project=None, roll__status='storage')\
+        .filter(
+            roll__owner=owner,
+            roll__project=None,
+            roll__status='01_storage'
+        )\
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
 
@@ -222,7 +231,7 @@ def project_rolls_add(request, pk):
             owner=owner,
             film=film,
             project=None,
-            status='storage',
+            status='01_storage',
         ).count()
 
         if quantity <= available_quantity:
@@ -230,7 +239,7 @@ def project_rolls_add(request, pk):
                 owner=owner,
                 film=film,
                 project=None,
-                status='storage',
+                status='01_storage',
             ).order_by('-created_at')[:quantity]
             Roll.objects.filter(id__in=rolls_queryset).update(project=project)
 
@@ -334,7 +343,7 @@ def film_rolls(request, slug):
     '''All the rolls of a particular film that someone has available.'''
     owner = request.user
     rolls = Roll.objects\
-        .filter(owner=owner, status='storage')\
+        .filter(owner=owner, status='01_storage')\
         .filter(film__slug=slug)
     name = Film.objects.only('name').get(slug=slug)
     context = {
@@ -351,7 +360,7 @@ def film_format(request, format):
     '''All the rolls in a particular format that someone has available.'''
     owner = request.user
     film_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status='storage')\
+        .filter(roll__owner=owner, roll__status='01_storage')\
         .filter(format=format)\
         .annotate(count=Count('roll'))
     format_choices = dict(Film._meta.get_field('format').flatchoices)
@@ -369,7 +378,7 @@ def film_type(request, type):
     '''All the rolls of a particular film type that someone has available.'''
     owner = request.user
     film_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status='storage')\
+        .filter(roll__owner=owner, roll__status='01_storage')\
         .filter(type=type)\
         .annotate(count=Count('roll'))
     type_choices = dict(Film._meta.get_field('type').flatchoices)
@@ -463,15 +472,15 @@ def camera_load(request, pk):
                 .filter(
                     owner=owner,
                     film=film,
-                    status='storage',
+                    status='01_storage',
                     project=current_project
                 )\
                 .order_by('created_at')[0]
         else:
             roll = Roll.objects\
-                .filter(owner=owner, film=film, status='storage')\
+                .filter(owner=owner, film=film, status='01_storage')\
                 .order_by('created_at')[0]
-        roll.status = 'loaded'
+        roll.status = '02_loaded'
         roll.camera = camera
         roll.push_pull = push_pull
         roll.started_on = datetime.date.today()
@@ -495,7 +504,7 @@ def camera_load(request, pk):
             film_counts = Film.objects\
                 .filter(
                     roll__owner=owner,
-                    roll__status='storage',
+                    roll__status='01_storage',
                     roll__project=current_project
                 )\
                 .filter(format=camera.format)\
@@ -503,7 +512,7 @@ def camera_load(request, pk):
                 .order_by('type', 'manufacturer__name', 'name',)
         else:
             film_counts = Film.objects\
-                .filter(roll__owner=owner, roll__status='storage')\
+                .filter(roll__owner=owner, roll__status='01_storage')\
                 .filter(format=camera.format)\
                 .annotate(count=Count('name'))\
                 .order_by('type', 'manufacturer__name', 'name',)
@@ -530,7 +539,7 @@ def camera_detail(request, pk):
 
     if request.method == 'POST':
         roll = get_object_or_404(Roll, id=request.POST.get('roll', ''))
-        roll.status = 'shot'
+        roll.status = '03_shot'
         roll.ended_on = datetime.date.today()
         roll.save()
         camera.status = 'empty'
@@ -550,7 +559,7 @@ def camera_detail(request, pk):
     else:
         roll = ''
         if camera.status == 'loaded':
-            roll = Roll.objects.filter(camera=camera, status='loaded')[0]
+            roll = Roll.objects.filter(camera=camera, status='02_loaded')[0]
 
         context = {
             'owner': owner,
