@@ -5,6 +5,19 @@
 {% block content %}
 <h1>Logbook</h1>
 
+<form method="get">
+    <select name="status">
+        <option value="0" {% if status == '0' %}selected{% endif %}>All rolls</option>
+        <option value="02_loaded" {% if status == '02_loaded' %}selected{% endif %}>Loaded</option>
+        <option value="03_shot" {% if status == '03_shot' %}selected{% endif %}>Shot</option>
+        <option value="04_processing" {% if status == '04_processing' %}selected{% endif %}>Processing</option>
+        <option value="05_processed" {% if status ==  '05_processed' %}selected{% endif %}>Processed</option>
+        <option value="06_scanned" {% if status == '06_scanned' %}selected{% endif %}>Scanned</option>
+        <option value="07_archived" {% if status == '07_archived' %}selected{% endif %}>Archived</option>
+    </select>
+    <input type="submit" value="Filter">
+</form>
+
 {% if rolls %}
 <table>
     <thead>
@@ -28,6 +41,8 @@
     </tr>
     {% endfor %}
 </table>
+{% else %}
+<p>No rolls found.</p>
 {% endif %}
 
 {% endblock %}
