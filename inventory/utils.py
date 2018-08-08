@@ -31,3 +31,17 @@ def iso_filter(iso, objects):
         objects = objects.filter(iso=iso['value'])
 
     return objects
+
+
+def status_number(status):
+    "Return the status number/order from its name."
+
+    return {
+        'storage': '01_storage',
+        'loaded': '02_loaded',
+        'shot': '03_shot',
+        'processing': '04_processing',
+        'processed': '05_processed',
+        'scanned': '06_scanned',
+        'archived': '07_archived',
+    }[status]

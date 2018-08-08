@@ -8,12 +8,12 @@
 <form method="get">
     <select name="status">
         <option value="0" {% if status == '0' %}selected{% endif %}>All rolls</option>
-        <option value="02_loaded" {% if status == '02_loaded' %}selected{% endif %}>Loaded</option>
-        <option value="03_shot" {% if status == '03_shot' %}selected{% endif %}>Shot</option>
-        <option value="04_processing" {% if status == '04_processing' %}selected{% endif %}>Processing</option>
-        <option value="05_processed" {% if status ==  '05_processed' %}selected{% endif %}>Processed</option>
-        <option value="06_scanned" {% if status == '06_scanned' %}selected{% endif %}>Scanned</option>
-        <option value="07_archived" {% if status == '07_archived' %}selected{% endif %}>Archived</option>
+        <option value="loaded" {% if status == 'loaded' %}selected{% endif %}>Loaded</option>
+        <option value="shot" {% if status == 'shot' %}selected{% endif %}>Shot</option>
+        <option value="processing" {% if status == 'processing' %}selected{% endif %}>Processing</option>
+        <option value="processed" {% if status == 'processed' %}selected{% endif %}>Processed</option>
+        <option value="scanned" {% if status == 'scanned' %}selected{% endif %}>Scanned</option>
+        <option value="archived" {% if status == 'archived' %}selected{% endif %}>Archived</option>
     </select>
     <input type="submit" value="Filter">
 </form>
