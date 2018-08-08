@@ -1,0 +1,14 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / Ready to Process{% endblock %}
+
+{% block content %}
+<h2>Rolls Ready to Process</h2>
+
+{% if rolls %}
+<h3>You have {{ rolls.count }} rolls ready to process.</h3>
+{% else %}
+<p>You're all caught up!</p>
+{% endif %}
+
+{% endblock %}

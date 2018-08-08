@@ -29,12 +29,16 @@ def index(request):
             owner=owner,
             status=status_number('loaded')
         )
+        ready_roll_list = Roll.objects.filter(
+            owner=owner, status=status_number('shot')
+        )
         context = {
             'films': films,
             'latest_roll_list': latest_roll_list,
             'latest_finished_rolls': latest_finished_rolls,
             'empty_camera_list': empty_camera_list,
             'loaded_roll_list': loaded_roll_list,
+            'ready_roll_list': ready_roll_list
         }
         return render(request, 'inventory/index.html', context)
     else:
@@ -110,6 +114,22 @@ def logbook(request):
     }
 
     return render(request, 'inventory/logbook.html', context)
+
+
+@login_required
+def ready(request):
+    owner = request.user
+    rolls = Roll.objects.filter(
+        owner=owner,
+        status=status_number('shot')
+    )
+
+    context = {
+        'owner': owner,
+        'rolls': rolls,
+    }
+
+    return render(request, 'inventory/ready.html', context)
 
 
 @login_required
