@@ -119,14 +119,15 @@ def logbook(request):
 @login_required
 def ready(request):
     owner = request.user
-    rolls = Roll.objects.filter(
-        owner=owner,
-        status=status_number('shot')
-    )
+    rolls = Roll.objects.filter(owner=owner, status=status_number('shot'))
+    rolls_by_format = rolls.order_by('film__format')
+    rolls_by_type = rolls.order_by('film__type')
 
     context = {
         'owner': owner,
         'rolls': rolls,
+        'rolls_by_format': rolls_by_format,
+        'rolls_by_type': rolls_by_type,
     }
 
     return render(request, 'inventory/ready.html', context)
