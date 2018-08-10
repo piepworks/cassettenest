@@ -26,6 +26,65 @@
         </ul>
     </li>
 </ul>
+
+<hr />
+
+<table class="ready">
+    <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>35mm</th>
+            <th>120</th>
+            <th>Totals</th>
+        </tr>
+        <tr>
+            <td>C41 Color</td>
+            <td></td>
+            <td>{{ rolls_c41_135 }}</td>
+            <td>{{ rolls_c41_120 }}</td>
+            <td>{{ rolls_c41 }}</td>
+        </tr>
+        {% comment %}
+        <tr>
+            <td></td>
+            <td>Push +1</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>Push +2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        {% endcomment %}
+        <tr>
+            <td>Black and White</td>
+            <td></td>
+            <td>{{ rolls_bw_135 }}</td>
+            <td>{{ rolls_bw_120 }}</td>
+            <td>{{ rolls_bw }}</td>
+        </tr>
+        <tr>
+            <td>E6 Color Reversal</td>
+            <td></td>
+            <td>{{ rolls_e6_135 }}</td>
+            <td>{{ rolls_e6_120 }}</td>
+            <td>{{ rolls_e6 }}</td>
+        </tr>
+        <tr>
+            <td><b>Totals</b></td>
+            <td></td>
+            <td>{{ rolls_135 }}</td>
+            <td>{{ rolls_120 }}</td>
+            <td><b>{{ rolls.count }}</b> (grand total)</td>
+        </tr>
+    </thead>
+</table>
+
 {% else %}
 <p>You're all caught up!</p>
 {% endif %}

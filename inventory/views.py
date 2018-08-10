@@ -122,12 +122,34 @@ def ready(request):
     rolls = Roll.objects.filter(owner=owner, status=status_number('shot'))
     rolls_by_format = rolls.order_by('film__format')
     rolls_by_type = rolls.order_by('film__type')
+    rolls_135 = rolls.filter(film__format=135).count()
+    rolls_120 = rolls.filter(film__format=120).count()
+    rolls_c41 = rolls.filter(film__type='c41').count()
+    rolls_c41_135 = rolls.filter(film__type='c41', film__format=135).count()
+    rolls_c41_120 = rolls.filter(film__type='c41', film__format=120).count()
+    rolls_bw = rolls.filter(film__type='bw').count()
+    rolls_bw_135 = rolls.filter(film__type='bw', film__format='135').count()
+    rolls_bw_120 = rolls.filter(film__type='bw', film__format='120').count()
+    rolls_e6 = rolls.filter(film__type='e6').count()
+    rolls_e6_135 = rolls.filter(film__type='e6', film__format='135').count()
+    rolls_e6_120 = rolls.filter(film__type='e6', film__format='120').count()
 
     context = {
         'owner': owner,
         'rolls': rolls,
         'rolls_by_format': rolls_by_format,
         'rolls_by_type': rolls_by_type,
+        'rolls_135': rolls_135,
+        'rolls_120': rolls_120,
+        'rolls_c41': rolls_c41,
+        'rolls_c41_135': rolls_c41_135,
+        'rolls_c41_120': rolls_c41_120,
+        'rolls_bw': rolls_bw,
+        'rolls_bw_135': rolls_bw_135,
+        'rolls_bw_120': rolls_bw_120,
+        'rolls_e6': rolls_e6,
+        'rolls_e6_135': rolls_e6_135,
+        'rolls_e6_120': rolls_e6_120,
     }
 
     return render(request, 'inventory/ready.html', context)

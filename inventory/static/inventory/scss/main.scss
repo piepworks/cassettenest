@@ -19,6 +19,12 @@ form {
 }
 
 table {
+    &.ready {
+        margin-top: 20px;
+
+        th { min-width: 100px; }
+    }
+
     th { text-align: left; }
 
     td { padding: 5px 20px 5px 0; }
