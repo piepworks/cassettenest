@@ -5,6 +5,7 @@ django-libsass==0.7
 django-markdown-deux==1.0.5
 libsass==0.14.5
 markdown2==2.3.5
+model-mommy==1.6.0
 pycodestyle==2.4.0
 pytz==2018.3
 rcssmin==1.0.6
