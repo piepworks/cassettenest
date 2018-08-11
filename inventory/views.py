@@ -543,7 +543,6 @@ def camera_load(request, pk):
                     status=status_number('storage')
                 )\
                 .order_by('created_at')[0]
-        roll.status = status_number('loaded')
         roll.camera = camera
         roll.push_pull = push_pull
         roll.started_on = datetime.date.today()

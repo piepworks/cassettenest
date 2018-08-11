@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from .utils import *
 
 
 class Manufacturer(models.Model):
@@ -155,7 +156,7 @@ class Roll(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='01_storage',
+        default=status_number('storage'),
     )
     push_pull = models.CharField(
         max_length=2,
@@ -205,7 +206,7 @@ class Roll(models.Model):
             format = '35' if self.film.format == '135' else self.film.format
 
             self.code = '%s-%s-%d' % (format, self.film.type, sequence)
-            self.status = 'loaded'
+            self.status = status_number('loaded')
 
         # Check for proper validation of the code field somehow?
 
