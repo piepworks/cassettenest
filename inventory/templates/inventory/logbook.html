@@ -19,28 +19,7 @@
 </form>
 
 {% if rolls %}
-<table>
-    <thead>
-        <tr>
-            <th>Code</th>
-            <th>Film</th>
-            <th>Started</th>
-            <th>Finished</th>
-            <th>Project</th>
-            <th>Status</td>
-        </tr>
-    </thead>
-    {% for roll in rolls %}
-    <tr>
-        <td><a href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.code }}</a></td>
-        <td>{{ roll.film }}</td>
-        <td>{{ roll.started_on|date:"Y-m-d" }}</td>
-        <td>{{ roll.ended_on|date:"Y-m-d" }}</td>
-        <td>{{ roll.project|default:"" }}</td>
-        <td>{{ roll.get_status_display }}</td>
-    </tr>
-    {% endfor %}
-</table>
+{% include "inventory/_logbook-table.html" with page="logbook" %}
 {% else %}
 <p>No rolls found.</p>
 {% endif %}

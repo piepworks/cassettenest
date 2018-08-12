@@ -22,9 +22,24 @@ table {
     border-spacing: 0;
 
     &.ready {
-        margin-top: 30px;
+        margin: 30px 0 60px;
 
         th { min-width: 100px; }
+
+        th:last-child,
+        td:last-child {
+            border-left: 1px solid #000;
+            padding-left: 10px;
+        }
+
+        .totals td {
+            border-top: 1px solid #000;
+            padding-top: 10px;
+        }
+
+        .push-pull td {
+            color: #999;
+        }
     }
 
     th { text-align: left; }
@@ -32,19 +47,4 @@ table {
     td { padding: 5px 20px 5px 0; }
 
     thead th { border-bottom: 1px solid #000; }
-
-    th:last-child,
-    td:last-child {
-        border-left: 1px solid #000;
-        padding-left: 10px;
-    }
-
-    .totals td {
-        border-top: 1px solid #000;
-        padding-top: 10px;
-    }
-
-    .push-pull td {
-        color: #999;
-    }
 }

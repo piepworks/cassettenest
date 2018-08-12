@@ -8,27 +8,6 @@
 {% if rolls %}
 <h3>You have {{ rolls.count }} rolls ready to process.</h3>
 
-<ul>
-    <li>Formats
-        <ul>
-            {% regroup rolls_by_format by film.get_format_display as format_list %}
-            {% for format in format_list %}
-            <li>{{ format.grouper }}: <b>{{ format.list|length }}</b></li>
-            {% endfor %}
-        </ul>
-    </li>
-    <li>Types
-        <ul>
-            {% regroup rolls_by_type by film.get_type_display as type_list %}
-            {% for type in type_list %}
-            <li>{{ type.grouper }}: <b>{{ type.list|length }}</b></li>
-            {% endfor %}
-        </ul>
-    </li>
-</ul>
-
-<hr />
-
 <table class="ready">
     <thead>
         <tr>
@@ -207,6 +186,8 @@
         <td class="grand"><b>{{ rolls.count }}</b></td>
     </tr>
 </table>
+
+{% include "inventory/_logbook-table.html" %}
 
 {% else %}
 <p>You're all caught up!</p>
