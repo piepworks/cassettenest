@@ -134,6 +134,70 @@ def ready(request):
     rolls_e6_135 = rolls.filter(film__type='e6', film__format='135').count()
     rolls_e6_120 = rolls.filter(film__type='e6', film__format='120').count()
 
+    # Push/Pull C41
+    rolls_pull2_c41_135 = rolls.filter(
+        film__type='c41', film__format='135', push_pull='-2').count()
+    rolls_pull2_c41_120 = rolls.filter(
+        film__type='c41', film__format='120', push_pull='-2').count()
+    rolls_pull1_c41_135 = rolls.filter(
+        film__type='c41', film__format='135', push_pull='-1').count()
+    rolls_pull1_c41_120 = rolls.filter(
+        film__type='c41', film__format='120', push_pull='-1').count()
+    rolls_push1_c41_135 = rolls.filter(
+        film__type='c41', film__format='135', push_pull='+1').count()
+    rolls_push1_c41_120 = rolls.filter(
+        film__type='c41', film__format='120', push_pull='+1').count()
+    rolls_push2_c41_135 = rolls.filter(
+        film__type='c41', film__format='135', push_pull='+2').count()
+    rolls_push2_c41_120 = rolls.filter(
+        film__type='c41', film__format='120', push_pull='+2').count()
+    rolls_push3_c41_135 = rolls.filter(
+        film__type='c41', film__format='135', push_pull='+3').count()
+    rolls_push3_c41_120 = rolls.filter(
+        film__type='c41', film__format='120', push_pull='+3').count()
+    # Push/Pull B&W
+    rolls_pull2_bw_135 = rolls.filter(
+        film__type='bw', film__format='135', push_pull='-2').count()
+    rolls_pull2_bw_120 = rolls.filter(
+        film__type='bw', film__format='120', push_pull='-2').count()
+    rolls_pull1_bw_135 = rolls.filter(
+        film__type='bw', film__format='135', push_pull='-1').count()
+    rolls_pull1_bw_120 = rolls.filter(
+        film__type='bw', film__format='120', push_pull='-1').count()
+    rolls_push1_bw_135 = rolls.filter(
+        film__type='bw', film__format='135', push_pull='+1').count()
+    rolls_push1_bw_120 = rolls.filter(
+        film__type='bw', film__format='120', push_pull='+1').count()
+    rolls_push2_bw_135 = rolls.filter(
+        film__type='bw', film__format='135', push_pull='+2').count()
+    rolls_push2_bw_120 = rolls.filter(
+        film__type='bw', film__format='120', push_pull='+2').count()
+    rolls_push3_bw_135 = rolls.filter(
+        film__type='bw', film__format='135', push_pull='+3').count()
+    rolls_push3_bw_120 = rolls.filter(
+        film__type='bw', film__format='120', push_pull='+3').count()
+    # Push/Pull E6
+    rolls_pull2_e6_135 = rolls.filter(
+        film__type='e6', film__format='135', push_pull='-2').count()
+    rolls_pull2_e6_120 = rolls.filter(
+        film__type='e6', film__format='120', push_pull='-2').count()
+    rolls_pull1_e6_135 = rolls.filter(
+        film__type='e6', film__format='135', push_pull='-1').count()
+    rolls_pull1_e6_120 = rolls.filter(
+        film__type='e6', film__format='120', push_pull='-1').count()
+    rolls_push1_e6_135 = rolls.filter(
+        film__type='e6', film__format='135', push_pull='+1').count()
+    rolls_push1_e6_120 = rolls.filter(
+        film__type='e6', film__format='120', push_pull='+1').count()
+    rolls_push2_e6_135 = rolls.filter(
+        film__type='e6', film__format='135', push_pull='+2').count()
+    rolls_push2_e6_120 = rolls.filter(
+        film__type='e6', film__format='120', push_pull='+2').count()
+    rolls_push3_e6_135 = rolls.filter(
+        film__type='e6', film__format='135', push_pull='+3').count()
+    rolls_push3_e6_120 = rolls.filter(
+        film__type='e6', film__format='120', push_pull='+3').count()
+
     context = {
         'owner': owner,
         'rolls': rolls,
@@ -150,6 +214,39 @@ def ready(request):
         'rolls_e6': rolls_e6,
         'rolls_e6_135': rolls_e6_135,
         'rolls_e6_120': rolls_e6_120,
+        # Push/Pull C41
+        'rolls_pull2_c41_135': rolls_pull2_c41_135,
+        'rolls_pull2_c41_120': rolls_pull2_c41_120,
+        'rolls_pull1_c41_135': rolls_pull1_c41_135,
+        'rolls_pull1_c41_120': rolls_pull1_c41_120,
+        'rolls_push1_c41_135': rolls_push1_c41_135,
+        'rolls_push1_c41_120': rolls_push1_c41_120,
+        'rolls_push2_c41_135': rolls_push2_c41_135,
+        'rolls_push2_c41_120': rolls_push2_c41_120,
+        'rolls_push3_c41_135': rolls_push3_c41_135,
+        'rolls_push3_c41_120': rolls_push3_c41_120,
+        # Push/Pull B&W
+        'rolls_pull2_bw_135': rolls_pull2_bw_135,
+        'rolls_pull2_bw_120': rolls_pull2_bw_120,
+        'rolls_pull1_bw_135': rolls_pull1_bw_135,
+        'rolls_pull1_bw_120': rolls_pull1_bw_120,
+        'rolls_push1_bw_135': rolls_push1_bw_135,
+        'rolls_push1_bw_120': rolls_push1_bw_120,
+        'rolls_push2_bw_135': rolls_push2_bw_135,
+        'rolls_push2_bw_120': rolls_push2_bw_120,
+        'rolls_push3_bw_135': rolls_push3_bw_135,
+        'rolls_push3_bw_120': rolls_push3_bw_120,
+        # Push/Pull E6
+        'rolls_pull2_e6_135': rolls_pull2_e6_135,
+        'rolls_pull2_e6_120': rolls_pull2_e6_120,
+        'rolls_pull1_e6_135': rolls_pull1_e6_135,
+        'rolls_pull1_e6_120': rolls_pull1_e6_120,
+        'rolls_push1_e6_135': rolls_push1_e6_135,
+        'rolls_push1_e6_120': rolls_push1_e6_120,
+        'rolls_push2_e6_135': rolls_push2_e6_135,
+        'rolls_push2_e6_120': rolls_push2_e6_120,
+        'rolls_push3_e6_135': rolls_push3_e6_135,
+        'rolls_push3_e6_120': rolls_push3_e6_120,
     }
 
     return render(request, 'inventory/ready.html', context)
