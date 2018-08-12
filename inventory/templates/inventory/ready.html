@@ -3,10 +3,8 @@
 {% block title %} / Ready to Process{% endblock %}
 
 {% block content %}
-<h2>Rolls Ready to Process</h2>
-
 {% if rolls %}
-<h3>You have {{ rolls.count }} rolls ready to process.</h3>
+<h2>You have {{ rolls.count }} rolls ready to process.</h2>
 
 <table class="ready">
     <thead>
@@ -15,7 +13,7 @@
             <th></th>
             <th>35mm</th>
             <th>120</th>
-            <th>Totals</th>
+            <th class="totals">Totals</th>
         </tr>
     </thead>
 
@@ -179,7 +177,7 @@
     {% endif %}
 
     <tr class="totals">
-        <td><b>Totals</b></td>
+        <th>Totals</th>
         <td></td>
         <td>{{ rolls_135 }}</td>
         <td>{{ rolls_120 }}</td>
@@ -190,6 +188,8 @@
 {% include "inventory/_logbook-table.html" %}
 
 {% else %}
+<h2>No rolls ready to process.</h2>
+
 <p>You're all caught up!</p>
 {% endif %}
 
