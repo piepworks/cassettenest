@@ -20,6 +20,7 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('project/add/', views.project_add, name='project-add'),
     path('project/<int:pk>/edit/', views.project_edit, name='project-edit'),
     path('project/<int:pk>/delete/',

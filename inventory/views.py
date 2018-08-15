@@ -253,6 +253,45 @@ def ready(request):
 
 
 @login_required
+def dashboard(request):
+    owner = request.user
+    statuses = (
+        'processing',
+        'processed',
+        'scanned',
+        'archived',
+    )
+    rolls = Roll.objects.filter(owner=owner)\
+        .exclude(status=status_number('storage'))\
+        .exclude(status=status_number('shot'))
+    rolls_processing = rolls.filter(status=status_number('processing')).count()
+    rolls_processed = rolls.filter(status=status_number('processed')).count()
+    rolls_scanned = rolls.filter(status=status_number('scanned')).count()
+    rolls_archived = rolls.filter(status=status_number('archived')).count()
+
+    if request.method == 'POST':
+        current_status = request.POST.get('current_status', '')
+        updated_status = request.POST.get('updated_status', '')
+
+        if current_status in statuses and updated_status in statuses:
+            rolls.filter(status=status_number(current_status))\
+                .update(status=status_number(updated_status))
+            messages.success(request, 'Rolls updated!')
+
+        return redirect(reverse('dashboard'))
+
+    context = {
+        'rolls': rolls,
+        'rolls_processing': rolls_processing,
+        'rolls_processed': rolls_processed,
+        'rolls_scanned': rolls_scanned,
+        'rolls_archived': rolls_archived,
+    }
+
+    return render(request, 'inventory/dashboard.html', context)
+
+
+@login_required
 def project_add(request):
     owner = request.user
 
