@@ -10,27 +10,21 @@
         <form method="post">
             {% csrf_token %}
             <p>processing: {{ rolls_processing }}</p>
-            <input type="hidden" name="current_status" value="processing">
-            <input type="hidden" name="updated_status" value="processed">
-            <input type="submit" value="Mark all as processed.">
+            {% include 'inventory/_form-status.html' with current_status='processing' updated_status='processed' %}
         </form>
     </li>
     <li>
         <form method="post">
             {% csrf_token %}
             <p>processed: {{ rolls_processed }}</p>
-            <input type="hidden" name="current_status" value="processed">
-            <input type="hidden" name="updated_status" value="scanned">
-            <input type="submit" value="Mark all as scanned.">
+            {% include 'inventory/_form-status.html' with current_status='processed' updated_status='scanned' %}
         </form>
     </li>
     <li>
         <form method="post">
             {% csrf_token %}
             <p>scanned: {{ rolls_scanned }}</p>
-            <input type="hidden" name="current_status" value="scanned">
-            <input type="hidden" name="updated_status" value="archived">
-            <input type="submit" value="Mark all as archived.">
+            {% include 'inventory/_form-status.html' with current_status='scanned' updated_status='archived' %}
         </form>
     </li>
     <li>
