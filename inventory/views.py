@@ -22,7 +22,7 @@ def index(request):
             .order_by('-created_at')[:5]
         latest_finished_rolls = Roll.objects.filter(
             owner=owner, status=status_number('shot')
-        )[:5]
+        ).order_by('-ended_on')[:5]
         empty_camera_list = Camera.objects\
             .filter(owner=owner, status='empty')
         loaded_roll_list = Roll.objects.filter(
