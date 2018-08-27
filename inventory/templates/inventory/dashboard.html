@@ -4,33 +4,35 @@
 <h1>Dashboard</h1>
 
 <div class="wrapper dashboard">
-{% if rolls %}
-<ul>
-    <li>
-        <form method="post">
-            {% csrf_token %}
-            <p>processing: {{ rolls_processing }}</p>
-            {% include 'inventory/_form-status.html' with current_status='processing' updated_status='processed' %}
-        </form>
-    </li>
-    <li>
-        <form method="post">
-            {% csrf_token %}
-            <p>processed: {{ rolls_processed }}</p>
-            {% include 'inventory/_form-status.html' with current_status='processed' updated_status='scanned' %}
-        </form>
-    </li>
-    <li>
-        <form method="post">
-            {% csrf_token %}
-            <p>scanned: {{ rolls_scanned }}</p>
-            {% include 'inventory/_form-status.html' with current_status='scanned' updated_status='archived' %}
-        </form>
-    </li>
-    <li>
-        <p>archived: {{ rolls_archived }}</p>
-    </li>
-</ul>
-{% endif %}
+    <p>["Ready" list here]</p>
+
+    {% if rolls %}
+    <ul>
+        <li>
+            <form method="post">
+                {% csrf_token %}
+                <p>Processing: {{ rolls_processing }}</p>
+                {% include 'inventory/_form-status.html' with current_status='processing' updated_status='processed' %}
+            </form>
+        </li>
+        <li>
+            <form method="post">
+                {% csrf_token %}
+                <p>Processed: {{ rolls_processed }}</p>
+                {% include 'inventory/_form-status.html' with current_status='processed' updated_status='scanned' %}
+            </form>
+        </li>
+        <li>
+            <form method="post">
+                {% csrf_token %}
+                <p>Scanned: {{ rolls_scanned }}</p>
+                {% include 'inventory/_form-status.html' with current_status='scanned' updated_status='archived' %}
+            </form>
+        </li>
+        <li>
+            <p>Archived: {{ rolls_archived }}</p>
+        </li>
+    </ul>
+    {% endif %}
 </div>
 {% endblock %}
