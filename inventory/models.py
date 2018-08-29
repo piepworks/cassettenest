@@ -141,6 +141,11 @@ class Roll(models.Model):
         blank=True,
         null=True,
     )
+    lens = models.CharField(
+        max_length=255,
+        help_text='(or lenses)',
+        blank=True,
+    )
     project = models.ForeignKey(
         Project,
         on_delete=models.SET_NULL,
@@ -164,7 +169,22 @@ class Roll(models.Model):
         blank=True,
         verbose_name='Push/Pull',
     )
-    notes = models.TextField(blank=True)
+    location = models.CharField(
+        max_length=255,
+        help_text='(or locations)',
+        blank=True,
+    )
+    notes = models.TextField(blank=True, help_text='General notes')
+    notes_on_development = models.TextField(
+        help_text='Chemicals used, development times, techniques, etc.',
+        blank=True,
+    )
+    scanner = models.CharField(max_length=255, blank=True)
+    lab = models.CharField(
+        max_length=255,
+        help_text='The name of the lab (or Self, Home, etc.)',
+        blank=True,
+    )
     started_on = models.DateField(null=True, blank=True)
     ended_on = models.DateField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
