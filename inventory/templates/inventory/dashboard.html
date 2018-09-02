@@ -4,33 +4,31 @@
 <h1>Dashboard</h1>
 
 <div class="wrapper dashboard">
-    <p>["Ready" list here]</p>
-
     {% if rolls %}
     <ul>
         <li>
             <form method="post">
                 {% csrf_token %}
-                <p>Processing: {{ rolls_processing }}</p>
+                <p><a href="{% url 'logbook' %}?status=processing">Processing: {{ rolls_processing }}</a></p>
                 {% include 'inventory/_form-status.html' with current_status='processing' updated_status='processed' %}
             </form>
         </li>
         <li>
             <form method="post">
                 {% csrf_token %}
-                <p>Processed: {{ rolls_processed }}</p>
+                <p><a href="{% url 'logbook' %}?status=processed">Processed: {{ rolls_processed }}</a></p>
                 {% include 'inventory/_form-status.html' with current_status='processed' updated_status='scanned' %}
             </form>
         </li>
         <li>
             <form method="post">
                 {% csrf_token %}
-                <p>Scanned: {{ rolls_scanned }}</p>
+                <p><a href="{% url 'logbook' %}?status=scanned">Scanned: {{ rolls_scanned }}</a></p>
                 {% include 'inventory/_form-status.html' with current_status='scanned' updated_status='archived' %}
             </form>
         </li>
         <li>
-            <p>Archived: {{ rolls_archived }}</p>
+            <p><a href="{% url 'logbook' %}?status=archived">Archived: {{ rolls_archived }}</a></p>
         </li>
     </ul>
     {% endif %}
