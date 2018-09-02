@@ -38,7 +38,7 @@ def index(request):
             'latest_finished_rolls': latest_finished_rolls,
             'empty_camera_list': empty_camera_list,
             'loaded_roll_list': loaded_roll_list,
-            'ready_roll_list': ready_roll_list
+            'ready_roll_list': ready_roll_list,
         }
         return render(request, 'inventory/index.html', context)
     else:
@@ -289,6 +289,70 @@ def dashboard(request):
     }
 
     return render(request, 'inventory/dashboard.html', context)
+
+
+@require_POST
+@login_required
+def roll_update(request):
+    '''
+    Update status (and other things?) for selected rolls in a grid.
+    '''
+    # I need to make the naming of the rest of the views consistent with this
+    # one. Having "film" in the name for things having to do with Rolls isn't
+    # right.
+    owner = request.user
+    # Put these statuses in utility function?
+    statuses = (
+        'loaded',
+        'shot',
+        'processing',
+        'processed',
+        'scanned',
+        'archived',
+    )
+    updated_status = request.POST.get('updated_status')
+    rolls = request.POST.getlist('roll')
+    lab = request.POST.get('lab', '')
+    scanner = request.POST.get('scanner', '')
+    notes_on_development = request.POST.get('notes_on_development', '')
+
+    if updated_status in statuses:
+        # Bulk update selected rows.
+        # Verify that the selected row IDs belong to request.user.
+        roll_count = 0
+        for roll_to_update in rolls:
+            roll = Roll.objects.get(pk=roll_to_update)
+
+            if roll.owner == owner:
+                roll.status = status_number(updated_status)
+                if lab:
+                    roll.lab = lab
+                if scanner:
+                    roll.scanner = scanner
+                if notes_on_development:
+                    roll.notes_on_development = notes_on_development
+                roll.save()
+                roll_count += 1
+
+        # Check for errors somehow. Don't assume everything worked.
+
+        # Move this to utilities.
+        if roll_count != 1:
+            plural = 's'
+        else:
+            plural = ''
+
+        messages.success(
+            request,
+            'Status updated on %s selected roll%s!' % (roll_count, plural)
+        )
+    else:
+        messages.error(request, 'Something is amiss.')
+
+    if request.POST.get('redirect_to') == 'dashboard':
+        return redirect(reverse('dashboard'))
+
+    return redirect(reverse('logbook') + '?status=%s' % updated_status)
 
 
 @login_required

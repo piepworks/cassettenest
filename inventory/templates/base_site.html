@@ -9,7 +9,7 @@
     {% endcompress %}
 </head>
 
-<body>
+<body {% block bodytag %}{% endblock %}>
     <header>
         <h1><a href="{% url 'index' %}">Film Inventory</a></h1>
         {% if user.is_authenticated %}

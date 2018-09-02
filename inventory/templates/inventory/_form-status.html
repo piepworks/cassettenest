@@ -1,9 +1,14 @@
 <input type="hidden" name="current_status" value="{{ current_status }}" />
-<select name="updated_status">
+<select name="updated_status" required>
+    <option value="">Select a status</option>
     <option value="shot" {% if updated_status == 'shot' %}selected{% endif %}>Shot</option>
     <option value="processing" {% if updated_status == 'processing' %}selected{% endif %}>Processing</option>
     <option value="processed" {% if updated_status == 'processed' %}selected{% endif %}>Processed</option>
     <option value="scanned" {% if updated_status == 'scanned' %}selected{% endif %}>Scanned</option>
     <option value="archived" {% if updated_status == 'archived' %}selected{% endif %}>Archived</option>
 </select>
+{% if page == 'logbook' %}
+<input type="submit" value="Update Selected" />
+{% else %}
 <input type="submit" value="Update All" />
+{% endif %}

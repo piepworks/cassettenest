@@ -6,6 +6,9 @@
 
 body {
     padding: 50px 100px;
+
+    &.logbook { @import './partials/logbook'; }
+    &.ready { @import './partials/ready'; }
 }
 
 form {

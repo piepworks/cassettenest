@@ -1,6 +1,7 @@
 {% extends 'base_site.html' %}
 
 {% block title %} / Logbook{% endblock %}
+{% block bodytag %}class="logbook"{% endblock %}
 
 {% block content %}
 <h1>Logbook</h1>
@@ -19,7 +20,15 @@
 </form>
 
 {% if rolls %}
-{% include "inventory/_logbook-table.html" with page="logbook" %}
+<form method="post" action="{% url 'roll-update' %}">
+    {% csrf_token %}
+    <div class="bulk-status">
+        <p>Bulk update the status of these rolls.</p>
+        {% include "inventory/_form-status.html" with page="logbook" current_status=status %}
+    </div>
+
+    {% include "inventory/_logbook-table.html" with page="logbook" %}
+</form>
 {% else %}
 <p>No rolls found.</p>
 {% endif %}

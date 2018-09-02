@@ -1,6 +1,7 @@
 {% extends 'base_site.html' %}
 
 {% block title %} / Ready to Process{% endblock %}
+{% block bodytag %}class="ready"{% endblock %}
 
 {% block content %}
 {% if rolls %}
@@ -185,7 +186,11 @@
     </tr>
 </table>
 
-{% include "inventory/_logbook-table.html" %}
+<form method="post" action="{% url 'roll-update' %}">
+    {% csrf_token %}
+    {% include "inventory/_order-form.html" %}
+    {% include "inventory/_logbook-table.html" %}
+</form>
 
 {% else %}
 <h2>No rolls ready to process.</h2>
