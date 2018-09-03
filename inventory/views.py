@@ -336,15 +336,12 @@ def roll_update(request):
 
         # Check for errors somehow. Don't assume everything worked.
 
-        # Move this to utilities.
-        if roll_count != 1:
-            plural = 's'
-        else:
-            plural = ''
-
         messages.success(
             request,
-            'Status updated on %s selected roll%s!' % (roll_count, plural)
+            'Status updated on %s selected %s!' % (
+                roll_count,
+                pluralize('roll', roll_count)
+            )
         )
     else:
         messages.error(request, 'Something is amiss.')
@@ -425,15 +422,10 @@ def project_delete(request, pk):
         rolls.update(project=None)
         project.delete()
 
-        if roll_count > 1:
-            plural = 's'
-        else:
-            plural = ''
-
         messages.success(
             request,
-            'Project deleted and %s roll%s now available for other projects.' %
-            (roll_count, plural)
+            'Project deleted and %s %s now available for other projects.' %
+            (roll_count, pluralize('roll', roll_count))
         )
         return redirect(reverse('profile'))
     else:
@@ -502,14 +494,13 @@ def project_rolls_add(request, pk):
             ).order_by('-created_at')[:quantity]
             Roll.objects.filter(id__in=rolls_queryset).update(project=project)
 
-            if quantity > 1:
-                plural = 's'
-            else:
-                plural = ''
-
             messages.success(
                 request,
-                '%s roll%s of %s added!' % (quantity, plural, film)
+                '%s %s of %s added!' % (
+                    quantity,
+                    pluralize('roll', quantity),
+                    film
+                )
             )
         else:
             messages.error(
@@ -528,11 +519,17 @@ def project_rolls_remove(request, pk):
         project = get_object_or_404(Project, id=pk, owner=owner)
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
 
-        Roll.objects.filter(owner=owner, film=film, project=project)\
-            .update(project=None)
+        rolls = Roll.objects.filter(owner=owner, film=film, project=project)
+        roll_count = rolls.count()
+        rolls.update(project=None)
+
         messages.success(
             request,
-            'Removed %s from this project!' % (film)
+            'Removed %s %s of %s from this project!' % (
+                roll_count,
+                pluralize('roll', roll_count),
+                film
+            )
         )
 
     return redirect(reverse('project-detail', args=(project.id,)))
@@ -559,13 +556,13 @@ def film_roll_add(request):
                 roll.pk = None
                 roll.save()
 
-            if quantity > 1:
-                plural = 's'
-            else:
-                plural = ''
             messages.success(
                 request,
-                'Added %s roll%s of %s!' % (quantity, plural, film)
+                'Added %s %s of %s!' % (
+                    quantity,
+                    pluralize('roll', quantity),
+                    film
+                )
             )
         else:
             messages.error(request, 'Enter a quantity of 1 or more.')

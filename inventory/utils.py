@@ -45,3 +45,9 @@ def status_number(status):
         'scanned': '06_scanned',
         'archived': '07_archived',
     }[status]
+
+
+def pluralize(noun, count):
+    if count != 1:
+        return noun + 's'
+    return noun
