@@ -91,19 +91,11 @@ def profile(request):
 def logbook(request):
     owner = request.user
     status = 0
-    statuses = (
-        'loaded',
-        'shot',
-        'processing',
-        'processed',
-        'scanned',
-        'archived',
-    )
     rolls = Roll.objects.filter(owner=owner)\
         .exclude(status=status_number('storage'))\
         .order_by('status')
 
-    if request.GET.get('status') and request.GET.get('status') in statuses:
+    if request.GET.get('status') and request.GET.get('status') in status_keys:
         status = request.GET.get('status')
         rolls = rolls.filter(status=status_number(status))
 
@@ -255,12 +247,6 @@ def ready(request):
 @login_required
 def dashboard(request):
     owner = request.user
-    statuses = (
-        'processing',
-        'processed',
-        'scanned',
-        'archived',
-    )
     rolls = Roll.objects.filter(owner=owner)\
         .exclude(status=status_number('storage'))\
         .exclude(status=status_number('shot'))
@@ -273,7 +259,7 @@ def dashboard(request):
         current_status = request.POST.get('current_status', '')
         updated_status = request.POST.get('updated_status', '')
 
-        if current_status in statuses and updated_status in statuses:
+        if current_status in status_keys and updated_status in status_keys:
             rolls.filter(status=status_number(current_status))\
                 .update(status=status_number(updated_status))
             messages.success(request, 'Rolls updated!')
@@ -301,22 +287,13 @@ def roll_update(request):
     # one. Having "film" in the name for things having to do with Rolls isn't
     # right.
     owner = request.user
-    # Put these statuses in utility function?
-    statuses = (
-        'loaded',
-        'shot',
-        'processing',
-        'processed',
-        'scanned',
-        'archived',
-    )
     updated_status = request.POST.get('updated_status')
     rolls = request.POST.getlist('roll')
     lab = request.POST.get('lab', '')
     scanner = request.POST.get('scanner', '')
     notes_on_development = request.POST.get('notes_on_development', '')
 
-    if updated_status in statuses:
+    if updated_status in status_keys:
         # Bulk update selected rows.
         # Verify that the selected row IDs belong to request.user.
         roll_count = 0

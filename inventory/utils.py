@@ -33,18 +33,24 @@ def iso_filter(iso, objects):
     return objects
 
 
+valid_statuses = {
+    'storage': '01_storage',
+    'loaded': '02_loaded',
+    'shot': '03_shot',
+    'processing': '04_processing',
+    'processed': '05_processed',
+    'scanned': '06_scanned',
+    'archived': '07_archived',
+}
+
+
+status_keys = list(valid_statuses)
+
+
 def status_number(status):
     "Return the status number/order from its name."
 
-    return {
-        'storage': '01_storage',
-        'loaded': '02_loaded',
-        'shot': '03_shot',
-        'processing': '04_processing',
-        'processed': '05_processed',
-        'scanned': '06_scanned',
-        'archived': '07_archived',
-    }[status]
+    return valid_statuses[status]
 
 
 def pluralize(noun, count):
