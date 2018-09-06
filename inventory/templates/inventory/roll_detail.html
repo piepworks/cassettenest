@@ -6,11 +6,7 @@
 {% block content %}
 <h1>{{ roll }}</h1>
 
-<form action="{% url 'film-roll-update' roll.id %}" method="post">
-    {% csrf_token %}
-    {{ statusForm }}
-    <input type="submit" value="Update status">
-</form>
+<p>Status: {{ roll.get_status_display }}</p>
 
 {% if roll.code %}
 <p>Code: {{ roll.code }}</p>
@@ -20,12 +16,8 @@
 <p>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></p>
 {% endif %}
 
-{% if projects %}
-<form action="{% url 'film-roll-update-project' roll.id %}" method="post">
-    {% csrf_token %}
-    {{ projectForm }}
-    <input type="submit" value="Update project">
-</form>
+{% if roll.project %}
+<p>Project: {{ roll.project }}</p>
 {% endif %}
 
 {% if roll.push_pull %}
@@ -40,16 +32,8 @@
 <p>Finished on: {{ roll.ended_on }}</p>
 {% endif %}
 
+{% if roll.notes %}
 <p>Notes:</p>
 <p>{{ roll.notes|markdown }}</p>
-<p>
-    <a href="{% url 'film-roll-detail-notes' roll.film.slug roll.id %}">
-        {% if roll.notes %}
-        Edit
-        {% else %}
-        Add
-        {% endif %}
-        notes
-    </a>
-</p>
+{% endif %}
 {% endblock %}

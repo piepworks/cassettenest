@@ -279,7 +279,7 @@ def dashboard(request):
 
 @require_POST
 @login_required
-def roll_update(request):
+def rolls_update(request):
     '''
     Update status (and other things?) for selected rolls in a grid.
     '''
@@ -547,30 +547,6 @@ def film_roll_add(request):
         return redirect(reverse('index'))
 
 
-@require_POST
-@login_required
-def film_roll_update(request, pk):
-    owner = request.user
-    roll = get_object_or_404(Roll, id=pk, owner=owner)
-
-    if 'project' in resolve(request.path).url_name:
-        form = RollProjectForm(request.POST, instance=roll)
-        if form.is_valid():
-            roll.project = form.cleaned_data['project']
-            roll.save()
-            messages.success(request, 'Project updated!')
-    else:
-        form = RollStatusForm(request.POST, instance=roll)
-        if form.is_valid():
-            roll.status = form.cleaned_data['status']
-            roll.save()
-            messages.success(request, 'Status updated!')
-
-    return redirect(
-        reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
-    )
-
-
 @login_required
 def film_rolls(request, slug):
     '''All the rolls of a particular film that someone has available.'''
@@ -625,30 +601,24 @@ def film_type(request, type):
 
 
 @login_required
-def film_roll_detail(request, slug, pk):
+def roll_detail(request, pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
-    statusForm = RollStatusForm(instance=roll)
-    projectForm = RollProjectForm(instance=roll)
-    projects = Project.objects.filter(owner=owner)
     context = {
         'owner': owner,
         'roll': roll,
-        'statusForm': statusForm,
-        'projectForm': projectForm,
-        'projects': projects,
     }
 
-    return render(request, 'inventory/film_roll_detail.html', context)
+    return render(request, 'inventory/roll_detail.html', context)
 
 
 @login_required
-def film_roll_detail_notes(request, slug, pk):
+def roll_update(request, pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
 
     if request.method == 'POST':
-        form = RollNotesForm(request.POST)
+        form = RollForm(request.POST)
 
         if form.is_valid():
             roll.notes = form.cleaned_data['notes']
@@ -657,10 +627,10 @@ def film_roll_detail_notes(request, slug, pk):
             messages.success(request, 'Notes updated!')
 
             return redirect(
-                reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
+                reverse('roll-detail', args=(roll.id,))
             )
     else:
-        form = RollNotesForm(instance=roll)
+        form = RollForm(instance=roll)
         context = {
             'owner': owner,
             'roll': roll,
@@ -669,7 +639,7 @@ def film_roll_detail_notes(request, slug, pk):
 
         return render(
             request,
-            'inventory/film_roll_detail_notes.html',
+            'inventory/roll_edit.html',
             context
         )
 
@@ -793,7 +763,7 @@ def camera_detail(request, pk):
         )
 
         return redirect(
-            reverse('film-roll-detail', args=(roll.film.slug, roll.id,))
+            reverse('roll-detail', args=(roll.id,))
         )
     else:
         roll = ''

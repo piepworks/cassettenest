@@ -186,7 +186,7 @@
     </tr>
 </table>
 
-<form method="post" action="{% url 'roll-update' %}">
+<form method="post" action="{% url 'rolls-update' %}">
     {% csrf_token %}
     {% include "inventory/_order-form.html" %}
     {% include "inventory/_logbook-table.html" %}

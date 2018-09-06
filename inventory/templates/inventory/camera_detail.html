@@ -12,7 +12,7 @@
 
 {% if camera.status == 'loaded' %}
 <p>
-    Loaded with <a title="{{ roll.code }}" href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }}
+    Loaded with <a title="{{ roll.code }}" href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }}
     {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}</a>
 </p>
 <form method="post">

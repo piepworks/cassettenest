@@ -20,7 +20,7 @@
 </form>
 
 {% if rolls %}
-<form method="post" action="{% url 'roll-update' %}">
+<form method="post" action="{% url 'rolls-update' %}">
     {% csrf_token %}
     <div class="bulk-status">
         <p>Bulk update the status of these rolls.</p>

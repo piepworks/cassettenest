@@ -9,16 +9,10 @@ class CameraForm(ModelForm):
         fields = ['name', 'format', 'owner']
 
 
-class RollNotesForm(ModelForm):
+class RollForm(ModelForm):
     class Meta:
         model = Roll
-        fields = ['notes']
-
-
-class RollStatusForm(ModelForm):
-    class Meta:
-        model = Roll
-        fields = ['status']
+        exclude = ['created_at', 'updated_at']
 
 
 class RollProjectForm(ModelForm):

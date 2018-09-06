@@ -16,7 +16,7 @@
     {% for roll in rolls %}
     <tr>
         <td><input type="checkbox" value="{{ roll.id }}" name="roll" /></td>
-        <td><a href="{% url 'film-roll-detail' roll.film.slug roll.id %}">{{ roll.code }}</a></td>
+        <td><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></td>
         <td>{{ roll.film }}</td>
         <td>{{ roll.started_on|date:"Y-m-d" }}</td>
         <td>{{ roll.ended_on|date:"Y-m-d" }}</td>
