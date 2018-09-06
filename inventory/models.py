@@ -175,14 +175,14 @@ class Roll(models.Model):
         blank=True,
     )
     notes = models.TextField(blank=True, help_text='General notes')
-    notes_on_development = models.TextField(
-        help_text='Chemicals used, development times, techniques, etc.',
-        blank=True,
-    )
-    scanner = models.CharField(max_length=255, blank=True)
     lab = models.CharField(
         max_length=255,
         help_text='The name of the lab (or Self, Home, etc.)',
+        blank=True,
+    )
+    scanner = models.CharField(max_length=255, blank=True)
+    notes_on_development = models.TextField(
+        help_text='Chemicals used, development times, techniques, etc.',
         blank=True,
     )
     started_on = models.DateField(null=True, blank=True)
