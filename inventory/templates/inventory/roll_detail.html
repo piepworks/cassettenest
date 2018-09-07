@@ -2,38 +2,74 @@
 {% load markdown_deux_tags %}
 
 {% block title %} / {{ roll }}{% endblock %}
+{% block bodytag %}class="roll-detail"{% endblock %}
 
 {% block content %}
 <h1>{{ roll }}</h1>
 
-<p>Status: {{ roll.get_status_display }}</p>
+<ul>
+    <li>Status: {{ roll.get_status_display }}</li>
 
-{% if roll.code %}
-<p>Code: {{ roll.code }}</p>
-{% endif %}
+    {% if roll.code %}
+    <li>Code: {{ roll.code }}</li>
+    {% endif %}
 
-{% if roll.camera %}
-<p>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></p>
-{% endif %}
+    {% if roll.camera %}
+    <li>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></li>
+    {% endif %}
 
-{% if roll.project %}
-<p>Project: {{ roll.project }}</p>
-{% endif %}
+    {% if roll.lens %}
+    <li>Lens(es): {{roll.lens}}</li>
+    {% endif %}
 
-{% if roll.push_pull %}
-<p>{{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }})</p>
-{% endif %}
+    {% if roll.project %}
+    <li>Project: {{ roll.project }}</li>
+    {% endif %}
 
-{% if roll.started_on %}
-<p>Started on: {{ roll.started_on }}</p>
-{% endif %}
+    {% if roll.push_pull %}
+    <li>{{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }})</li>
+    {% endif %}
 
-{% if roll.ended_on %}
-<p>Finished on: {{ roll.ended_on }}</p>
-{% endif %}
+    {% if roll.location %}
+    <li>Location(s): {{ roll.location }}</li>
+    {% endif %}
 
-{% if roll.notes %}
-<p>Notes:</p>
-<p>{{ roll.notes|markdown }}</p>
-{% endif %}
+    {% if roll.started_on %}
+    <li>Started on: {{ roll.started_on }}</li>
+    {% endif %}
+
+    {% if roll.ended_on %}
+    <li>Finished on: {{ roll.ended_on }}</li>
+    {% endif %}
+
+    {% if roll.notes %}
+    <li>Notes:
+        <ul>
+            <li>{{ roll.notes|markdown }}</li>
+        </ul>
+    </li>
+    {% endif %}
+
+    {% if roll.status in development_statuses %}
+    <li class="development">Development
+        <ul>
+            {% if roll.lab %}
+            <li>Lab: {{ roll.lab }}</li>
+            {% endif %}
+
+            {% if roll.scanner %}
+            <li>Scanner: {{ roll.scanner }}</li>
+            {% endif %}
+
+            {% if roll.notes_on_development %}
+            <li>Notes on Development:
+                <ul>
+                    <li>{{ roll.notes_on_development|markdown }}</li>
+                </ul>
+            </li>
+            {% endif %}
+        </ul>
+    </li>
+    {% endif %}
+</ul>
 {% endblock %}

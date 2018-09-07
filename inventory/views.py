@@ -607,6 +607,7 @@ def roll_detail(request, pk):
     context = {
         'owner': owner,
         'roll': roll,
+        'development_statuses': development_statuses,
     }
 
     return render(request, 'inventory/roll_detail.html', context)

@@ -9,6 +9,7 @@ body {
 
     &.logbook { @import './partials/logbook'; }
     &.ready { @import './partials/ready'; }
+    &.roll-detail { @import './partials/roll-detail'; }
 }
 
 form {

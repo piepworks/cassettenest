@@ -47,6 +47,14 @@ valid_statuses = {
 status_keys = list(valid_statuses)
 
 
+# Statuses once a roll has begun development.
+# Useful for showing a subset of metadata in some places.
+development_statuses = {
+    value for key, value in valid_statuses.items()
+    if key not in ['storage', 'loaded', 'shot']
+}
+
+
 def status_number(status):
     "Return the status number/order from its name."
 
