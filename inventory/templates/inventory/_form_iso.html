@@ -9,7 +9,7 @@
         <option value="gte" {% if iso_range == 'gte' %}selected{% endif %}>&gt;= Greater than or equal to</option>
         <option value="equals" {% if iso_range == 'equals' %}selected{% endif %}>= Equal to</option>
     </select>
-    <input type="number" name="iso_value" placeholder="ISO" value="{{ iso_value }}" required />
+    <input type="number" min="1" name="iso_value" placeholder="ISO" value="{{ iso_value }}" required />
     <input type="submit" value="Filter" />
 </form>
 {% if iso_range and iso_value %}
