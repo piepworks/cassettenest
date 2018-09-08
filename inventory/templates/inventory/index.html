@@ -4,7 +4,7 @@
 
 <h2>Add film</h2>
 
-<form action="{% url 'film-roll-add' %}" method="post">
+<form action="{% url 'rolls-add' %}" method="post">
     {% csrf_token %}
     <select name="film" required>
         <option value="">Select a film</option>

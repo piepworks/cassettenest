@@ -513,7 +513,7 @@ def project_rolls_remove(request, pk):
 
 
 @login_required
-def film_roll_add(request):
+def rolls_add(request):
     owner = request.user
 
     if request.method == 'POST':
@@ -614,7 +614,7 @@ def roll_detail(request, pk):
 
 
 @login_required
-def roll_update(request, pk):
+def roll_edit(request, pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
 

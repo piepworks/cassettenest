@@ -15,31 +15,36 @@ urlpatterns = [
         success_url='/'
     ), name='register'),
 
-    # Inventory
+    # Top-Level
     path('', views.index, name='index'),
     path('profile/', views.profile, name='profile'),
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
     path('dashboard/', views.dashboard, name='dashboard'),
+
+    # Rolls
+    path('rolls/add/', views.rolls_add, name='rolls-add'),
     path('rolls/update/', views.rolls_update, name='rolls-update'),
-    path('roll/<int:pk>/',
-         views.roll_detail, name='roll-detail'),
-    path('roll/<int:pk>/update/',
-         views.roll_update, name='roll-update'),
+    path('roll/<int:pk>/', views.roll_detail, name='roll-detail'),
+    path('roll/<int:pk>/edit/', views.roll_edit, name='roll-edit'),
+
+    # Projects
     path('project/add/', views.project_add, name='project-add'),
     path('project/<int:pk>/edit/', views.project_edit, name='project-edit'),
     path('project/<int:pk>/delete/',
          views.project_delete, name='project-delete'),
-    path('project/<int:pk>/',
-         views.project_detail, name='project-detail'),
+    path('project/<int:pk>/', views.project_detail, name='project-detail'),
     path('project/<int:pk>/add/',
          views.project_rolls_add, name='project-rolls-add'),
     path('project/<int:pk>/remove/',
          views.project_rolls_remove, name='project-rolls-remove'),
-    path('film/add/', views.film_roll_add, name='film-roll-add'),
+
+    # Films
     path('film/type/<type>/', views.film_type, name='film-type'),
     path('film/format/<format>/', views.film_format, name='film-format'),
     path('film/<slug:slug>/', views.film_rolls, name='film-rolls'),
+
+    # Cameras
     path('camera/add/', views.camera_add, name='camera-add'),
     path('camera/<int:pk>/', views.camera_detail, name='camera-detail'),
     path('camera/<int:pk>/load/', views.camera_load, name='camera-load'),
