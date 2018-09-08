@@ -15,12 +15,6 @@ class RollForm(ModelForm):
         exclude = ['code', 'film', 'owner', 'created_at', 'updated_at']
 
 
-class RollProjectForm(ModelForm):
-    class Meta:
-        model = Roll
-        fields = ['project']
-
-
 class ProjectForm(ModelForm):
     class Meta:
         model = Project

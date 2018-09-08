@@ -289,6 +289,7 @@ def rolls_update(request):
     owner = request.user
     updated_status = request.POST.get('updated_status')
     rolls = request.POST.getlist('roll')
+    # Should I be sanitizing the following fields?
     lab = request.POST.get('lab', '')
     scanner = request.POST.get('scanner', '')
     notes_on_development = request.POST.get('notes_on_development', '')
