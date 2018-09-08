@@ -7,7 +7,7 @@
 
 <form method="post">
     {% csrf_token %}
-    <div>{{ form.notes }}</div>
-    <div><input type="submit" value="Save notes"></div>
+    {{ form.as_p }}
+    <div><input type="submit" value="Save changes"></div>
 </form>
 {% endblock %}

@@ -12,7 +12,7 @@ class CameraForm(ModelForm):
 class RollForm(ModelForm):
     class Meta:
         model = Roll
-        exclude = ['created_at', 'updated_at']
+        exclude = ['code', 'film', 'owner', 'created_at', 'updated_at']
 
 
 class RollProjectForm(ModelForm):

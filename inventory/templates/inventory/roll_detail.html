@@ -7,6 +7,8 @@
 {% block content %}
 <h1>{{ roll }}</h1>
 
+<p><a href="{% url 'roll-edit' roll.id %}">Edit roll</a></p>
+
 <ul>
     <li>Status: {{ roll.get_status_display }}</li>
 

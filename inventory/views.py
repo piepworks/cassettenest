@@ -622,16 +622,30 @@ def roll_edit(request, pk):
         form = RollForm(request.POST)
 
         if form.is_valid():
+            roll.camera = form.cleaned_data['camera']
+            roll.lens = form.cleaned_data['lens']
+            roll.project = form.cleaned_data['project']
+            roll.status = form.cleaned_data['status']
+            roll.push_pull = form.cleaned_data['push_pull']
+            roll.location = form.cleaned_data['location']
             roll.notes = form.cleaned_data['notes']
+            roll.lab = form.cleaned_data['lab']
+            roll.scanner = form.cleaned_data['scanner']
+            roll.notes_on_development =\
+                form.cleaned_data['notes_on_development']
             roll.save()
 
-            messages.success(request, 'Notes updated!')
+            messages.success(request, 'Changes saved!')
 
             return redirect(
                 reverse('roll-detail', args=(roll.id,))
             )
     else:
         form = RollForm(instance=roll)
+        form.fields['camera'].queryset = Camera.objects.filter(
+            format=roll.film.format
+        )
+
         context = {
             'owner': owner,
             'roll': roll,
