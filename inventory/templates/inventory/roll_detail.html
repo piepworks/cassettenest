@@ -25,7 +25,7 @@
     {% endif %}
 
     {% if roll.project %}
-    <li>Project: {{ roll.project }}</li>
+    <li>Project: <a href="{% url 'project-detail' roll.project.id %}">{{ roll.project }}</a></li>
     {% endif %}
 
     {% if roll.push_pull %}
