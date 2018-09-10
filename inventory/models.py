@@ -106,6 +106,11 @@ class Project(models.Model):
         choices=STATUS_CHOICES,
         default='current',
     )
+    cameras = models.ManyToManyField(
+        Camera,
+        # Figure out a way to limit this to only cameras from the same owner.
+        # limit_choices_to={}
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
