@@ -108,6 +108,7 @@ class Project(models.Model):
     )
     cameras = models.ManyToManyField(
         Camera,
+        blank=True,
         # Figure out a way to limit this to only cameras from the same owner.
         # limit_choices_to={}
     )

@@ -4,12 +4,12 @@
 {% block title %} / {{ project.name }}{% endblock %}
 
 {% block content %}
-<h2>
+<h1>
     {{ project.name }}
     {% if total_film_count %}
         <small>({{ total_film_count.count }} roll{{total_film_count.count|pluralize}})</small>
     {% endif %}
-</h2>
+</h1>
 
 <p>Status: {{ project.get_status_display }}</p>
 
@@ -19,7 +19,20 @@
     {% csrf_token %}
     <input type="submit" value="Delete this project." />
 </form>
+
+{% if project.cameras.all %}
+<hr />
+<h2>Cameras</h2>
+
+<ul>
+    {% for camera in project.cameras.all %}
+    <li>{{ camera.name }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 {% if project.notes %}
+<hr />
 <h3>Notes</h3>
 <div>{{ project.notes|markdown }}</div>
 {% endif %}
