@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
 from django.views.decorators.http import require_POST
 from django.utils.encoding import force_text
+from django.utils.safestring import mark_safe
 from django.urls import reverse, resolve
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -415,6 +416,10 @@ def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
     iso = iso_variables(request)
+    # Get all of this user's cameras not already associated with this project.
+    cameras = Camera.objects.filter(owner=owner).exclude(
+        pk__in=project.cameras.values_list('pk', flat=True)
+    )
 
     # rolls already in this project
     total_film_count = Film.objects\
@@ -438,6 +443,7 @@ def project_detail(request, pk):
     context = {
         'owner': owner,
         'project': project,
+        'cameras': cameras,
         'total_film_count': total_film_count,
         'film_counts': film_counts,
         'film_available_count': film_available_count,
@@ -509,6 +515,51 @@ def project_rolls_remove(request, pk):
                 film
             )
         )
+
+    return redirect(reverse('project-detail', args=(project.id,)))
+
+
+@require_POST
+@login_required
+def project_camera_update(request, pk):
+    '''
+    Add or remove a camera from a project.
+    '''
+    owner = request.user
+    actions = ('add', 'remove',)
+    project = get_object_or_404(Project, id=pk, owner=owner)
+    camera = get_object_or_404(
+        Camera,
+        id=request.POST.get('camera', ''),
+        owner=owner
+    )
+    action = request.POST.get('action', '')
+
+    if action in actions:
+        if action == 'add':
+            project.cameras.add(camera)
+            messages.success(
+                request,
+                mark_safe(
+                    '<a href="%s">%s</a> added to this project!' % (
+                        reverse('camera-detail', args=(camera.id,)),
+                        camera.name
+                    )
+                )
+            )
+        if action == 'remove':
+            project.cameras.remove(camera)
+            messages.success(
+                request,
+                mark_safe(
+                    '<a href="%s">%s</a> removed from this project!' % (
+                        reverse('camera-detail', args=(camera.id,)),
+                        camera.name
+                    )
+                )
+            )
+    else:
+        messages.error(request, 'Something is amiss.')
 
     return redirect(reverse('project-detail', args=(project.id,)))
 

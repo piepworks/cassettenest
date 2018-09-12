@@ -26,9 +26,33 @@
 
 <ul>
     {% for camera in project.cameras.all %}
-    <li>{{ camera.name }}</li>
+    <li>
+        <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
+        <form action="{% url 'project-camera-update' project.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="remove" />
+            <input type="hidden" name="camera" value="{{ camera.id }}" />
+            <input type="submit" value="Remove from project" />
+        </form>
+    </li>
     {% endfor %}
 </ul>
+{% endif %}
+
+{% if cameras %}
+<h3>Add a new camera to this project.</h3>
+
+<form action="{% url 'project-camera-update' project.id %}" method="post">
+    {% csrf_token %}
+    <select name="camera">
+        <option value="">Choose a camera</option>
+    {% for camera in cameras %}
+        <option value="{{ camera.id }}">{{ camera.name }}</option>
+    {% endfor %}
+    </select>
+    <input type="hidden" name="action" value="add" />
+    <input type="submit" value="Add to project" />
+</form>
 {% endif %}
 
 {% if project.notes %}
@@ -59,7 +83,7 @@
         {% endfor %}
     </select>
     <input type="number" min="1" name="quantity" value="0" required />
-    <input type="submit" value="Add rolls" />
+    <input type="submit" value="Add rolls to project" />
 </form>
 {% endif %}
 

@@ -38,6 +38,8 @@ urlpatterns = [
          views.project_rolls_add, name='project-rolls-add'),
     path('project/<int:pk>/remove/',
          views.project_rolls_remove, name='project-rolls-remove'),
+    path('project/<int:pk>/camera/update/',
+         views.project_camera_update, name='project-camera-update'),
 
     # Films
     path('film/type/<type>/', views.film_type, name='film-type'),
