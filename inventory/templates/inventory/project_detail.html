@@ -25,22 +25,30 @@
 <h2>Cameras</h2>
 
 <ul>
-    {% for camera in project.cameras.all %}
+    {% regroup project.cameras.all by get_status_display as camera_list %}
+    {% for status in camera_list %}
     <li>
-        <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
-        <form action="{% url 'project-camera-update' project.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="action" value="remove" />
-            <input type="hidden" name="camera" value="{{ camera.id }}" />
-            <input type="submit" value="Remove from project" />
-        </form>
+        {{ status.grouper }}
+        <ul>
+            {% for camera in status.list %}
+            <li>
+                <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
+                <form action="{% url 'project-camera-update' project.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="remove" />
+                    <input type="hidden" name="camera" value="{{ camera.id }}" />
+                    <input type="submit" value="Remove from project" />
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
     </li>
     {% endfor %}
 </ul>
 {% endif %}
 
 {% if cameras %}
-<h3>Add a new camera to this project.</h3>
+<h3>Add a camera to this project.</h3>
 
 <form action="{% url 'project-camera-update' project.id %}" method="post">
     {% csrf_token %}

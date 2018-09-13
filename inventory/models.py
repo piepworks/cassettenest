@@ -84,6 +84,7 @@ class Camera(models.Model):
 
     class Meta:
         unique_together = (('owner', 'name'),)
+        ordering = ['-status', 'name']
 
     def __str__(self):
         return '%s\'s %s' % (self.owner, self.name)
