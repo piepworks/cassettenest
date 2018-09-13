@@ -39,6 +39,9 @@
                     <input type="hidden" name="camera" value="{{ camera.id }}" />
                     <input type="submit" value="Remove from project" />
                 </form>
+                {% if film_counts and camera.status != 'loaded' %}
+                {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project %}
+                {% endif %}
             </li>
             {% endfor %}
         </ul>

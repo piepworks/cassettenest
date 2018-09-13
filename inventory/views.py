@@ -420,9 +420,13 @@ def project_detail(request, pk):
         pk__in=project.cameras.values_list('pk', flat=True)
     )
 
-    # rolls already in this project
+    # Unshot rolls already in this project
     total_film_count = Film.objects\
-        .filter(roll__owner=owner, roll__project=project)
+        .filter(
+            roll__owner=owner,
+            roll__project=project,
+            roll__status=status_number('storage'),
+        )
     film_counts = total_film_count\
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
@@ -705,16 +709,6 @@ def roll_edit(request, pk):
 def camera_load(request, pk):
     owner = request.user
     current_project = None
-    iso = iso_variables(request)
-
-    if request.GET.get('project'):
-        try:
-            current_project = Project.objects.get(
-                pk=request.GET.get('project'),
-                owner=owner
-            )
-        except Project.DoesNotExist:
-            current_project = None
 
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
@@ -726,6 +720,15 @@ def camera_load(request, pk):
         camera = get_object_or_404(Camera, id=pk, owner=owner)
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
         push_pull = request.POST.get('push_pull', '')
+
+        # Hidden form field
+        if request.POST.get('project'):
+            current_project = get_project_or_none(
+                Project,
+                owner,
+                request.POST.get('project')
+            )
+
         # The the oldest roll we have of that film in storage.
         if current_project is not None and current_project != 0:
             roll = Roll.objects.filter(
@@ -761,6 +764,16 @@ def camera_load(request, pk):
     else:
         camera = get_object_or_404(Camera, id=pk, owner=owner)
         projects = Project.objects.filter(owner=owner, status='current')
+        iso = iso_variables(request)
+
+        # Querystring
+        if request.GET.get('project'):
+            current_project = get_project_or_none(
+                Project,
+                owner,
+                request.GET.get('project'),
+            )
+
         if current_project is not None and current_project != 0:
             film_counts = Film.objects\
                 .filter(

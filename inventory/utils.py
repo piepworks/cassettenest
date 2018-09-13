@@ -33,6 +33,18 @@ def iso_filter(iso, objects):
     return objects
 
 
+def get_project_or_none(Project, owner, project_id):
+    try:
+        current_project = Project.objects.get(
+            pk=project_id,
+            owner=owner,
+        )
+    except Project.DoesNotExist:
+        current_project = None
+
+    return current_project
+
+
 valid_statuses = {
     'storage': '01_storage',
     'loaded': '02_loaded',
