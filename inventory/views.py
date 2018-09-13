@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
 from django.views.decorators.http import require_POST
 from django.utils.encoding import force_text
-from django.utils.safestring import mark_safe
 from django.urls import reverse, resolve
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -540,23 +539,13 @@ def project_camera_update(request, pk):
             project.cameras.add(camera)
             messages.success(
                 request,
-                mark_safe(
-                    '<a href="%s">%s</a> added to this project!' % (
-                        reverse('camera-detail', args=(camera.id,)),
-                        camera.name
-                    )
-                )
+                '%s added to this project!' % camera.name
             )
         if action == 'remove':
             project.cameras.remove(camera)
             messages.success(
                 request,
-                mark_safe(
-                    '<a href="%s">%s</a> removed from this project!' % (
-                        reverse('camera-detail', args=(camera.id,)),
-                        camera.name
-                    )
-                )
+                '%s removed from this project!' % camera.name
             )
     else:
         messages.error(request, 'Something is amiss.')
