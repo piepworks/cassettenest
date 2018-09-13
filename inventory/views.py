@@ -437,6 +437,7 @@ def project_detail(request, pk):
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
 
+    # Filter available films by ISO if set. Return the unaltered list if not.
     film_available_count = iso_filter(iso, film_available_count)
 
     context = {
@@ -727,22 +728,20 @@ def camera_load(request, pk):
         push_pull = request.POST.get('push_pull', '')
         # The the oldest roll we have of that film in storage.
         if current_project is not None and current_project != 0:
-            roll = Roll.objects\
-                .filter(
+            roll = Roll.objects.filter(
                     owner=owner,
                     film=film,
+                    film__format=camera.format,
                     status=status_number('storage'),
-                    project=current_project
-                )\
-                .order_by('created_at')[0]
+                    project=current_project,
+                ).order_by('created_at')[0]
         else:
-            roll = Roll.objects\
-                .filter(
+            roll = Roll.objects.filter(
                     owner=owner,
                     film=film,
-                    status=status_number('storage')
-                )\
-                .order_by('created_at')[0]
+                    film__format=camera.format,
+                    status=status_number('storage'),
+                ).order_by('created_at')[0]
         roll.camera = camera
         roll.push_pull = push_pull
         roll.started_on = datetime.date.today()
