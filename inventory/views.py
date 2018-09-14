@@ -431,6 +431,11 @@ def project_detail(request, pk):
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)
 
+    format_counts = {
+        'thirtyfive': film_counts.filter(format='135'),
+        'onetwenty': film_counts.filter(format='120'),
+    }
+
     # rolls available to be added to a project
     film_available_count = Film.objects\
         .filter(
@@ -451,6 +456,7 @@ def project_detail(request, pk):
         'total_film_count': total_film_count,
         'film_counts': film_counts,
         'film_available_count': film_available_count,
+        'format_counts': format_counts,
         'iso_range': iso['range'],
         'iso_value': iso['value'],
     }
