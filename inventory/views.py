@@ -432,8 +432,8 @@ def project_detail(request, pk):
         .order_by('type', 'manufacturer__name', 'name',)
 
     format_counts = {
-        'thirtyfive': film_counts.filter(format='135'),
-        'onetwenty': film_counts.filter(format='120'),
+        '135': film_counts.filter(format='135'),
+        '120': film_counts.filter(format='120'),
     }
 
     # rolls available to be added to a project

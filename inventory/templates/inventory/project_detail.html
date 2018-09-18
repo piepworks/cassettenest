@@ -39,11 +39,11 @@
                     <input type="hidden" name="camera" value="{{ camera.id }}" />
                     <input type="submit" value="Remove from project" />
                 </form>
-                {% if camera.format == '135' and format_counts.thirtyfive and camera.status != 'loaded' %}
-                    {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.thirtyfive %}
+                {% if camera.format == '135' and format_counts.135 and camera.status != 'loaded' %}
+                    {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.135 %}
                 {% endif %}
-                {% if camera.format == '120' and format_counts.onetwenty and camera.status != 'loaded' %}
-                    {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.onetwenty %}
+                {% if camera.format == '120' and format_counts.120 and camera.status != 'loaded' %}
+                    {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.120 %}
                 {% endif %}
             </li>
             {% endfor %}
