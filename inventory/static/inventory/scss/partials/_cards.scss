@@ -8,10 +8,10 @@ $bw: #555;
     li { list-style: none; }
 }
 
+// The <li />
 .card {
     color: black;
     background: blue;
-    cursor: pointer;
     display: flex;
     position: relative;
     align-items: stretch;
@@ -38,7 +38,21 @@ $bw: #555;
 
     header {
         padding: 0 20px;
+    }
+
+    a {
+        color: white;
+        text-decoration: none;
         flex-grow: 1;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    form {
+        margin: auto 20px;
+        flex-grow: 0;
     }
 
     .count {
