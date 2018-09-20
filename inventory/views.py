@@ -419,6 +419,11 @@ def project_detail(request, pk):
     cameras = Camera.objects.filter(owner=owner).exclude(
         pk__in=project.cameras.values_list('pk', flat=True)
     )
+    loaded_roll_list = Roll.objects.filter(
+        owner=owner,
+        project=project,
+        status=status_number('loaded'),
+    )
 
     # Unshot rolls already in this project
     total_film_count = Film.objects\
@@ -457,6 +462,7 @@ def project_detail(request, pk):
         'film_counts': film_counts,
         'film_available_count': film_available_count,
         'format_counts': format_counts,
+        'loaded_roll_list': loaded_roll_list,
         'iso_range': iso['range'],
         'iso_value': iso['value'],
     }

@@ -39,11 +39,24 @@
                     <input type="hidden" name="camera" value="{{ camera.id }}" />
                     <input type="submit" value="Remove from project" />
                 </form>
-                {% if camera.format == '135' and format_counts.135 and camera.status != 'loaded' %}
-                    {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.135 %}
-                {% endif %}
-                {% if camera.format == '120' and format_counts.120 and camera.status != 'loaded' %}
-                    {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.120 %}
+                {% if camera.status == 'loaded' %}
+                    {% for roll in loaded_roll_list %}
+                        {% if roll.camera.id == camera.id %}
+                            <p>Loaded with: <a href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }} / {{ roll.code }}</a></p>
+                            <form action="{% url 'camera-detail' camera.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="roll" value="{{ roll.id }}" />
+                                <input type="submit" value="Finish roll" />
+                            </form>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% if camera.format == '135' and format_counts.135 and camera.status != 'loaded' %}
+                        {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.135 %}
+                    {% endif %}
+                    {% if camera.format == '120' and format_counts.120 and camera.status != 'loaded' %}
+                        {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.120 %}
+                    {% endif %}
                 {% endif %}
             </li>
             {% endfor %}
