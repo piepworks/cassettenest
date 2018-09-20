@@ -66,33 +66,34 @@
 </ul>
 {% endif %}
 
-{% if cameras %}
-<h3>Add a camera to this project.</h3>
-
-<form action="{% url 'project-camera-update' project.id %}" method="post">
-    {% csrf_token %}
-    <select name="camera">
-        <option value="">Choose a camera</option>
-    {% for camera in cameras %}
-        <option value="{{ camera.id }}">{{ camera.name }}</option>
-    {% endfor %}
-    </select>
-    <input type="hidden" name="action" value="add" />
-    <input type="submit" value="Add to project" />
-</form>
-{% endif %}
-
-{% if project.notes %}
+{% if film_counts %}
 <hr />
-<h3>Notes</h3>
-<div>{{ project.notes|markdown }}</div>
+
+<ul class="cards">
+    {% for film in film_counts %}
+    <li class="card card__{{ film.type }}">
+        <form action="{% url 'project-rolls-remove' project.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="film" value="{{ film.id }}" />
+            <input type="submit" value="Remove from project" />
+        </form>
+
+        <a href="{% url 'film-rolls' film.slug %}">
+            <header><h1>{{ film }}</h1> </header>
+        </a>
+
+        <div class="count" title="Number of rolls of this film in the project."><span>{{ film.count }}</span></div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No rolls in this project.</p>
 {% endif %}
 
+{% if film_available_count %}
 <hr />
 
 <h3>Add rolls to this project</h3>
-
-{% if film_available_count %}
 
 {% include 'inventory/_form_iso.html' %}
 
@@ -114,28 +115,28 @@
 </form>
 {% endif %}
 
+{% if cameras %}
 <hr />
 
-{% if film_counts %}
-<ul class="cards">
-    {% for film in film_counts %}
-    <li class="card card__{{ film.type }}">
-        <form action="{% url 'project-rolls-remove' project.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="film" value="{{ film.id }}" />
-            <input type="submit" value="Remove from project" />
-        </form>
+<h3>Add a camera to this project.</h3>
 
-        <a href="{% url 'film-rolls' film.slug %}">
-            <header><h1>{{ film }}</h1> </header>
-        </a>
-
-        <div class="count" title="Number of rolls of this film in the project."><span>{{ film.count }}</span></div>
-    </li>
+<form action="{% url 'project-camera-update' project.id %}" method="post">
+    {% csrf_token %}
+    <select name="camera">
+        <option value="">Choose a camera</option>
+    {% for camera in cameras %}
+        <option value="{{ camera.id }}">{{ camera.name }}</option>
     {% endfor %}
-</ul>
-{% else %}
-<p>No rolls in this project.</p>
+    </select>
+    <input type="hidden" name="action" value="add" />
+    <input type="submit" value="Add to project" />
+</form>
+{% endif %}
+
+{% if project.notes %}
+<hr />
+<h3>Notes</h3>
+<div>{{ project.notes|markdown }}</div>
 {% endif %}
 
 {% endblock %}
