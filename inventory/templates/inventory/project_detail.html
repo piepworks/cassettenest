@@ -42,7 +42,7 @@
                 {% if camera.status == 'loaded' %}
                     {% for roll in loaded_roll_list %}
                         {% if roll.camera.id == camera.id %}
-                            <p>Loaded with: <a href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }} / {{ roll.code }}</a></p>
+                            {% include 'inventory/_camera-loaded.html' %}
                             <form action="{% url 'camera-detail' camera.id %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="roll" value="{{ roll.id }}" />

@@ -11,10 +11,7 @@
 <p>Format: {{ camera.get_format_display }}</p>
 
 {% if camera.status == 'loaded' %}
-<p>
-    Loaded with <a title="{{ roll.code }}" href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }}
-    {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}</a>
-</p>
+{% include 'inventory/_camera-loaded.html' %}
 <form method="post">
     {% csrf_token %}
     <input type="hidden" name="roll" value="{{ roll.id }}" />
