@@ -748,6 +748,12 @@ def camera_load(request, pk):
         camera = get_object_or_404(Camera, id=pk, owner=owner)
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
         push_pull = request.POST.get('push_pull', '')
+        rolls = Roll.objects.filter(
+                owner=owner,
+                film=film,
+                film__format=camera.format,
+                status=status_number('storage'),
+            )
 
         # Hidden form field
         if request.POST.get('project'):
@@ -759,20 +765,11 @@ def camera_load(request, pk):
 
         # The the oldest roll we have of that film in storage.
         if current_project is not None and current_project != 0:
-            roll = Roll.objects.filter(
-                    owner=owner,
-                    film=film,
-                    film__format=camera.format,
-                    status=status_number('storage'),
-                    project=current_project,
-                ).order_by('created_at')[0]
+            roll = rolls.filter(project=current_project)\
+                .order_by('created_at')[0]
         else:
-            roll = Roll.objects.filter(
-                    owner=owner,
-                    film=film,
-                    film__format=camera.format,
-                    status=status_number('storage'),
-                ).order_by('created_at')[0]
+            roll = rolls.order_by('created_at')[0]
+
         roll.camera = camera
         roll.push_pull = push_pull
         roll.started_on = datetime.date.today()
