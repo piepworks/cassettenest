@@ -6,6 +6,7 @@
 
 {% block content %}
 <h1>{{ roll }}</h1>
+<h2><a href="{% url 'film-rolls' roll.film.slug %}">View all your unused rolls of {{ roll.film }}.</a></h2>
 
 <p><a href="{% url 'roll-edit' roll.id %}">Edit roll</a></p>
 
