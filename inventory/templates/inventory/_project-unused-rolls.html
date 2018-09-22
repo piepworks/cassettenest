@@ -1,0 +1,21 @@
+{% if total_film_count %}
+    <h3>{{ total_film_count.count }} roll{{total_film_count.count|pluralize}} left</h3>
+{% endif %}
+
+<ul class="cards">
+    {% for film in film_counts %}
+    <li class="card card__{{ film.type }}">
+        <form action="{% url 'project-rolls-remove' project.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="film" value="{{ film.id }}" />
+            <input type="submit" value="Remove from project" />
+        </form>
+
+        <a href="{% url 'film-rolls' film.slug %}?project={{ project.id }}">
+            <header><h1>{{ film }}</h1> </header>
+        </a>
+
+        <div class="count" title="Number of rolls of this film in the project."><span>{{ film.count }}</span></div>
+    </li>
+    {% endfor %}
+</ul>

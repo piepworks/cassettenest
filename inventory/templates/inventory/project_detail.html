@@ -4,12 +4,7 @@
 {% block title %} / {{ project.name }}{% endblock %}
 
 {% block content %}
-<h1>
-    {{ project.name }}
-    {% if total_film_count %}
-        <small>({{ total_film_count.count }} roll{{total_film_count.count|pluralize}})</small>
-    {% endif %}
-</h1>
+<h1>{{ project.name }}</h1>
 
 <p>Status: {{ project.get_status_display }}</p>
 
@@ -21,116 +16,25 @@
 </form>
 
 {% if project.cameras.all %}
-<hr />
-<h2>Cameras</h2>
-
-<ul>
-    {% regroup project.cameras.all by get_status_display as camera_list %}
-    {% for status in camera_list %}
-    <li>
-        {{ status.grouper }}
-        <ul>
-            {% for camera in status.list %}
-            <li>
-                <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
-                <form action="{% url 'project-camera-update' project.id %}" method="post">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="remove" />
-                    <input type="hidden" name="camera" value="{{ camera.id }}" />
-                    <input type="submit" value="Remove from project" />
-                </form>
-                {% if camera.status == 'loaded' %}
-                    {% for roll in loaded_roll_list %}
-                        {% if roll.camera.id == camera.id %}
-                            {% include 'inventory/_camera-loaded.html' %}
-                            <form action="{% url 'camera-detail' camera.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="roll" value="{{ roll.id }}" />
-                                <input type="submit" value="Finish roll" />
-                            </form>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    {% if camera.format == '135' and format_counts.135 and camera.status != 'loaded' %}
-                        {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.135 %}
-                    {% endif %}
-                    {% if camera.format == '120' and format_counts.120 and camera.status != 'loaded' %}
-                        {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.120 %}
-                    {% endif %}
-                {% endif %}
-            </li>
-            {% endfor %}
-        </ul>
-    </li>
-    {% endfor %}
-</ul>
+    <hr />
+    {% include 'inventory/_project-cameras.html' %}
 {% endif %}
 
 {% if film_counts %}
-<hr />
-
-<ul class="cards">
-    {% for film in film_counts %}
-    <li class="card card__{{ film.type }}">
-        <form action="{% url 'project-rolls-remove' project.id %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="film" value="{{ film.id }}" />
-            <input type="submit" value="Remove from project" />
-        </form>
-
-        <a href="{% url 'film-rolls' film.slug %}?project={{ project.id }}">
-            <header><h1>{{ film }}</h1> </header>
-        </a>
-
-        <div class="count" title="Number of rolls of this film in the project."><span>{{ film.count }}</span></div>
-    </li>
-    {% endfor %}
-</ul>
+    <hr />
+    {% include 'inventory/_project-unused-rolls.html' %}
 {% else %}
-<p>No rolls in this project.</p>
+    <p>No rolls in this project.</p>
 {% endif %}
 
 {% if film_available_count %}
-<hr />
-
-<h3>Add rolls to this project</h3>
-
-{% include 'inventory/_form_iso.html' %}
-
-<form action="{% url 'project-rolls-add' project.id %}" method="post">
-    {% csrf_token %}
-    {% regroup film_available_count by get_type_display as film_list %}
-    <select name="film" required>
-        <option value="">Select a film</option>
-        {% for type in film_list %}
-        <optgroup label="{{ type.grouper }}">
-            {% for film in type.list %}
-            <option value="{{ film.id }}">{{ film }} ({{ film.count }})</option>
-            {% endfor %}
-        </optgroup>
-        {% endfor %}
-    </select>
-    <input type="number" min="1" name="quantity" value="0" required />
-    <input type="submit" value="Add rolls to project" />
-</form>
+    <hr />
+    {% include 'inventory/_project-add-rolls.html' %}
 {% endif %}
 
 {% if cameras %}
-<hr />
-
-<h3>Add a camera to this project.</h3>
-
-<form action="{% url 'project-camera-update' project.id %}" method="post">
-    {% csrf_token %}
-    <select name="camera">
-        <option value="">Choose a camera</option>
-    {% for camera in cameras %}
-        <option value="{{ camera.id }}">{{ camera.name }}</option>
-    {% endfor %}
-    </select>
-    <input type="hidden" name="action" value="add" />
-    <input type="submit" value="Add to project" />
-</form>
+    <hr />
+    {% include 'inventory/_project-add-camera.html' %}
 {% endif %}
 
 {% if project.notes %}

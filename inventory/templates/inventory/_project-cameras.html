@@ -1,0 +1,42 @@
+<h2>Cameras</h2>
+
+<ul>
+    {% regroup project.cameras.all by get_status_display as camera_list %}
+    {% for status in camera_list %}
+    <li>
+        {{ status.grouper }}
+        <ul>
+            {% for camera in status.list %}
+            <li>
+                <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
+                <form action="{% url 'project-camera-update' project.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="remove" />
+                    <input type="hidden" name="camera" value="{{ camera.id }}" />
+                    <input type="submit" value="Remove from project" />
+                </form>
+                {% if camera.status == 'loaded' %}
+                    {% for roll in loaded_roll_list %}
+                        {% if roll.camera.id == camera.id %}
+                            {% include 'inventory/_camera-loaded.html' %}
+                            <form action="{% url 'camera-detail' camera.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="roll" value="{{ roll.id }}" />
+                                <input type="submit" value="Finish roll" />
+                            </form>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% if camera.format == '135' and format_counts.135 and camera.status != 'loaded' %}
+                        {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.135 %}
+                    {% endif %}
+                    {% if camera.format == '120' and format_counts.120 and camera.status != 'loaded' %}
+                        {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.120 %}
+                    {% endif %}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>

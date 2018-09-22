@@ -1,0 +1,13 @@
+<h3>Add a camera to this project.</h3>
+
+<form action="{% url 'project-camera-update' project.id %}" method="post">
+    {% csrf_token %}
+    <select name="camera">
+        <option value="">Choose a camera</option>
+    {% for camera in cameras %}
+        <option value="{{ camera.id }}">{{ camera.name }}</option>
+    {% endfor %}
+    </select>
+    <input type="hidden" name="action" value="add" />
+    <input type="submit" value="Add to project" />
+</form>
