@@ -6,6 +6,10 @@
 <h1>{{ owner.username }} / {{ name }}</h1>
 
 {% if rolls %}
+
+{% if current_project %}
+<h2>Viewing rolls in project: <a href="{% url 'project-detail' current_project.id %}">{{ current_project }}</a>. <small><a href="{% url 'film-rolls' slug %}">View all your rolls of {{ name }}.</a></small></h2>
+{% endif %}
 <ul>
     {% for roll in rolls %}
     <li>

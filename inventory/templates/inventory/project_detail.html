@@ -78,7 +78,7 @@
             <input type="submit" value="Remove from project" />
         </form>
 
-        <a href="{% url 'film-rolls' film.slug %}">
+        <a href="{% url 'film-rolls' film.slug %}?project={{ project.id }}">
             <header><h1>{{ film }}</h1> </header>
         </a>
 

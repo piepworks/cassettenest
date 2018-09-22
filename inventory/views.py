@@ -609,14 +609,30 @@ def rolls_add(request):
 def film_rolls(request, slug):
     '''All the rolls of a particular film that someone has available.'''
     owner = request.user
-    rolls = Roll.objects\
-        .filter(owner=owner, status=status_number('storage'))\
-        .filter(film__slug=slug)
+    current_project = None
     name = Film.objects.only('name').get(slug=slug)
+    rolls = Roll.objects.filter(
+        owner=owner,
+        status=status_number('storage'),
+        film__slug=slug,
+    )
+
+    # Querystring.
+    if request.GET.get('project'):
+        current_project = get_project_or_none(
+            Project,
+            owner,
+            request.GET.get('project'),
+        )
+    if current_project is not None and current_project != 0:
+        rolls = rolls.filter(project=current_project)
+
     context = {
         'rolls': rolls,
         'name': name,
+        'slug': slug,
         'owner': owner,
+        'current_project': current_project,
     }
 
     return render(request, 'inventory/film_rolls.html', context)
