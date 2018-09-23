@@ -454,6 +454,11 @@ def project_detail(request, pk):
     # Filter available films by ISO if set. Return the unaltered list if not.
     film_available_count = iso_filter(iso, film_available_count)
 
+    roll_logbook = Roll.objects.filter(owner=owner, project=project)\
+        .exclude(status=status_number('storage'))\
+        .exclude(status=status_number('loaded'))\
+        .order_by('status')
+
     context = {
         'owner': owner,
         'project': project,
@@ -465,6 +470,7 @@ def project_detail(request, pk):
         'loaded_roll_list': loaded_roll_list,
         'iso_range': iso['range'],
         'iso_value': iso['value'],
+        'roll_logbook': roll_logbook,
     }
 
     return render(request, 'inventory/project_detail.html', context)

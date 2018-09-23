@@ -1,0 +1,5 @@
+<h2>Project Logbook</h2>
+
+<p>{{ roll_logbook.count }} rolls done</p>
+
+{% include 'inventory/_logbook-table.html' with rolls=roll_logbook page='project' %}

@@ -1,27 +1,31 @@
-{# Make sure this partial is wrapped in a <form>.#}
+{# Make sure this partial is wrapped in a <form> if you need to perform an action with this data. #}
 <table>
     <thead>
         <tr>
+            {% if page != 'project' %}
             <th><input type="checkbox" disabled title="This will select/deselect all rows when it works." /></th>
+            {% endif %}
             <th>Code</th>
             <th>Film</th>
             <th>Started</th>
             <th>Finished</th>
             <th style="min-width: 80px">Project</th>
-            {% if page == 'logbook' %}
+            {% if page == 'logbook' or page == 'project' %}
             <th>Status</td>
             {% endif %}
         </tr>
     </thead>
     {% for roll in rolls %}
     <tr>
+        {% if page != 'project' %}
         <td><input type="checkbox" value="{{ roll.id }}" name="roll" /></td>
+        {% endif %}
         <td><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></td>
         <td>{{ roll.film }}</td>
         <td>{{ roll.started_on|date:"Y-m-d" }}</td>
         <td>{{ roll.ended_on|date:"Y-m-d" }}</td>
         <td>{{ roll.project|default:"" }}</td>
-        {% if page == 'logbook' %}
+        {% if page == 'logbook' or page == 'project' %}
         <td>{{ roll.get_status_display }}</td>
         {% endif %}
     </tr>
