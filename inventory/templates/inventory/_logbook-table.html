@@ -27,7 +27,7 @@
         <td>{{ roll.started_on|date:'Y-m-d' }}</td>
         <td>{{ roll.ended_on|date:'Y-m-d' }}</td>
         {% if page != 'project' %}
-        <td>{{ roll.project|default:'' }}</td>
+        <td>{% if roll.project %}<a href="{% url 'project-detail' roll.project.id %}">{{ roll.project }}</a>{% endif %}</td>
         {% endif %}
         {% if page == 'logbook' or page == 'project' %}
         <td>{{ roll.get_status_display }}</td>
