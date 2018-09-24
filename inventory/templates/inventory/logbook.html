@@ -24,10 +24,10 @@
     {% csrf_token %}
     <div class="bulk-status">
         <p>Bulk update the status of these rolls.</p>
-        {% include "inventory/_form-status.html" with page="logbook" current_status=status %}
+        {% include 'inventory/_form-status.html' with page='logbook' current_status=status %}
     </div>
 
-    {% include "inventory/_logbook-table.html" with page="logbook" %}
+    {% include 'inventory/_logbook-table.html' with page='logbook' %}
 </form>
 {% else %}
 <p>No rolls found.</p>

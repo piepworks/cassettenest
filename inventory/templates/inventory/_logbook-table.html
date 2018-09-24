@@ -22,9 +22,9 @@
         {% endif %}
         <td><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></td>
         <td>{{ roll.film }}</td>
-        <td>{{ roll.started_on|date:"Y-m-d" }}</td>
-        <td>{{ roll.ended_on|date:"Y-m-d" }}</td>
-        <td>{{ roll.project|default:"" }}</td>
+        <td>{{ roll.started_on|date:'Y-m-d' }}</td>
+        <td>{{ roll.ended_on|date:'Y-m-d' }}</td>
+        <td>{{ roll.project|default:'' }}</td>
         {% if page == 'logbook' or page == 'project' %}
         <td>{{ roll.get_status_display }}</td>
         {% endif %}

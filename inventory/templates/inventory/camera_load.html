@@ -28,7 +28,7 @@
     </select>
     <input type="submit" value="Filter" />
 </form>
-<p>Showing: {{ current_project.name|default:"All rolls" }}</p>
+<p>Showing: {{ current_project.name|default:'All rolls' }}</p>
 {% endif %}
 
 {% include 'inventory/_form_iso.html' %}
