@@ -1,3 +1,5 @@
 *.sqlite3
 *.css
 tlapse/
+local_settings.py
+prod_settings.py
