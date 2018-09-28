@@ -1,5 +1,8 @@
 *.sqlite3
 *.css
+static/
+!inventory/static
 tlapse/
 local_settings.py
 prod_settings.py
+__pycache__/

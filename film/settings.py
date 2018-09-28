@@ -117,7 +117,7 @@ LOGOUT_REDIRECT_URL = 'index'
 # https://github.com/torchbox/django-libsass
 # https://github.com/django-compressor/django-compressor/
 
-COMPRESS_ROOT = 'static/inventory/scss/'
+STATIC_ROOT = 'static/'
 
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
