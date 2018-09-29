@@ -45,13 +45,13 @@ class Film(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['manufacturer__name', 'name']
+
     def __str__(self):
         return '%s %s in %s' % (
             self.manufacturer, self.name, self.get_format_display()
         )
-
-    class Meta:
-        ordering = ['manufacturer__name', 'name']
 
 
 class Camera(models.Model):
@@ -200,6 +200,11 @@ class Roll(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return '%s added on %s' % (
+            self.film, self.created_at.strftime('%Y-%m-%d')
+        )
+
     @property
     def effective_iso(self):
         "Calculates the effective ISO for a pushed or pulled roll."
@@ -241,8 +246,3 @@ class Roll(models.Model):
         # Check for proper validation of the code field somehow?
 
         super().save(*args, **kwargs)
-
-    def __str__(self):
-        return '%s added on %s' % (
-            self.film, self.created_at.strftime('%Y-%m-%d')
-        )
