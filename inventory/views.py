@@ -93,7 +93,7 @@ def logbook(request):
     status = 0
     rolls = Roll.objects.filter(owner=owner)\
         .exclude(status=status_number('storage'))\
-        .order_by('status')
+        .order_by('status', '-started_on', '-code')
 
     if request.GET.get('status') and request.GET.get('status') in status_keys:
         status = request.GET.get('status')
