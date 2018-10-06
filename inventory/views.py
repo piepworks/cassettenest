@@ -48,9 +48,14 @@ def index(request):
 @login_required
 def profile(request):
     owner = request.user
-    film_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status=status_number('storage'))\
-        .annotate(count=Count('roll'))
+    # Unshot rolls
+    total_film_count = Film.objects.filter(
+        roll__owner=owner,
+        roll__status=status_number('storage'),
+    )
+    film_counts = total_film_count\
+        .annotate(count=Count('roll'))\
+        .order_by('type', 'manufacturer__name', 'name',)
     format_counts = Film.objects\
         .filter(roll__owner=owner, roll__status=status_number('storage'))\
         .values('format')\
@@ -77,6 +82,7 @@ def profile(request):
             force_text(type_choices[type['type']], strings_only=True)
 
     context = {
+        'total_film_count': total_film_count,
         'film_counts': film_counts,
         'format_counts': format_counts,
         'type_counts': type_counts,
@@ -426,12 +432,11 @@ def project_detail(request, pk):
     )
 
     # Unshot rolls already in this project
-    total_film_count = Film.objects\
-        .filter(
-            roll__owner=owner,
-            roll__project=project,
-            roll__status=status_number('storage'),
-        )
+    total_film_count = Film.objects.filter(
+        roll__owner=owner,
+        roll__project=project,
+        roll__status=status_number('storage'),
+    )
     film_counts = total_film_count\
         .annotate(count=Count('roll'))\
         .order_by('type', 'manufacturer__name', 'name',)

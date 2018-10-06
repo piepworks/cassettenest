@@ -5,11 +5,13 @@
 <ul class="cards">
     {% for film in film_counts %}
     <li class="card card__{{ film.type }}">
+        {% if page == 'project' %}
         <form action="{% url 'project-rolls-remove' project.id %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="film" value="{{ film.id }}" />
             <input type="submit" value="Remove from project" />
         </form>
+        {% endif %}
 
         <a href="{% url 'film-rolls' film.slug %}?project={{ project.id }}">
             <header><h1>{{ film }}</h1> </header>

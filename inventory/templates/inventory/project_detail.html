@@ -22,7 +22,7 @@
 
 {% if film_counts %}
     <hr />
-    {% include 'inventory/_project-unused-rolls.html' %}
+    {% include 'inventory/_unused-rolls.html' with page='project' %}
 {% else %}
     <p>No rolls in this project.</p>
 {% endif %}
