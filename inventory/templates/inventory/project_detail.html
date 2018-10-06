@@ -32,14 +32,19 @@
     {% include 'inventory/_project-logbook.html' %}
 {% endif %}
 
-{% if film_available_count %}
-    <hr />
-    {% include 'inventory/_project-add-rolls.html' %}
-{% endif %}
+{% if project.status != 'archived' %}
+    {% if film_available_count %}
+        <hr />
+        {% include 'inventory/_project-add-rolls.html' %}
+    {% endif %}
 
-{% if cameras %}
+    {% if cameras %}
+        <hr />
+        {% include 'inventory/_project-add-camera.html' %}
+    {% endif %}
+{% else %}
     <hr />
-    {% include 'inventory/_project-add-camera.html' %}
+    <p><i>This project is archived. You can add rolls and cameras to it if you <a href="{% url 'project-edit' project.id %}">change its status</a>.</i></p>
 {% endif %}
 
 {% if project.notes %}
