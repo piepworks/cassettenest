@@ -117,7 +117,8 @@ def logbook(request):
 @login_required
 def ready(request):
     owner = request.user
-    rolls = Roll.objects.filter(owner=owner, status=status_number('shot'))
+    rolls = Roll.objects.filter(owner=owner, status=status_number('shot'))\
+        .order_by('-started_on', '-code')
     rolls_by_format = rolls.order_by('film__format')
     rolls_by_type = rolls.order_by('film__type')
     rolls_135 = rolls.filter(film__format=135).count()
@@ -462,7 +463,7 @@ def project_detail(request, pk):
     roll_logbook = Roll.objects.filter(owner=owner, project=project)\
         .exclude(status=status_number('storage'))\
         .exclude(status=status_number('loaded'))\
-        .order_by('status')
+        .order_by('status', '-started_on', '-code')
 
     context = {
         'owner': owner,
