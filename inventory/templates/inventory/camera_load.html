@@ -31,11 +31,11 @@
 <p>Showing: {{ current_project.name|default:'All rolls' }}</p>
 {% endif %}
 
+{% if film_counts %}
 {% include 'inventory/_form_iso.html' %}
 
 <hr />
 
-{% if film_counts %}
 {% include 'inventory/_form-load-camera.html' %}
 {% else %}
 <p>No film to load.</p>
