@@ -6,16 +6,7 @@
 <h1>{{ owner.username }} / {{ format }}</h1>
 
 {% if film_counts %}
-<ul class="cards">
-    {% for film in film_counts %}
-    <li>
-        <a class="card card__{{ film.type }}" href="{% url 'film-rolls' film.slug %}">
-            <header><h1>{{ film.manufacturer }} {{ film.name }}</h1> </header>
-            <div class="count"><span>{{ film.count }}</span></div>
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+{% include 'inventory/_unused-rolls.html' %}
 {% else %}
 <p>{{ owner.username }} doesn't have any of this film.</p>
 {% endif %}

@@ -653,13 +653,18 @@ def film_rolls(request, slug):
 def film_format(request, format):
     '''All the rolls in a particular format that someone has available.'''
     owner = request.user
-    film_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status=status_number('storage'))\
-        .filter(format=format)\
-        .annotate(count=Count('roll'))
+    total_film_count = Film.objects.filter(
+        roll__owner=owner,
+        roll__status=status_number('storage'),
+        format=format,
+    )
+    film_counts = total_film_count\
+        .annotate(count=Count('roll'))\
+        .order_by('type', 'manufacturer__name', 'name',)
     format_choices = dict(Film._meta.get_field('format').flatchoices)
     context = {
         'format': force_text(format_choices[format], strings_only=True),
+        'total_film_count': total_film_count,
         'film_counts': film_counts,
         'owner': owner,
     }
@@ -671,13 +676,18 @@ def film_format(request, format):
 def film_type(request, type):
     '''All the rolls of a particular film type that someone has available.'''
     owner = request.user
-    film_counts = Film.objects\
-        .filter(roll__owner=owner, roll__status=status_number('storage'))\
-        .filter(type=type)\
-        .annotate(count=Count('roll'))
+    total_film_count = Film.objects.filter(
+        roll__owner=owner,
+        roll__status=status_number('storage'),
+        type=type,
+    )
+    film_counts = total_film_count\
+        .annotate(count=Count('roll'))\
+        .order_by('format', 'manufacturer__name', 'name',)
     type_choices = dict(Film._meta.get_field('type').flatchoices)
     context = {
         'type': force_text(type_choices[type], strings_only=True),
+        'total_film_count': total_film_count,
         'film_counts': film_counts,
         'owner': owner,
     }
