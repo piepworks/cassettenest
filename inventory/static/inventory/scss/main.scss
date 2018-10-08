@@ -1,5 +1,7 @@
 @import './vendor/normalize';
 @import './vendor/django-admin-mixins';
+@import './modules/mixins';
+@import './modules/colors';
 @import './partials/base';
 @import './partials/cards';
 @import './partials/dashboard';
