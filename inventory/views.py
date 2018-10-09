@@ -48,14 +48,14 @@ def index(request):
 @login_required
 def profile(request):
     owner = request.user
-    # Unshot rolls
+    # Unused rolls
     total_film_count = Film.objects.filter(
         roll__owner=owner,
         roll__status=status_number('storage'),
     )
     film_counts = total_film_count\
         .annotate(count=Count('roll'))\
-        .order_by('type', 'manufacturer__name', 'name',)
+        .order_by('type', '-format', 'manufacturer__name', 'name',)
     format_counts = Film.objects\
         .filter(roll__owner=owner, roll__status=status_number('storage'))\
         .values('format')\
@@ -432,7 +432,7 @@ def project_detail(request, pk):
         status=status_number('loaded'),
     )
 
-    # Unshot rolls already in this project
+    # Unused rolls already in this project
     total_film_count = Film.objects.filter(
         roll__owner=owner,
         roll__project=project,
@@ -440,7 +440,7 @@ def project_detail(request, pk):
     )
     film_counts = total_film_count\
         .annotate(count=Count('roll'))\
-        .order_by('type', 'manufacturer__name', 'name',)
+        .order_by('type', '-format', 'manufacturer__name', 'name',)
 
     format_counts = {
         '135': film_counts.filter(format='135'),
@@ -684,7 +684,7 @@ def film_type(request, type):
     )
     film_counts = total_film_count\
         .annotate(count=Count('roll'))\
-        .order_by('format', 'manufacturer__name', 'name',)
+        .order_by('-format', 'manufacturer__name', 'name',)
     type_choices = dict(Film._meta.get_field('type').flatchoices)
     context = {
         'type': force_text(type_choices[type], strings_only=True),
