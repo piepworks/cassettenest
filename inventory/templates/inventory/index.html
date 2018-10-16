@@ -32,7 +32,7 @@
 {% for roll in loaded_roll_list %}
     <li>
         <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a> with
-        <a href="{% url 'roll-detail' roll.id %}">{{ roll.film.name }} {{ roll.push_pull }}</a>
+        <a href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }} {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}</a>
     </li>
 {% endfor %}
 </ul>
