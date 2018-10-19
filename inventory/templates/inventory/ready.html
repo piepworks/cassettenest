@@ -180,8 +180,8 @@
     <tr class="totals">
         <th>Totals</th>
         <td></td>
-        <td>{{ rolls_135 }}</td>
-        <td>{{ rolls_120 }}</td>
+        <td>{{ rolls_135|default:'' }}</td>
+        <td>{{ rolls_120|default:'' }}</td>
         <td class="grand"><b>{{ rolls.count }}</b></td>
     </tr>
 </table>
