@@ -7,64 +7,18 @@
 @import './partials/base';
 @import './partials/cards';
 @import './partials/dashboard';
+@import './partials/forms';
+@import './partials/tables';
 
 body {
-    padding: 20px;
-    @include breakpoint('l') { padding: 50px 100px; }
-
     &.logbook { @import './partials/logbook'; }
     &.ready { @import './partials/ready'; }
     &.roll-detail { @import './partials/roll-detail'; }
-}
 
-form {
-    margin-bottom: 20px;
+    > header { @import './partials/site-header'; }
 
-    label { padding-right: 10px; }
-
-    button,
-    input[type='submit'] { @include django-admin-button; }
-
-    select { @include django-admin-select; }
-}
-
-table {
-    border-spacing: 0;
-
-    th { text-align: left; }
-
-    td { padding: 5px 20px 5px 0; }
-
-    td,
-    th { border-bottom: 1px solid #eee; }
-
-    thead th { border-bottom: 1px solid #000; }
-
-    tbody tr:last-child {
-        th,
-        td { border-bottom: none; }
-    }
-
-    &.ready {
-        margin: 30px 0 60px;
-
-        th {
-            min-width: 100px;
-
-            &.totals { min-width: 60px; }
-        }
-
-        th:last-child,
-        td:last-child {
-            border-left: 1px solid #000;
-            padding-left: 10px;
-        }
-
-        .totals {
-            th,
-            td { border-top: 1px solid #000; }
-        }
-
-        .push-pull td { color: #999; }
+    > main {
+        padding: 20px;
+        @include breakpoint('l') { padding: 50px 100px; }
     }
 }

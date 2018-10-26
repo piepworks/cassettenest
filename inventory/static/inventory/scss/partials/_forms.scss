@@ -1,0 +1,10 @@
+form {
+    margin-bottom: 20px;
+
+    label { padding-right: 10px; }
+
+    button,
+    input[type='submit'] { @include django-admin-button; }
+
+    select { @include django-admin-select; }
+}
