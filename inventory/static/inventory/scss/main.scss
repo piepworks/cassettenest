@@ -1,5 +1,7 @@
 @import './vendor/normalize';
 @import './vendor/django-admin-mixins';
+@import './modules/utils';
+// @import './modules/breakpoint-display';
 @import './modules/mixins';
 @import './modules/colors';
 @import './partials/base';
@@ -7,7 +9,8 @@
 @import './partials/dashboard';
 
 body {
-    padding: 50px 100px;
+    padding: 20px;
+    @include breakpoint('l') { padding: 50px 100px; }
 
     &.logbook { @import './partials/logbook'; }
     &.ready { @import './partials/ready'; }

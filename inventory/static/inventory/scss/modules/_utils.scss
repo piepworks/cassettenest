@@ -1,0 +1,17 @@
+// Replace these sizes and names with whatever you want.
+
+$breakpoints: (
+    s:  '(min-width: 375px)',
+    m:  '(min-width: 890px)',
+    l:  '(min-width: 1120px)',
+    xl: '(min-width: 1400px)'
+);
+
+// Example usage:
+//     @include breakpoint('S') { /*...*/ }
+
+@mixin breakpoint($query) {
+    @media only screen and #{map-get($breakpoints, $query)} {
+        @content;
+    }
+}
