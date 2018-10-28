@@ -1,7 +1,26 @@
 & {
     background: #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+
+    a { text-decoration: none; }
 
     h1 {
         margin: 0;
+        font-size: 26px;
+    }
+
+    nav ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        font-size: 14px;
+
+        li {
+            display: inline-block;
+            margin-left: 10px;
+        }
     }
 }

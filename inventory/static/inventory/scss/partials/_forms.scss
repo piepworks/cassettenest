@@ -7,4 +7,6 @@ form {
     input[type='submit'] { @include django-admin-button; }
 
     select { @include django-admin-select; }
+
+    input[type='number'] { width: 5em; }
 }
