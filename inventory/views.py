@@ -739,7 +739,8 @@ def roll_edit(request, pk):
     else:
         form = RollForm(instance=roll)
         form.fields['camera'].queryset = Camera.objects.filter(
-            format=roll.film.format
+            format=roll.film.format,
+            owner=owner
         )
 
         context = {
