@@ -17,6 +17,8 @@ body {
 
     > header { @import './partials/site-header'; }
 
+    > .messages { @import './partials/messages'; }
+
     > main {
         padding: 20px;
         @include breakpoint('l') { padding: 50px 100px; }
