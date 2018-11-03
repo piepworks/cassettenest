@@ -15,7 +15,7 @@ class CameraForm(ModelForm):
 
 
 class RollForm(ModelForm):
-    camera = CameraChoiceField(queryset=Roll.objects.all())
+    camera = CameraChoiceField(queryset=Camera.objects.all())
 
     class Meta:
         model = Roll
