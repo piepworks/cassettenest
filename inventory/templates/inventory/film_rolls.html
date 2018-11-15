@@ -1,9 +1,9 @@
 {% extends 'base_site.html' %}
 
-{% block title %} / {{ film }}{% endblock %}
+{% block title %} / {{ name }}{% endblock %}
 
 {% block content %}
-<h1>{{ owner.username }} / {{ name }}</h1>
+<h1>{{ name }}</h1>
 
 {% if rolls %}
 
@@ -21,6 +21,6 @@
     {% endfor %}
 </ul>
 {% else %}
-<p>{{ owner.username }} doesn't have any of this film.</p>
+<p>You don&rsquo;t have any of this film.</p>
 {% endif %}
 {% endblock %}

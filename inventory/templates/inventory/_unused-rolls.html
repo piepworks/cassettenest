@@ -13,7 +13,7 @@
         </form>
         {% endif %}
 
-        <a href="{% url 'film-rolls' film.slug %}?project={{ project.id }}">
+        <a href="{% url 'film-rolls' film.slug %}{% if project %}?project={{ project.id }}{% endif %}">
             <header><h1>{{ film }}</h1> </header>
         </a>
 
