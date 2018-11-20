@@ -84,7 +84,7 @@
 
 <h2>Rolls Ready to Process</h2>
 {% if ready_roll_list %}
-<p><a href="{% url 'ready' %}">{{ ready_roll_list.count }} rolls ready to process.</a></p>
+<p><a href="{% url 'ready' %}">{{ ready_roll_list.count }} roll{{ ready_roll_list.count|pluralize }} ready to process.</a></p>
 {% else %}
 <p>You're all caught up!</p>
 {% endif %}
