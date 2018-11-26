@@ -531,7 +531,12 @@ def project_rolls_remove(request, pk):
         project = get_object_or_404(Project, id=pk, owner=owner)
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
 
-        rolls = Roll.objects.filter(owner=owner, film=film, project=project)
+        rolls = Roll.objects.filter(
+            owner=owner,
+            film=film,
+            project=project,
+            status=status_number('storage'),
+        )
         roll_count = rolls.count()
         rolls.update(project=None)
 
