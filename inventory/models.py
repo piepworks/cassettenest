@@ -246,3 +246,21 @@ class Roll(models.Model):
         # Check for proper validation of the code field somehow?
 
         super().save(*args, **kwargs)
+
+
+class Journal(models.Model):
+    roll = models.ForeignKey(Roll, on_delete=models.CASCADE)
+    date = models.DateField()
+    notes = models.TextField(blank=True)
+    frame = models.IntegerField(help_text='Last frame of the day')
+
+    class Meta:
+        verbose_name = 'journal entry'
+        verbose_name_plural = 'journal entries'
+        unique_together = (('roll', 'date'),)
+        ordering = ['date']
+
+    def __str__(self):
+        return 'Journal entry for %s on %s' % (
+            self.roll.code, self.date.strftime('%Y-%m-%d')
+        )
