@@ -1,4 +1,4 @@
-<h2>Cameras</h2>
+<h2>Camera{{ project.cameras.count|pluralize }}</h2>
 
 <ul>
     {% regroup project.cameras.all by get_status_display as camera_list %}
