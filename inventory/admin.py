@@ -36,9 +36,7 @@ class RollAdmin(admin.ModelAdmin):
 
 
 class CameraAdmin(admin.ModelAdmin):
-    list_filter = (
-        'owner',
-    )
+    list_filter = ('owner',)
     list_display = (
         'owner',
         'name',
@@ -46,9 +44,24 @@ class CameraAdmin(admin.ModelAdmin):
     )
 
 
+class JournalAdmin(admin.ModelAdmin):
+    list_filter = ('roll__owner',)
+    list_display = (
+        'date',
+        'roll_owner',
+        'roll_code',
+    )
+
+    def roll_owner(self, obj):
+        return obj.roll.owner
+
+    def roll_code(self, obj):
+        return obj.roll.code
+
+
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Camera, CameraAdmin)
 admin.site.register(Project)
-admin.site.register(Journal)
+admin.site.register(Journal, JournalAdmin)
