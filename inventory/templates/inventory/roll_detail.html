@@ -53,7 +53,7 @@
     </li>
     {% endif %}
 
-    {% comment %}
+    {% if journal_entries %}
     <li class="journal">Journal
         <table>
             <thead>
@@ -64,20 +64,17 @@
                 </tr>
             </thead>
             <tbody>
+                {% for entry in journal_entries %}
                 <tr>
-                    <td>1-5</td>
-                    <td>Entry one</td>
-                    <td>2018-12-08</td>
+                    <td>{{ entry.frame }}</td>
+                    <td>{{ entry.notes }}</td>
+                    <td>{{ entry.date }}</td>
                 </tr>
-                <tr>
-                    <td>6-10</td>
-                    <td>Entry two</td>
-                    <td>2018-12-09</td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </li>
-    {% endcomment %}
+    {% endif %}
 
     {% if roll.status in development_statuses %}
     <li class="development">Development
