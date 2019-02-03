@@ -1,13 +1,13 @@
 {% extends 'base_site.html' %}
 
-{% block title %} / {{ type }}{% endblock %}
+{% block title %} / Type: {{ type }}{% endblock %}
 
 {% block content %}
-<h1>{{ owner.username }} / {{ type }}</h1>
+<h1>Type: {{ type }}</h1>
 
 {% if film_counts %}
 {% include 'inventory/_unused-rolls.html' %}
 {% else %}
-<p>{{ owner.username }} doesn't have any of this film.</p>
+<p>You don&rsquo;t have any of this type of film.</p>
 {% endif %}
 {% endblock %}
