@@ -627,7 +627,7 @@ def film_rolls(request, slug):
     '''All the rolls of a particular film that someone has available.'''
     owner = request.user
     current_project = None
-    name = Film.objects.only('name').get(slug=slug)
+    film = Film.objects.get(slug=slug)
     rolls = Roll.objects.filter(
         owner=owner,
         status=status_number('storage'),
@@ -646,7 +646,7 @@ def film_rolls(request, slug):
 
     context = {
         'rolls': rolls,
-        'name': name,
+        'film': film,
         'slug': slug,
         'owner': owner,
         'current_project': current_project,
