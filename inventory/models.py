@@ -6,7 +6,7 @@ from .utils import *
 class Manufacturer(models.Model):
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50, unique=True)
-    url = models.URLField(max_length=200, blank=True)
+    url = models.URLField(max_length=200, blank=True, verbose_name='URL')
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -42,7 +42,7 @@ class Film(models.Model):
         choices=FORMAT_CHOICES,
         default='135',
     )
-    url = models.URLField(max_length=200, blank=True)
+    url = models.URLField(max_length=200, blank=True, verbose_name='URL')
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
