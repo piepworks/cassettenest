@@ -5,7 +5,7 @@
 
 {% block content %}
 {% if rolls %}
-<h2>You have {{ rolls.count }} rolls ready to process.</h2>
+<h2>You have {{ rolls.count }} roll{{ rolls.count|pluralize }} ready to process.</h2>
 
 <table class="ready">
     <thead>
