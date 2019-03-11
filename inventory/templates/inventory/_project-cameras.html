@@ -13,7 +13,7 @@
                     {% csrf_token %}
                     <input type="hidden" name="action" value="remove" />
                     <input type="hidden" name="camera" value="{{ camera.id }}" />
-                    <input type="submit" value="Remove from project" />
+                    <input type="submit" value="Remove" title="Remove from project" />
                 </form>
                 {% if camera.status == 'loaded' %}
                     {% for roll in loaded_roll_list %}

@@ -9,7 +9,7 @@
         <form action="{% url 'project-rolls-remove' project.id %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="film" value="{{ film.id }}" />
-            <input type="submit" value="Remove from project" />
+            <input type="submit" value="Remove" title="Remove from project" />
         </form>
         {% endif %}
 
