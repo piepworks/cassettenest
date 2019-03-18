@@ -59,9 +59,22 @@ class JournalAdmin(admin.ModelAdmin):
         return obj.roll.code
 
 
+class ProjectAdmin(admin.ModelAdmin):
+    list_filter = (
+        'owner',
+        'status',
+    )
+    list_display = (
+        'name',
+        'owner',
+        'created_at',
+        'updated_at',
+    )
+
+
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Camera, CameraAdmin)
-admin.site.register(Project)
+admin.site.register(Project, ProjectAdmin)
 admin.site.register(Journal, JournalAdmin)

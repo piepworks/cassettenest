@@ -60,7 +60,8 @@ def profile(request):
         .filter(roll__owner=owner, roll__status=status_number('storage'))\
         .values('format')\
         .annotate(count=Count('format')).distinct().order_by('format')
-    projects = Project.objects.filter(owner=owner).order_by('-status')
+    projects = Project.objects.filter(owner=owner)\
+        .order_by('-status', '-updated_at',)
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
