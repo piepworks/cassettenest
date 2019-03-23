@@ -29,9 +29,9 @@
 
 {% if current_project %}
 <h2>Viewing rolls in project: <a href="{% url 'project-detail' current_project.id %}">{{ current_project }}</a>.</h2>
-<h3><a href="{% url 'film-rolls' slug %}">View all your rolls of {{ name }}.</a></h3>
-
+<h3><a href="{% url 'film-rolls' slug %}">View all your rolls of {{ film }}.</a></h3>
 {% endif %}
+
 <ul>
     {% for roll in rolls %}
     <li>
