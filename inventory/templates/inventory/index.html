@@ -24,6 +24,7 @@
 <h2><a href="{% url 'camera-add' %}">Add a camera</a></h2>
 <h2><a href="{% url 'project-add' %}">Add a project</a></h2>
 <h2><a href="{% url 'logbook' %}">View logbook</a></h2>
+<h2><a href="{% url 'dashboard' %}">View dashboard</a></h2>
 
 <h2>Currently loaded cameras</h2>
 
@@ -52,9 +53,8 @@
 <p>You have no cameras ready to load.</p>
 {% endif %}
 
-<hr />
-
 {% if latest_finished_rolls %}
+<hr />
 <h2>Recently finished rolls</h2>
 <ul>
 {% for roll in latest_finished_rolls %}
@@ -64,20 +64,6 @@
     </li>
 {% endfor %}
 </ul>
-{% endif %}
-
-{% if latest_roll_list %}
-<h2>Recently added rolls</h2>
-<ul>
-{% for roll in latest_roll_list %}
-    <li>
-        <a href="{% url 'roll-detail' roll.id %}">{{ roll.film }}</a>
-        {% include 'inventory/_roll-project-link.html' %}
-    </li>
-{% endfor %}
-</ul>
-{% else %}
-<p>You have no film.</p>
 {% endif %}
 
 <hr />
