@@ -806,7 +806,7 @@ def roll_journal_add(request, roll_pk):
 
 
 @login_required
-def roll_journal_entry(request, roll_pk, entry_pk):
+def roll_journal_edit(request, roll_pk, entry_pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=roll_pk, owner=owner)
     entry = get_object_or_404(Journal, roll=roll, pk=entry_pk)
@@ -824,7 +824,9 @@ def roll_journal_entry(request, roll_pk, entry_pk):
             return redirect(reverse('roll-detail', args=(roll.id,)))
         else:
             messages.error(request, 'Something is not right.')
-            return redirect(reverse('roll-journal-add', args=(roll.id,)))
+            return redirect(
+                reverse('roll-journal-edit', args=(roll.id, entry.id,))
+            )
     else:
         form = JournalForm(instance=entry)
         context = {

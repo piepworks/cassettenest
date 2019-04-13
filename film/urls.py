@@ -32,7 +32,7 @@ urlpatterns = [
     path('roll/<int:roll_pk>/journal/add/',
          views.roll_journal_add, name='roll-journal-add'),
     path('roll/<int:roll_pk>/journal/<int:entry_pk>/',
-         views.roll_journal_entry, name='roll-journal-entry'),
+         views.roll_journal_edit, name='roll-journal-edit'),
 
     # Projects
     path('project/add/', views.project_add, name='project-add'),
