@@ -1,0 +1,33 @@
+{% extends 'base_site.html' %}
+{% block bodytag %}class="journal-entry"{% endblock %}
+
+{% block title %} / Journal entry for {{ roll }}{% endblock %}
+
+{% block content %}
+<h1>Journal entry for {{ roll }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    <div>
+        <label for="{{ form.frame.id_for_label }}">{{ form.frame.label }}</label>
+        {{ form.frame }}
+    </div>
+    {% comment %}
+    <div>
+        <label for="checkbox-done">Done?</label>
+        <input id="checkbox-done" type="checkbox" />
+    </div>
+    {% endcomment %}
+    <div class="notes">
+        <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+        {{ form.notes }}
+    </div>
+    <div>
+        <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
+        {{ form.date }}
+    </div>
+    <div class="action">
+        <input type="submit" value="Save" />
+    </div>
+</form>
+{% endblock %}

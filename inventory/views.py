@@ -804,7 +804,7 @@ def roll_journal_add(request, roll_pk):
 
         return render(
             request,
-            'inventory/roll_journal.html',
+            'inventory/roll_journal_add_edit.html',
             context
         )
 
@@ -846,7 +846,7 @@ def roll_journal_edit(request, roll_pk, entry_pk):
 
         return render(
             request,
-            'inventory/roll_journal.html',
+            'inventory/roll_journal_add_edit.html',
             context
         )
 

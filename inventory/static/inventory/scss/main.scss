@@ -14,6 +14,7 @@ body {
     &.logbook { @import './partials/logbook'; }
     &.ready { @import './partials/ready'; }
     &.roll-detail { @import './partials/roll-detail'; }
+    &.journal-entry { @import './partials/journal-entry'; }
 
     > header { @import './partials/site-header'; }
 
