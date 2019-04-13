@@ -807,7 +807,37 @@ def roll_journal_add(request, roll_pk):
 
 @login_required
 def roll_journal_entry(request, roll_pk, entry_pk):
-    pass
+    owner = request.user
+    roll = get_object_or_404(Roll, pk=roll_pk, owner=owner)
+    entry = get_object_or_404(Journal, roll=roll, pk=entry_pk)
+
+    if request.method == 'POST':
+        form = JournalForm(request.POST)
+
+        if form.is_valid():
+            entry.date = form.cleaned_data['date']
+            entry.notes = form.cleaned_data['notes']
+            entry.frame = form.cleaned_data['frame']
+            entry.save()
+
+            messages.success(request, 'Journal entry updated.')
+            return redirect(reverse('roll-detail', args=(roll.id,)))
+        else:
+            messages.error(request, 'Something is not right.')
+            return redirect(reverse('roll-journal-add', args=(roll.id,)))
+    else:
+        form = JournalForm(instance=entry)
+        context = {
+            'owner': owner,
+            'roll': roll,
+            'form': form,
+        }
+
+        return render(
+            request,
+            'inventory/roll_journal.html',
+            context
+        )
 
 
 @login_required

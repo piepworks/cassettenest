@@ -92,7 +92,7 @@
         <tr>
             <td>{{ entry.frame }}</td>
             <td>{{ entry.notes }}</td>
-            <td>{{ entry.date }}</td>
+            <td><a href="{% url 'roll-journal-entry' roll.id entry.id %}">{{ entry.date }}</a></td>
         </tr>
         {% endfor %}
     </tbody>
