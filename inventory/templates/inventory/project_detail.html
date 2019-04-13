@@ -10,7 +10,7 @@
 
 <p><a href="{% url 'project-edit' project.id %}">Edit project</a></p>
 
-<form action="{% url 'project-delete' project.id %}" method="post">
+<form onsubmit="return confirmDelete('project');" action="{% url 'project-delete' project.id %}" method="post">
     {% csrf_token %}
     <input type="submit" value="Delete this project." />
 </form>

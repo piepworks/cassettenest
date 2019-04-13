@@ -1,3 +1,3 @@
-const confirmDelete = function() {
-    return confirm('Are you sure you want to delete this item?');
+const confirmDelete = function(item='item') {
+    return confirm(`Are you sure you want to delete this ${item}?`);
 }
