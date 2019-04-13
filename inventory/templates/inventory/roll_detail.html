@@ -85,6 +85,7 @@
             <th>Frames</th>
             <th>Notes</th>
             <th>Date</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -93,6 +94,12 @@
             <td>{{ entry.frame }}</td>
             <td>{{ entry.notes }}</td>
             <td><a href="{% url 'roll-journal-edit' roll.id entry.id %}">{{ entry.date }}</a></td>
+            <td>
+                <form onSubmit="return confirmDelete();" action="{% url 'roll-journal-delete' roll.id entry.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="submit" value="Delete" />
+                </form>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

@@ -842,6 +842,23 @@ def roll_journal_edit(request, roll_pk, entry_pk):
         )
 
 
+@require_POST
+@login_required
+def roll_journal_delete(request, roll_pk, entry_pk):
+    owner = request.user
+    roll = get_object_or_404(Roll, pk=roll_pk, owner=owner)
+    entry = get_object_or_404(Journal, roll=roll, pk=entry_pk)
+    entry_date = entry.date
+
+    entry.delete()
+
+    messages.success(
+        request,
+        'Journal entry for %s successfully deleted.' % (entry_date)
+    )
+    return redirect(reverse('roll-detail', args=(roll.id,)))
+
+
 @login_required
 def camera_load(request, pk):
     owner = request.user

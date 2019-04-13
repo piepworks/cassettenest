@@ -33,6 +33,8 @@ urlpatterns = [
          views.roll_journal_add, name='roll-journal-add'),
     path('roll/<int:roll_pk>/journal/<int:entry_pk>/',
          views.roll_journal_edit, name='roll-journal-edit'),
+    path('roll/<int:roll_pk>/journal/<int:entry_pk>/delete/',
+         views.roll_journal_delete, name='roll-journal-delete'),
 
     # Projects
     path('project/add/', views.project_add, name='project-add'),
