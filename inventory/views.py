@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic.detail import DetailView
 from django.db.models import Count
+from django.db import IntegrityError
 from django.contrib.auth.models import User
 from django.views.generic.detail import DetailView
 from django.views.decorators.http import require_POST
@@ -778,15 +779,18 @@ def roll_journal_add(request, roll_pk):
             notes = form.cleaned_data['notes']
             frame = form.cleaned_data['frame']
 
-            journal = Journal.objects.create(
-                roll=roll,
-                date=date,
-                notes=notes,
-                frame=frame
-            )
-
-            messages.success(request, 'Journal entry added.')
-            return redirect(reverse('roll-detail', args=(roll.id,)))
+            try:
+                journal = Journal.objects.create(
+                    roll=roll,
+                    date=date,
+                    notes=notes,
+                    frame=frame
+                )
+                messages.success(request, 'Journal entry added.')
+                return redirect(reverse('roll-detail', args=(roll.id,)))
+            except IntegrityError:
+                messages.error(request, 'Only one entry per date per roll.')
+                return redirect(reverse('roll-journal-add', args=(roll.id,)))
         else:
             messages.error(request, 'Something is not right.')
             return redirect(reverse('roll-journal-add', args=(roll.id,)))
@@ -818,10 +822,15 @@ def roll_journal_edit(request, roll_pk, entry_pk):
             entry.date = form.cleaned_data['date']
             entry.notes = form.cleaned_data['notes']
             entry.frame = form.cleaned_data['frame']
-            entry.save()
-
-            messages.success(request, 'Journal entry updated.')
-            return redirect(reverse('roll-detail', args=(roll.id,)))
+            try:
+                entry.save()
+                messages.success(request, 'Journal entry updated.')
+                return redirect(reverse('roll-detail', args=(roll.id,)))
+            except IntegrityError:
+                messages.error(request, 'Only one entry per date per roll.')
+                return redirect(
+                    reverse('roll-journal-edit', args=(roll.id, entry.id,))
+                )
         else:
             messages.error(request, 'Something is not right.')
             return redirect(
