@@ -53,29 +53,6 @@
     </li>
     {% endif %}
 
-    {% if journal_entries %}
-    <li class="journal">Journal
-        <table>
-            <thead>
-                <tr>
-                    <th>Frames</th>
-                    <th>Notes</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for entry in journal_entries %}
-                <tr>
-                    <td>{{ entry.frame }}</td>
-                    <td>{{ entry.notes }}</td>
-                    <td>{{ entry.date }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </li>
-    {% endif %}
-
     {% if roll.status in development_statuses %}
     <li class="development">Development
         <ul>
@@ -98,4 +75,29 @@
     </li>
     {% endif %}
 </ul>
+
+<hr />
+
+{% if journal_entries %}
+<table>
+    <thead>
+        <tr>
+            <th>Frames</th>
+            <th>Notes</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for entry in journal_entries %}
+        <tr>
+            <td>{{ entry.frame }}</td>
+            <td>{{ entry.notes }}</td>
+            <td>{{ entry.date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<p><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
 {% endblock %}

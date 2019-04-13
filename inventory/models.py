@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .utils import *
+import datetime
 
 
 class Manufacturer(models.Model):
@@ -252,7 +253,7 @@ class Roll(models.Model):
 
 class Journal(models.Model):
     roll = models.ForeignKey(Roll, on_delete=models.CASCADE)
-    date = models.DateField()
+    date = models.DateField(default=datetime.date.today)
     notes = models.TextField(blank=True)
     frame = models.IntegerField(help_text='Last frame of the day')
     created_at = models.DateTimeField(auto_now_add=True)

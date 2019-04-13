@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm, ModelChoiceField
-from .models import Camera, Roll, Project
+from .models import Camera, Roll, Project, Journal
 
 
 class CameraChoiceField(ModelChoiceField):
@@ -26,3 +26,9 @@ class ProjectForm(ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'status', 'notes', 'owner']
+
+
+class JournalForm(ModelForm):
+    class Meta:
+        model = Journal
+        fields = ['date', 'notes', 'frame']

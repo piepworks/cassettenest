@@ -766,6 +766,51 @@ def roll_edit(request, pk):
 
 
 @login_required
+def roll_journal_add(request, roll_pk):
+    owner = request.user
+    roll = get_object_or_404(Roll, pk=roll_pk, owner=owner)
+
+    if request.method == 'POST':
+        form = JournalForm(request.POST)
+
+        if form.is_valid():
+            date = form.cleaned_data['date']
+            notes = form.cleaned_data['notes']
+            frame = form.cleaned_data['frame']
+
+            journal = Journal.objects.create(
+                roll=roll,
+                date=date,
+                notes=notes,
+                frame=frame
+            )
+
+            messages.success(request, 'Journal entry added.')
+            return redirect(reverse('roll-detail', args=(roll.id,)))
+        else:
+            messages.error(request, 'Something is not right.')
+            return redirect(reverse('roll-journal-add', args=(roll.id,)))
+    else:
+        form = JournalForm()
+        context = {
+            'owner': owner,
+            'roll': roll,
+            'form': form,
+        }
+
+        return render(
+            request,
+            'inventory/roll_journal.html',
+            context
+        )
+
+
+@login_required
+def roll_journal_entry(request, roll_pk, entry_pk):
+    pass
+
+
+@login_required
 def camera_load(request, pk):
     owner = request.user
     current_project = None
