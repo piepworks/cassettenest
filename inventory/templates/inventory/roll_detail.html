@@ -1,7 +1,14 @@
 {% extends 'base_site.html' %}
 {% load markdown_deux_tags %}
 
-{% block title %} / {{ roll }}{% endblock %}
+{% block title %}
+    {% if roll.status != '01_storage' %}
+    / {{ roll.code }} / {{ roll.started_on|date:'Y' }}
+    {% else %}
+    / {{ roll }}
+    {% endif %}
+{% endblock %}
+
 {% block bodytag %}class="roll-detail"{% endblock %}
 
 {% block content %}
