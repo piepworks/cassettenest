@@ -4,7 +4,7 @@
 {% block title %} / Journal entry for {{ roll }}{% endblock %}
 
 {% block content %}
-<h1>Journal entry for {{ roll }}</h1>
+<h1>Journal entry for <span><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></span> / {{ roll.started_on|date:'Y' }}</h1>
 
 <form method="post">
     {% csrf_token %}
@@ -24,7 +24,7 @@
     </div>
     <div>
         <label for="{{ form.date.id_for_label }}">{{ form.date.label }}</label>
-        <input type="date" name={{ form.date.html_name }} value="{{ form.date.value|date:"Y-m-d" }}" id="{{ form.date.id_for_label}}" />
+        <input type="date" name={{ form.date.html_name }} value="{{ form.date.value|date:'Y-m-d' }}" id="{{ form.date.id_for_label}}" />
     </div>
     <div class="action">
         <input type="submit" value="Save" />
