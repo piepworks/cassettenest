@@ -44,15 +44,23 @@ class RollTestCase(TestCase):
             film__type='bw',
             started_on=datetime.date.today()
         )
+        roll6 = mommy.make(
+            Roll,
+            owner__id=2,
+            film__type='bw',
+            started_on=datetime.date.today()
+        )
 
         roll1.save()
         roll2.save()
         roll3.save()
         roll4.save()
         roll5.save()
+        roll6.save()
 
         self.assertEqual(roll1.code, '35-e6-1')
         self.assertEqual(roll2.code, '35-c41-1')
         self.assertEqual(roll3.code, '35-e6-2')
         self.assertEqual(roll4.code, '35-c41-2')
         self.assertEqual(roll5.code, '35-bw-1')
+        self.assertEqual(roll6.code, '35-bw-1')

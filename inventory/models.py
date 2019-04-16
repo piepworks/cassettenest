@@ -168,7 +168,6 @@ class Roll(models.Model):
     code = models.CharField(
         max_length=100,
         help_text='A unique roll code (per year)',
-        unique_for_year='started_on',
         blank=True,
     )
     status = models.CharField(
@@ -244,7 +243,6 @@ class Roll(models.Model):
             format = '35' if self.film.format == '135' else self.film.format
 
             # TODO: Check for proper validation of the code field somehow?
-
             self.code = '%s-%s-%d' % (format, self.film.type, sequence)
             self.status = status_number('loaded')
 
