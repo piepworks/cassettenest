@@ -24,8 +24,7 @@ def index(request):
         latest_finished_rolls = Roll.objects.filter(
             owner=owner, status=status_number('shot')
         ).order_by('-ended_on')[:5]
-        empty_camera_list = Camera.objects\
-            .filter(owner=owner, status='empty')
+        empty_camera_list = Camera.objects.filter(owner=owner, status='empty')
         loaded_roll_list = Roll.objects.filter(
             owner=owner,
             status=status_number('loaded')

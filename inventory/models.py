@@ -254,8 +254,9 @@ class Roll(models.Model):
         if self.code and self.status == status_number('storage'):
             # Unload camera
             if self.camera:
-                self.camera.status = 'emtpy'
+                self.camera.status = 'empty'
                 self.camera.save()
+                self.camera = None
 
             self.code = ''
             self.push_pull = ''
