@@ -737,8 +737,9 @@ def roll_edit(request, pk):
             roll.notes = form.cleaned_data['notes']
             roll.lab = form.cleaned_data['lab']
             roll.scanner = form.cleaned_data['scanner']
-            roll.notes_on_development =\
-                form.cleaned_data['notes_on_development']
+            roll.notes_on_development = form.cleaned_data[
+                'notes_on_development'
+            ]
             roll.save()
 
             messages.success(request, 'Changes saved!')

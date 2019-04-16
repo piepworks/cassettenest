@@ -243,10 +243,24 @@ class Roll(models.Model):
 
             format = '35' if self.film.format == '135' else self.film.format
 
+            # TODO: Check for proper validation of the code field somehow?
+
             self.code = '%s-%s-%d' % (format, self.film.type, sequence)
             self.status = status_number('loaded')
 
-        # Check for proper validation of the code field somehow?
+        # If we've changed our minds and put something back into storage, set
+        # everything back to factory condition.
+
+        if self.code and self.status == status_number('storage'):
+            # Unload camera
+            if self.camera:
+                self.camera.status = 'emtpy'
+                self.camera.save()
+
+            self.code = ''
+            self.push_pull = ''
+            self.started_on = None
+            self.ended_on = None
 
         super().save(*args, **kwargs)
 

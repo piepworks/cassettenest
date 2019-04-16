@@ -3,7 +3,10 @@
 {% block title %} / {{ roll }}{% endblock %}
 
 {% block content %}
-<h1>Edit {{ roll }}</h1>
+<h1>
+    Edit {{ roll }}
+    {% if roll.code %}<br />({{ roll.code }}){% endif %}
+</h1>
 
 <form method="post">
     {% csrf_token %}
@@ -19,8 +22,6 @@
     <p><label>{{ form.scanner.label }}: {{ form.scanner }}</label> <small>{{ form.scanner.help_text }}</small></p>
     <p><label for="id_notes_on_development">{{ form.notes_on_development.label }}:</label> <small>({{ form.notes_on_development.help_text }})</small></p>
     <p>{{ form.notes_on_development }}</p>
-    <p><label>{{ form.started_on.label }}: {{ form.started_on }}</label> <small>{{ form.started_on.help_text }}</small></p>
-    <p><label>{{ form.ended_on.label }}: {{ form.ended_on }}</label> <small>{{ form.ended_on.help_text }}</small></p>
     <input type="submit" value="Save changes">
 </form>
 {% endblock %}
