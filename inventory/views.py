@@ -767,6 +767,26 @@ def roll_edit(request, pk):
         )
 
 
+@require_POST
+@login_required
+def roll_delete(request, pk):
+    owner = request.user
+    roll = get_object_or_404(Roll, pk=pk, owner=owner)
+    film = roll.film
+
+    if roll.camera:
+        roll.camera.status = 'empty'
+        roll.camera.save()
+
+    roll.delete()
+
+    messages.success(
+        request,
+        'Roll of %s successfully deleted.' % (film)
+    )
+    return redirect(reverse('index'))
+
+
 @login_required
 def roll_journal_add(request, roll_pk):
     owner = request.user
