@@ -282,3 +282,18 @@ class Journal(models.Model):
         return 'Journal entry for %s on %s' % (
             self.roll.code, self.date.strftime('%Y-%m-%d')
         )
+
+    @property
+    def starting_frame(self):
+        "Adds one to the previous entry's frame."
+
+        entries = Journal.objects.filter(roll=self.roll)
+
+        for index, obj in enumerate(entries):
+            if obj == self:
+                if index > 0:
+                    # If it's not the first entry for the roll.
+                    return entries[index - 1].frame + 1
+                else:
+                    # If it is the first entry for the roll.
+                    return 1

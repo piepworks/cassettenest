@@ -104,7 +104,13 @@
     <tbody>
         {% for entry in journal_entries %}
         <tr>
-            <td>{{ entry.frame }}</td>
+            <td>
+                {{ entry.starting_frame }}
+                {% if entry.frame != entry.starting_frame %}
+                    &ndash;
+                    {{ entry.frame }}
+                {% endif %}
+            </td>
             <td>{{ entry.notes }}</td>
             <td><a href="{% url 'roll-journal-edit' roll.id entry.id %}">{{ entry.date }}</a></td>
             <td>
@@ -118,7 +124,6 @@
     </tbody>
 </table>
 {% endif %}
-
 
 <ul>
     <li><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></li>
