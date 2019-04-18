@@ -815,7 +815,13 @@ def roll_journal_add(request, roll_pk):
             messages.error(request, 'Something is not right.')
             return redirect(reverse('roll-journal-add', args=(roll.id,)))
     else:
-        form = JournalForm()
+        # Find the last entry's ending frame and add one.
+
+        starting_frame = Journal.objects.filter(
+            roll=roll
+        ).reverse()[0].frame + 1
+
+        form = JournalForm(initial={'frame': starting_frame})
         context = {
             'owner': owner,
             'roll': roll,
@@ -862,6 +868,7 @@ def roll_journal_edit(request, roll_pk, entry_pk):
             'owner': owner,
             'roll': roll,
             'form': form,
+            'starting_frame': entry.starting_frame,
         }
 
         return render(

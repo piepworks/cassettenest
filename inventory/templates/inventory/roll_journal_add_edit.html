@@ -10,7 +10,13 @@
     {% csrf_token %}
     <div>
         <label for="{{ form.frame.id_for_label }}">{{ form.frame.label }}</label>
+        <span>
+        {% if starting_frame %}
+            {{ starting_frame }}
+            &ndash;
+        {% endif %}
         {{ form.frame }}
+        </span>
     </div>
     {% comment %}
     <div>
