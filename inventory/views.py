@@ -816,10 +816,12 @@ def roll_journal_add(request, roll_pk):
             return redirect(reverse('roll-journal-add', args=(roll.id,)))
     else:
         # Find the last entry's ending frame and add one.
-
-        starting_frame = Journal.objects.filter(
-            roll=roll
-        ).reverse()[0].frame + 1
+        try:
+            starting_frame = Journal.objects.filter(
+                roll=roll
+            ).reverse()[0].frame + 1
+        except IndexError:
+            starting_frame = 1
 
         form = JournalForm(initial={'frame': starting_frame})
         context = {
