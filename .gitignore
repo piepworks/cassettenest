@@ -6,3 +6,8 @@ tlapse/
 local_settings.py
 prod_settings.py
 __pycache__/
+
+cypress/
+node_modules/
+cypress.json
+package-lock.json

@@ -1,6 +1,43 @@
 {% extends 'base_site.html' %}
 
 {% block content %}
+<ul>
+    <li>Current Projects
+        <ul>
+            {% for project in projects %}
+            <li><a href="{% url 'project-detail' project.id %}">{{ project.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>Loaded Cameras
+        <ul>
+            {% for roll in loaded_roll_list %}
+            <li>
+                <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a> with
+                <a href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }} {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>Empty Cameras
+        <ul>
+            {% for camera in empty_camera_list %}
+            <li><a href="{% url 'camera-load' camera.id %}">{{ camera.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    <li>[Inventory]
+        <ul>
+            <li><a href="{% url 'ready' %}">{{ ready_roll_list.count }} roll{{ ready_roll_list.count|pluralize }} ready to process.</a></li>
+            <li><a href="{% url 'dashboard' %}">{{ outstanding_rolls }} roll{{ outstanding_rolls|pluralize }} are still <span class="help" title="Everything that's not in storage or archived">outstanding</span>.</a></li>
+            <li><a href="{% url 'profile' %}">{{ storage_rolls }} roll{{ storage_rolls|pluralize }} in storage</a></li>
+        </ul>
+    </li>
+</ul>
+
+<hr />
+<hr />
+<hr />
 
 <h2>Add film</h2>
 

@@ -19,26 +19,34 @@ def index(request):
     if request.user.is_authenticated:
         owner = request.user
         films = Film.objects.all()
-        latest_roll_list = Roll.objects.filter(owner=owner)\
-            .order_by('-created_at')[:5]
-        latest_finished_rolls = Roll.objects.filter(
-            owner=owner, status=status_number('shot')
-        ).order_by('-ended_on')[:5]
+        rolls = Roll.objects.filter(owner=owner)
+        latest_finished_rolls = rolls.filter(
+                status=status_number('shot')
+            ).order_by('-ended_on')[:5]
         empty_camera_list = Camera.objects.filter(owner=owner, status='empty')
-        loaded_roll_list = Roll.objects.filter(
+        loaded_roll_list = rolls.filter(status=status_number('loaded'))
+        ready_roll_list = rolls.filter(status=status_number('shot'))
+        storage_rolls = rolls.filter(status=status_number('storage')).count()
+
+        projects = Project.objects.filter(
             owner=owner,
-            status=status_number('loaded')
-        )
-        ready_roll_list = Roll.objects.filter(
-            owner=owner, status=status_number('shot')
-        )
+            status='current',
+        ).order_by('-updated_at',)
+        outstanding_rolls = rolls.exclude(
+                status=status_number('storage')
+            ).exclude(
+                status=status_number('archived')
+            ).count()
+
         context = {
             'films': films,
-            'latest_roll_list': latest_roll_list,
             'latest_finished_rolls': latest_finished_rolls,
             'empty_camera_list': empty_camera_list,
             'loaded_roll_list': loaded_roll_list,
             'ready_roll_list': ready_roll_list,
+            'storage_rolls': storage_rolls,
+            'projects': projects,
+            'outstanding_rolls': outstanding_rolls,
         }
         return render(request, 'inventory/index.html', context)
     else:
@@ -256,8 +264,10 @@ def ready(request):
 def dashboard(request):
     owner = request.user
     rolls = Roll.objects.filter(owner=owner)\
-        .exclude(status=status_number('storage'))\
-        .exclude(status=status_number('shot'))
+        .exclude(status=status_number('storage'))
+    # should 'loaded' be excluded here too?
+    rolls_loaded = rolls.filter(status=status_number('loaded')).count()
+    rolls_ready = rolls.filter(status=status_number('shot')).count()
     rolls_processing = rolls.filter(status=status_number('processing')).count()
     rolls_processed = rolls.filter(status=status_number('processed')).count()
     rolls_scanned = rolls.filter(status=status_number('scanned')).count()
@@ -276,6 +286,8 @@ def dashboard(request):
 
     context = {
         'rolls': rolls,
+        'rolls_loaded': rolls_loaded,
+        'rolls_ready': rolls_ready,
         'rolls_processing': rolls_processing,
         'rolls_processed': rolls_processed,
         'rolls_scanned': rolls_scanned,

@@ -7,6 +7,12 @@
     {% if rolls %}
     <ul>
         <li>
+            <p><a href="{% url 'logbook' %}?status=loaded">Loaded: {{ rolls_loaded }}</a></p>
+        </li>
+        <li>
+            <p><a href="{% url 'ready' %}">Ready: {{ rolls_ready }}</a></p>
+        </li>
+        <li>
             <form method="post">
                 {% csrf_token %}
                 <p><a href="{% url 'logbook' %}?status=processing">Processing: {{ rolls_processing }}</a></p>
