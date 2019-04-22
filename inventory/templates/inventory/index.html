@@ -3,31 +3,14 @@
 {% block content %}
 
 {% for project in projects %}
-    {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url %}
+    {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot="count" count=project.get_rolls_remaining %}
+{% endfor %}
+
+{% for roll in rolls_loaded %}
+    {% include 'inventory/_card.html' with name=roll.camera.name location=roll.camera.get_absolute_url slot="reminder" roll=roll %}
 {% endfor %}
 
 <ul>
-    <li>Current Projects
-        <ul>
-            {% for project in projects %}
-            <li><a href="{% url 'project-detail' project.id %}">{{ project.name }}</a></li>
-            {% endfor %}
-        </ul>
-    </li>
-    <li>Loaded Cameras
-        <ul>
-        {% if rolls_loaded %}
-            {% for roll in rolls_loaded %}
-            <li>
-                <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a> with
-                <a href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }} {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}</a>
-            </li>
-            {% endfor %}
-        {% else %}
-            <li>You have no loaded cameras.</li>
-        {% endif %}
-        </ul>
-    </li>
     <li>Ready to Load
         <ul>
         {% if cameras_empty %}

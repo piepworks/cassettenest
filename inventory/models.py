@@ -96,6 +96,9 @@ class Camera(models.Model):
     def __str__(self):
         return '%s\'s %s' % (self.owner, self.name)
 
+    def get_absolute_url(self):
+        return reverse('camera-detail', args=(self.id,))
+
 
 class Project(models.Model):
     """
@@ -131,6 +134,12 @@ class Project(models.Model):
 
     def get_absolute_url(self):
         return reverse('project-detail', args=(self.id,))
+
+    def get_rolls_remaining(self):
+        return Roll.objects.filter(
+            project=self,
+            status=status_number('storage'),
+        ).count()
 
 
 class Roll(models.Model):

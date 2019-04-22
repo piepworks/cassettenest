@@ -23,17 +23,19 @@ def index(request):
         rolls = Roll.objects.filter(owner=owner)
         rolls_loaded = rolls.filter(status=status_number('loaded'))
         rolls_ready_count = rolls.filter(status=status_number('shot')).count()
-        rolls_storage_count = rolls.filter(status=status_number('storage')).count()
+        rolls_storage_count = rolls.filter(
+            status=status_number('storage')
+        ).count()
 
         projects = Project.objects.filter(
             owner=owner,
             status='current',
         ).order_by('-updated_at',)
         rolls_outstanding_count = rolls.exclude(
-                status=status_number('storage')
-            ).exclude(
-                status=status_number('archived')
-            ).count()
+            status=status_number('storage')
+        ).exclude(
+            status=status_number('archived')
+        ).count()
 
         context = {
             'films': films,
