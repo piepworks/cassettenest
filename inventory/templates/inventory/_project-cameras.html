@@ -9,7 +9,7 @@
             {% for camera in status.list %}
             <li>
                 <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
-                <form action="{% url 'project-camera-update' project.id %}" method="post">
+                <form onsubmit="return confirmRemove('camera');" action="{% url 'project-camera-update' project.id %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="remove" />
                     <input type="hidden" name="camera" value="{{ camera.id }}" />

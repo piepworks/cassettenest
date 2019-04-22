@@ -6,7 +6,7 @@
     {% for film in film_counts %}
     <li class="card card__{{ film.type }}">
         {% if page == 'project' %}
-        <form action="{% url 'project-rolls-remove' project.id %}" method="post">
+        <form onsubmit="return confirmRemove('film');" action="{% url 'project-rolls-remove' project.id %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="film" value="{{ film.id }}" />
             <input type="submit" value="Remove" title="Remove from project" />
