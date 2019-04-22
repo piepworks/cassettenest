@@ -1,0 +1,59 @@
+.c-card {
+  margin-bottom: 1px;
+
+  a {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+
+    > header {
+      display: flex;
+      align-items: center;
+
+      h1 {
+        padding: 0 20px;
+        font-size: 1.2rem;
+        font-weight: normal;
+      }
+    }
+  }
+
+  &--default {
+    a {
+      @include gradient(#eee);
+      color: #000;
+      text-decoration: none;
+
+      > header h1 {
+        font-weight: normal;
+        color: #000;
+      }
+    }
+  }
+
+  &--film {
+    @include gradient(blue);
+    color: white;
+
+    &__e6 { @include gradient($e6); }
+
+    &__c41 { @include gradient($c41); }
+
+    &__bw { @include gradient($bw); }
+
+    a {
+      color: white;
+      text-decoration: none;
+
+      > header h1 { color: white; }
+    }
+  }
+
+  &__count {
+    background: rgba(0, 0, 0, .25);
+    display: flex;
+    min-width: 3rem;
+
+    span { margin: auto; }
+  }
+}

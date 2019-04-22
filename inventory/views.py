@@ -19,20 +19,17 @@ def index(request):
     if request.user.is_authenticated:
         owner = request.user
         films = Film.objects.all()
+        cameras_empty = Camera.objects.filter(owner=owner, status='empty')
         rolls = Roll.objects.filter(owner=owner)
-        latest_finished_rolls = rolls.filter(
-                status=status_number('shot')
-            ).order_by('-ended_on')[:5]
-        empty_camera_list = Camera.objects.filter(owner=owner, status='empty')
-        loaded_roll_list = rolls.filter(status=status_number('loaded'))
-        ready_roll_list = rolls.filter(status=status_number('shot'))
-        storage_rolls = rolls.filter(status=status_number('storage')).count()
+        rolls_loaded = rolls.filter(status=status_number('loaded'))
+        rolls_ready_count = rolls.filter(status=status_number('shot')).count()
+        rolls_storage_count = rolls.filter(status=status_number('storage')).count()
 
         projects = Project.objects.filter(
             owner=owner,
             status='current',
         ).order_by('-updated_at',)
-        outstanding_rolls = rolls.exclude(
+        rolls_outstanding_count = rolls.exclude(
                 status=status_number('storage')
             ).exclude(
                 status=status_number('archived')
@@ -40,13 +37,12 @@ def index(request):
 
         context = {
             'films': films,
-            'latest_finished_rolls': latest_finished_rolls,
-            'empty_camera_list': empty_camera_list,
-            'loaded_roll_list': loaded_roll_list,
-            'ready_roll_list': ready_roll_list,
-            'storage_rolls': storage_rolls,
+            'cameras_empty': cameras_empty,
             'projects': projects,
-            'outstanding_rolls': outstanding_rolls,
+            'rolls_loaded': rolls_loaded,
+            'rolls_ready_count': rolls_ready_count,
+            'rolls_storage_count': rolls_storage_count,
+            'rolls_outstanding_count': rolls_outstanding_count,
         }
         return render(request, 'inventory/index.html', context)
     else:

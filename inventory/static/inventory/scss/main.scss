@@ -4,13 +4,18 @@
 // @import './modules/breakpoint-display';
 @import './modules/mixins';
 @import './modules/colors';
+@import './partials/nav';
 @import './partials/base';
-@import './partials/cards';
+@import './partials/card';
 @import './partials/dashboard';
 @import './partials/forms';
 @import './partials/tables';
 
+html { font-size: 16px; }
+
 body {
+    font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
     &.logbook { @import './partials/logbook'; }
     &.ready { @import './partials/ready'; }
     &.roll-detail { @import './partials/roll-detail'; }
@@ -22,6 +27,6 @@ body {
 
     > main {
         padding: 20px;
-        @include breakpoint('l') { padding: 50px 100px; }
+        @include breakpoint('L') { padding: 50px 100px; }
     }
 }

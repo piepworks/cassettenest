@@ -12,7 +12,7 @@
 </head>
 
 <body {% block bodytag %}{% endblock %}>
-    <header>
+    <header class="c-site-nav">
         <h1><a href="{% url 'index' %}">Cassette Nest</a></h1>
         {% if user.is_authenticated %}
         <nav>

@@ -1,6 +1,11 @@
 {% extends 'base_site.html' %}
 
 {% block content %}
+
+{% for project in projects %}
+    {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url %}
+{% endfor %}
+
 <ul>
     <li>Current Projects
         <ul>
@@ -11,32 +16,38 @@
     </li>
     <li>Loaded Cameras
         <ul>
-            {% for roll in loaded_roll_list %}
+        {% if rolls_loaded %}
+            {% for roll in rolls_loaded %}
             <li>
                 <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a> with
                 <a href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }} {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}</a>
             </li>
             {% endfor %}
+        {% else %}
+            <li>You have no loaded cameras.</li>
+        {% endif %}
         </ul>
     </li>
-    <li>Empty Cameras
+    <li>Ready to Load
         <ul>
-            {% for camera in empty_camera_list %}
+        {% if cameras_empty %}
+            {% for camera in cameras_empty %}
             <li><a href="{% url 'camera-load' camera.id %}">{{ camera.name }}</a></li>
             {% endfor %}
+        {% else %}
+            <li>You have no cameras ready to load.</li>
+        {% endif %}
         </ul>
     </li>
-    <li>[Inventory]
+    <li>Inventory
         <ul>
-            <li><a href="{% url 'ready' %}">{{ ready_roll_list.count }} roll{{ ready_roll_list.count|pluralize }} ready to process.</a></li>
-            <li><a href="{% url 'dashboard' %}">{{ outstanding_rolls }} roll{{ outstanding_rolls|pluralize }} are still <span class="help" title="Everything that's not in storage or archived">outstanding</span>.</a></li>
-            <li><a href="{% url 'profile' %}">{{ storage_rolls }} roll{{ storage_rolls|pluralize }} in storage</a></li>
+            <li><a href="{% url 'ready' %}">{{ rolls_ready_count }} roll{{ rolls_ready_count|pluralize }} ready to process.</a></li>
+            <li><a href="{% url 'dashboard' %}">{{ rolls_outstanding_count }} roll{{ rolls_outstanding_count|pluralize }} are still <span class="help" title="Everything that's not in storage or archived">outstanding</span>.</a></li>
+            <li><a href="{% url 'profile' %}">{{ rolls_storage_count }} roll{{ rolls_storage_count|pluralize }} in storage</a></li>
         </ul>
     </li>
 </ul>
 
-<hr />
-<hr />
 <hr />
 
 <h2>Add film</h2>
@@ -60,56 +71,4 @@
 
 <h2><a href="{% url 'camera-add' %}">Add a camera</a></h2>
 <h2><a href="{% url 'project-add' %}">Add a project</a></h2>
-<h2><a href="{% url 'logbook' %}">View logbook</a></h2>
-<h2><a href="{% url 'dashboard' %}">View dashboard</a></h2>
-
-<h2>Currently loaded cameras</h2>
-
-{% if loaded_roll_list %}
-<ul>
-{% for roll in loaded_roll_list %}
-    <li>
-        <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a> with
-        <a href="{% url 'roll-detail' roll.id %}">{{ roll.film.manufacturer }} {{ roll.film.name }} {% if roll.push_pull %} / {{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }}){% endif %}</a>
-    </li>
-{% endfor %}
-</ul>
-{% else %}
-<p>You have no loaded cameras.</p>
-{% endif %}
-
-<h2>Cameras ready to load</h2>
-
-{% if empty_camera_list %}
-<ul>
-{% for camera in empty_camera_list %}
-    <li><a href="{% url 'camera-load' camera.id %}">{{ camera.name }}</a></li>
-{% endfor %}
-</ul>
-{% else %}
-<p>You have no cameras ready to load.</p>
-{% endif %}
-
-{% if latest_finished_rolls %}
-<hr />
-<h2>Recently finished rolls</h2>
-<ul>
-{% for roll in latest_finished_rolls %}
-    <li>
-        <a title="{{ roll.code }}" href="{% url 'roll-detail' roll.id %}">{{ roll.film }}</a>
-        {% include 'inventory/_roll-project-link.html' %}
-    </li>
-{% endfor %}
-</ul>
-{% endif %}
-
-<hr />
-
-<h2>Rolls Ready to Process</h2>
-{% if ready_roll_list %}
-<p><a href="{% url 'ready' %}">{{ ready_roll_list.count }} roll{{ ready_roll_list.count|pluralize }} ready to process.</a></p>
-{% else %}
-<p>You're all caught up!</p>
-{% endif %}
-
 {% endblock %}
