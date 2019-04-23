@@ -126,7 +126,9 @@
 {% endif %}
 
 <ul>
+    {% if roll.status != '01_storage' %}
     <li><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></li>
+    {% endif %}
     <li>
         <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
             {% csrf_token %}
