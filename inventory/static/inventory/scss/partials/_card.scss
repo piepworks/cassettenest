@@ -1,10 +1,14 @@
 .c-card {
     margin-bottom: 1px;
+    display: flex;
+
+    form { margin: auto 20px; }
 
     a {
         display: flex;
         justify-content: space-between;
         align-items: stretch;
+        flex-grow: 1;
 
         > header {
             display: flex;

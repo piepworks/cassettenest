@@ -57,6 +57,9 @@ class Film(models.Model):
             self.manufacturer, self.name, self.get_format_display()
         )
 
+    def get_absolute_url(self):
+        return reverse('film-rolls', args=(self.slug,))
+
 
 class Camera(models.Model):
     """
