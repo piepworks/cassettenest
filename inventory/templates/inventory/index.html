@@ -1,37 +1,43 @@
 {% extends 'base_site.html' %}
 
 {% block content %}
+{% if projects %}
+<section>
+    {% for project in projects %}
+        {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot="count" count=project.get_rolls_remaining %}
+    {% endfor %}
+</section>
+{% endif %}
 
-{% for project in projects %}
-    {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot="count" count=project.get_rolls_remaining %}
-{% endfor %}
+{% if rolls_loaded %}
+<section>
+    <h2>Loaded Cameras</h2>
+    {% for roll in rolls_loaded %}
+        {% include 'inventory/_card.html' with name=roll.camera.name location=roll.camera.get_absolute_url slot="reminder" roll=roll %}
+    {% endfor %}
+</section>
+{% endif %}
 
-{% for roll in rolls_loaded %}
-    {% include 'inventory/_card.html' with name=roll.camera.name location=roll.camera.get_absolute_url slot="reminder" roll=roll %}
-{% endfor %}
+{% if cameras_empty %}
+<section>
+    <h2>Ready to Load</h2>
+    {% for camera in cameras_empty %}
+        {% url 'camera-load' camera.id as camera_load %}
+        {% include 'inventory/_card.html' with name=camera.name location=camera_load slot="reminder" %}
+    {% endfor %}
+</section>
+{% endif %}
 
-<ul>
-    <li>Ready to Load
-        <ul>
-        {% if cameras_empty %}
-            {% for camera in cameras_empty %}
-            <li><a href="{% url 'camera-load' camera.id %}">{{ camera.name }}</a></li>
-            {% endfor %}
-        {% else %}
-            <li>You have no cameras ready to load.</li>
-        {% endif %}
-        </ul>
-    </li>
-    <li>Inventory
-        <ul>
-            <li><a href="{% url 'ready' %}">{{ rolls_ready_count }} roll{{ rolls_ready_count|pluralize }} ready to process.</a></li>
-            <li><a href="{% url 'dashboard' %}">{{ rolls_outstanding_count }} roll{{ rolls_outstanding_count|pluralize }} are still <span class="help" title="Everything that's not in storage or archived">outstanding</span>.</a></li>
-            <li><a href="{% url 'profile' %}">{{ rolls_storage_count }} roll{{ rolls_storage_count|pluralize }} in storage</a></li>
-        </ul>
-    </li>
-</ul>
+<section>
+    <h2>Inventory</h2>
+    {% url 'ready' as ready_url %}
+    {% url 'dashboard' as dashboard_url %}
+    {% url 'profile' as profile_url %}
 
-<hr />
+    {% include 'inventory/_card.html' with name='Ready to process' location=ready_url slot="count" count=rolls_ready_count %}
+    {% include 'inventory/_card.html' with name='Still outstanding' location=dashboard_url slot="count" count=rolls_outstanding_count %}
+    {% include 'inventory/_card.html' with name='In storage' location=profile_url slot="count" count=rolls_storage_count %}
+</section>
 
 <h2>Add film</h2>
 
