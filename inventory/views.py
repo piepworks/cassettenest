@@ -762,6 +762,7 @@ def roll_edit(request, pk):
             format=roll.film.format,
             owner=owner
         )
+        form.fields['project'].queryset = Project.objects.filter(owner=owner)
 
         context = {
             'owner': owner,
