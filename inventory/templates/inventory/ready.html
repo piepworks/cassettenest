@@ -18,6 +18,7 @@
         </tr>
     </thead>
 
+    {% if rolls_c41 %}
     <tr>
         <th>C41 Color</th>
         <td></td>
@@ -25,6 +26,7 @@
         <td>{{ rolls_c41_120|default:'' }}</td>
         <td>{{ rolls_c41|default:'' }}</td>
     </tr>
+    {% endif %}
     {% if rolls_pull2_c41_135 or rolls_pull2_c41_120 %}
     <tr class="push-pull">
         <td></td>
@@ -71,6 +73,7 @@
     </tr>
     {% endif %}
 
+    {% if rolls_bw %}
     <tr>
         <th>Black and White</th>
         <td></td>
@@ -78,6 +81,7 @@
         <td>{{ rolls_bw_120|default:'' }}</td>
         <td>{{ rolls_bw|default:'' }}</td>
     </tr>
+    {% endif %}
     {% if rolls_pull2_c41_135 or rolls_pull2_c41_120 %}
     <tr class="push-pull">
         <td></td>
@@ -124,6 +128,7 @@
     </tr>
     {% endif %}
 
+    {% if rolls_e6 %}
     <tr>
         <th>E6 Color Reversal</th>
         <td></td>
@@ -131,6 +136,7 @@
         <td>{{ rolls_e6_120|default:'' }}</td>
         <td>{{ rolls_e6|default:'' }}</td>
     </tr>
+    {% endif %}
     {% if rolls_pull2_e6_135 or rolls_pull2_e6_120 %}
     <tr class="push-pull">
         <td></td>
