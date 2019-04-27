@@ -1,3 +1,3 @@
 {% if roll.project %}
-/ <a href="{% url 'project-detail' roll.project.id %}">{{ roll.project.name }}</a>
+/ <a href="{% url 'film-rolls' roll.film.slug %}?project={{ roll.project.id }}">{{ roll.project.name }}</a>
 {% endif %}

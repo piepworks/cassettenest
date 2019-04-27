@@ -639,11 +639,9 @@ def film_rolls(request, slug):
     owner = request.user
     current_project = None
     film = Film.objects.get(slug=slug)
-    rolls = Roll.objects.filter(
-        owner=owner,
-        status=status_number('storage'),
-        film__slug=slug,
-    )
+    rolls = Roll.objects.filter(owner=owner, film__slug=slug)
+    rolls_storage = rolls.filter(status=status_number('storage'))
+    rolls_history = rolls.exclude(status=status_number('storage'))
 
     # Querystring.
     if request.GET.get('project'):
@@ -653,10 +651,12 @@ def film_rolls(request, slug):
             request.GET.get('project'),
         )
     if current_project is not None and current_project != 0:
-        rolls = rolls.filter(project=current_project)
+        rolls_storage = rolls_storage.filter(project=current_project)
+        rolls_history = rolls_history.filter(project=current_project)
 
     context = {
-        'rolls': rolls,
+        'rolls_storage': rolls_storage,
+        'rolls_history': rolls_history,
         'film': film,
         'slug': slug,
         'owner': owner,

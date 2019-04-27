@@ -19,28 +19,48 @@
     in {{ film.get_format_display }}
 </h1>
 
-<h2>ISO {{ film.iso }}</h2>
+<p>ISO {{ film.iso }}</p>
 
 {% if film.description %}
-<div>{{ film.description|markdown }}</div>
+    <div>{{ film.description|markdown }}</div>
 {% endif %}
-
-{% if rolls %}
 
 {% if current_project %}
-<h2>Viewing rolls in project: <a href="{% url 'project-detail' current_project.id %}">{{ current_project }}</a>.</h2>
-<h3><a href="{% url 'film-rolls' slug %}">View all your rolls of {{ film }}.</a></h3>
+    <hr />
+    <p>Viewing rolls in project: <b><a href="{% url 'project-detail' current_project.id %}">{{ current_project }}</a></b>.</p>
+    <p><a href="{% url 'film-rolls' slug %}">View all your rolls of {{ film }}.</a></p>
 {% endif %}
 
-<ul>
-    {% for roll in rolls %}
-    <li>
-        <a href="{% url 'roll-detail' roll.id %}">Added on {{ roll.created_at|date:'Y-m-d' }}</a>
-        {% include 'inventory/_roll-project-link.html' %}
-    </li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>You don&rsquo;t have any of this film.</p>
-{% endif %}
+<section class="storage">
+    <h2>Storage</h2>
+    {% if rolls_storage %}
+        <ul>
+            {% for roll in rolls_storage %}
+            <li>
+                <a href="{% url 'roll-detail' roll.id %}">Added on {{ roll.created_at|date:'Y-m-d' }}</a>
+                {% if not current_project %}{% include 'inventory/_roll-project-link.html' %}{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You don&rsquo;t have any of this film.</p>
+    {% endif %}
+</section>
+
+<section class="history">
+    <h2>History</h2>
+
+    {% if rolls_history %}
+        <ul>
+            {% for roll in rolls_history %}
+            <li>
+                <a href="{% url 'roll-detail' roll.id %}">{{ roll.code }} / {{ roll.started_on|date:'Y' }}</a>
+                {% if not current_project %}{% include 'inventory/_roll-project-link.html' %}{% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You don&rsquo;t have any finished rolls of this film yet.</p>
+    {% endif %}
+</section>
 {% endblock %}
