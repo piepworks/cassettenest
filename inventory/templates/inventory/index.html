@@ -39,25 +39,27 @@
     {% include 'inventory/_card.html' with name='In storage' location=profile_url slot="count" count=rolls_storage_count %}
 </section>
 
-<h2>Add film</h2>
-
-<form action="{% url 'rolls-add' %}" method="post">
-    {% csrf_token %}
-    <select name="film" required>
-        <option value="">Select a film</option>
-        {% regroup films by manufacturer as films_list %}
-        {% for manufacturer in films_list %}
-        <optgroup label="{{ manufacturer.grouper }}">
-            {% for film in manufacturer.list %}
+<section>
+    <h2>Add to your database</h2>
+    <h3>Add film</h3>
+    <form action="{% url 'rolls-add' %}" method="post">
+        {% csrf_token %}
+        <select name="film" required>
+            <option value="">Select a film</option>
+            {% regroup films by manufacturer as films_list %}
+            {% for manufacturer in films_list %}
+            <optgroup label="{{ manufacturer.grouper }}">
+                {% for film in manufacturer.list %}
                 <option value="{{ film.id }}">{{ film.name }} in {{ film.get_format_display }}</option>
+                {% endfor %}
+            </optgroup>
             {% endfor %}
-        </optgroup>
-        {% endfor %}
-    </select>
-    <input type="number" min="1" name="quantity" placeholder="quantity" required />
-    <input type="submit" value="Add" />
-</form>
+        </select>
+        <input type="number" min="1" name="quantity" placeholder="quantity" required />
+        <input type="submit" value="Add" />
+    </form>
 
-<h2><a href="{% url 'camera-add' %}">Add a camera</a></h2>
-<h2><a href="{% url 'project-add' %}">Add a project</a></h2>
+    <h3><a href="{% url 'camera-add' %}">Add a camera</a></h3>
+    <h3><a href="{% url 'project-add' %}">Add a project</a></h3>
+</section>
 {% endblock %}

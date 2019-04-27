@@ -1,4 +1,4 @@
-<div class="c-card c-card--{{ type|default:'default' }} c-card--{{ type|default:'default' }}__{{ film_type|default:'c41' }}">
+<section class="c-card c-card--{{ type|default:'default' }} c-card--{{ type|default:'default' }}__{{ film_type|default:'c41' }}">
     {% if project and film %}
         <form onsubmit="return confirmRemove('film');" action="{% url 'project-rolls-remove' project.id %}" method="post">
             {% csrf_token %}
@@ -11,7 +11,7 @@
         {% if slot == 'count' %}
             <div class="c-card__count" title="Number of rolls remaining."><span>{{ count|default:'0' }}</span></div>
         {% elif slot == 'reminder' %}
-            <div class="c-reminder c-reminder--{{ roll.film.type|default:'empty' }}">
+            <section class="c-reminder c-reminder--{{ roll.film.type|default:'empty' }}">
                 <header>
                     {% if roll.film.iso %}
                     <h1 title="{{ roll.film.type|upper }}">
@@ -34,7 +34,7 @@
                     <li class="push_pull" title="{{ roll.film.iso }} {{ roll.get_push_pull_display }}">{{ roll.film.iso }} {{ roll.push_pull }}</li>
                     {% endif %}
                 </ul>
-            </div>
+            </section>
         {% endif %}
     </a>
-</div>
+</section>
