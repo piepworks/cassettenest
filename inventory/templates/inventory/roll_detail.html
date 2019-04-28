@@ -12,6 +12,7 @@
 {% block bodytag %}class="roll-detail"{% endblock %}
 
 {% block content %}
+<div class="raw">
 {% if roll.status != '01_storage' %}
 <h1>{{ roll.code }} / {{ roll.started_on|date:'Y' }}</h1>
 <h2>{{ roll.film }}</h2>
@@ -136,4 +137,5 @@
         </form>
     </li>
 </ul>
+</div>
 {% endblock %}

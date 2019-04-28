@@ -4,6 +4,7 @@
 {% block title %} / {{ film }}{% endblock %}
 
 {% block content %}
+<div class="raw">
 <h1>
 {% if film.manufacturer.url %}
     <a href="{{ film.manufacturer.url }}">{{ film.manufacturer }}</a>
@@ -63,4 +64,5 @@
         <p>You don&rsquo;t have any finished rolls of this film yet.</p>
     {% endif %}
 </section>
+</div>
 {% endblock %}

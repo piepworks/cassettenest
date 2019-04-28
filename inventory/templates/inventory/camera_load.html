@@ -3,6 +3,7 @@
 {% block title %} / Load {{ camera.name }}{% endblock %}
 
 {% block content %}
+<div class="raw">
 <h2>{{ camera.name }}</h2>
 <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
 
@@ -44,5 +45,5 @@
 {% else %}
 <p><a href="{% url 'camera-detail' camera.id %}">This camera</a> is already loaded.</p>
 {% endif %}
-
+</div>
 {% endblock %}

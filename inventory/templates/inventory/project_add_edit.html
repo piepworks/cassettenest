@@ -3,6 +3,7 @@
 {% block title %} / {{ action }} a project{% endblock %}
 
 {% block content %}
+<div class="raw">
 <h1>{{ action }} project</h1>
 
 <form method="post">
@@ -13,4 +14,5 @@
     <input type="hidden" name="owner" value="{{ owner.id }}">
     <input type="submit" value="Save project">
 </form>
+</div>
 {% endblock %}

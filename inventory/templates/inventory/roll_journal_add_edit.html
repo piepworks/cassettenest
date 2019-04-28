@@ -4,6 +4,7 @@
 {% block title %} / Journal entry for {{ roll.code }} / {{ roll.started_on|date:'Y' }}{% endblock %}
 
 {% block content %}
+<div class="raw">
 <h1>Journal entry for <span><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></span> / {{ roll.started_on|date:'Y' }}</h1>
 
 <form method="post">
@@ -36,4 +37,5 @@
         <input type="submit" value="Save" />
     </div>
 </form>
+</div>
 {% endblock %}

@@ -6,6 +6,7 @@
 @import './modules/colors';
 @import './partials/nav';
 @import './partials/base';
+@import './partials/heading';
 @import './partials/card';
 @import './partials/reminder';
 @import './partials/dashboard';
@@ -27,7 +28,8 @@ body {
     > .messages { @import './partials/messages'; }
 
     > main {
-        padding: 20px;
-        @include breakpoint('L') { padding: 50px 100px; }
+        padding: 0;
+        @include breakpoint('M') { padding: 1.25rem; }
+        @include breakpoint('L') { padding: 2.5rem 5rem; }
     }
 }

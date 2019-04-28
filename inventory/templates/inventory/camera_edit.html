@@ -3,7 +3,7 @@
 {% block title %} / Edit a camera{% endblock %}
 
 {% block content %}
-
+<div class="raw">
 <h1>Edit &ldquo;{{ camera.name }}&rdquo;</h1>
 
 <form method="post">
@@ -13,5 +13,5 @@
     <input type="hidden" name="owner" value="{{ owner.id }}">
     <input type="submit" value="Update camera">
 </form>
-
+</div>
 {% endblock %}

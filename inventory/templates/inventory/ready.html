@@ -5,6 +5,7 @@
 
 {% block content %}
 {% if rolls %}
+<div class="raw">
 <h2>You have {{ rolls.count }} roll{{ rolls.count|pluralize }} ready to process.</h2>
 
 <table class="ready">
@@ -203,5 +204,5 @@
 
 <p>You're all caught up!</p>
 {% endif %}
-
+</div>
 {% endblock %}

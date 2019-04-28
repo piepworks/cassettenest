@@ -3,6 +3,7 @@
 {% block title %} / {{ roll }}{% endblock %}
 
 {% block content %}
+<div class="raw">
 <h1>
     Edit {{ roll }}
     {% if roll.code %}<br />({{ roll.code }}){% endif %}
@@ -24,4 +25,5 @@
     <p>{{ form.notes_on_development }}</p>
     <input type="submit" value="Save changes">
 </form>
+</div>
 {% endblock %}

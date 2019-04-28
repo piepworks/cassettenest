@@ -4,6 +4,7 @@
 {% block title %} / {{ project.name }}{% endblock %}
 
 {% block content %}
+<div class="raw">
 <h1>{{ project.name }}</h1>
 
 <p>Status: {{ project.get_status_display }}</p>
@@ -52,5 +53,5 @@
 <h3>Notes</h3>
 <div>{{ project.notes|markdown }}</div>
 {% endif %}
-
+</div>
 {% endblock %}

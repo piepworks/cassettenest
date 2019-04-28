@@ -3,6 +3,7 @@
 {% block title %} / Type: {{ type }}{% endblock %}
 
 {% block content %}
+<div class="raw">
 <h1>Type: {{ type }}</h1>
 
 {% if film_counts %}
@@ -10,4 +11,5 @@
 {% else %}
 <p>You don&rsquo;t have any of this type of film.</p>
 {% endif %}
+</div>
 {% endblock %}

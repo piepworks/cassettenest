@@ -3,6 +3,7 @@
 {% block title %} / Profile{% endblock %}
 
 {% block content %}
+<div class="raw">
 <h1>Profile</h1>
 
 <h2><a href="{% url 'logbook' %}">View logbook</a></h2>
@@ -47,4 +48,5 @@
 {% else %}
 <p>No films found.</p>
 {% endif %}
+</div>
 {% endblock %}
