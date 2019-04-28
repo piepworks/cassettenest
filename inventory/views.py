@@ -635,10 +635,10 @@ def rolls_add(request):
 
 @login_required
 def film_rolls(request, slug):
-    '''All the rolls of a particular film that someone has available.'''
+    '''All the rolls of a particular film that someone has or has used.'''
     owner = request.user
     current_project = None
-    film = Film.objects.get(slug=slug)
+    film = get_object_or_404(Film, slug=slug)
     rolls = Roll.objects.filter(owner=owner, film__slug=slug)
     rolls_storage = rolls.filter(status=status_number('storage'))
     rolls_history = rolls.exclude(status=status_number('storage'))
