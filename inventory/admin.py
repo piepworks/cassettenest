@@ -49,14 +49,13 @@ class JournalAdmin(admin.ModelAdmin):
     list_display = (
         'date',
         'roll_owner',
-        'roll_code',
+        'roll',
     )
+    date_hierarchy = 'date'
+    ordering = ('-date',)
 
     def roll_owner(self, obj):
         return obj.roll.owner
-
-    def roll_code(self, obj):
-        return obj.roll.code
 
 
 class ProjectAdmin(admin.ModelAdmin):

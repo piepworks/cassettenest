@@ -1,23 +1,15 @@
 {% extends 'base_site.html' %}
 {% load markdown_deux_tags %}
 
-{% block title %}
-    {% if roll.status != '01_storage' %}
-    / {{ roll.code }} / {{ roll.started_on|date:'Y' }}
-    {% else %}
-    / {{ roll }}
-    {% endif %}
-{% endblock %}
+{% block title %}{{ roll }}{% endblock %}
 
 {% block bodytag %}class="roll-detail"{% endblock %}
 
 {% block content %}
 <div class="raw">
-{% if roll.status != '01_storage' %}
-<h1>{{ roll.code }} / {{ roll.started_on|date:'Y' }}</h1>
-<h2>{{ roll.film }}</h2>
-{% else %}
 <h1>{{ roll }}</h1>
+{% if roll.status != '01_storage' %}
+<h2>{{ roll.film }}</h2>
 {% endif %}
 
 <p><a href="{% url 'film-rolls' roll.film.slug %}">View all your rolls of this film.</a></p>

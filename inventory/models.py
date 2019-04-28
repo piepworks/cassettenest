@@ -219,9 +219,12 @@ class Roll(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '%s added on %s' % (
-            self.film, self.created_at.strftime('%Y-%m-%d')
-        )
+        if self.code is not None and self.started_on:
+            return '%s / %s' % (self.code, self.started_on.strftime('%Y'))
+        else:
+            return '%s added on %s' % (
+                self.film, self.created_at.strftime('%Y-%m-%d')
+            )
 
     @property
     def effective_iso(self):
