@@ -687,7 +687,11 @@ def film_rolls(request, slug):
     film = get_object_or_404(Film, slug=slug)
     rolls = Roll.objects.filter(owner=owner, film__slug=slug)
     rolls_storage = rolls.filter(status=status_number('storage'))
-    rolls_history = rolls.exclude(status=status_number('storage'))
+    rolls_history = rolls.exclude(
+            status=status_number('storage')
+        ).order_by(
+            '-started_on'
+        )
 
     # Querystring.
     if request.GET.get('project'):
@@ -1101,7 +1105,11 @@ def camera_detail(request, pk):
         rolls_history = Roll.objects.filter(
             owner=owner,
             camera=pk
-        ).exclude(status=status_number('loaded'))
+        ).exclude(
+            status=status_number('loaded')
+        ).order_by(
+            '-started_on'
+        )
 
         if camera.status == 'loaded':
             roll = Roll.objects.filter(
