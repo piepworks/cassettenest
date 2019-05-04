@@ -1035,6 +1035,11 @@ def camera_detail(request, pk):
         )
     else:
         roll = ''
+        rolls_history = Roll.objects.filter(
+            owner=owner,
+            camera=pk
+        ).exclude(status=status_number('loaded'))
+
         if camera.status == 'loaded':
             roll = Roll.objects.filter(
                 camera=camera,
@@ -1045,6 +1050,7 @@ def camera_detail(request, pk):
             'owner': owner,
             'camera': camera,
             'roll': roll,
+            'rolls_history': rolls_history,
         }
 
         return render(request, 'inventory/camera_detail.html', context)

@@ -4,22 +4,35 @@
 
 {% block content %}
 <div class="raw">
-<h2>{{ camera.name }}</h2>
-<p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
+    <h1>{{ camera.name }}</h1>
+    <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
 
-<h3>Status: {{ camera.status }}</h3>
+    <section class="status">
+        <h2>Status: {{ camera.status }}</h2>
+    </section>
 
-<p>Format: {{ camera.get_format_display }}</p>
+    <p>Format: {{ camera.get_format_display }}</p>
 
-{% if camera.status == 'loaded' %}
-{% include 'inventory/_camera-loaded.html' %}
-<form method="post">
-    {% csrf_token %}
-    <input type="hidden" name="roll" value="{{ roll.id }}" />
-    <input type="submit" value="Finish roll" />
-</form>
-{% else %}
-<p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
-{% endif %}
+    {% if camera.status == 'loaded' %}
+    {% include 'inventory/_camera-loaded.html' %}
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="roll" value="{{ roll.id }}" />
+        <input type="submit" value="Finish roll" />
+    </form>
+    {% else %}
+    <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
+    {% endif %}
+
+    {% if rolls_history %}
+    <section class="history">
+        <h3>{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
+        <ul>
+            {% for roll in rolls_history %}
+            <li><a href="{% url 'roll-detail' roll.id %}">{{ roll }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
 </div>
 {% endblock %}
