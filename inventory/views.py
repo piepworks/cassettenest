@@ -119,6 +119,7 @@ def profile(request):
 def logbook(request):
     owner = request.user
     status = 0
+    description = ''
     rolls = Roll.objects.filter(owner=owner).exclude(
             status=status_number('storage')
         ).order_by(
@@ -129,12 +130,14 @@ def logbook(request):
 
     if request.GET.get('status') and request.GET.get('status') in status_keys:
         status = request.GET.get('status')
+        description = status_description(status)
         rolls = rolls.filter(status=status_number(status))
 
     context = {
         'owner': owner,
         'rolls': rolls,
         'status': status,
+        'description': description,
     }
 
     return render(request, 'inventory/logbook.html', context)

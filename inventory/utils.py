@@ -46,13 +46,49 @@ def get_project_or_none(Project, owner, project_id):
 
 
 valid_statuses = {
-    'storage': '01_storage',
-    'loaded': '02_loaded',
-    'shot': '03_shot',
-    'processing': '04_processing',
-    'processed': '05_processed',
-    'scanned': '06_scanned',
-    'archived': '07_archived',
+    'storage': {
+        'number': '01_storage',
+        'description': '''
+            A roll not yet used. Put it in the fridge if it's gonna be
+            a while.
+        ''',
+    },
+    'loaded': {
+        'number': '02_loaded',
+        'description': '''
+            In a camera or film back.
+        ''',
+    },
+    'shot': {
+        'number': '03_shot',
+        'description': '''
+            Ready to be developed.
+        ''',
+    },
+    'processing': {
+        'number': '04_processing',
+        'description': '''
+            Sent to the lab, but you haven't heard from them yet.
+        ''',
+    },
+    'processed': {
+        'number': '05_processed',
+        'description': '''
+            Developed, but not yet scanned.
+        ''',
+    },
+    'scanned': {
+        'number': '06_scanned',
+        'description': '''
+            Scanned, but not back in your hands.
+        ''',
+    },
+    'archived': {
+        'number': '07_archived',
+        'description': '''
+            Done and done. Hopefully safely stored in a sleeve in a binder.
+        ''',
+    },
 }
 
 
@@ -62,7 +98,7 @@ status_keys = list(valid_statuses)
 # Statuses once a roll has begun development.
 # Useful for showing a subset of metadata in some places.
 development_statuses = {
-    value for key, value in valid_statuses.items()
+    value['number'] for key, value in valid_statuses.items()
     if key not in ['storage', 'loaded', 'shot']
 }
 
@@ -70,7 +106,13 @@ development_statuses = {
 def status_number(status):
     "Return the status number/order from its name."
 
-    return valid_statuses[status]
+    return valid_statuses[status]['number']
+
+
+def status_description(status):
+    "Return a helpful description of the status to display on its page."
+
+    return valid_statuses[status]['description']
 
 
 def pluralize(noun, count):
