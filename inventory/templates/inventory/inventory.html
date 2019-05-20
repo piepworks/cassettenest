@@ -4,29 +4,7 @@
 
 {% block content %}
 <div class="raw">
-<h1>Profile</h1>
-
-<h2><a href="{% url 'logbook' %}">View logbook</a></h2>
-
-<h2>Projects</h2>
-<p><a href="{% url 'project-add' %}">Add a project</a></p>
-
-<ul>
-    {% regroup projects by get_status_display as status_list %}
-    {% for status in status_list %}
-    <ul>
-        <li>{{ status.grouper }}
-            <ul>
-                {% for project in status.list %}
-                <li><a href="{% url 'project-detail' project.id %}">{{ project.name }}</a></li>
-                {% endfor %}
-            </ul>
-        </li>
-    </ul>
-    {% endfor %}
-</ul>
-
-<hr />
+<h1>Inventory</h1>
 
 {% if total_film_count %}
 <h2>Formats</h2>

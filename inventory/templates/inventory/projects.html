@@ -1,0 +1,25 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / Projects{% endblock %}
+
+{% block content %}
+<div class="raw">
+<h1>Projects</h1>
+
+<p><a href="{% url 'project-add' %}">Add a project</a></p>
+
+<ul>
+    {% regroup projects by get_status_display as status_list %}
+    {% for status in status_list %}
+    <ul>
+        <li>{{ status.grouper }}
+            <ul>
+                {% for project in status.list %}
+                <li><a href="{% url 'project-detail' project.id %}">{{ project.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    {% endfor %}
+</ul>
+{% endblock %}

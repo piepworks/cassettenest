@@ -8,6 +8,9 @@
     {% if rolls %}
     <ul>
         <li>
+            <p><a href="{% url 'inventory' %}">Storage: {{ rolls_storage }}</a></p>
+        </li>
+        <li>
             <p><a href="{% url 'logbook' %}?status=loaded">Loaded: {{ rolls_loaded }}</a></p>
         </li>
         <li>

@@ -52,7 +52,7 @@ def index(request):
 
 
 @login_required
-def profile(request):
+def inventory(request):
     owner = request.user
     # Unused rolls
     total_film_count = Film.objects.filter(
@@ -73,12 +73,6 @@ def profile(request):
         ).values('format').annotate(
             count=Count('format')
         ).distinct().order_by('format')
-    projects = Project.objects.filter(
-            owner=owner
-        ).order_by(
-            '-status',
-            '-updated_at',
-        )
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
@@ -108,11 +102,9 @@ def profile(request):
         'film_counts': film_counts,
         'format_counts': format_counts,
         'type_counts': type_counts,
-        'projects': projects,
-        'owner': owner,
     }
 
-    return render(request, 'inventory/profile.html', context)
+    return render(request, 'inventory/inventory.html', context)
 
 
 @login_required
@@ -288,12 +280,8 @@ def ready(request):
 @login_required
 def dashboard(request):
     owner = request.user
-    rolls = Roll.objects.filter(
-            owner=owner
-        ).exclude(
-            status=status_number('storage')
-        )
-    # should 'loaded' be excluded here too?
+    rolls = Roll.objects.filter(owner=owner)
+    rolls_storage = rolls.filter(status=status_number('storage')).count()
     rolls_loaded = rolls.filter(status=status_number('loaded')).count()
     rolls_ready = rolls.filter(status=status_number('shot')).count()
     rolls_processing = rolls.filter(status=status_number('processing')).count()
@@ -317,6 +305,7 @@ def dashboard(request):
 
     context = {
         'rolls': rolls,
+        'rolls_storage': rolls_storage,
         'rolls_loaded': rolls_loaded,
         'rolls_ready': rolls_ready,
         'rolls_processing': rolls_processing,
@@ -379,6 +368,22 @@ def rolls_update(request):
         return redirect(reverse('dashboard'))
 
     return redirect(reverse('logbook') + '?status=%s' % updated_status)
+
+
+@login_required
+def projects(request):
+    owner = request.user
+    projects = Project.objects.filter(
+            owner=owner
+        ).order_by(
+            '-status',
+            '-updated_at',
+        )
+    context = {
+        'projects': projects,
+    }
+
+    return render(request, 'inventory/projects.html', context)
 
 
 @login_required

@@ -17,7 +17,7 @@ urlpatterns = [
 
     # Top-Level
     path('', views.index, name='index'),
-    path('profile/', views.profile, name='profile'),
+    path('inventory/', views.inventory, name='inventory'),
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
     path('dashboard/', views.dashboard, name='dashboard'),
@@ -38,6 +38,7 @@ urlpatterns = [
          views.roll_journal_delete, name='roll-journal-delete'),
 
     # Projects
+    path('projects/', views.projects, name='projects'),
     path('project/add/', views.project_add, name='project-add'),
     path('project/<int:pk>/edit/', views.project_edit, name='project-edit'),
     path('project/<int:pk>/delete/',
