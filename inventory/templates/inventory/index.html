@@ -34,8 +34,8 @@
     {% url 'dashboard' as dashboard_url %}
     {% url 'inventory' as inventory_url %}
 
-    {% include 'inventory/_card.html' with name='Dashboard' location=dashboard_url %}
     {% include 'inventory/_card.html' with name='Ready to process' location=ready_url slot="count" count=rolls_ready_count %}
+    {% include 'inventory/_card.html' with name='Dashboard / Rolls still outstanding' location=dashboard_url slot="count" count=rolls_outstanding_count %}
     {% include 'inventory/_card.html' with name='In storage' location=inventory_url slot="count" count=rolls_storage_count %}
 </section>
 
