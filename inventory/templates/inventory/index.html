@@ -1,19 +1,23 @@
 {% extends 'base_site.html' %}
 
 {% block content %}
-{% if projects %}
 <section>
-    {% for project in projects %}
-        {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot="count" count=project.get_rolls_remaining %}
-    {% endfor %}
+    <h2 class="c-heading">Projects</h2>
+    {% url 'projects' as projects_url %}
+
+    {% if projects %}
+        {% for project in projects %}
+            {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot='count' count=project.get_rolls_remaining %}
+        {% endfor %}
+    {% endif %}
+    {% include 'inventory/_card.html' with name='View all projects' location=projects_url %}
 </section>
-{% endif %}
 
 {% if rolls_loaded %}
 <section>
     <h2 class="c-heading">Loaded Cameras</h2>
     {% for roll in rolls_loaded %}
-        {% include 'inventory/_card.html' with name=roll.camera.name location=roll.camera.get_absolute_url slot="reminder" roll=roll %}
+        {% include 'inventory/_card.html' with name=roll.camera.name location=roll.camera.get_absolute_url slot='reminder' roll=roll %}
     {% endfor %}
 </section>
 {% endif %}
@@ -23,7 +27,7 @@
     <h2 class="c-heading">Ready to Load</h2>
     {% for camera in cameras_empty %}
         {% url 'camera-load' camera.id as camera_load %}
-        {% include 'inventory/_card.html' with name=camera.name location=camera_load slot="reminder" %}
+        {% include 'inventory/_card.html' with name=camera.name location=camera_load slot='reminder' %}
     {% endfor %}
 </section>
 {% endif %}
@@ -34,9 +38,9 @@
     {% url 'dashboard' as dashboard_url %}
     {% url 'inventory' as inventory_url %}
 
-    {% include 'inventory/_card.html' with name='Ready to process' location=ready_url slot="count" count=rolls_ready_count %}
-    {% include 'inventory/_card.html' with name='Dashboard / Rolls still outstanding' location=dashboard_url slot="count" count=rolls_outstanding_count %}
-    {% include 'inventory/_card.html' with name='In storage' location=inventory_url slot="count" count=rolls_storage_count %}
+    {% include 'inventory/_card.html' with name='Ready to process' location=ready_url slot='count' count=rolls_ready_count %}
+    {% include 'inventory/_card.html' with name='In storage' location=inventory_url slot='count' count=rolls_storage_count %}
+    {% include 'inventory/_card.html' with name='Dashboard' location=dashboard_url %}
 </section>
 
 <section>

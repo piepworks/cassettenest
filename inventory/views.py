@@ -26,7 +26,6 @@ def index(request):
         rolls_storage_count = rolls.filter(
             status=status_number('storage')
         ).count()
-
         projects = Project.objects.filter(
             owner=owner,
             status='current',

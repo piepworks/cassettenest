@@ -9,7 +9,7 @@
     <a href="{{ location|default:'#' }}{% if project and type == 'film' %}?project={{ project.id }}{% endif %}">
         <header><h1>{{ name }}</h1></header>
         {% if slot == 'count' %}
-            <div class="c-card__count" title="Number of rolls remaining."><span>{{ count|default:'0' }}</span></div>
+            <div class="c-card__count" title="Number of rolls"><span>{{ count|default:'0' }}</span></div>
         {% elif slot == 'reminder' %}
             <section class="c-reminder c-reminder--{{ roll.film.type|default:'empty' }}">
                 <header>
