@@ -1,10 +1,12 @@
 {% extends 'base_site.html' %}
 {% block title %} / Dashboard{% endblock %}
+{% block bodytag %}class="dashboard"{% endblock %}
+
 {% block content %}
 <div class="raw">
 <h1>Dashboard</h1>
 
-<div class="wrapper dashboard">
+<div class="wrapper">
     {% if rolls %}
     <ul>
         <li>

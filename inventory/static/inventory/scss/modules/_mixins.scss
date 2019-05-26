@@ -1,9 +1,0 @@
-@mixin gradient($color) {
-    background: $color;
-    background-image: linear-gradient($color, darken($color, 10%));
-
-    &:hover {
-        background: darken($color, 15%);
-        background-image: linear-gradient(darken($color, 15%), darken($color, 20%));
-    }
-}

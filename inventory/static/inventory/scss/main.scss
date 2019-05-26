@@ -2,14 +2,11 @@
 @import './vendor/django-admin-mixins';
 @import './modules/utils';
 // @import './modules/breakpoint-display';
-@import './modules/mixins';
 @import './modules/colors';
 @import './partials/nav';
-@import './partials/base';
 @import './partials/heading';
 @import './partials/card';
 @import './partials/reminder';
-@import './partials/dashboard';
 @import './partials/forms';
 @import './partials/tables';
 
@@ -22,8 +19,7 @@ body {
     &.ready { @import './partials/ready'; }
     &.roll-detail { @import './partials/roll-detail'; }
     &.journal-entry { @import './partials/journal-entry'; }
-
-    > header { @import './partials/site-header'; }
+    &.dashboard { @import './partials/dashboard'; }
 
     > .messages { @import './partials/messages'; }
 

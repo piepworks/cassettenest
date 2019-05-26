@@ -1,4 +1,4 @@
-// Replace these sizes and names with whatever you want.
+$spacing: .6rem;
 
 $breakpoints: (
     S:  '(min-width: 580px)',
@@ -14,4 +14,19 @@ $breakpoints: (
     @media only screen and #{map-get($breakpoints, $query)} {
         @content;
     }
+}
+
+@mixin gradient($color) {
+  background: $color;
+  background-image: linear-gradient($color, darken($color, 10%));
+
+  &:hover {
+    background: darken($color, 15%);
+    background-image: linear-gradient(darken($color, 15%), darken($color, 20%));
+  }
+}
+
+// For parts of the app that still need to be properly designed.
+.raw {
+    padding: 1.25rem;
 }
