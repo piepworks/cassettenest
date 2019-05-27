@@ -6,7 +6,8 @@
 <div class="raw">
 <h1>Inventory</h1>
 
-<h2>Add film</h2>
+<h2>Add rolls</h2>
+<p><i>To add a roll as "Loaded," go to <a href="{% url 'index' %}">the home page</a> and choose a "Ready to Load" camera.</i></p>
 <form action="{% url 'rolls-add' %}" method="post">
     {% csrf_token %}
     <select name="film" required>
@@ -20,6 +21,13 @@
         </optgroup>
         {% endfor %}
     </select>
+    <label>Status:
+        <select name="status" required>
+            {% for value, text in status_choices %}
+                <option value="{{ value }}">{{ text }}</option>
+            {% endfor %}
+        </select>
+    </label>
     <input type="number" min="1" name="quantity" placeholder="quantity" required />
     <input type="submit" value="Add" />
 </form>

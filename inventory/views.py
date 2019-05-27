@@ -95,12 +95,17 @@ def inventory(request):
             strings_only=True
         )
 
+    status_choices = Roll._meta.get_field('status').flatchoices
+    # If you want to add something as "Loaded," you should load a camera.
+    del status_choices[1]
+
     context = {
         'films': films,
         'total_film_count': total_film_count,
         'film_counts': film_counts,
         'format_counts': format_counts,
         'type_counts': type_counts,
+        'status_choices': status_choices,
     }
 
     return render(request, 'inventory/film.html', context)
@@ -651,39 +656,55 @@ def project_camera_update(request, pk):
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
+@require_POST
 @login_required
 def rolls_add(request):
     owner = request.user
+    film = get_object_or_404(Film, id=request.POST.get('film', ''))
 
-    if request.method == 'POST':
-        film = get_object_or_404(Film, id=request.POST.get('film', ''))
+    # CHECK STATUS AND REDIRECT TO AN INTERMEDIARY PAGE IF IT'S
+    # ANYTHING OTHER THAN "STORAGE."
 
-        try:
-            quantity = int(request.POST.get('quantity', ''))
-        except ValueError:
-            messages.error(request, 'Enter a valid quantity.')
-            return redirect(reverse('index'))
+    # IF STATUS IS ANYTHING OTHER THAN "STORAGE" AND THE QUANITY IS
+    # ANYTHING OTHER THAN 1, SET IT TO 1 AND PUT A MESSAGE ON THE
+    # SCREEN EXPLAINING THAT YOU CAN ONLY ADD MULTIPLE ROLLS TO STORAGE.
+    # --LATER WE'LL ADD SOME JS TO HIDE THE QUANITY DROPDOWN IF YOU PICK
+    # A NON-STORAGE STATUS.
 
-        if quantity > 0:
-            roll = Roll.objects.create(owner=owner, film=film)
+    # ON THE INTERMEDIARY PAGE, PUT A MESSAGE EXPLAINING THAT IT'S
+    # IMPORTANT TO ADD THINGS IN STRICT CHRONOLOGICAL ORDER.
 
-            # The first roll has already been created, this creates the rest.
-            for x in range(1, quantity):
-                roll.pk = None
-                roll.save()
-
-            messages.success(
-                request,
-                'Added %s %s of %s!' % (
-                    quantity,
-                    pluralize('roll', quantity),
-                    film
-                )
-            )
-        else:
-            messages.error(request, 'Enter a quantity of 1 or more.')
-
+    try:
+        quantity = int(request.POST.get('quantity', ''))
+    except ValueError:
+        messages.error(request, 'Enter a valid quantity.')
         return redirect(reverse('index'))
+
+    if quantity > 0:
+        roll = Roll.objects.create(owner=owner, film=film)
+
+        # The first roll has already been created, this creates the rest.
+        for x in range(1, quantity):
+            roll.pk = None
+            roll.save()
+
+        messages.success(
+            request,
+            'Added %s %s of %s!' % (
+                quantity,
+                pluralize('roll', quantity),
+                film
+            )
+        )
+    else:
+        messages.error(request, 'Enter a quantity of 1 or more.')
+
+    return redirect(reverse('inventory'))
+
+
+@login_required
+def roll_add_nonstorage(request):
+    pass
 
 
 @login_required

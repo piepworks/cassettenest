@@ -40,7 +40,7 @@
     {% url 'camera-add' as camera_add_url %}
 
     {% include 'inventory/_card.html' with name='Ready to process' location=ready_url slot='count' count=rolls_ready_count %}
-    {% include 'inventory/_card.html' with name='Storage' location=inventory_url slot='count' count=rolls_storage_count %}
+    {% include 'inventory/_card.html' with name='Storage  / Add rolls' location=inventory_url slot='count' count=rolls_storage_count %}
     {% include 'inventory/_card.html' with name='Dashboard' location=dashboard_url %}
     {% include 'inventory/_card.html' with name='+ Add a camera' location=camera_add_url %}
 </section>
