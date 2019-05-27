@@ -1,0 +1,48 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / Profile{% endblock %}
+
+{% block content %}
+<div class="raw">
+<h1>Inventory</h1>
+
+<h2>Add film</h2>
+<form action="{% url 'rolls-add' %}" method="post">
+    {% csrf_token %}
+    <select name="film" required>
+        <option value="">Select a film</option>
+        {% regroup films by manufacturer as films_list %}
+        {% for manufacturer in films_list %}
+        <optgroup label="{{ manufacturer.grouper }}">
+            {% for film in manufacturer.list %}
+            <option value="{{ film.id }}">{{ film.name }} in {{ film.get_format_display }}</option>
+            {% endfor %}
+        </optgroup>
+        {% endfor %}
+    </select>
+    <input type="number" min="1" name="quantity" placeholder="quantity" required />
+    <input type="submit" value="Add" />
+</form>
+
+{% if total_film_count %}
+<h2>Formats</h2>
+<ul>
+    {% for format in format_counts %}
+    <li><a href="{% url 'film-format' format.format %}">{{ format.format_display }} / {{ format.count }}</a></li>
+    {% endfor %}
+</ul>
+
+<h2>Types</h2>
+<ul>
+    {% for type in type_counts %}
+    <li><a href="{% url 'film-type' type.type %}">{{ type.type_display }} / {{ type.count }}</a></li>
+    {% endfor %}
+</ul>
+
+{% include 'inventory/_unused-rolls.html' %}
+
+{% else %}
+<p>No films found.</p>
+{% endif %}
+</div>
+{% endblock %}

@@ -17,7 +17,6 @@ urlpatterns = [
 
     # Top-Level
     path('', views.index, name='index'),
-    path('inventory/', views.inventory, name='inventory'),
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
     path('dashboard/', views.dashboard, name='dashboard'),
@@ -52,6 +51,7 @@ urlpatterns = [
          views.project_camera_update, name='project-camera-update'),
 
     # Films
+    path('film/', views.inventory, name='inventory'),
     path('film/type/<type>/', views.film_type, name='film-type'),
     path('film/format/<format>/', views.film_format, name='film-format'),
     path('film/<slug:slug>/', views.film_rolls, name='film-rolls'),

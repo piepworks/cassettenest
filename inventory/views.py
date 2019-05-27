@@ -18,7 +18,6 @@ import datetime
 def index(request):
     if request.user.is_authenticated:
         owner = request.user
-        films = Film.objects.all()
         cameras_empty = Camera.objects.filter(owner=owner, status='empty')
         rolls = Roll.objects.filter(owner=owner)
         rolls_loaded = rolls.filter(status=status_number('loaded'))
@@ -37,7 +36,6 @@ def index(request):
         ).count()
 
         context = {
-            'films': films,
             'cameras_empty': cameras_empty,
             'projects': projects,
             'rolls_loaded': rolls_loaded,
@@ -53,6 +51,7 @@ def index(request):
 @login_required
 def inventory(request):
     owner = request.user
+    films = Film.objects.all()
     # Unused rolls
     total_film_count = Film.objects.filter(
         roll__owner=owner,
@@ -97,13 +96,14 @@ def inventory(request):
         )
 
     context = {
+        'films': films,
         'total_film_count': total_film_count,
         'film_counts': film_counts,
         'format_counts': format_counts,
         'type_counts': type_counts,
     }
 
-    return render(request, 'inventory/inventory.html', context)
+    return render(request, 'inventory/film.html', context)
 
 
 @login_required
