@@ -661,6 +661,7 @@ def project_camera_update(request, pk):
 def rolls_add(request):
     owner = request.user
     film = get_object_or_404(Film, id=request.POST.get('film', ''))
+    status = request.POST.get('status')
 
     # CHECK STATUS AND REDIRECT TO AN INTERMEDIARY PAGE IF IT'S
     # ANYTHING OTHER THAN "STORAGE."
@@ -680,31 +681,65 @@ def rolls_add(request):
         messages.error(request, 'Enter a valid quantity.')
         return redirect(reverse('index'))
 
-    if quantity > 0:
-        roll = Roll.objects.create(owner=owner, film=film)
+    if status != '01_storage':
+        # set session variables
+        # redirect to new intermediary page
+        request.session['status'] = status
+        request.session['film'] = film.id
 
-        # The first roll has already been created, this creates the rest.
-        for x in range(1, quantity):
-            roll.pk = None
-            roll.save()
-
-        messages.success(
-            request,
-            'Added %s %s of %s!' % (
-                quantity,
-                pluralize('roll', quantity),
-                film
-            )
-        )
+        return redirect(reverse('roll-add'))
     else:
-        messages.error(request, 'Enter a quantity of 1 or more.')
+        if quantity > 0:
+            roll = Roll.objects.create(owner=owner, film=film)
 
-    return redirect(reverse('inventory'))
+            # The first roll has already been created, this creates the rest.
+            for x in range(1, quantity):
+                roll.pk = None
+                roll.save()
+
+            messages.success(
+                request,
+                'Added %s %s of %s!' % (
+                    quantity,
+                    pluralize('roll', quantity),
+                    film
+                )
+            )
+        else:
+            messages.error(request, 'Enter a quantity of 1 or more.')
+
+        return redirect(reverse('inventory'))
 
 
 @login_required
-def roll_add_nonstorage(request):
-    pass
+def roll_add(request):
+    '''For adding non-storage rolls.'''
+    owner = request.user
+
+    try:
+        film = get_object_or_404(Film, id=request.session['film'])
+        status = request.session['status']
+
+        # if POST...
+
+        # else...
+
+        context = {
+            'owner': owner,
+            'film': film,
+            'status': status,
+        }
+
+        # after we're done with the session variables, delete them
+        # del request.session['film']
+        # del request.session['status']
+
+        return render(request, 'inventory/roll_add.html', context)
+
+    except KeyError:
+        messages.error(request, 'Add rolls from the inventory page.')
+
+        return redirect(reverse('inventory'))
 
 
 @login_required

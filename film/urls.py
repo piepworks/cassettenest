@@ -24,6 +24,7 @@ urlpatterns = [
     # Rolls
     path('rolls/add/', views.rolls_add, name='rolls-add'),
     path('rolls/update/', views.rolls_update, name='rolls-update'),
+    path('roll/add/', views.roll_add, name='roll-add'),
     path('roll/<int:pk>/', views.roll_detail, name='roll-detail'),
     path('roll/<int:pk>/edit/', views.roll_edit, name='roll-edit'),
     path('roll/<int:pk>/delete/', views.roll_delete, name='roll-delete'),
