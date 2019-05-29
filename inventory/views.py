@@ -694,6 +694,7 @@ def rolls_add(request):
 
             # The first roll has already been created, this creates the rest.
             for x in range(1, quantity):
+                # https://stackoverflow.com/a/4736172/96257
                 roll.pk = None
                 roll.save()
 
@@ -719,24 +720,49 @@ def roll_add(request):
     try:
         film = get_object_or_404(Film, id=request.session['film'])
         status = request.session['status']
+        cameras = Camera.objects
 
-        # if POST...
+        if request.method == 'POST':
+            form = RollForm(request.POST)
 
-        # else...
+            if form.is_valid():
+                roll = Roll.objects.create(owner=owner, film=film)
+                roll.film = film
+                roll.status = status
+                roll.started_on = form.cleaned_data['started_on']
+                roll.ended_on = form.cleaned_data['ended_on']
+                roll.camera = form.cleaned_data['camera']
+                roll.save()
 
-        context = {
-            'owner': owner,
-            'film': film,
-            'status': status,
-        }
+                # Validate ended on isn't before started on?
 
-        # after we're done with the session variables, delete them
-        # del request.session['film']
-        # del request.session['status']
+                # after we're done with the session variables, delete them
+                # del request.session['film']
+                # del request.session['status']
 
-        return render(request, 'inventory/roll_add.html', context)
+                return redirect(reverse('roll-detail', args=(roll.id,)))
+            else:
+                messages.error(request, 'Please fill out the form.')
+                return redirect(reverse('roll-add'))
+
+        else:
+            form = RollForm()
+            form.fields['camera'].queryset = Camera.objects.filter(
+                format=film.format,
+                owner=owner
+            )
+
+            context = {
+                'owner': owner,
+                'film': film,
+                'status': status,
+                'form': form,
+            }
+
+            return render(request, 'inventory/roll_add.html', context)
 
     except KeyError:
+        # No matching session keys.
         messages.error(request, 'Add rolls from the inventory page.')
 
         return redirect(reverse('inventory'))
@@ -874,9 +900,7 @@ def roll_edit(request, pk):
 
             messages.success(request, 'Changes saved!')
 
-            return redirect(
-                reverse('roll-detail', args=(roll.id,))
-            )
+            return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         form = RollForm(instance=roll)
         form.fields['camera'].queryset = Camera.objects.filter(

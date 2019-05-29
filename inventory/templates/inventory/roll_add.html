@@ -1,14 +1,23 @@
 {% extends 'base_site.html' %}
 
-{% block title %}Add a non-storage roll{% endblock %}
+{% block title %} / Add a non-storage roll{% endblock %}
 
 {% block content %}
 <div class="raw">
     <h1>Add a non-storage roll</h1>
-    <p>{{ film }}</p>
-    <p>{{ status }}</p>
-
     <p>We need more information to add this...</p>
     <p>Be sure to add things in strict chronological order...</p>
+
+    <hr />
+
+    <form action="{% url 'roll-add' %}" method="post">
+        {% csrf_token %}
+        <p>{{ film }}</p>
+        <p>{{ status }}</p>
+        <p><label>{{ form.camera.label }}: {{ form.camera }}</label> <small>{{ form.camera.help_text }}</small></p>
+        <p><label>{{ form.started_on.label }} {{ form.started_on }}</label> <small>{{ form.started_on.help_text }}</small></p>
+        <p><label>{{ form.ended_on.label }} {{ form.ended_on }}</label> <small>{{ form.ended_on.help_text }}</small></p>
+        <p><input type="submit" name="" value="Add roll"></p>
+    </form>
 </div>
 {% endblock %}
