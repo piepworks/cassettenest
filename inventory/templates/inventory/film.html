@@ -7,7 +7,6 @@
 <h1>Inventory</h1>
 
 <h2>Add rolls</h2>
-<p><i>To add a roll as "Loaded," go to <a href="{% url 'index' %}">the home page</a> and choose a "Ready to Load" camera.</i></p>
 <form action="{% url 'rolls-add' %}" method="post">
     {% csrf_token %}
     <select name="film" required>
@@ -31,6 +30,7 @@
     <input type="number" min="1" name="quantity" placeholder="quantity" required />
     <input type="submit" value="Add" />
 </form>
+<p><i>To mark a roll as "Loaded," go to <a href="{% url 'index' %}">the home page</a> and choose a "Ready to Load" camera.</i></p>
 
 {% if total_film_count %}
 <h2>Formats</h2>

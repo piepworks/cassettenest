@@ -727,7 +727,6 @@ def roll_add(request):
 
             if form.is_valid():
                 roll = Roll.objects.create(owner=owner, film=film)
-                roll.film = film
                 roll.status = status
                 roll.started_on = form.cleaned_data['started_on']
                 roll.ended_on = form.cleaned_data['ended_on']
@@ -737,10 +736,16 @@ def roll_add(request):
                 # Validate ended on isn't before started on?
 
                 # after we're done with the session variables, delete them
-                # del request.session['film']
-                # del request.session['status']
+                del request.session['film']
+                del request.session['status']
 
-                return redirect(reverse('roll-detail', args=(roll.id,)))
+                messages.success(
+                    request,
+                    'Added a roll of %s with a code of %s!' % (film, roll.code)
+                )
+                return redirect(reverse(
+                    'logbook',
+                ) + '?status=' + status[3:])
             else:
                 messages.error(request, 'Please fill out the form.')
                 return redirect(reverse('roll-add'))
@@ -751,6 +756,7 @@ def roll_add(request):
                 format=film.format,
                 owner=owner
             )
+            # push/pull
 
             context = {
                 'owner': owner,

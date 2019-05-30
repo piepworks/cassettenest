@@ -263,7 +263,8 @@ class Roll(models.Model):
 
             # TODO: Check for proper validation of the code field somehow?
             self.code = '%s-%s-%d' % (format, self.film.type, sequence)
-            self.status = status_number('loaded')
+            if self.status == status_number('storage'):
+                self.status = status_number('loaded')
 
         # If we've changed our minds and put something back into storage, set
         # everything back to factory condition.

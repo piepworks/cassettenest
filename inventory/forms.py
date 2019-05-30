@@ -15,9 +15,6 @@ class CameraForm(ModelForm):
 
 
 class RollForm(ModelForm):
-    # TODO: Delete camera here? Doesn't seem wise to have it here at all.
-    camera = CameraChoiceField(queryset=Camera.objects.all(), required=False)
-
     class Meta:
         model = Roll
         exclude = ['code', 'film', 'owner', 'created_at', 'updated_at']

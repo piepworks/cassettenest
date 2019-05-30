@@ -10,10 +10,11 @@
 
     <hr />
 
+    <p>Add a roll of <b>{{ film }}</b> with the status of <b>{{ status|slice:'3:'|capfirst }}</b></p>
+
     <form action="{% url 'roll-add' %}" method="post">
         {% csrf_token %}
-        <p>{{ film }}</p>
-        <p>{{ status }}</p>
+        <input type="hidden" name="status" value="{{ status }}" />
         <p><label>{{ form.camera.label }}: {{ form.camera }}</label> <small>{{ form.camera.help_text }}</small></p>
         <p><label>{{ form.started_on.label }} {{ form.started_on }}</label> <small>{{ form.started_on.help_text }}</small></p>
         <p><label>{{ form.ended_on.label }} {{ form.ended_on }}</label> <small>{{ form.ended_on.help_text }}</small></p>
