@@ -731,6 +731,7 @@ def roll_add(request):
                 roll.started_on = form.cleaned_data['started_on']
                 roll.ended_on = form.cleaned_data['ended_on']
                 roll.camera = form.cleaned_data['camera']
+                roll.push_pull = form.cleaned_data['push_pull']
                 roll.save()
 
                 # Validate ended on isn't before started on?
@@ -891,6 +892,7 @@ def roll_edit(request, pk):
 
         if form.is_valid():
             roll.camera = form.cleaned_data['camera']
+            roll.code = form.cleaned_data['code']
             roll.lens = form.cleaned_data['lens']
             roll.project = form.cleaned_data['project']
             roll.status = form.cleaned_data['status']

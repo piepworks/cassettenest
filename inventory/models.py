@@ -183,7 +183,7 @@ class Roll(models.Model):
     )
     code = models.CharField(
         max_length=100,
-        help_text='A unique roll code (per year)',
+        help_text='A unique identifier (per year)',
         blank=True,
     )
     status = models.CharField(
