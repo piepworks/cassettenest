@@ -9,27 +9,11 @@
 <h2>Add rolls</h2>
 <form action="{% url 'rolls-add' %}" method="post">
     {% csrf_token %}
-    <select name="film" required>
-        <option value="">Select a film</option>
-        {% regroup films by manufacturer as films_list %}
-        {% for manufacturer in films_list %}
-        <optgroup label="{{ manufacturer.grouper }}">
-            {% for film in manufacturer.list %}
-            <option value="{{ film.id }}">{{ film.name }} in {{ film.get_format_display }}</option>
-            {% endfor %}
-        </optgroup>
-        {% endfor %}
-    </select>
-    <label>Status:
-        <select name="status" required>
-            {% for value, text in status_choices %}
-                <option value="{{ value }}">{{ text }}</option>
-            {% endfor %}
-        </select>
-    </label>
+    {% include 'inventory/_film-selector.html' %}
     <input type="number" min="1" name="quantity" placeholder="quantity" required />
-    <input type="submit" value="Add" />
+    <input type="submit" value="Add to storage" />
 </form>
+<p><a href="{% url 'roll-add' %}">Add a roll to a non-storage status.</a></p>
 <p><i>To mark a roll as "Loaded," go to <a href="{% url 'index' %}">the home page</a> and choose a "Ready to Load" camera.</i></p>
 
 {% if total_film_count %}

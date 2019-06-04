@@ -681,35 +681,27 @@ def rolls_add(request):
         messages.error(request, 'Enter a valid quantity.')
         return redirect(reverse('index'))
 
-    if status != '01_storage':
-        # set session variables
-        # redirect to new intermediary page
-        request.session['status'] = status
-        request.session['film'] = film.id
+    if quantity > 0:
+        roll = Roll.objects.create(owner=owner, film=film)
 
-        return redirect(reverse('roll-add'))
-    else:
-        if quantity > 0:
-            roll = Roll.objects.create(owner=owner, film=film)
+        # The first roll has already been created, this creates the rest.
+        for x in range(1, quantity):
+            # https://stackoverflow.com/a/4736172/96257
+            roll.pk = None
+            roll.save()
 
-            # The first roll has already been created, this creates the rest.
-            for x in range(1, quantity):
-                # https://stackoverflow.com/a/4736172/96257
-                roll.pk = None
-                roll.save()
-
-            messages.success(
-                request,
-                'Added %s %s of %s!' % (
-                    quantity,
-                    pluralize('roll', quantity),
-                    film
-                )
+        messages.success(
+            request,
+            'Added %s %s of %s!' % (
+                quantity,
+                pluralize('roll', quantity),
+                film
             )
-        else:
-            messages.error(request, 'Enter a quantity of 1 or more.')
+        )
+    else:
+        messages.error(request, 'Enter a quantity of 1 or more.')
 
-        return redirect(reverse('inventory'))
+    return redirect(reverse('inventory'))
 
 
 @login_required
@@ -717,62 +709,50 @@ def roll_add(request):
     '''For adding non-storage rolls.'''
     owner = request.user
 
-    try:
-        film = get_object_or_404(Film, id=request.session['film'])
-        status = request.session['status']
-        cameras = Camera.objects
+    if request.method == 'POST':
+        form = RollForm(request.POST)
 
-        if request.method == 'POST':
-            form = RollForm(request.POST)
+        if form.is_valid():
+            film = get_object_or_404(Film, id=request.POST.get('film', ''))
+            status = form.cleaned_data['status']
 
-            if form.is_valid():
-                roll = Roll.objects.create(owner=owner, film=film)
-                roll.status = status
-                roll.started_on = form.cleaned_data['started_on']
-                roll.ended_on = form.cleaned_data['ended_on']
-                roll.camera = form.cleaned_data['camera']
-                roll.push_pull = form.cleaned_data['push_pull']
-                roll.save()
+            roll = Roll.objects.create(owner=owner, film=film)
+            roll.status = status
+            # Validate ended on isn't before started on?
+            roll.started_on = form.cleaned_data['started_on']
+            roll.ended_on = form.cleaned_data['ended_on']
+            roll.camera = form.cleaned_data['camera']
+            roll.push_pull = form.cleaned_data['push_pull']
+            roll.location = form.cleaned_data['location']
+            roll.notes = form.cleaned_data['notes']
+            roll.save()
 
-                # Validate ended on isn't before started on?
-
-                # after we're done with the session variables, delete them
-                del request.session['film']
-                del request.session['status']
-
-                messages.success(
-                    request,
-                    'Added a roll of %s with a code of %s!' % (film, roll.code)
-                )
-                return redirect(reverse(
-                    'logbook',
-                ) + '?status=' + status[3:])
-            else:
-                messages.error(request, 'Please fill out the form.')
-                return redirect(reverse('roll-add'))
-
-        else:
-            form = RollForm()
-            form.fields['camera'].queryset = Camera.objects.filter(
-                format=film.format,
-                owner=owner
+            messages.success(
+                request,
+                'Added a roll of %s with a code of %s!' % (film, roll.code)
             )
-            # push/pull
+            return redirect(reverse(
+                'logbook',
+            ) + '?status=' + status[3:])
+        else:
+            messages.error(request, 'Please fill out the form.')
+            return redirect(reverse('roll-add'))
 
-            context = {
-                'owner': owner,
-                'film': film,
-                'status': status,
-                'form': form,
-            }
+    else:
+        films = Film.objects.all()
+        form = RollForm()
+        form.fields['camera'].queryset = Camera.objects.filter(owner=owner)
+        status_choices = Roll._meta.get_field('status').flatchoices
+        del status_choices[0:2]  # storage & loaded
+        form.fields['status'].choices = status_choices
 
-            return render(request, 'inventory/roll_add.html', context)
+        context = {
+            'owner': owner,
+            'form': form,
+            'films': films,
+        }
 
-    except KeyError:
-        # No matching session keys.
-        messages.error(request, 'Add rolls from the inventory page.')
-
-        return redirect(reverse('inventory'))
+        return render(request, 'inventory/roll_add.html', context)
 
 
 @login_required

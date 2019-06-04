@@ -1,0 +1,11 @@
+<select name="film" required>
+    <option value="">Select a film</option>
+    {% regroup films by manufacturer as films_list %}
+    {% for manufacturer in films_list %}
+    <optgroup label="{{ manufacturer.grouper }}">
+        {% for film in manufacturer.list %}
+        <option value="{{ film.id }}">{{ film.name }} in {{ film.get_format_display }}</option>
+        {% endfor %}
+    </optgroup>
+    {% endfor %}
+</select>

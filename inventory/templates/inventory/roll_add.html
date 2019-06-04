@@ -5,20 +5,20 @@
 {% block content %}
 <div class="raw">
     <h1>Add a non-storage roll</h1>
-    <p>We need more information to add this...</p>
-    <p>Be sure to add things in strict chronological order...</p>
+    <p>For best results with the auto-generated code/label, be sure to add things in strict chronological order from oldest to newest.</p>
 
     <hr />
 
-    <p>Add a roll of <b>{{ film }}</b> with the status of <b>{{ status|slice:'3:'|capfirst }}</b></p>
-
     <form action="{% url 'roll-add' %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="status" value="{{ status }}" />
+        <p><label>Film: {% include 'inventory/_film-selector.html' %}</label></p>
+        <p><label>{{ form.status.label }} {{ form.status }}</label> <small>{{ form.status.help_text }}</small></p>
         <p><label>{{ form.camera.label }} {{ form.camera }}</label> <small>{{ form.camera.help_text }}</small></p>
         <p><label>{{ form.started_on.label }} {{ form.started_on }}</label> <small>{{ form.started_on.help_text }}</small></p>
         <p><label>{{ form.ended_on.label }} {{ form.ended_on }}</label> <small>{{ form.ended_on.help_text }}</small></p>
-        <p><label>{{ form.push_pull.label }} {{ form.push_pull }}</label></p>
+        <p><label>{{ form.push_pull.label }} {{ form.push_pull }} <small>{{ form.push_pull.help_text }}</small></label></p>
+        <p><label>{{ form.location.label }} {{ form.location }} <small>{{ form.location.help_text }}</small></label></p>
+        <p><label>{{ form.notes.label }} {{ form.notes }} <small>{{ form.notes.help_text }}</small></label></p>
         <p><input type="submit" name="" value="Add roll"></p>
     </form>
 </div>

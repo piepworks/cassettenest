@@ -97,7 +97,7 @@ class Camera(models.Model):
         ordering = ['-status', 'name']
 
     def __str__(self):
-        return '%s\'s %s' % (self.owner, self.name)
+        return '%s' % self.name
 
     def get_absolute_url(self):
         return reverse('camera-detail', args=(self.id,))
