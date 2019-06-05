@@ -11,19 +11,8 @@
 <form method="post">
     {% csrf_token %}
     <p><label>Code / Label: {{ form.code }} <small>{{ form.code.help_text }}</small></label></p>
-    <p><label>{{ form.camera.label }}: {{ form.camera }}</label> <small>{{ form.camera.help_text }}</small></p>
-    <p><label>{{ form.lens.label }}: {{ form.lens }}</label> <small>{{ form.lens.help_text }}</small></p>
-    <p><label>{{ form.project.label }}: {{ form.project }}</label> <small>{{ form.project.help_text }}</small></p>
-    <p><label>{{ form.status.label }}: {{ form.status }}</label> <small>{{ form.status.help_text }}</small></p>
-    <p><label>{{ form.push_pull.label }}: {{ form.push_pull }}</label> <small>{{ form.push_pull.help_text }}</small></p>
-    <p><label>{{ form.location.label }}: {{ form.location }}</label> <small>{{ form.location.help_text }}</small></p>
-    <p><label for="id_notes">{{ form.notes.label }}:</label> <small>({{ form.notes.help_text }})</small></p>
-    <p>{{ form.notes }}</p>
-    <p><label>{{ form.lab.label }}: {{ form.lab }}</label> <small>{{ form.lab.help_text }}</small></p>
-    <p><label>{{ form.scanner.label }}: {{ form.scanner }}</label> <small>{{ form.scanner.help_text }}</small></p>
-    <p><label for="id_notes_on_development">{{ form.notes_on_development.label }}:</label> <small>({{ form.notes_on_development.help_text }})</small></p>
-    <p>{{ form.notes_on_development }}</p>
-    <input type="submit" value="Save changes">
+    {% include 'inventory/_form-roll.html' %}
+    <input type="submit" value="Save changes" />
 </form>
 </div>
 {% endblock %}

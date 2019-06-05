@@ -717,14 +717,21 @@ def roll_add(request):
             status = form.cleaned_data['status']
 
             roll = Roll.objects.create(owner=owner, film=film)
-            roll.status = status
             # Validate ended on isn't before started on?
             roll.started_on = form.cleaned_data['started_on']
             roll.ended_on = form.cleaned_data['ended_on']
             roll.camera = form.cleaned_data['camera']
+            roll.lens = form.cleaned_data['lens']
+            roll.project = form.cleaned_data['project']
+            roll.status = form.cleaned_data['status']
             roll.push_pull = form.cleaned_data['push_pull']
             roll.location = form.cleaned_data['location']
             roll.notes = form.cleaned_data['notes']
+            roll.lab = form.cleaned_data['lab']
+            roll.scanner = form.cleaned_data['scanner']
+            roll.notes_on_development = form.cleaned_data[
+                'notes_on_development'
+            ]
             roll.save()
 
             messages.success(
@@ -751,6 +758,7 @@ def roll_add(request):
         films = Film.objects.all()
         form = RollForm()
         form.fields['camera'].queryset = Camera.objects.filter(owner=owner)
+        form.fields['project'].queryset = Project.objects.filter(owner=owner)
         status_choices = Roll._meta.get_field('status').flatchoices
         del status_choices[0:2]  # storage & loaded
         form.fields['status'].choices = status_choices
