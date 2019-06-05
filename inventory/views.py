@@ -729,7 +729,16 @@ def roll_add(request):
 
             messages.success(
                 request,
-                'Added a roll of %s with a code of %s!' % (film, roll.code)
+                '''
+                    Added a roll: <a href="%s">%s</a>!
+                    <a href="%s">Add another</a>
+                '''
+                % (
+                    reverse('roll-detail', args=(roll.id,)),
+                    roll.code,
+                    reverse('roll-add')
+                ),
+                extra_tags='safe'
             )
             return redirect(reverse(
                 'logbook',
