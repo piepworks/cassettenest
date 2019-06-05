@@ -4,15 +4,13 @@
 
 {% block content %}
 <div class="raw">
-<h1>
-    Edit {{ roll }}
-</h1>
+    <h1>Edit {{ roll }}</h1>
 
-<form method="post">
-    {% csrf_token %}
-    <p><label>Code / Label: {{ form.code }} <small>{{ form.code.help_text }}</small></label></p>
-    {% include 'inventory/_form-roll.html' %}
-    <input type="submit" value="Save changes" />
-</form>
+    <form method="post">
+        {% csrf_token %}
+        <p><label>Code / Label: {{ form.code }} <small>{{ form.code.help_text }}</small></label></p>
+        {% include 'inventory/_form-roll.html' %}
+        <input type="submit" value="Save changes" />
+    </form>
 </div>
 {% endblock %}

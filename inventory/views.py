@@ -129,6 +129,10 @@ def logbook(request):
         description = status_description(status)
         rolls = rolls.filter(status=status_number(status))
 
+    if request.GET.get('year'):
+        year = request.GET.get('year')
+        rolls = rolls.filter(started_on__year=year)
+
     context = {
         'owner': owner,
         'rolls': rolls,
@@ -747,6 +751,7 @@ def roll_add(request):
                 ),
                 extra_tags='safe'
             )
+            # TODO: redirect to year=year for this roll and status=all.
             return redirect(reverse(
                 'logbook',
             ) + '?status=' + status[3:])
@@ -760,7 +765,7 @@ def roll_add(request):
         form.fields['camera'].queryset = Camera.objects.filter(owner=owner)
         form.fields['project'].queryset = Project.objects.filter(owner=owner)
         status_choices = Roll._meta.get_field('status').flatchoices
-        del status_choices[0:2]  # storage & loaded
+        del status_choices[0:2]  # remove storage & loaded
         form.fields['status'].choices = status_choices
 
         context = {
