@@ -6,11 +6,22 @@ const confirmRemove = function(item='item') {
     return confirm(`Are you sure you want to remove this ${item}?`);
 }
 
-const pickmeupOptions = {
-    format: 'Y-m-d',
-    default_date: false,
-    hide_on_select: true,
+const dateWidgetSupported = function() {
+    const input = document.createElement('input');
+    input.setAttribute('type', 'date');
+    const support = input.type !== 'text';
+    delete input;
+    return support;
 }
 
-pickmeup('#id_started_on', pickmeupOptions);
-pickmeup('#id_ended_on', pickmeupOptions);
+if (!dateWidgetSupported()) {
+    const pickmeupOptions = {
+        format: 'm/d/Y',
+        default_date: false,
+        hide_on_select: true,
+    }
+
+    pickmeup('#id_date', pickmeupOptions);
+    pickmeup('#id_started_on', pickmeupOptions);
+    pickmeup('#id_ended_on', pickmeupOptions);
+}
