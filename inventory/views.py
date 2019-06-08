@@ -740,21 +740,18 @@ def roll_add(request):
 
             messages.success(
                 request,
-                '''
-                    Added a roll: <a href="%s">%s</a>!
-                    <a href="%s">Add another</a>
-                '''
+                'Added a roll: <a href="%s">%s</a>!'
                 % (
                     reverse('roll-detail', args=(roll.id,)),
-                    roll.code,
-                    reverse('roll-add')
+                    roll.code
                 ),
                 extra_tags='safe'
             )
             # TODO: redirect to year=year for this roll and status=all.
-            return redirect(reverse(
-                'logbook',
-            ) + '?status=' + status[3:])
+            if 'another' in request.POST:
+                return redirect(reverse('roll-add'))
+            else:
+                return redirect(reverse('logbook') + '?status=' + status[3:])
         else:
             messages.error(request, 'Please fill out the form.')
             return redirect(reverse('roll-add'))
