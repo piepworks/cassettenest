@@ -7,7 +7,6 @@ form {
     input[type='number'] { width: 5em; }
 
     .c-field {
-        // margin-bottom: 1rem;
         display: flex;
         padding: 2rem 0;
         justify-content: space-between;
@@ -18,19 +17,25 @@ form {
             flex-direction: column;
             align-items: stretch;
 
-            textarea { width: 100%; }
-
             label { margin-bottom: 1rem; }
         }
+
+        label { padding-right: 1rem; }
 
         &__widget {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
 
+            select,
+            textarea { width: 100%; }
+
             small { padding-top: .5rem; }
         }
     }
 
-    .action { margin-top: 3rem; }
+    .action {
+        margin-top: 3rem;
+        text-align: right;
+    }
 }
