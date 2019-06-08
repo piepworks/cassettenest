@@ -4,17 +4,24 @@
 
 {% block content %}
 <div class="raw">
-    <h1>Add a non-storage roll</h1>
+    <h1>Add a roll to your&nbsp;logbook</h1>
     <p>For best results with the auto-generated code/label, be sure to add things in strict chronological order from oldest to newest.</p>
 
     <hr />
 
     <form action="{% url 'roll-add' %}" method="post">
         {% csrf_token %}
-        <p><label>Film: {% include 'inventory/_film-selector.html' %}</label></p>
+        <div class="c-field">
+            <label for="id_film">Film</label>
+            <div class="c-field--widget">
+                {% include 'inventory/_film-selector.html' %}
+            </div>
+        </div>
         {% include 'inventory/_form-roll.html' %}
-        <p><input type="submit" name="" value="Add roll to logbook" /></p>
-        <p><input type="submit" name="another" value="Add roll to logbook then add another" /></p>
+        <div class="action">
+            <p><input type="submit" name="" value="Save roll to logbook" /></p>
+            <p><input type="submit" name="another" value="Save roll to logbook and add another" /></p>
+        </div>
     </form>
 </div>
 {% endblock %}

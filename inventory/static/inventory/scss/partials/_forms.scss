@@ -1,12 +1,36 @@
 form {
     margin-bottom: 20px;
 
-    label { padding-right: 10px; }
-
     button,
     input[type='submit'] { @include django-admin-button; }
 
-    select { @include django-admin-select; }
-
     input[type='number'] { width: 5em; }
+
+    .c-field {
+        // margin-bottom: 1rem;
+        display: flex;
+        padding: 2rem 0;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: .3rem solid #eee;
+
+        &--textarea {
+            flex-direction: column;
+            align-items: stretch;
+
+            textarea { width: 100%; }
+
+            label { margin-bottom: 1rem; }
+        }
+
+        &__widget {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            small { padding-top: .5rem; }
+        }
+    }
+
+    .action { margin-top: 3rem; }
 }

@@ -8,9 +8,10 @@
 
     <form method="post">
         {% csrf_token %}
-        <p><label>Code / Label: {{ form.code }} <small>{{ form.code.help_text }}</small></label></p>
+        {% include 'inventory/_form-field.html' with field=form.code %}
         {% include 'inventory/_form-roll.html' %}
-        <input type="submit" value="Save changes" />
+
+        <div class="action"><input type="submit" value="Save changes" /></div>
     </form>
 </div>
 {% endblock %}

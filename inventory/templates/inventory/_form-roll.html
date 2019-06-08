@@ -1,14 +1,12 @@
-<p><label>{{ form.started_on.label }} {{ form.started_on }}</label> <small>{{ form.started_on.help_text }}</small></p>
-<p><label>{{ form.ended_on.label }} {{ form.ended_on }}</label> <small>{{ form.ended_on.help_text }}</small></p>
-<p><label>{{ form.status.label }}: {{ form.status }}</label> <small>{{ form.status.help_text }}</small></p>
-<p><label>{{ form.camera.label }}: {{ form.camera }}</label> <small>{{ form.camera.help_text }}</small></p>
-<p><label>{{ form.lens.label }}: {{ form.lens }}</label> <small>{{ form.lens.help_text }}</small></p>
-<p><label>{{ form.project.label }}: {{ form.project }}</label> <small>{{ form.project.help_text }}</small></p>
-<p><label>{{ form.push_pull.label }}: {{ form.push_pull }}</label> <small>{{ form.push_pull.help_text }}</small></p>
-<p><label>{{ form.location.label }}: {{ form.location }}</label> <small>{{ form.location.help_text }}</small></p>
-<p><label for="id_notes">{{ form.notes.label }}:</label> <small>({{ form.notes.help_text }})</small></p>
-<p>{{ form.notes }}</p>
-<p><label>{{ form.lab.label }}: {{ form.lab }}</label> <small>{{ form.lab.help_text }}</small></p>
-<p><label>{{ form.scanner.label }}: {{ form.scanner }}</label> <small>{{ form.scanner.help_text }}</small></p>
-<p><label for="id_notes_on_development">{{ form.notes_on_development.label }}:</label> <small>({{ form.notes_on_development.help_text }})</small></p>
-<p>{{ form.notes_on_development }}</p>
+{% include 'inventory/_form-field.html' with field=form.started_on %}
+{% include 'inventory/_form-field.html' with field=form.ended_on %}
+{% include 'inventory/_form-field.html' with field=form.status %}
+{% include 'inventory/_form-field.html' with field=form.camera %}
+{% include 'inventory/_form-field.html' with field=form.lens %}
+{% include 'inventory/_form-field.html' with field=form.project %}
+{% include 'inventory/_form-field.html' with field=form.push_pull %}
+{% include 'inventory/_form-field.html' with field=form.location %}
+{% include 'inventory/_form-field.html' with field=form.notes widget='textarea' %}
+{% include 'inventory/_form-field.html' with field=form.lab %}
+{% include 'inventory/_form-field.html' with field=form.scanner %}
+{% include 'inventory/_form-field.html' with field=form.notes_on_development widget='textarea' %}

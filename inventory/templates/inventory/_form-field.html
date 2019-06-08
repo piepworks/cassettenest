@@ -1,0 +1,9 @@
+<div class="c-field{% if widget %} c-field--{{ widget }}{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    <div class="c-field__widget">
+        {{ field }}
+        {% if field.help_text %}
+        <small>{{ field.help_text }}</small>
+        {% endif %}
+    </div>
+</div>

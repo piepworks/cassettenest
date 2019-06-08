@@ -1,4 +1,4 @@
-<select name="film" required>
+<select name="film" id="id_film" required>
     <option value="">Select a film</option>
     {% regroup films by manufacturer as films_list %}
     {% for manufacturer in films_list %}
