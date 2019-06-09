@@ -9,9 +9,11 @@ class CameraChoiceField(ModelChoiceField):
 
 
 class CameraForm(ModelForm):
+    unavailable = forms.BooleanField(label='Unavailable', required=False)
+
     class Meta:
         model = Camera
-        fields = ['name', 'format', 'owner']
+        fields = ['name', 'format', 'owner', 'unavailable']
 
 
 class RollForm(ModelForm):

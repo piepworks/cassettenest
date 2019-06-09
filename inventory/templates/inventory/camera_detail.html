@@ -8,7 +8,7 @@
     <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
 
     <section class="status">
-        <h2>Status: {{ camera.status }}</h2>
+        <h2>Status: {{ camera.get_status_display }}</h2>
     </section>
 
     <p>Format: {{ camera.get_format_display }}</p>

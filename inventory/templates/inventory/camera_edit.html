@@ -4,14 +4,21 @@
 
 {% block content %}
 <div class="raw">
-<h1>Edit &ldquo;<a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>&rdquo;</h1>
+    <h1>Edit &ldquo;<a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>&rdquo;</h1>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.name }}
-    {{ form.format }}
-    <input type="hidden" name="owner" value="{{ owner.id }}">
-    <input type="submit" value="Update camera">
-</form>
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="owner" value="{{ owner.id }}">
+        <p>
+            {{ form.name }}
+            {{ form.format }}
+        </p>
+        {% if camera.status != 'loaded' %}
+        <p><label>{{ form.unavailable }} {{ form.unavailable.label }}</label></p>
+        {% endif %}
+        <p>
+            <input type="submit" value="Update camera">
+        </p>
+    </form>
 </div>
 {% endblock %}

@@ -41,6 +41,7 @@ class CameraAdmin(admin.ModelAdmin):
         'owner',
         'name',
         'format',
+        'status',
     )
 
 

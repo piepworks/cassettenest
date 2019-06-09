@@ -1259,10 +1259,16 @@ def camera_edit(request, pk):
 
     if request.method == 'POST':
         form = CameraForm(request.POST, instance=camera)
+        unavailable = request.POST.get('unavailable')
 
         if form.is_valid():
             name = form.cleaned_data['name']
             format = form.cleaned_data['format']
+            unavailable = form.cleaned_data['unavailable']
+            if unavailable and camera.status != 'loaded':
+                camera.status = 'unavailable'
+            elif camera.status != 'loaded':
+                camera.status = 'empty'
             camera.name = name
             camera.format = format
             camera.save()
@@ -1271,6 +1277,8 @@ def camera_edit(request, pk):
             return redirect(reverse('camera-detail', args=(camera.id,)))
     else:
         form = CameraForm(instance=camera)
+        form.fields['unavailable'].initial = camera.status == 'unavailable'
+
         context = {
             'owner': owner,
             'form': form,
