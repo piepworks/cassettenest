@@ -10,7 +10,7 @@
             {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot='count' count=project.get_rolls_remaining %}
         {% endfor %}
     {% endif %}
-    {% include 'inventory/_card.html' with name='View all projects' location=projects_url %}
+    {% include 'inventory/_card.html' with name='All projects' location=projects_url %}
 </section>
 
 {% if rolls_loaded %}
@@ -39,10 +39,12 @@
     {% url 'inventory' as inventory_url %}
     {% url 'camera-add' as camera_add_url %}
     {% url 'roll-add' as roll_add_url %}
+    {% url 'cameras' as cameras_url %}
 
-    {% include 'inventory/_card.html' with name='Ready to process' location=ready_url slot='count' count=rolls_ready_count %}
-    {% include 'inventory/_card.html' with name='Storage  / Add rolls' location=inventory_url slot='count' count=rolls_storage_count %}
     {% include 'inventory/_card.html' with name='Dashboard' location=dashboard_url %}
+    {% include 'inventory/_card.html' with name='Ready to process' location=ready_url slot='count' count=rolls_ready_count %}
+    {% include 'inventory/_card.html' with name='Storage / Add rolls' location=inventory_url slot='count' count=rolls_storage_count %}
+    {% include 'inventory/_card.html' with name='All cameras' location=cameras_url slot='count' count=cameras_total.count %}
     {% include 'inventory/_card.html' with name='+ Add a camera' location=camera_add_url %}
     {% include 'inventory/_card.html' with name='+ Add a roll to your logbook' location=roll_add_url %}
 </section>

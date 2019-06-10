@@ -18,7 +18,8 @@ import datetime
 def index(request):
     if request.user.is_authenticated:
         owner = request.user
-        cameras_empty = Camera.objects.filter(owner=owner, status='empty')
+        cameras_total = Camera.objects.filter(owner=owner)
+        cameras_empty = cameras_total.filter(status='empty')
         rolls = Roll.objects.filter(owner=owner)
         rolls_loaded = rolls.filter(status=status_number('loaded'))
         rolls_ready_count = rolls.filter(status=status_number('shot')).count()
@@ -36,6 +37,7 @@ def index(request):
         ).count()
 
         context = {
+            'cameras_total': cameras_total,
             'cameras_empty': cameras_empty,
             'projects': projects,
             'rolls_loaded': rolls_loaded,
@@ -1058,6 +1060,22 @@ def roll_journal_delete(request, roll_pk, entry_pk):
         'Journal entry for %s successfully deleted.' % (entry_date)
     )
     return redirect(reverse('roll-detail', args=(roll.id,)))
+
+
+@login_required
+def cameras(request):
+    owner = request.user
+    cameras = Camera.objects.filter(
+            owner=owner
+        ).order_by(
+            '-status',
+            '-updated_at',
+        )
+    context = {
+        'cameras': cameras,
+    }
+
+    return render(request, 'inventory/cameras.html', context)
 
 
 @login_required

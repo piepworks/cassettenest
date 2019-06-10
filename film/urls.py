@@ -58,6 +58,7 @@ urlpatterns = [
     path('film/<slug:slug>/', views.film_rolls, name='film-rolls'),
 
     # Cameras
+    path('cameras/', views.cameras, name='cameras'),
     path('camera/add/', views.camera_add, name='camera-add'),
     path('camera/<int:pk>/', views.camera_detail, name='camera-detail'),
     path('camera/<int:pk>/load/', views.camera_load, name='camera-load'),

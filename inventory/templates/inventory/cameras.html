@@ -1,0 +1,25 @@
+{% extends 'base_site.html' %}
+
+{% block title %} / Cameras{% endblock %}
+
+{% block content %}
+<div class="raw">
+<h1>Cameras</h1>
+
+<p><a href="{% url 'camera-add' %}">Add a camera</a></p>
+
+<ul>
+    {% regroup cameras by get_status_display as status_list %}
+    {% for status in status_list %}
+    <ul>
+        <li>{{ status.grouper }}
+            <ul>
+                {% for camera in status.list %}
+                <li><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    {% endfor %}
+</ul>
+{% endblock %}
