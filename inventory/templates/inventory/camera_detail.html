@@ -15,11 +15,7 @@
 
     {% if camera.status == 'loaded' %}
     {% include 'inventory/_camera-loaded.html' %}
-    <form method="post">
-        {% csrf_token %}
-        <input type="hidden" name="roll" value="{{ roll.id }}" />
-        <input type="submit" value="Finish roll" />
-    </form>
+    {% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}
     {% else %}
     <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
     {% endif %}

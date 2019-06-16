@@ -1,6 +1,16 @@
 {% include 'inventory/_form-field.html' with field=form.started_on %}
 {% include 'inventory/_form-field.html' with field=form.ended_on %}
+{% if status != '02_loaded' %}
 {% include 'inventory/_form-field.html' with field=form.status %}
+{% else %}
+<div class="c-field">
+    <label>Status</label>
+    <div class="c-field__widget">
+        Loaded
+        <small>You can't update the status of a loaded roll from this form.</small>
+    </div>
+</div>
+{% endif %}
 {% include 'inventory/_form-field.html' with field=form.camera %}
 {% include 'inventory/_form-field.html' with field=form.lens %}
 {% include 'inventory/_form-field.html' with field=form.project %}

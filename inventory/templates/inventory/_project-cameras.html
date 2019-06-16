@@ -19,11 +19,7 @@
                     {% for roll in loaded_roll_list %}
                         {% if roll.camera.id == camera.id %}
                             {% include 'inventory/_camera-loaded.html' %}
-                            <form action="{% url 'camera-detail' camera.id %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="roll" value="{{ roll.id }}" />
-                                <input type="submit" value="Finish roll" />
-                            </form>
+                            {% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}
                         {% endif %}
                     {% endfor %}
                 {% else %}

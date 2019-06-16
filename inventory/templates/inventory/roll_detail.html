@@ -118,16 +118,18 @@
 </table>
 {% endif %}
 
-<ul>
+<div class="action">
     {% if roll.status != '01_storage' %}
-    <li><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></li>
+    <p><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
     {% endif %}
-    <li>
+    {% if roll.status == '02_loaded' %}
+    <p>{% include 'inventory/_form-finish-roll.html' with camera=roll.camera roll=roll %}</p>
+    {% endif %}
+    <p>
         <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
             {% csrf_token %}
             <input type="submit" value="Delete" />
         </form>
-    </li>
-</ul>
+    </p>
 </div>
 {% endblock %}

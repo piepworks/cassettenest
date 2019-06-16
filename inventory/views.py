@@ -97,17 +97,12 @@ def inventory(request):
             strings_only=True
         )
 
-    status_choices = Roll._meta.get_field('status').flatchoices
-    # If you want to add something as "Loaded," you should load a camera.
-    del status_choices[1]
-
     context = {
         'films': films,
         'total_film_count': total_film_count,
         'film_counts': film_counts,
         'format_counts': format_counts,
         'type_counts': type_counts,
-        'status_choices': status_choices,
     }
 
     return render(request, 'inventory/film.html', context)
@@ -919,6 +914,10 @@ def roll_edit(request, pk):
             owner=owner
         )
         form.fields['project'].queryset = Project.objects.filter(owner=owner)
+
+        status_choices = Roll._meta.get_field('status').flatchoices
+        del status_choices[1]  # remove loaded
+        form.fields['status'].choices = status_choices
 
         context = {
             'owner': owner,

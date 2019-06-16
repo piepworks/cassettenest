@@ -17,8 +17,8 @@
 <section>
     <h2 class="c-heading">Loaded Cameras</h2>
     {% for roll in rolls_loaded %}
-        {% url 'roll-journal-add' roll.id as journal_add %}
-        {% include 'inventory/_card.html' with name=roll.camera.name location=journal_add slot='reminder' roll=roll %}
+        {% url 'roll-detail' roll.id as roll_detail %}
+        {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
     {% endfor %}
 </section>
 {% endif %}
