@@ -892,6 +892,8 @@ def roll_edit(request, pk):
         form = RollForm(request.POST)
 
         if form.is_valid():
+            roll.started_on = form.cleaned_data['started_on']
+            roll.ended_on = form.cleaned_data['ended_on']
             roll.camera = form.cleaned_data['camera']
             roll.code = form.cleaned_data['code']
             roll.lens = form.cleaned_data['lens']
