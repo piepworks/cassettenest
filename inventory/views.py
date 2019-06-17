@@ -143,6 +143,7 @@ def logbook(request):
 @login_required
 def ready(request):
     owner = request.user
+    form = ReadyForm()
     rolls = Roll.objects.filter(
             owner=owner,
             status=status_number('shot')
@@ -230,6 +231,7 @@ def ready(request):
 
     context = {
         'owner': owner,
+        'form': form,
         'rolls': rolls,
         'rolls_by_format': rolls_by_format,
         'rolls_by_type': rolls_by_type,
@@ -328,16 +330,21 @@ def rolls_update(request):
     '''
     Update status (and other things?) for selected rolls in a grid.
     '''
-    # I need to make the naming of the rest of the views consistent with this
-    # one. Having "film" in the name for things having to do with Rolls isn't
-    # right.
     owner = request.user
+    form = ReadyForm(request.POST)
     updated_status = request.POST.get('updated_status')
     rolls = request.POST.getlist('roll')
-    # Should I be sanitizing the following fields?
-    lab = request.POST.get('lab', '')
-    scanner = request.POST.get('scanner', '')
-    notes_on_development = request.POST.get('notes_on_development', '')
+
+    if form.is_valid():
+        # This is for the sake of the Ready page.
+        # I guess this works with forms on Logbook views since none of the
+        # fields are required so it happily ignores them not being there?
+        lab = form.cleaned_data['lab']
+        scanner = form.cleaned_data['scanner']
+        notes_on_development = form.cleaned_data['notes_on_development']
+    else:
+        messages.error(request, 'Something is not right.')
+        return redirect(reverse('ready'),)
 
     if updated_status in status_keys:
         # Bulk update selected rows.

@@ -1,5 +1,6 @@
 from django import forms
 from django.forms import ModelForm, ModelChoiceField, widgets
+from django.utils.safestring import mark_safe
 from .models import Camera, Roll, Project, Journal
 
 
@@ -39,3 +40,16 @@ class JournalForm(ModelForm):
         widgets = {
             'date': widgets.DateInput(attrs={'type': 'date'}),
         }
+
+
+class ReadyForm(forms.Form):
+    lab = forms.CharField(
+        required=False,
+        help_text=mark_safe('Or &ldquo;Self&rdquo;, &ldquo;Home&rdquo;, etc.')
+    )
+    scanner = forms.CharField(required=False)
+    notes_on_development = forms.CharField(
+        required=False,
+        help_text='Chemicals used, development times, etc.',
+        widget=forms.Textarea
+    )
