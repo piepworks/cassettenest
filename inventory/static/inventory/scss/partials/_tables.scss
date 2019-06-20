@@ -4,10 +4,13 @@ table {
     th { text-align: left; }
 
     th,
-    td { padding: 5px 20px 5px 0; }
+    td {
+        padding: 5px 20px 5px 0;
+        white-space: nowrap;
+    }
 
-    td,
-    th { border-bottom: 1px solid #eee; }
+    th,
+    td { border-bottom: 1px solid #eee; }
 
     thead th { border-bottom: 1px solid #000; }
 

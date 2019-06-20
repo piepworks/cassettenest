@@ -8,190 +8,192 @@
 <div class="raw">
 <h2>You have {{ rolls.count }} roll{{ rolls.count|pluralize }} ready to process.</h2>
 
-<table class="ready">
-    <thead>
+<div class="overflow-x">
+    <table class="ready">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>35mm</th>
+                <th>120</th>
+                <th class="totals">Totals</th>
+            </tr>
+        </thead>
+
+        {% if rolls_c41 %}
         <tr>
-            <th></th>
-            <th></th>
-            <th>35mm</th>
-            <th>120</th>
-            <th class="totals">Totals</th>
+            <th>C41 Color</th>
+            <td></td>
+            <td>{{ rolls_c41_135|default:'' }}</td>
+            <td>{{ rolls_c41_120|default:'' }}</td>
+            <td>{{ rolls_c41|default:'' }}</td>
         </tr>
-    </thead>
+        {% endif %}
+        {% if rolls_pull2_c41_135 or rolls_pull2_c41_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Pull 2 stops</td>
+            <td>{{ rolls_pull2_c41_135|default:'' }}</td>
+            <td>{{ rolls_pull2_c41_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_pull2_c41_135 or rolls_pull2_c41_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Pull 1 stop</td>
+            <td>{{ rolls_pull1_c41_135|default:'' }}</td>
+            <td>{{ rolls_pull1_c41_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push1_c41_135 or rolls_push1_c41_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 1 stop</td>
+            <td>{{ rolls_push1_c41_135|default:'' }}</td>
+            <td>{{ rolls_push1_c41_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push2_c41_135 or rolls_push2_c41_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 2 stops</td>
+            <td>{{ rolls_push2_c41_135|default:'' }}</td>
+            <td>{{ rolls_push2_c41_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push3_c41_135 or rolls_push3_c41_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 3 stops</td>
+            <td>{{ rolls_push3_c41_135|default:'' }}</td>
+            <td>{{ rolls_push3_c41_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
 
-    {% if rolls_c41 %}
-    <tr>
-        <th>C41 Color</th>
-        <td></td>
-        <td>{{ rolls_c41_135|default:'' }}</td>
-        <td>{{ rolls_c41_120|default:'' }}</td>
-        <td>{{ rolls_c41|default:'' }}</td>
-    </tr>
-    {% endif %}
-    {% if rolls_pull2_c41_135 or rolls_pull2_c41_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Pull 2 stops</td>
-        <td>{{ rolls_pull2_c41_135|default:'' }}</td>
-        <td>{{ rolls_pull2_c41_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_pull2_c41_135 or rolls_pull2_c41_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Pull 1 stop</td>
-        <td>{{ rolls_pull1_c41_135|default:'' }}</td>
-        <td>{{ rolls_pull1_c41_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push1_c41_135 or rolls_push1_c41_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 1 stop</td>
-        <td>{{ rolls_push1_c41_135|default:'' }}</td>
-        <td>{{ rolls_push1_c41_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push2_c41_135 or rolls_push2_c41_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 2 stops</td>
-        <td>{{ rolls_push2_c41_135|default:'' }}</td>
-        <td>{{ rolls_push2_c41_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push3_c41_135 or rolls_push3_c41_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 3 stops</td>
-        <td>{{ rolls_push3_c41_135|default:'' }}</td>
-        <td>{{ rolls_push3_c41_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
+        {% if rolls_bw %}
+        <tr>
+            <th>Black and White</th>
+            <td></td>
+            <td>{{ rolls_bw_135|default:'' }}</td>
+            <td>{{ rolls_bw_120|default:'' }}</td>
+            <td>{{ rolls_bw|default:'' }}</td>
+        </tr>
+        {% endif %}
+        {% if rolls_pull2_c41_135 or rolls_pull2_c41_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Pull 2 stops</td>
+            <td>{{ rolls_pull2_bw_135|default:'' }}</td>
+            <td>{{ rolls_pull2_bw_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_pull1_bw_135 or rolls_pull1_bw_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Pull 1 stop</td>
+            <td>{{ rolls_pull1_bw_135|default:'' }}</td>
+            <td>{{ rolls_pull1_bw_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push1_bw_135 or rolls_push1_bw_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 1 stop</td>
+            <td>{{ rolls_push1_bw_135|default:'' }}</td>
+            <td>{{ rolls_push1_bw_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push2_bw_135 or rolls_push2_bw_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 2 stops</td>
+            <td>{{ rolls_push2_bw_135|default:'' }}</td>
+            <td>{{ rolls_push2_bw_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push3_bw_135 or rolls_push3_bw_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 3 stops</td>
+            <td>{{ rolls_push3_bw_135|default:'' }}</td>
+            <td>{{ rolls_push3_bw_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
 
-    {% if rolls_bw %}
-    <tr>
-        <th>Black and White</th>
-        <td></td>
-        <td>{{ rolls_bw_135|default:'' }}</td>
-        <td>{{ rolls_bw_120|default:'' }}</td>
-        <td>{{ rolls_bw|default:'' }}</td>
-    </tr>
-    {% endif %}
-    {% if rolls_pull2_c41_135 or rolls_pull2_c41_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Pull 2 stops</td>
-        <td>{{ rolls_pull2_bw_135|default:'' }}</td>
-        <td>{{ rolls_pull2_bw_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_pull1_bw_135 or rolls_pull1_bw_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Pull 1 stop</td>
-        <td>{{ rolls_pull1_bw_135|default:'' }}</td>
-        <td>{{ rolls_pull1_bw_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push1_bw_135 or rolls_push1_bw_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 1 stop</td>
-        <td>{{ rolls_push1_bw_135|default:'' }}</td>
-        <td>{{ rolls_push1_bw_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push2_bw_135 or rolls_push2_bw_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 2 stops</td>
-        <td>{{ rolls_push2_bw_135|default:'' }}</td>
-        <td>{{ rolls_push2_bw_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push3_bw_135 or rolls_push3_bw_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 3 stops</td>
-        <td>{{ rolls_push3_bw_135|default:'' }}</td>
-        <td>{{ rolls_push3_bw_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
+        {% if rolls_e6 %}
+        <tr>
+            <th>E6 Color Reversal</th>
+            <td></td>
+            <td>{{ rolls_e6_135|default:'' }}</td>
+            <td>{{ rolls_e6_120|default:'' }}</td>
+            <td>{{ rolls_e6|default:'' }}</td>
+        </tr>
+        {% endif %}
+        {% if rolls_pull2_e6_135 or rolls_pull2_e6_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Pull 2 stops</td>
+            <td>{{ rolls_pull2_e6_135|default:'' }}</td>
+            <td>{{ rolls_pull2_e6_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_pull2_e6_135 or rolls_pull2_e6_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Pull 1 stop</td>
+            <td>{{ rolls_pull1_e6_135|default:'' }}</td>
+            <td>{{ rolls_pull1_e6_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push1_e6_135 or rolls_push1_e6_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 1 stop</td>
+            <td>{{ rolls_push1_e6_135|default:'' }}</td>
+            <td>{{ rolls_push1_e6_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push2_e6_135 or rolls_push2_e6_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 2 stops</td>
+            <td>{{ rolls_push2_e6_135|default:'' }}</td>
+            <td>{{ rolls_push2_e6_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
+        {% if rolls_push3_e6_135 or rolls_push3_e6_120 %}
+        <tr class="push-pull">
+            <td></td>
+            <td>Push 3 stops</td>
+            <td>{{ rolls_push3_e6_135|default:'' }}</td>
+            <td>{{ rolls_push3_e6_120|default:'' }}</td>
+            <td></td>
+        </tr>
+        {% endif %}
 
-    {% if rolls_e6 %}
-    <tr>
-        <th>E6 Color Reversal</th>
-        <td></td>
-        <td>{{ rolls_e6_135|default:'' }}</td>
-        <td>{{ rolls_e6_120|default:'' }}</td>
-        <td>{{ rolls_e6|default:'' }}</td>
-    </tr>
-    {% endif %}
-    {% if rolls_pull2_e6_135 or rolls_pull2_e6_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Pull 2 stops</td>
-        <td>{{ rolls_pull2_e6_135|default:'' }}</td>
-        <td>{{ rolls_pull2_e6_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_pull2_e6_135 or rolls_pull2_e6_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Pull 1 stop</td>
-        <td>{{ rolls_pull1_e6_135|default:'' }}</td>
-        <td>{{ rolls_pull1_e6_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push1_e6_135 or rolls_push1_e6_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 1 stop</td>
-        <td>{{ rolls_push1_e6_135|default:'' }}</td>
-        <td>{{ rolls_push1_e6_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push2_e6_135 or rolls_push2_e6_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 2 stops</td>
-        <td>{{ rolls_push2_e6_135|default:'' }}</td>
-        <td>{{ rolls_push2_e6_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-    {% if rolls_push3_e6_135 or rolls_push3_e6_120 %}
-    <tr class="push-pull">
-        <td></td>
-        <td>Push 3 stops</td>
-        <td>{{ rolls_push3_e6_135|default:'' }}</td>
-        <td>{{ rolls_push3_e6_120|default:'' }}</td>
-        <td></td>
-    </tr>
-    {% endif %}
-
-    <tr class="totals">
-        <th>Totals</th>
-        <td></td>
-        <td>{{ rolls_135|default:'' }}</td>
-        <td>{{ rolls_120|default:'' }}</td>
-        <td class="grand"><b>{{ rolls.count }}</b></td>
-    </tr>
-</table>
+        <tr class="totals">
+            <th>Totals</th>
+            <td></td>
+            <td>{{ rolls_135|default:'' }}</td>
+            <td>{{ rolls_120|default:'' }}</td>
+            <td class="grand"><b>{{ rolls.count }}</b></td>
+        </tr>
+    </table>
+</div>
 
 <form method="post" action="{% url 'rolls-update' %}">
     {% csrf_token %}

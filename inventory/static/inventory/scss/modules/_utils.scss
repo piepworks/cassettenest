@@ -26,6 +26,11 @@ $breakpoints: (
   }
 }
 
+// For wide tables or whatever.
+.overflow-x {
+    overflow-x: auto;
+}
+
 // For parts of the app that still need to be properly designed.
 .raw {
     padding: 1.25rem;
