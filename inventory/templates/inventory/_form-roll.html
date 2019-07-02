@@ -3,6 +3,7 @@
 {% if status != '02_loaded' %}
 {% include 'inventory/_form-field.html' with field=form.status %}
 {% else %}
+<input type="hidden" name="status" value="{{ status }}" />
 <div class="c-field">
     <label>Status</label>
     <div class="c-field__widget">
