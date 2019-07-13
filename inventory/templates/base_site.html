@@ -13,16 +13,18 @@
 <body {% block bodytag %}{% endblock %}>
     <header class="c-site-nav">
         <h1><a href="{% url 'index' %}">Cassette Nest</a></h1>
-        {% if user.is_authenticated %}
         <nav>
             <ul>
+            {% if user.is_authenticated %}
                 {% if user.is_superuser %}
                 <li><a href="{% url 'admin:index' %}">Admin</a></li>
                 {% endif %}
                 <li><a href="{% url 'logout' %}">Log out</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}">Log in</a></li>
+            {% endif %}
             </ul>
         </nav>
-        {% endif %}
     </header>
     {% if messages %}
     <ul class="messages">
