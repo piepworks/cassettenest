@@ -1,8 +1,35 @@
 {% extends 'base_site.html' %}
 
 {% block content %}
+{% if signedup %}
+<div class="raw">
+    <h2>Thanks! We'll be in touch.</h2>
+    <p><a href="https://twitter.com/cassettenest">Follow us on Twitter</a> if you're so inclined.</p>
+</div>
+{% else %}
 <div class="raw">
     <h2>Welcome! We&rsquo;re still developing&hellip;</h2>
+
+    <p>Submit your email address and we'll let you know when we're ready!</p>
+
+    <form action="https://app.e2ma.net/app2/audience/signup/1902957/31622/?r=signup" id="signup" method="post" name="signup">
+        <input id="id_prev_member_email" name="prev_member_email" type="hidden" />
+        <input id="id_source" name="source" type="hidden" />
+        <input id="id_group_10062726" name="group_10062726" type="hidden" value="10062726" />
+        <input name="prev_member_email" type="hidden" value="" />
+
+        <div class="c-field">
+            <label for="id_email">Email</label>
+            <div class="c-field__widget">
+                <input id="id_email" name="email" type="email" required />
+            </div>
+        </div>
+
+        <div class="action">
+            <p><input id="form-submit-input" name="Submit" type="submit" value="Submit" /></p>
+        </div>
+    </form>
 </div>
-<iframe src="https://signup.e2ma.net/signup/1902957/31622/" height="500" frameborder="0"></iframe>
+
+{% endif %}
 {% endblock %}

@@ -47,7 +47,12 @@ def index(request):
         }
         return render(request, 'inventory/index.html', context)
     else:
-        return render(request, 'inventory/landing.html')
+        context = {}
+        if request.GET.get('signedup'):
+            context = {
+                'signedup': True
+            }
+        return render(request, 'inventory/landing.html', context)
 
 
 @login_required
