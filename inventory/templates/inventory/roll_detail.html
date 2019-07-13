@@ -17,7 +17,7 @@
 <p><a href="{% url 'roll-edit' roll.id %}">Edit roll</a></p>
 
 <ul>
-    <li>Status: {{ roll.get_status_display }}</li>
+    <li>Status: <a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></li>
 
     {% if roll.code %}
     <li>Code: {{ roll.code }}</li>
