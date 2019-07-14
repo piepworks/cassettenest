@@ -1,13 +1,14 @@
 {% extends 'base_site.html' %}
-
 {% block content %}
+<div class="raw">
+    <h2>Create an account to continue.</h2>
 
-<h2>Create an account to continue.</h2>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Create your account</button>
-</form>
-
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {% include 'inventory/_form-field.html' with field=field %}
+        {% endfor %}
+        <div class="action"><input type="submit" value="Create your account" /></div>
+    </form>
+</div>
 {% endblock %}

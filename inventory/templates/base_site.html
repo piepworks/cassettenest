@@ -15,13 +15,14 @@
         <h1><a href="{% url 'index' %}">Cassette Nest</a></h1>
         <nav>
             <ul>
+            {% url 'login' as login_url %}
             {% if user.is_authenticated %}
                 {% if user.is_superuser %}
                 <li><a href="{% url 'admin:index' %}">Admin</a></li>
                 {% endif %}
                 <li><a href="{% url 'logout' %}">Log out</a></li>
-            {% else %}
-                <li><a href="{% url 'login' %}">Log in</a></li>
+            {% elif request.path != login_url %}
+                <li><a href="{{ login_url }}">Log in</a></li>
             {% endif %}
             </ul>
         </nav>

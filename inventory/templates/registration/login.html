@@ -1,15 +1,15 @@
 {% extends 'base_site.html' %}
-
 {% block content %}
+<div class="raw">
+    <h2>Log in to continue.</h2>
 
-<h2>Log in to continue.</h2>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
-
-<!-- <p>Don't have an account? <a href="{% url 'register' %}">Create one.</a></p> -->
-
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {% include 'inventory/_form-field.html' with field=field %}
+        {% endfor %}
+        <div class="action"><input type="submit" value="Login" /></div>
+    </form>
+</div>
+<!--<p>Don't have an account? <a href="{% url 'register' %}">Create one.</a></p> -->
 {% endblock %}
