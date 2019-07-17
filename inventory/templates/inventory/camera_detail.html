@@ -1,4 +1,5 @@
 {% extends 'base_site.html' %}
+{% load markdown_deux_tags %}
 
 {% block title %} / {{ camera.name }}{% endblock %}
 
@@ -18,6 +19,11 @@
     {% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}
     {% else %}
     <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
+    {% endif %}
+
+    {% if camera.notes %}
+    <h2>Notes</h2>
+    <div>{{ camera.notes|markdown }}</div>
     {% endif %}
 
     {% if rolls_history %}

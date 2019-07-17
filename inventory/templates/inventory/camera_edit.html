@@ -9,16 +9,13 @@
     <form method="post">
         {% csrf_token %}
         <input type="hidden" name="owner" value="{{ owner.id }}">
-        <p>
-            {{ form.name }}
-            {{ form.format }}
-        </p>
+        {% include 'inventory/_form-field.html' with field=form.name %}
+        {% include 'inventory/_form-field.html' with field=form.format %}
+        {% include 'inventory/_form-field.html' with field=form.notes %}
         {% if camera.status != 'loaded' %}
-        <p><label>{{ form.unavailable }} {{ form.unavailable.label }}</label></p>
+        {% include 'inventory/_form-field.html' with field=form.unavailable %}
         {% endif %}
-        <p>
-            <input type="submit" value="Update camera">
-        </p>
+        <div class="action"><input type="submit" value="Update camera" /></div>
     </form>
 </div>
 {% endblock %}

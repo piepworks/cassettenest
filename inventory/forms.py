@@ -14,7 +14,7 @@ class CameraForm(ModelForm):
 
     class Meta:
         model = Camera
-        fields = ['name', 'format', 'owner', 'unavailable']
+        fields = ['name', 'format', 'notes', 'owner', 'unavailable']
 
 
 class RollForm(ModelForm):
