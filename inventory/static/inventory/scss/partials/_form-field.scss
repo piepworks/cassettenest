@@ -1,0 +1,37 @@
+.c-field {
+    $base: &;
+
+    display: flex;
+    padding: 2rem 0;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: .3rem solid #eee;
+
+    &--textarea {
+        flex-direction: column;
+        align-items: stretch;
+
+        label { margin-bottom: 1rem; }
+    }
+
+    label { padding-right: 1rem; }
+
+    &__widget {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        select,
+        textarea { width: 100%; }
+
+        small { padding-top: .5rem; }
+
+        #{$base}--multi & {
+            flex-direction: row;
+
+            > * { margin-right: 1rem; }
+
+            :last-child { margin-right: 0; }
+        }
+    }
+}

@@ -8,34 +8,14 @@
 <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
 
 {% if camera.status != 'loaded' %}
-<h3>Pick a film to load:</h3>
-
-<p>Format: {{ camera.get_format_display }}</p>
+<h3>Pick a film to load: <small>(Format: {{ camera.get_format_display }})</small></h3>
 
 {% if projects %}
-<p>Filter by Project:</p>
-<form method="get">
-    {% if iso_range and iso_value %}
-    <input type="hidden" name="iso_range" value="{{ iso_range }}" />
-    <input type="hidden" name="iso_value" value="{{ iso_value }}" />
-    {% endif %}
-    <select name="project">
-        <option value="0">All rolls</option>
-        {% for project in projects %}
-        <option value="{{ project.id }}" {% if project.id == current_project.id %}selected{% endif %}>
-            {{ project.name }}
-        </option>
-        {% endfor %}
-    </select>
-    <input type="submit" value="Filter" />
-</form>
-<p>Showing: {{ current_project.name|default:'All rolls' }}</p>
+{% include 'inventory/_form-project.html' %}
 {% endif %}
 
 {% if film_counts %}
 {% include 'inventory/_form_iso.html' %}
-
-<hr />
 
 {% include 'inventory/_form-load-camera.html' %}
 {% else %}

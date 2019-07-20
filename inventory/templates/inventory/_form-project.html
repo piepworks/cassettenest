@@ -1,0 +1,33 @@
+<form method="get">
+    {% if iso_range and iso_value %}
+    <input type="hidden" name="iso_range" value="{{ iso_range }}" />
+    <input type="hidden" name="iso_value" value="{{ iso_value }}" />
+    {% endif %}
+
+    <div class="c-field">
+        <label for="id_project_filter">Project filter: {{ current_project.name|default:'inactive' }}</label>
+        <div class="c-field__widget">
+            <button id="id_project_filter" class="toggle-button">Show</button>
+        </div>
+    </div>
+
+    <div class="toggle">
+        <div class="c-field">
+            <label for="id_project">Filter by Project</label>
+            <div class="c-field__widget">
+                <select name="project">
+                    <option value="0">All available rolls</option>
+                    {% for project in projects %}
+                    <option value="{{ project.id }}" {% if project.id == current_project.id %}selected{% endif %}>
+                        {{ project.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="action">
+            <input type="submit" value="Filter" />
+        </div>
+    </div>
+</form>

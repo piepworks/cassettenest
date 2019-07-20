@@ -35,3 +35,19 @@ $breakpoints: (
 .raw {
     padding: 1.25rem;
 }
+
+// TODO: Make this better and more flexible.
+.toggle {
+    background: #eee;
+    padding: 0 1rem 2rem;
+
+    .action { margin-top: 0; }
+}
+
+.toggle-button { display: none; }
+
+html.has-js {
+    .toggle { display: none; }
+
+    .toggle-button { display: inline; }
+}
