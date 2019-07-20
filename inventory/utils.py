@@ -80,7 +80,7 @@ valid_statuses = {
     'scanned': {
         'number': '06_scanned',
         'description': '''
-            Scanned, but not back in your hands.
+            Scanned, but not put away.
         ''',
     },
     'archived': {
