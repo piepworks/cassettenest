@@ -478,7 +478,7 @@ def project_delete(request, pk):
             'Project deleted and %s %s now available for other projects.' %
             (roll_count, pluralize('roll', roll_count))
         )
-        return redirect(reverse('profile'))
+        return redirect(reverse('projects'))
     else:
         return redirect(reverse('project-detail', args=(project.id,)))
 
