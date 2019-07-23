@@ -1,0 +1,5 @@
+{% for roll in loaded_roll_list %}
+    {% if roll.camera.id == camera.id %}
+        {% block content %}{% endblock %}
+    {% endif %}
+{% endfor %}

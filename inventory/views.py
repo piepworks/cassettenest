@@ -491,6 +491,8 @@ def project_detail(request, pk):
     # Get all of this user's cameras not already associated with this project.
     cameras = Camera.objects.filter(owner=owner).exclude(
         pk__in=project.cameras.values_list('pk', flat=True)
+    ).exclude(
+        status='unavailable'
     )
     loaded_roll_list = Roll.objects.filter(
         owner=owner,

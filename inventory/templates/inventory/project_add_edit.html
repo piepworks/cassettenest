@@ -8,11 +8,13 @@
 
 <form method="post">
     {% csrf_token %}
-    <p>{{ form.name }}</p>
-    <p><label>Status: {{ form.status }}</label></p>
-    <p>{{ form.notes }}</p>
     <input type="hidden" name="owner" value="{{ owner.id }}">
-    <input type="submit" value="Save project">
+
+    {% include 'inventory/_form-field.html' with field=form.name %}
+    {% include 'inventory/_form-field.html' with field=form.status %}
+    {% include 'inventory/_form-field.html' with field=form.notes %}
+
+    <div class="action"><input type="submit" value="Save project" /></div>
 </form>
 </div>
 {% endblock %}

@@ -1,13 +1,15 @@
 form {
     margin-bottom: 20px;
 
-    button,
-    input[type='submit'] { @include django-admin-button; }
+    .c-field__widget & { margin-bottom: 0; }
+}
 
-    input[type='number'] { width: 5em; }
+button,
+input[type='submit'] { @include django-admin-button; }
 
-    .action {
-        margin-top: 3rem;
-        text-align: right;
-    }
+input[type='number'] { width: 5em; }
+
+.action {
+    margin-top: 3rem;
+    text-align: right;
 }
