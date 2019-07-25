@@ -3,6 +3,10 @@
 <div class="raw">
     <h2>Create an account to continue.</h2>
 
+    {% if form.errors %}
+    {{ form.errors }}
+    {% endif %}
+
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
