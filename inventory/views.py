@@ -1264,10 +1264,14 @@ def camera_add(request):
         if form.is_valid():
             name = form.cleaned_data['name']
             format = form.cleaned_data['format']
+            notes = form.cleaned_data['notes']
+            unavailable = form.cleaned_data['unavailable']
             camera = Camera.objects.create(
                 owner=owner,
                 name=name,
                 format=format,
+                notes=notes,
+                status='unavailable' if unavailable else 'empty'
             )
 
             messages.success(request, 'Camera added!')
@@ -1292,11 +1296,11 @@ def camera_edit(request, pk):
 
     if request.method == 'POST':
         form = CameraForm(request.POST, instance=camera)
-        unavailable = request.POST.get('unavailable')
 
         if form.is_valid():
             name = form.cleaned_data['name']
             format = form.cleaned_data['format']
+            notes = form.cleaned_data['notes']
             unavailable = form.cleaned_data['unavailable']
             if unavailable and camera.status != 'loaded':
                 camera.status = 'unavailable'
