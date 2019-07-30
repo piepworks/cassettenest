@@ -7,3 +7,20 @@
     margin-bottom: 20px;
     padding-bottom: 20px;
 }
+
+.year-filter {
+    list-style: none;
+    padding: 0;
+
+    a { text-decoration: none; }
+
+    > * + * { margin-left: 1.5rem; }
+
+    li {
+        display: inline-block;
+        padding-bottom: .25rem;
+        border-bottom: .25rem solid transparent;
+
+        &.current { border-color: $bw; }
+    }
+}

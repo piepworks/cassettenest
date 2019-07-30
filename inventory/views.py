@@ -125,6 +125,12 @@ def logbook(request):
             '-started_on',
             '-code'
         )
+    year = ''
+    all_years = {}
+
+    for y in rolls.dates('started_on', 'year'):
+        count = rolls.filter(started_on__year=y.year).count()
+        all_years.update({y.year: count})
 
     if request.GET.get('status') and request.GET.get('status') in status_keys:
         status = request.GET.get('status')
@@ -140,6 +146,8 @@ def logbook(request):
         'rolls': rolls,
         'status': status,
         'description': description,
+        'year': year,
+        'all_years': all_years
     }
 
     return render(request, 'inventory/logbook.html', context)

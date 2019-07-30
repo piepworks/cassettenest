@@ -7,6 +7,14 @@
 <div class="raw">
 <h1>Logbook</h1>
 
+<ul class="year-filter">
+    {% for key, value in all_years.items %}
+    <li{% if key|stringformat:'s' == year %} class="current"{% endif %}>
+        <a href="?year={{ key }}">{{ key }} <small>({{ value }})</small></a>
+    </li>
+    {% endfor %}
+</ul>
+
 <form method="get">
     <select name="status">
         <option value="0" {% if status == '0' %}selected{% endif %}>All rolls</option>
