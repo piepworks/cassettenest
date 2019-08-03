@@ -1,0 +1,12 @@
+{% if film.manufacturer.url %}
+    <a href="{{ film.manufacturer.url }}">{{ film.manufacturer }}</a>
+{% else %}
+    {{ film.manufacturer }}
+{% endif %}
+
+{% if film.url %}
+    <a href="{{ film.url }}">{{ film.name }}</a>
+{% else %}
+    {{ film.name }}
+{% endif %}
+    in {{ film.get_format_display }}

@@ -5,20 +5,7 @@
 
 {% block content %}
 <div class="raw">
-<h1>
-{% if film.manufacturer.url %}
-    <a href="{{ film.manufacturer.url }}">{{ film.manufacturer }}</a>
-{% else %}
-    {{ film.manufacturer }}
-{% endif %}
-
-{% if film.url %}
-    <a href="{{ film.url }}">{{ film.name }}</a>
-{% else %}
-    {{ film.name }}
-{% endif %}
-    in {{ film.get_format_display }}
-</h1>
+<h1>{% include 'inventory/_film-name-display.html' with film=film %}</h1>
 
 <p>ISO {{ film.iso }}</p>
 
