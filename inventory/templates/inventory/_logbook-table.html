@@ -5,7 +5,7 @@
             <tr>
                 {% if page != 'project' %}
                 {# <th><input type="checkbox" disabled title="This will select/deselect all rows when it works." /></th> #}
-                <th></th>
+                <th class="do-not-print"></th>
                 {% endif %}
                 <th>Code</th>
                 <th>Film</th>
@@ -22,14 +22,14 @@
         {% for roll in rolls %}
         <tr>
             {% if page != 'project' %}
-            <td><input type="checkbox" value="{{ roll.id }}" name="roll" /></td>
+            <td class="do-not-print"><input type="checkbox" value="{{ roll.id }}" name="roll" /></td>
             {% endif %}
             <td><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></td>
             <td>{{ roll.film }}</td>
             <td>{{ roll.started_on|date:'Y-m-d' }}</td>
             <td>{{ roll.ended_on|date:'Y-m-d' }}</td>
             {% if page != 'project' %}
-            <td>{% if roll.project %}<a href="{% url 'project-detail' roll.project.id %}">{{ roll.project }}</a>{% endif %}</td>
+            <td class="wrap">{% if roll.project %}<a href="{% url 'project-detail' roll.project.id %}">{{ roll.project }}</a>{% endif %}</td>
             {% endif %}
             {% if page == 'logbook' or page == 'project' %}
             <td>{{ roll.get_status_display }}</td>

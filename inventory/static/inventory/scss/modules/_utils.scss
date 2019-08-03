@@ -56,3 +56,19 @@ html.has-js {
 
     .toggle-button { display: inline; }
 }
+
+// Print
+
+@media print {
+    a {
+        text-decoration: none;
+        color: black;
+
+        &[href^='http'] {
+            text-decoration: underline;
+            &:after { content: ' (' attr(href) ')'; }
+        }
+    }
+
+    .do-not-print { display: none; }
+}

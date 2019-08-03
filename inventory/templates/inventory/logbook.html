@@ -8,6 +8,9 @@
 <h1>Logbook</h1>
 
 <ul class="year-filter">
+    {% if year %}
+    <li><a href="{% url 'logbook' %}">All years</a></li>
+    {% endif %}
     {% for key, value in all_years.items %}
     <li{% if key|stringformat:'s' == year %} class="current"{% endif %}>
         <a href="?year={{ key }}">{{ key }} <small>({{ value }})</small></a>
@@ -15,7 +18,7 @@
     {% endfor %}
 </ul>
 
-<form method="get">
+<form method="get" class="do-not-print">
     <select name="status">
         <option value="0" {% if status == '0' %}selected{% endif %}>All rolls</option>
         <option value="loaded" {% if status == 'loaded' %}selected{% endif %}>Loaded</option>
@@ -35,7 +38,7 @@
 {% if rolls %}
 <form method="post" action="{% url 'rolls-update' %}">
     {% csrf_token %}
-    <div class="bulk-status">
+    <div class="bulk-status do-not-print">
         <p>Bulk update the status of these rolls.</p>
         {% include 'inventory/_form-status.html' with page='logbook' current_status=status %}
     </div>
