@@ -1,5 +1,6 @@
 #!/bin/bash
 # https://blog.pythonanywhere.com/87/
+# I live in ~/bare-repos/cassettenest.git/hooks/post-receive
 GIT_WORK_TREE=/home/treypiepmeier/film git checkout -f
 
 now=$(date +"%F_%H-%M-%s")
