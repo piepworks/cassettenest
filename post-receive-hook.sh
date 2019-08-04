@@ -9,6 +9,7 @@ cd $HOME/film
 export WORKON_HOME=$HOME/.virtualenvs
 source /usr/local/bin/virtualenvwrapper.sh
 workon film
+pip install -r requirements.txt
 ./manage.py dumpdata > $backup_file
 ./manage.py collectstatic --noinput
 ./manage.py migrate --noinput
