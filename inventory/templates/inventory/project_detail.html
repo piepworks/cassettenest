@@ -9,12 +9,14 @@
 
 <p>Status: {{ project.get_status_display }}</p>
 
-<p><a href="{% url 'project-edit' project.id %}">Edit project</a></p>
+<div class="do-not-print">
+    <p><a href="{% url 'project-edit' project.id %}">Edit project</a></p>
 
-<form onsubmit="return confirmDelete('project');" action="{% url 'project-delete' project.id %}" method="post">
-    {% csrf_token %}
-    <input type="submit" value="Delete this project." />
-</form>
+    <form onsubmit="return confirmDelete('project');" action="{% url 'project-delete' project.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete this project." />
+    </form>
+</div>
 
 {% if project.cameras.all %}
     <hr />
@@ -33,6 +35,7 @@
     {% include 'inventory/_project-logbook.html' %}
 {% endif %}
 
+<div class="do-not-print">
 {% if project.status != 'archived' %}
     {% if film_available_count %}
         <hr />
@@ -47,6 +50,7 @@
     <hr />
     <p><i>This project is archived. You can add rolls and cameras to it if you <a href="{% url 'project-edit' project.id %}">change its status</a>.</i></p>
 {% endif %}
+</div>
 
 {% if project.notes %}
 <hr />

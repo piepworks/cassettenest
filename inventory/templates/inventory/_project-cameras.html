@@ -11,6 +11,7 @@
                 <div class="c-field c-field--multi">
                     <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
 
+                    {% if project.status != 'archived' %}
                     <div class="c-field__widget">
                         <form onsubmit="return confirmRemove('camera');" action="{% url 'project-camera-update' project.id %}" method="post">
                             {% csrf_token %}
@@ -29,6 +30,7 @@
                             {% endif %}
                         {% endif %}
                     </div>
+                    {% endif %}
                 </div>
 
                 {% if camera.status == 'loaded' %}

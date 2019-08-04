@@ -1,6 +1,6 @@
 <section class="c-card c-card--{{ type|default:'default' }} c-card--{{ type|default:'default' }}__{{ film_type|default:'c41' }}">
     {% if project and film %}
-        <form onsubmit="return confirmRemove('film');" action="{% url 'project-rolls-remove' project.id %}" method="post">
+        <form onsubmit="return confirmRemove('film');" action="{% url 'project-rolls-remove' project.id %}" method="post" class="do-not-print">
             {% csrf_token %}
             <input type="hidden" name="film" value="{{ film.id }}" />
             <input type="submit" value="Remove" title="Remove from project" />
