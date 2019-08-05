@@ -1,0 +1,35 @@
+<div class="c-field c-field--multi">
+    <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
+
+    <div class="c-field__widget">
+        <form onsubmit="return confirmRemove('camera');" action="{% url 'project-camera-update' project.id %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="remove" />
+            <input type="hidden" name="camera" value="{{ camera.id }}" />
+            <input type="submit" value="Remove" title="Remove from project" />
+        </form>
+        {% if camera.status == 'loaded' %}
+            {% include 'inventory/_form-finish-roll-within-project.html' %}
+            <button class="toggle-button">Show</button>
+        {% else %}
+            {% if camera.format == '135' and format_counts.135 %}
+            <button class="toggle-button">Show</button>
+            {% elif camera.format == '120' and format_counts.120 %}
+            <button class="toggle-button">Show</button>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+<div class="toggle">
+{% if camera.status == 'loaded' %}
+    {% include 'inventory/_camera-loaded-within-project.html' %}
+{% else %}
+    {% if camera.format == '135' and format_counts.135 and camera.status != 'loaded' %}
+        {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.135 %}
+    {% endif %}
+    {% if camera.format == '120' and format_counts.120 and camera.status != 'loaded' %}
+        {% include 'inventory/_form-load-camera.html' with camera=camera current_project=project film_counts=format_counts.120 %}
+    {% endif %}
+{% endif %}
+</div>
