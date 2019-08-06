@@ -16,6 +16,8 @@
         {% csrf_token %}
         <input type="submit" value="Delete this project." />
     </form>
+
+    <p><a href="{% url 'projects' %}">View all projects</a></p>
 </div>
 
 {% if project.cameras.all %}

@@ -6,7 +6,11 @@
 {% block content %}
 <div class="raw">
     <h1>{{ camera.name }}</h1>
-    <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
+
+    <div class="do-not-print">
+        <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
+        <p><a href="{% url 'cameras' %}">View all cameras</a></p>
+    </div>
 
     <section class="status">
         <h2>Status: {{ camera.get_status_display }}</h2>
