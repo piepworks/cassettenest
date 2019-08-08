@@ -14,12 +14,13 @@
 
     a { text-decoration: none; }
 
-    > * + * { margin-left: 1.5rem; }
-
     li {
+        margin-right: 1.5rem;
         display: inline-block;
         padding-bottom: .25rem;
         border-bottom: .25rem solid transparent;
+
+        &:last-child { margin-right: 0; }
 
         &.current { border-color: $bw; }
     }
