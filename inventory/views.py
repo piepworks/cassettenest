@@ -134,8 +134,11 @@ def logbook(request):
 
     if request.GET.get('status') and request.GET.get('status') in status_keys:
         status = request.GET.get('status')
-        description = status_description(status)
-        rolls = rolls.filter(status=status_number(status))
+        if status == 'storage':
+            return redirect(reverse('inventory'))
+        else:
+            description = status_description(status)
+            rolls = rolls.filter(status=status_number(status))
 
     if request.GET.get('year'):
         year = request.GET.get('year')
