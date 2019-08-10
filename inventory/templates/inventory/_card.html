@@ -6,7 +6,7 @@
             <input type="submit" value="Remove" title="Remove from project" />
         </form>
     {% endif %}
-    <a href="{{ location|default:'#' }}{% if project and type == 'film' %}?project={{ project.id }}{% endif %}">
+    <a href="{{ location|default:'#' }}{% if project %}?project={{ project.id }}{% endif %}">
         <header><h1>{{ name }}</h1></header>
         {% if slot == 'count' %}
             <div class="c-card__count" title="Number of rolls"><span>{{ count|default:'0' }}</span></div>

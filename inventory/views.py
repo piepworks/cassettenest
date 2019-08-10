@@ -505,6 +505,7 @@ def project_detail(request, pk):
     ).exclude(
         status='unavailable'
     )
+    cameras_empty = project.cameras.filter(status='empty')
     loaded_roll_list = Roll.objects.filter(
         owner=owner,
         project=project,
@@ -564,6 +565,7 @@ def project_detail(request, pk):
         'owner': owner,
         'project': project,
         'cameras': cameras,
+        'cameras_empty': cameras_empty,
         'total_film_count': total_film_count,
         'film_counts': film_counts,
         'film_available_count': film_available_count,

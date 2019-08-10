@@ -1,21 +1,48 @@
 <h2>Camera{{ project.cameras.count|pluralize }}</h2>
 
-<ul>
 {% if project.status == 'archived' %}
-    {% for camera in project.cameras.all %}
-    <li><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></li>
-    {% endfor %}
+    <ul>
+        {% for camera in project.cameras.all %}
+        <li><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></li>
+        {% endfor %}
+    </ul>
 {% else %}
-    {% regroup project.cameras.all by get_status_display as camera_list %}
-    {% for status in camera_list %}
-    <li>
-        {{ status.grouper }}
-        <ul>
-            {% for camera in status.list %}
-            <li>{% include 'inventory/_project-camera.html' %}</li>
-            {% endfor %}
-        </ul>
-    </li>
-    {% endfor %}
+    {% if loaded_roll_list %}
+    <section>
+        <h2 class="c-heading">Loaded Cameras</h2>
+        {% for roll in loaded_roll_list %}
+            {% url 'roll-detail' roll.id as roll_detail %}
+            {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if cameras_empty %}
+    <section>
+        <h2 class="c-heading">Ready to Load</h2>
+        {% for camera in cameras_empty %}
+            {% url 'camera-load' camera.id as camera_load %}
+            {% include 'inventory/_card.html' with name=camera.name location=camera_load slot='reminder' %}
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <p><i>Note: cameras loaded outside of this project won't show up here until the non-project roll is finished.</i></p>
+
+    {% comment %}
+    {# This is way too fiddly. #}
+    <section>
+        <h2 class="c-heading">Loaded outside of project</h2>
+        {% for camera in project.cameras.all %}
+            {% if camera.status == 'loaded' %}
+                {% for roll in camera.roll_set.all %}
+                    {% if roll.status == '02_loaded' and roll.project != project %}
+                        {% url 'roll-detail' roll.id as roll_detail %}
+                        {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    </section>
+    {% endcomment %}
 {% endif %}
-</ul>
