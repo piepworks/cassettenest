@@ -9,7 +9,7 @@
 {% else %}
     {% if loaded_roll_list %}
     <section>
-        <h2 class="c-heading">Loaded Cameras</h2>
+        <h2 class="c-heading">Loaded</h2>
         {% for roll in loaded_roll_list %}
             {% url 'roll-detail' roll.id as roll_detail %}
             {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
