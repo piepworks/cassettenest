@@ -22,7 +22,7 @@
         <h2 class="c-heading">Ready to Load</h2>
         {% for camera in cameras_empty %}
             {% url 'camera-load' camera.id as camera_load %}
-            {% include 'inventory/_card.html' with name=camera.name location=camera_load slot='reminder' %}
+            {% include 'inventory/_card.html' with name=camera.name location=camera_load slot='reminder' querystring='project' %}
         {% endfor %}
     </section>
     {% endif %}

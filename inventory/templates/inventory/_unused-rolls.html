@@ -3,5 +3,5 @@
 {% endif %}
 
 {% for film in film_counts %}
-    {% include 'inventory/_card.html' with name=film location=film.get_absolute_url slot="count" count=film.count type="film" film_type=film.type %}
+    {% include 'inventory/_card.html' with name=film location=film.get_absolute_url slot='count' count=film.count type='film' film_type=film.type querystring='project' %}
 {% endfor %}
