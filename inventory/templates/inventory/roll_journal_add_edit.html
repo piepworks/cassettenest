@@ -1,7 +1,7 @@
 {% extends 'base_site.html' %}
 {% block bodytag %}class="journal-entry"{% endblock %}
 
-{% block title %} / Journal entry for {{ roll.code }} / {{ roll.started_on|date:'Y' }}{% endblock %}
+{% block title %}Journal entry for {{ roll.code }} / {{ roll.started_on|date:'Y' }}{% endblock %}
 
 {% block content %}
 <div class="raw">

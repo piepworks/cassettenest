@@ -3,7 +3,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Cassette Nest{% block title %}{% endblock %}</title>
+    {% url 'index' as index_url %}
+    <title>{% block title %}{% endblock %}{% if request.get_full_path != index_url %} / {% endif %}Cassette Nest</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'inventory/scss/main.scss' %}" />
