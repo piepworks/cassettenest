@@ -2,7 +2,7 @@ form {
     margin-bottom: 20px;
 
     table &,
-    .c-field__widget & { margin-bottom: 0; }
+    body.camera-load & { margin-bottom: 0; }
 
     .c-card & { margin: auto 20px; }
 }

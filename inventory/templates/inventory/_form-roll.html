@@ -6,10 +6,8 @@
 <input type="hidden" name="status" value="{{ status }}" />
 <div class="c-field">
     <label>Status</label>
-    <div class="c-field__widget">
-        Loaded
-        <small>You can't update the status of a loaded roll from this form.</small>
-    </div>
+    <p>Loaded</p>
+    <small class="c-field__help">You can't update the status of a loaded roll from this form.</small>
 </div>
 {% endif %}
 {% include 'inventory/_form-field.html' with field=form.camera %}

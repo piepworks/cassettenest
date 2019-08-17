@@ -14,15 +14,13 @@
             <label for="id_iso_filter">ISO filter: inactive</label>
         {% endif %}
 
-        <div class="c-field__widget">
-            <button id="id_iso_filter" class="toggle-button">Show</button>
-        </div>
+        <button id="id_iso_filter" class="toggle-button">Show</button>
     </div>
 
     <div class="toggle">
         <div class="c-field c-field--multi">
           <label for="id_iso_range">Filter by ISO</label>
-          <div class="c-field__widget">
+          <div class="c-field__fieldset">
               <select id="id_iso_range" name="iso_range" required>
                   <option value="0">All ISOs</option>
                   <option value="lte" {% if iso_range == 'lte' %}selected{% endif %}>&lt;= Less than or equal to</option>
@@ -33,8 +31,6 @@
           </div>
         </div>
 
-        <div class="action">
-          <input type="submit" value="Filter" />
-        </div>
+        <div class="action"><input type="submit" value="Filter" /></div>
     </div>
 </form>

@@ -6,14 +6,12 @@
 
     <div class="c-field">
         <label for="id_camera">Add a camera</label>
-        <div class="c-field__widget">
-            <select id="id_camera" name="camera">
-                <option value="">Choose a camera</option>
-            {% for camera in cameras %}
-                <option value="{{ camera.id }}">{{ camera.name }}</option>
-            {% endfor %}
-            </select>
-        </div>
+        <select id="id_camera" name="camera">
+            <option value="">Choose a camera</option>
+        {% for camera in cameras %}
+            <option value="{{ camera.id }}">{{ camera.name }}</option>
+        {% endfor %}
+        </select>
     </div>
 
     <div class="action"><input type="submit" value="Add to project" /></div>

@@ -2,6 +2,8 @@
 
 {% block title %} / Load {{ camera.name }}{% endblock %}
 
+{% block bodytag %}class="camera-load"{% endblock %}
+
 {% block content %}
 <div class="raw">
 <h2><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></h2>
@@ -15,8 +17,6 @@
 {% endif %}
 
 {% if film_counts %}
-{% include 'inventory/_form_iso.html' %}
-
 {% include 'inventory/_form-load-camera.html' %}
 {% else %}
 <p>No film to load.</p>

@@ -1,37 +1,43 @@
 .c-field {
-    $base: &;
-
-    display: flex;
-    padding: 2rem 0;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
+    padding: 2rem 0;
     border-bottom: .3rem solid #eee;
 
     &--textarea {
+        display: flex;
         flex-direction: column;
         align-items: stretch;
 
         label { margin-bottom: 1rem; }
     }
 
+    // Fields don't need to be full-width all the time.
+    > *:nth-child(2) { justify-self: end; }
+
     label { padding-right: 1rem; }
 
-    &__widget {
+    input[type=number] { width: 5em; }
+
+    p { margin: 0; }
+
+    p,
+    &__help { text-align: right; }
+
+    &__help {
+        grid-column-start: 2;
+        margin-top: .5rem;
+
+        ul { text-align: left; }
+
+        ul, p { margin-top: 0; }
+    }
+
+    &__fieldset {
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
+        justify-content: flex-end;
 
-        select,
-        textarea { width: 100%; }
-
-        small { padding-top: .5rem; }
-
-        #{$base}--multi & {
-            flex-direction: row;
-
-            > * { margin-right: 1rem; }
-
-            :last-child { margin-right: 0; }
-        }
+        * + * { margin-left: 1rem; }
     }
 }

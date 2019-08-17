@@ -15,9 +15,7 @@
         {% csrf_token %}
         <div class="c-field">
             <label for="id_film">Film</label>
-            <div class="c-field--widget">
-                {% include 'inventory/_film-selector.html' %}
-            </div>
+            {% include 'inventory/_film-selector.html' %}
         </div>
         {% include 'inventory/_form-roll.html' %}
         <div class="action">

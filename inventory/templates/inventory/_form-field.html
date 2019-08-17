@@ -1,9 +1,7 @@
 <div class="c-field{% if not field.field.widget.input_type %} c-field--textarea{% endif %}">
     <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-    <div class="c-field__widget">
-        {{ field }}
-        {% if field.help_text %}
-        <small>{{ field.help_text }}</small>
-        {% endif %}
-    </div>
+    {{ field }}
+    {% if field.help_text %}
+    <small class="c-field__help">{{ field.help_text }}</small>
+    {% endif %}
 </div>
