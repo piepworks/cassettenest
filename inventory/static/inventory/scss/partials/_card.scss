@@ -21,8 +21,9 @@
     }
 
     &--default {
+        @include gradient(#eee);
+
         a {
-            @include gradient(#eee);
             color: #000;
             text-decoration: none;
 
