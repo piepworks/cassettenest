@@ -9,7 +9,6 @@
 
     <div class="do-not-print">
         <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
-        <p><a href="{% url 'cameras' %}">View all cameras</a></p>
     </div>
 
     <section class="status">
@@ -21,7 +20,7 @@
     {% if camera.status == 'loaded' %}
     {% include 'inventory/_camera-loaded.html' %}
     {% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}
-    {% else %}
+    {% elif camera.status != 'unavailable' %}
     <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
     {% endif %}
 

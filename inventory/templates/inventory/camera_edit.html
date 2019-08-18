@@ -17,5 +17,13 @@
         {% endif %}
         <div class="action"><input type="submit" value="Update camera" /></div>
     </form>
+
+    {% if not camera.roll_set.all %}
+    <form onsubmit="return confirmDelete('camera')"  action="{% url 'camera-delete' camera.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="camera" value="{{ camera.id }}" />
+        <div class="action">Since you've never used this, you can <input type="submit" value="delete this camera" /></div>
+    </form>
+    {% endif %}
 </div>
 {% endblock %}

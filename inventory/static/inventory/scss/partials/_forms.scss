@@ -15,4 +15,6 @@ input[type='number'] { width: 5em; }
 .action {
     margin-top: 3rem;
     text-align: right;
+
+    @media print { display: none; }
 }

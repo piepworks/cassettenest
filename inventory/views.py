@@ -1343,3 +1343,19 @@ def camera_edit(request, pk):
         }
 
         return render(request, 'inventory/camera_edit.html', context)
+
+
+@require_POST
+@login_required
+def camera_delete(request, pk):
+    owner = request.user
+    camera = get_object_or_404(Camera, id=pk, owner=owner)
+    name = camera.name
+
+    camera.delete()
+
+    messages.success(
+        request,
+        'Camera %s successfully deleted.' % (name)
+    )
+    return redirect(reverse('index'))

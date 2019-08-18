@@ -122,7 +122,7 @@
 </div>
 {% endif %}
 
-<div class="action do-not-print">
+<div class="action">
     {% if roll.status != '01_storage' %}
     <p><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
     {% endif %}
