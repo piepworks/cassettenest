@@ -1,11 +1,10 @@
 .bulk-status {
-    border: {
-        color: #eee;
-        style: dashed;
-        width: 3px 0;
-    }
-    margin-bottom: 20px;
-    padding-bottom: 20px;
+    @include divider-dashed;
+    border-width: $divider-width 0;
+    margin-bottom: 2rem;
+    padding: 1.8rem 0 2rem;
+
+    p { margin-top: 0; }
 }
 
 .year-filter {

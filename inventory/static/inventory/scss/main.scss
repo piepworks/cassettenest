@@ -1,6 +1,5 @@
 @import './vendor/normalize';
 @import './vendor/django-admin-mixins';
-@import './vendor/pickmeup';
 @import './modules/reset';
 @import './modules/utils';
 // @import './modules/breakpoint-display';
@@ -12,6 +11,7 @@
 @import './partials/forms';
 @import './partials/form-field';
 @import './partials/tables';
+@import './partials/elements';
 
 html { font-size: 16px; }
 

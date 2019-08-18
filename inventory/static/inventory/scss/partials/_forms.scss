@@ -13,7 +13,7 @@ input[type='submit'] { @include django-admin-button; }
 input[type='number'] { width: 5em; }
 
 .action {
-    margin-top: 3rem;
+    margin-top: 1rem;
     text-align: right;
 
     @media print { display: none; }

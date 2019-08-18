@@ -26,15 +26,30 @@ $breakpoints: (
   }
 }
 
-// For wide tables or whatever.
-.overflow-x {
-    overflow-x: auto;
+$divider-width: .2rem;
+
+@mixin divider {
+    border-color: #eee;
+    // Define where you want the border to show up after including the mixin.
+    border-width: 0;
 }
 
-// For parts of the app that still need to be properly designed.
-.raw {
-    padding: 1.25rem;
+@mixin divider-solid {
+    @include divider;
+    border-style: solid;
 }
+
+@mixin divider-dashed {
+    @include divider;
+    border-style: dashed;
+}
+
+
+// For wide tables or whatever.
+.overflow-x { overflow-x: auto; }
+
+// For parts of the app that still need to be properly designed.
+.raw { padding: 1.25rem; }
 
 // TODO: Make this better and more flexible.
 .toggle {
@@ -58,7 +73,6 @@ html.has-js {
 }
 
 // Print
-
 @media print {
     a {
         text-decoration: none;

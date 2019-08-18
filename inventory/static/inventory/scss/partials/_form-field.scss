@@ -3,7 +3,11 @@
     grid-template-columns: 1fr 1fr;
     align-items: center;
     padding: 2rem 0;
-    border-bottom: .3rem solid #eee;
+
+    & + & {
+        @include divider-solid;
+        border-top-width: $divider-width;
+    }
 
     &--textarea {
         display: flex;
