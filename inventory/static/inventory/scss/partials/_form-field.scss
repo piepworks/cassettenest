@@ -1,6 +1,6 @@
 .c-field {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
     align-items: center;
     padding: 2rem 0;
 
@@ -26,6 +26,10 @@
 
     p { margin: 0; }
 
+    // TODO: Don't do this. Fields should be different sizes
+    // to indicate what's in them.
+    select { width: 100%; }
+
     p,
     &__help { text-align: right; }
 
@@ -41,7 +45,8 @@
     &__fieldset {
         display: flex;
         justify-content: flex-end;
+        align-items: center;
 
-        * + * { margin-left: 1rem; }
+        * + * { margin-left: .5rem; }
     }
 }
