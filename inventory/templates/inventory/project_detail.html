@@ -11,13 +11,6 @@
 
 <div class="do-not-print">
     <p><a href="{% url 'project-edit' project.id %}">Edit project</a></p>
-
-    <form onsubmit="return confirmDelete('project');" action="{% url 'project-delete' project.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" value="Delete this project." />
-    </form>
-
-    <p><a href="{% url 'projects' %}">View all projects</a></p>
 </div>
 
 {% if project.cameras.all %}
