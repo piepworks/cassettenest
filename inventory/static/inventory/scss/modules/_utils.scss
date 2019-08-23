@@ -49,7 +49,14 @@ $divider-width: .2rem;
 .overflow-x { overflow-x: auto; }
 
 // For parts of the app that still need to be properly designed.
-.raw { padding: 1.25rem; }
+.raw {
+    padding: 1.25rem;
+    padding-top: 0;
+
+    // Let the slightly more sophisticated Card styles break out of the
+    // .raw padding.
+    > section { margin: 0 -1.25rem; }
+}
 
 // TODO: Make this better and more flexible.
 .toggle {
