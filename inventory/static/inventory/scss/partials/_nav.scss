@@ -1,3 +1,5 @@
+$logo-size: 35px;
+
 .c-site-nav {
     background: $dark;
     display: flex;
@@ -17,13 +19,27 @@
 
     h1 {
         margin: 0;
+        padding: 0;
         font-size: 1rem;
         color: rgba(255, 255, 255, .7);
         font-weight: normal;
 
         @include breakpoint('S') { font-size: 1.5rem; }
 
-        a { font-weight: bold; }
+        a {
+            font-weight: bold;
+
+            &:active {
+                position: relative;
+                top: 1px;
+            }
+        }
+
+        &,
+        img {
+            height: $logo-size;
+            width: $logo-size;
+        }
     }
 
     nav {
