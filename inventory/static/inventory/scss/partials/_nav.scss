@@ -8,8 +8,6 @@ $logo-size: 35px;
     padding: .6rem 1rem;
     border-bottom: 1px solid $bw;
 
-    @include breakpoint('L') { margin-bottom: 2rem; }
-
     a {
         text-decoration: none;
         color: rgba(255, 255, 255, .8);

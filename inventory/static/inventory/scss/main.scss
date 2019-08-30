@@ -26,8 +26,6 @@ body {
 
     > .messages { @import './partials/messages'; }
 
-    > main { padding: 0; }
-
     > footer {
         padding: 1.25rem;
         font-size: .6rem;
@@ -39,5 +37,11 @@ body {
     > footer {
         margin: 0 auto;
         max-width: 60rem;
+    }
+
+    > main {
+        padding: 0;
+
+        @include breakpoint('L') { margin-top: 2rem; }
     }
 }
