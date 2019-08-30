@@ -1159,14 +1159,20 @@ def camera_load(request, pk):
         camera.save()
         messages.success(
             request,
-            'Camera loaded with %s %s (code: %s)!' % (
+            '%s loaded with %s %s (code: %s)!' % (
+                camera.name,
                 roll.film.manufacturer,
                 roll.film.name,
                 roll.code,
             )
         )
 
-        return redirect(reverse('camera-detail', args=(camera.id,)))
+        if current_project:
+            return redirect(reverse(
+                'project-detail', args=(current_project.id,))
+            )
+        else:
+            return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         camera = get_object_or_404(Camera, id=pk, owner=owner)
         projects = Project.objects.filter(owner=owner, status='current')
