@@ -562,8 +562,6 @@ def project_detail(request, pk):
             project=project
         ).exclude(
             status=status_number('storage')
-        ).exclude(
-            status=status_number('loaded')
         ).order_by(
             'status',
             '-started_on',

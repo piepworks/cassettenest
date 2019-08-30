@@ -1,5 +1,3 @@
-<h2>Project Logbook</h2>
-
-<p>{{ roll_logbook.count }} roll{{ roll_logbook.count|pluralize}} done</p>
+<h3>{{ roll_logbook.count }} roll{{ roll_logbook.count|pluralize}} used</h3>
 
 {% include 'inventory/_logbook-table.html' with rolls=roll_logbook page='project' %}
