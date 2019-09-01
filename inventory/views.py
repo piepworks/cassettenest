@@ -1251,9 +1251,10 @@ def camera_detail(request, pk):
             )
         )
 
-        return redirect(
-            reverse('roll-detail', args=(roll.id,))
-        )
+        if roll.project:
+            return redirect(reverse('project-detail', args=(roll.project.id,)))
+        else:
+            return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         roll = ''
         rolls_history = Roll.objects.filter(
