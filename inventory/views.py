@@ -122,6 +122,7 @@ def logbook(request):
             status=status_number('storage')
         ).order_by(
             'status',
+            '-ended_on',
             '-started_on',
             '-code'
         )
@@ -164,6 +165,7 @@ def ready(request):
             owner=owner,
             status=status_number('shot')
         ).order_by(
+            '-ended_on',
             '-started_on',
             '-code'
         )
@@ -564,6 +566,7 @@ def project_detail(request, pk):
             status=status_number('storage')
         ).order_by(
             'status',
+            '-ended_on',
             '-started_on',
             '-code'
         )
