@@ -23,6 +23,7 @@ body {
     &.roll-detail { @import './partials/roll-detail'; }
     &.journal-entry { @import './partials/journal-entry'; }
     &.dashboard { @import './partials/dashboard'; }
+    &.landing { @import './partials/landing'; }
 
     > .messages { @import './partials/messages'; }
 

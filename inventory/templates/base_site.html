@@ -14,7 +14,9 @@
 
 <body {% block bodytag %}{% endblock %}>
     <header class="c-site-nav">
+        {% if request.get_full_path != index_url or user.is_authenticated %}
         <h1><a href="{% url 'index' %}"><img src="{% static 'inventory/img/icon.svg' %}" alt="Cassette Nest" /></a></h1>
+        {% endif %}
         <nav>
             <ul>
             {% url 'login' as login_url %}
@@ -42,6 +44,11 @@
         </li>
         {% endfor %}
     </ul>
+    {% endif %}
+    {% if request.get_full_path == index_url and not user.is_authenticated %}
+    <div class="icon">
+        <img src="{% static 'inventory/img/full-icon.svg' %}" alt="Cassette Nest" />
+    </div>
     {% endif %}
     <main>
         {% block content %}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" fill="#f5d327">
+<g transform="translate(50 50) scale(0.69 -0.69) rotate(0) translate(-50 -50)">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" x="0px" y="0px">
+    <title>Cassette Nest</title>
+    <g>
+        <path d="M15,12H53V40h2V3a1,1,0,0,0-1-1H14A5.006,5.006,0,0,0,9,7V57a5.006,5.006,0,0,0,5,5H34V60H15ZM14,4H53V6H15V8H53v2H14a3,3,0,0,1,0-6ZM11,57V10.974a4.954,4.954,0,0,0,2,.925V59.816A3,3,0,0,1,11,57Z"/>
+        <path d="M59,44H39a1,1,0,0,0-1,1V61a1,1,0,0,0,1,1H59a1,1,0,0,0,1-1V45A1,1,0,0,0,59,44Zm-1,4H56V46h2Zm-6,0V46h2v2Zm-2,0H48V46h2Zm-4,0H44V46h2Zm2,2v6H40V50Zm-2,8v2H44V58Zm2,0h2v2H48Zm4,0h2v2H52Zm-2-2V50h8v6ZM42,46v2H40V46ZM40,58h2v2H40Zm16,2V58h2v2Z"/>
+    </g>
+</svg>
+</g>
+</svg>

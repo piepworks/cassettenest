@@ -1,5 +1,7 @@
 {% extends 'base_site.html' %}
 
+{% block bodytag %}class="landing"{% endblock %}
+
 {% block content %}
 {% if signedup %}
 <div class="raw">
@@ -8,7 +10,7 @@
 </div>
 {% else %}
 <div class="raw">
-    <h2>We&rsquo;re still developing&hellip;</h2>
+    <h1>We&rsquo;re still developing&hellip;</h1>
 
     <p>Submit your email address and we&rsquo;ll let you know when we&rsquo;re ready!</p>
 

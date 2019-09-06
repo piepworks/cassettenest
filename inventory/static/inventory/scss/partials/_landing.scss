@@ -1,0 +1,22 @@
+& {
+    .c-site-nav {
+        border-bottom: 0;
+        justify-content: flex-end;
+
+        // Make sure the `Log in` link is in the same position as the
+        // `Log out` link when logged in.
+        li {
+            display: flex;
+            align-items: center;
+            height: $logo-size;
+        }
+    }
+
+    .icon {
+        background: $dark;
+        text-align: center;
+        padding-bottom: 3rem;
+
+        img { width: 200px; }
+    }
+}
