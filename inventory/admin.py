@@ -8,7 +8,7 @@ class ManufacturerAdmin(admin.ModelAdmin):
 
 
 class FilmAdmin(admin.ModelAdmin):
-    list_filter = ('format', 'type', 'iso',)
+    list_filter = ('format', 'type', 'manufacturer', 'iso',)
     list_display = ('__str__', 'type', 'iso',)
     prepopulated_fields = {'slug': ('name', 'format',)}
 

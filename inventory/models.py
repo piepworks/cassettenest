@@ -30,20 +30,20 @@ class Film(models.Model):
         ('135', '35mm'),
         ('120', '120'),
     )
-    name = models.CharField(max_length=50)
-    slug = models.SlugField(max_length=50, unique=True)
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     type = models.CharField(
         max_length=20,
         choices=TYPE_CHOICES,
         default='c41',
     )
-    iso = models.IntegerField(verbose_name='ISO')
     format = models.CharField(
         max_length=20,
         choices=FORMAT_CHOICES,
         default='135',
     )
+    iso = models.IntegerField(verbose_name='ISO')
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
     url = models.URLField(max_length=200, blank=True, verbose_name='URL')
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
