@@ -19,4 +19,24 @@
 
         img { width: 200px; }
     }
+
+    h1 {
+        font-size: 1.5rem;
+
+        @include breakpoint('S') { font-size: 2rem; }
+    }
+
+    form { margin-top: 2rem; }
+
+    input {
+        margin-bottom: 1rem;
+
+        &[type='email'] { margin-right: .5rem; }
+    }
+
+    label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 1rem;
+    }
 }
