@@ -1,0 +1,14 @@
+{% extends 'base_site.html' %}
+
+{% block title %}Settings{% endblock %}
+{% block bodytag %}class="settings"{% endblock %}
+
+{% block content %}
+<div class="raw">
+    <h1>Settings</h1>
+    <ul>
+        <li>Username: {{ user.username }}</li>
+        <li>Email: {{ user.email }}</li>
+    </ul>
+</div>
+{% endblock %}

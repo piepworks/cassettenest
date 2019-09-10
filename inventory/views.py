@@ -58,6 +58,17 @@ def index(request):
 
 
 @login_required
+def settings(request):
+    owner = request.user
+
+    context = {
+        'user': owner
+    }
+
+    return render(request, 'inventory/settings.html', context)
+
+
+@login_required
 def inventory(request):
     owner = request.user
     # Unused rolls
