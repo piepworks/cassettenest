@@ -74,7 +74,7 @@ def settings(request):
             messages.success(request, 'Settings updated!')
             return redirect(reverse('index'))
         else:
-            messages.error(request, 'That email address is taken')
+            messages.error(request, form.errors)
             return redirect(reverse('settings'))
     else:
         user_form = UserForm(instance=owner)

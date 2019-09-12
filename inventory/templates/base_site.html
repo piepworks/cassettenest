@@ -21,19 +21,7 @@
         {% endif %}
         {% include 'inventory/_nav.html' %}
     </header>
-    {% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-            {% if 'safe' in message.tags %}
-                {{ message|safe }}
-            {% else %}
-                {{ message }}
-            {% endif %}
-        </li>
-        {% endfor %}
-    </ul>
-    {% endif %}
+    {% include 'inventory/_messages.html' %}
     {% if request.get_full_path == index_url and not user.is_authenticated %}
     <div class="icon">
         <img src="{% static 'inventory/img/full-icon.svg' %}" alt="Cassette Nest" />
