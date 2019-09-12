@@ -6,9 +6,13 @@
 {% block content %}
 <div class="raw">
     <h1>Settings</h1>
-    <ul>
-        <li>Username: {{ user.username }}</li>
-        <li>Email: {{ user.email }}</li>
-    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in user_form %}
+            {% include 'inventory/_form-field.html' with field=field %}
+        {% endfor %}
+        <div class="action"><input type="submit" value="Save settings" /></div>
+    </form>
 </div>
 {% endblock %}

@@ -1,0 +1,21 @@
+{% url 'login' as login_url %}
+{% url 'dashboard' as dashboard_url %}
+{% url 'settings' as settings_url %}
+<nav>
+    <ul>
+    {% if user.is_authenticated %}
+        {% if request.path != dashboard_url %}
+        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        {% endif %}
+        {% if request.path != settings_url %}
+        <li><a href="{% url 'settings' %}">Settings</a></li>
+        {% endif %}
+        {% if user.is_superuser %}
+        <li><a href="{% url 'admin:index' %}">Admin</a></li>
+        {% endif %}
+        <li><a href="{% url 'logout' %}">Log out</a></li>
+    {% elif request.path != login_url %}
+        <li><a href="{{ login_url }}">Log in</a></li>
+    {% endif %}
+    </ul>
+</nav>

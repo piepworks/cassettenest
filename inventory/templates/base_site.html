@@ -19,20 +19,7 @@
         {% if request.get_full_path != index_url or user.is_authenticated %}
         <h1><a href="{% url 'index' %}"><img src="{% static 'inventory/img/icon.svg' %}" alt="Cassette Nest" /></a></h1>
         {% endif %}
-        <nav>
-            <ul>
-            {% url 'login' as login_url %}
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                {% if user.is_superuser %}
-                <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                {% endif %}
-                <li><a href="{% url 'logout' %}">Log out</a></li>
-            {% elif request.path != login_url %}
-                <li><a href="{{ login_url }}">Log in</a></li>
-            {% endif %}
-            </ul>
-        </nav>
+        {% include 'inventory/_nav.html' %}
     </header>
     {% if messages %}
     <ul class="messages">

@@ -61,11 +61,29 @@ def index(request):
 def settings(request):
     owner = request.user
 
-    context = {
-        'user': owner
-    }
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=owner)
 
-    return render(request, 'inventory/settings.html', context)
+        if form.is_valid():
+            user = owner
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.email = form.cleaned_data['email']
+            user.save()
+
+            messages.success(request, 'Settings updated!')
+            return redirect(reverse('index'))
+        else:
+            messages.error(request, 'That email address is taken')
+            return redirect(reverse('settings'))
+    else:
+        user_form = UserForm(instance=owner)
+
+        context = {
+            'user_form': user_form
+        }
+
+        return render(request, 'inventory/settings.html', context)
 
 
 @login_required
