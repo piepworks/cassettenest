@@ -1,0 +1,33 @@
+{% extends 'inventory/roll_journal_entry.html' %}
+{% load markdown_deux_tags %}
+
+{% block entry %}
+<p><a href="{% url 'roll-journal-edit' roll.id entry.id %}">Edit entry</a></p>
+
+<div class="c-field">
+    <label>Date</label>
+    <p>{{ entry.date|date:'l, F j, Y' }}</p>
+</div>
+
+<div class="c-field">
+    <label>Frame{% if entry.starting_frame != entry.frame %}s{% endif %}</label>
+    <p>
+        {% if entry.starting_frame and entry.starting_frame != entry.frame %}
+        <small>{{ entry.starting_frame}} &ndash; </small>
+        {% endif %}
+        {{ entry.frame }}
+    </p>
+</div>
+
+<div class="c-field">
+    <label>Notes</label>
+    {{ entry.notes|markdown }}
+</div>
+
+<div class="action">
+    <form onsubmit="return confirmDelete('journal entry');" action="{% url 'roll-journal-delete' roll.id entry.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete entry" />
+    </form>
+</div>
+{% endblock %}

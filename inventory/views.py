@@ -1017,6 +1017,24 @@ def roll_delete(request, pk):
 
 
 @login_required
+def roll_journal_detail(request, roll_pk, entry_pk):
+    owner = request.user
+    roll = get_object_or_404(Roll, pk=roll_pk, owner=owner)
+    entry = get_object_or_404(Journal, roll=roll, pk=entry_pk)
+
+    context = {
+        'roll': roll,
+        'entry': entry,
+    }
+
+    return render(
+        request,
+        'inventory/roll_journal_detail.html',
+        context
+    )
+
+
+@login_required
 def roll_journal_add(request, roll_pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=roll_pk, owner=owner)
@@ -1062,7 +1080,7 @@ def roll_journal_add(request, roll_pk):
 
         return render(
             request,
-            'inventory/roll_journal_add_edit.html',
+            'inventory/roll_journal_form.html',
             context
         )
 
@@ -1105,7 +1123,7 @@ def roll_journal_edit(request, roll_pk, entry_pk):
 
         return render(
             request,
-            'inventory/roll_journal_add_edit.html',
+            'inventory/roll_journal_form.html',
             context
         )
 

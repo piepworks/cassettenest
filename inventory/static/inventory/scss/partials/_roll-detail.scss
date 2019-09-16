@@ -1,1 +1,21 @@
 .development { background: #eee; }
+
+.journal-entries table {
+    width: 100%;
+    table-layout: fixed;
+    white-space: nowrap;
+
+    th.entry {
+        &-date,
+        &-frames { width: 25%; }
+    }
+
+    th,
+    td { padding: .5rem; }
+
+    td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

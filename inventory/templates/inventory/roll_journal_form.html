@@ -1,0 +1,21 @@
+{% extends 'inventory/roll_journal_entry.html' %}
+
+{% block entry %}
+{% if roll.status == '02_loaded' %}
+<p><a href="{% url 'camera-detail' roll.camera.id %}">Currently loaded in {{ roll.camera }}.</a></p>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {% comment %}
+    <div>
+        <label for="checkbox-done">Done?</label>
+        <input id="checkbox-done" type="checkbox" />
+    </div>
+    {% endcomment %}
+    {% include 'inventory/_form-field.html' with field=form.frame %}
+    {% include 'inventory/_form-field.html' with field=form.notes %}
+    {% include 'inventory/_form-field.html' with field=form.date %}
+    <div class="action"><input type="submit" value="Save" /></div>
+</form>
+{% endblock %}
