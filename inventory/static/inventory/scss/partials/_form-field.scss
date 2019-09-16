@@ -1,7 +1,4 @@
 .c-field {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    align-items: center;
     padding: 2rem 0;
 
     & + & {
@@ -9,44 +6,33 @@
         border-top-width: $divider-width;
     }
 
-    &--textarea {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
+    input[type=text],
+    input[type=number],
+    textarea { border: 1px solid $bw; }
 
-        label { margin-bottom: 1rem; }
+    textarea { width: 100%; }
+
+    label {
+        display: block;
+        margin-bottom: .5rem;
+        font-weight: 600;
     }
-
-    // Fields don't need to be full-width all the time.
-    > *:nth-child(2) { justify-self: end; }
-
-    label { padding-right: 1rem; }
 
     input[type=number] { width: 5em; }
 
-    p { margin: 0; }
-
-    // TODO: Don't do this. Fields should be different sizes
-    // to indicate what's in them.
-    select { width: 100%; }
-
-    p,
-    &__help { text-align: right; }
+    // For when you can't actually edit a field.
+    &__input-placeholder { margin-bottom: 0; }
 
     &__help {
-        grid-column-start: 2;
-        margin-top: .5rem;
-
-        ul { text-align: left; }
+        display: block;
+        margin-bottom: .5rem;
 
         ul, p { margin-top: 0; }
+
+        ul { padding-left: 1rem; }
     }
 
     &__fieldset {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-
         * + * { margin-left: .5rem; }
     }
 }
