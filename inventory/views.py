@@ -157,6 +157,7 @@ def logbook(request):
         )
     year = ''
     all_years = {}
+    all_years_count = rolls.count()
 
     for y in rolls.dates('started_on', 'year'):
         count = rolls.filter(started_on__year=y.year).count()
@@ -180,7 +181,8 @@ def logbook(request):
         'status': status,
         'description': description,
         'year': year,
-        'all_years': all_years
+        'all_years': all_years,
+        'all_years_count': all_years_count
     }
 
     return render(request, 'inventory/logbook.html', context)

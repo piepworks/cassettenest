@@ -8,14 +8,18 @@
 <h1>Logbook</h1>
 
 <ul class="year-filter">
-    {% if year %}
-    <li><a href="{% url 'logbook' %}">All years</a></li>
+{% if year %}
+    <li><a href="{% url 'logbook' %}">All years <small>({{ all_years_count }})</small></a></li>
+{% else %}
+    <li class="current">All years <small>({{ all_years_count }})</small></li>
+{% endif %}
+{% for key, value in all_years.items %}
+    {% if key|stringformat:'s' == year %}
+    <li class="current">{{ key }} <small>({{ value }})</small></li>
+    {% else %}
+    <li><a href="?year={{ key }}">{{ key }} <small>({{ value }})</small></a></li>
     {% endif %}
-    {% for key, value in all_years.items %}
-    <li{% if key|stringformat:'s' == year %} class="current"{% endif %}>
-        <a href="?year={{ key }}">{{ key }} <small>({{ value }})</small></a>
-    </li>
-    {% endfor %}
+{% endfor %}
 </ul>
 
 <form method="get" class="do-not-print">
