@@ -1,0 +1,23 @@
+{% extends 'base_site.html' %}
+{% block title %}Pattern Library{% endblock %}
+{% block content %}
+<div class="raw">
+    <h1>Pattern Library</h1>
+
+    <h2>Form Fields</h2>
+    {% for field in form %}
+        {% include 'inventory/_form-field.html' with field=field %}
+    {% endfor %}
+
+    <h2>Buttons</h2>
+    <div><button>Button Tag</button></div>
+    <hr />
+    <div><input type="submit" value="Input Button"></div>
+
+    <h2>Cards</h2>
+    <p>&hellip;</p>
+
+    <h2>Tables</h2>
+    <p>&hellip;</p>
+</div>
+{% endblock %}

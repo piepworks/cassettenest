@@ -57,6 +57,12 @@ def index(request):
         return render(request, 'inventory/landing.html', context)
 
 
+def patterns(request):
+    context = {'form': PatternsForm}
+
+    return render(request, 'patterns.html', context)
+
+
 @login_required
 def settings(request):
     owner = request.user

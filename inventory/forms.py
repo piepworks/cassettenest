@@ -70,3 +70,37 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
+
+
+class PatternsForm(forms.Form):
+    # This form is just to show examples of each field type.
+
+    help_text = 'This is help text.'
+
+    text = forms.CharField(help_text=help_text)
+    email = forms.EmailField(help_text=help_text)
+    password = forms.CharField(
+        help_text=help_text,
+        widget=widgets.PasswordInput()
+    )
+    date_input = forms.DateField(
+        help_text=help_text,
+        widget=widgets.DateInput(attrs={'type': 'date'})
+    )
+    textarea = forms.CharField(
+        help_text=help_text,
+        widget=forms.Textarea
+    )
+    number = forms.IntegerField(help_text=help_text)
+    choice = forms.ChoiceField(
+        help_text=help_text,
+        choices=[
+            ('1', 'First Option'),
+            ('2', 'Second Option'),
+            ('3', 'Third and Final Option')
+        ]
+    )
+    checkbox = forms.BooleanField(
+        help_text=help_text,
+        required=False
+    )

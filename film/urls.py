@@ -15,6 +15,9 @@ urlpatterns = [
         success_url='/'
     ), name='register'),
 
+    # Static pages
+    path('patterns/', views.patterns, name='patterns'),
+
     # Top-Level
     path('', views.index, name='index'),
     path('logbook/', views.logbook, name='logbook'),

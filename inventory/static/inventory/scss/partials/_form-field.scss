@@ -6,9 +6,7 @@
         border-top-width: $divider-width;
     }
 
-    input[type=text],
-    input[type=number],
-    input[type=password],
+    input:not([type=checkbox]):not([type=submit]),
     textarea { border: 1px solid $bw; }
 
     textarea { width: 100%; }
