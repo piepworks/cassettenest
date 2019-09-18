@@ -5,15 +5,61 @@ form {
     body.camera-load & { margin-bottom: 0; }
 
     .c-card & { margin: auto 20px; }
+
+    .action {
+        margin-top: 1rem;
+
+        @media print { display: none; }
+    }
 }
 
-button,
-input[type='submit'] { @include django-admin-button; }
+fieldset {
+    padding: 0;
+    border: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    // A little crude, but it does the job for when things wrap.
+    * + * {
+        margin-right: .5rem;
+        margin-bottom: .5rem;
+    }
+}
 
 input[type='number'] { width: 5em; }
 
-.action {
-    margin-top: 1rem;
+// Make sure cool outline happens on mobile Safari and that empty date field
+// doesn't collapse.
+input:not([type=checkbox]):not([type=submit]):not([type=date]),
+textarea { -webkit-appearance: none; }
 
-    @media print { display: none; }
+input:not([type=checkbox]):not([type=submit]),
+textarea {
+    border: 2px solid $bw;
+    padding: .5rem;
 }
+
+textarea { width: 100%; }
+
+input,
+select,
+textarea,
+button {
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 1px 4px $gold;
+    }
+}
+
+label input[type=checkbox] { margin-right: .5rem; }
+
+label { display: block; }
+
+label,
+legend {
+    margin-bottom: .5rem;
+    font-weight: 600;
+}
+
+input[type=number] { width: 5em; }

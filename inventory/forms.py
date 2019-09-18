@@ -77,7 +77,7 @@ class PatternsForm(forms.Form):
 
     help_text = 'This is help text.'
 
-    text = forms.CharField(help_text=help_text)
+    text = forms.CharField()
     email = forms.EmailField(help_text=help_text)
     password = forms.CharField(
         help_text=help_text,

@@ -6,19 +6,6 @@
         border-top-width: $divider-width;
     }
 
-    input:not([type=checkbox]):not([type=submit]),
-    textarea { border: 1px solid $bw; }
-
-    textarea { width: 100%; }
-
-    label {
-        display: block;
-        margin-bottom: .5rem;
-        font-weight: 600;
-    }
-
-    input[type=number] { width: 5em; }
-
     // For when you can't actually edit a field.
     &__input-placeholder { margin-bottom: 0; }
 
@@ -31,7 +18,17 @@
         ul { padding-left: 1rem; }
     }
 
-    &__fieldset {
-        * + * { margin-left: .5rem; }
+    &--checkbox {
+        label {
+            display: inline-flex;
+            align-items: center;
+            background: $light;
+            padding: 1rem;
+            border: .25rem solid $light;
+
+            &:hover {
+                border-color: $medium;
+            }
+        }
     }
 }

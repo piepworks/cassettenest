@@ -8,12 +8,11 @@
     <p>Or <a href="{% url 'roll-add' %}">add a roll to your logbook</a>.</p>
     <form method="post">
         {% csrf_token %}
-        <div class="c-field c-field--multi">
-            <label for="id_film">Add rolls to storage</label>
-            <div class="c-field__fieldset">
+        <div class="c-field">
+            <fieldset>
                 {% include 'inventory/_film-selector.html' %}
-                <input type="number" min="1" name="quantity" placeholder="quantity" required />
-            </div>
+                <input type="number" min="1" value="0" name="quantity" required />
+            </fieldset>
         </div>
         <div class="action"><input type="submit" value="Add to storage" /></div>
     </form>

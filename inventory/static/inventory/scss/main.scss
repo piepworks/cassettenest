@@ -1,5 +1,4 @@
 @import './vendor/normalize';
-@import './vendor/django-admin-mixins';
 @import './modules/reset';
 @import './modules/utils';
 // @import './modules/breakpoint-display';
@@ -9,6 +8,7 @@
 @import './partials/card';
 @import './partials/reminder';
 @import './partials/forms';
+@import './partials/buttons';
 @import './partials/form-field';
 @import './partials/tables';
 @import './partials/elements';

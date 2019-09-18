@@ -1,11 +1,9 @@
-<h3>Add a camera to this project</h3>
-
 <form action="{% url 'project-camera-update' project.id %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="action" value="add" />
 
     <div class="c-field">
-        <label for="id_camera">Add a camera</label>
+        <label for="id_camera">Add a camera to this project</label>
         <select id="id_camera" name="camera">
             <option value="">Choose a camera</option>
         {% for camera in cameras %}

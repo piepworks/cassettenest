@@ -1,12 +1,10 @@
-<h3>Add rolls to this project</h3>
-
 <form action="{% url 'project-rolls-add' project.id %}" method="post">
     {% csrf_token %}
     {% regroup film_available_count by get_type_display as film_list %}
 
-    <div class="c-field c-field--multi">
-        <label for="id_film">Add rolls</label>
-        <div class="c-field__fieldset">
+    <div class="c-field">
+        <fieldset>
+            <legend>Add rolls to this project</legend>
             <select id="id_film" name="film" required>
                 <option value="">Select a film</option>
                 {% for type in film_list %}
@@ -18,7 +16,7 @@
                 {% endfor %}
             </select>
             <input type="number" min="1" name="quantity" value="0" required />
-        </div>
+        </fieldset>
     </div>
     <div class="action"><input type="submit" value="Add to project" /></div>
 </form>

@@ -1,0 +1,43 @@
+button,
+input[type=submit] {
+    background: $button;
+    border: 0;
+    color: white;
+    cursor: pointer;
+    padding: .5rem 1rem;
+    display: inline-block;
+
+    & + & { margin-left: .5rem; }
+
+    &:hover { background: $button-hover; }
+
+    &.secondary {
+        color: $bw;
+        background: $light;
+
+        &:hover {
+            color: $dark;
+            background: $medium;
+        }
+    }
+
+    &.icon {
+        padding: 0;
+        background: none;
+        fill: $medium-dark;
+
+        // Keep button vertically centered in a card
+        .c-card & { display: flex; }
+
+        &:hover { fill: black; }
+
+        &-remove:hover { fill: red; }
+
+        svg {
+            // Keep svg centered in button
+            display: flex;
+            max-width: 20px;
+            max-height: 20px;
+        }
+    }
+}

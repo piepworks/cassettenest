@@ -9,10 +9,32 @@
         {% include 'inventory/_form-field.html' with field=field %}
     {% endfor %}
 
+    <div class="c-field">
+        <fieldset>
+            <legend>Fieldset & Legend</legend>
+            {{ form.choice }}
+            {{ form.number }}
+        </fieldset>
+    </div>
+
     <h2>Buttons</h2>
     <div><button>Button Tag</button></div>
     <hr />
     <div><input type="submit" value="Input Button"></div>
+    <hr />
+    <div>
+        <button>Primary (default)</button>
+        <button class="secondary">Secondary</button>
+    </div>
+    <hr />
+    <div>
+        <button class="icon icon-remove">
+            {% include 'inventory/_github-icon.html' with id='x' %}
+        </button>
+        <button class="icon icon-edit">
+            {% include 'inventory/_github-icon.html' with id='pencil' %}
+        </button>
+    </div>
 
     <h2>Cards</h2>
     <p>&hellip;</p>
