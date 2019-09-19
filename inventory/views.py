@@ -58,7 +58,34 @@ def index(request):
 
 
 def patterns(request):
-    context = {'form': PatternsForm}
+    roll1 = {
+        'film': {
+            'type': 'e6',
+            'iso': 400
+        }
+    }
+    roll2 = {
+        'push_pull': 2,
+        'get_push_pull_display': 'Push 2 stops',
+        'effective_iso': 1600,
+        'film': {
+            'type': 'c41',
+            'iso': 400
+        }
+    }
+    roll3 = {
+        'film': {
+            'type': 'bw',
+            'iso': 50
+        }
+    }
+
+    context = {
+        'form': PatternsForm,
+        'roll1': roll1,
+        'roll2': roll2,
+        'roll3': roll3,
+    }
 
     return render(request, 'patterns.html', context)
 

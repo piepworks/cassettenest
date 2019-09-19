@@ -37,7 +37,17 @@
     </div>
 
     <h2>Cards</h2>
-    <p>&hellip;</p>
+    {% include 'inventory/_card.html' with name='Plain card' %}
+    {% include 'inventory/_card.html' with name='Plain card with count' slot='count' %}
+    <hr />
+    {% include 'inventory/_card.html' with name='Film count: E6' slot='count' count=50 type='film' film_type='e6' %}
+    {% include 'inventory/_card.html' with name='Film count: C41' slot='count' count=25 type='film' film_type='c41' %}
+    {% include 'inventory/_card.html' with name='Film count: B&W' slot='count' count=12 type='film' film_type='bw' %}
+    <hr />
+    {% include 'inventory/_card.html' with name='Camera card with empty reminder' slot='reminder' %}
+    {% include 'inventory/_card.html' with name='Camera card with E6 film reminder' slot='reminder' roll=roll1 %}
+    {% include 'inventory/_card.html' with name='Camera card with pushed C41 film reminder' slot='reminder' roll=roll2 %}
+    {% include 'inventory/_card.html' with name='Camera card with B&W film reminder' slot='reminder' roll=roll3 %}
 
     <h2>Tables</h2>
     <p>&hellip;</p>
