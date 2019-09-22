@@ -65,7 +65,7 @@ def patterns(request):
         }
     }
     roll2 = {
-        'push_pull': 2,
+        'push_pull': '+2',
         'get_push_pull_display': 'Push 2 stops',
         'effective_iso': 1600,
         'film': {
@@ -74,9 +74,12 @@ def patterns(request):
         }
     }
     roll3 = {
+        'push_pull': '-1',
+        'get_push_pull_display': 'Pull 1 stop',
+        'effective_iso': 50,
         'film': {
             'type': 'bw',
-            'iso': 50
+            'iso': 100
         }
     }
 
