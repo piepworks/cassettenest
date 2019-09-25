@@ -10,7 +10,15 @@ class CameraChoiceField(ModelChoiceField):
 
 
 class CameraForm(ModelForm):
-    unavailable = forms.BooleanField(label='Unavailable', required=False)
+    unavailable = forms.BooleanField(
+        label='Unavailable',
+        required=False,
+        help_text='''
+            Keep this camera in your collection, but prevent it from being
+            available to load. Good for cameras you no longer own or only
+            borrowed.
+        '''
+    )
 
     class Meta:
         model = Camera
