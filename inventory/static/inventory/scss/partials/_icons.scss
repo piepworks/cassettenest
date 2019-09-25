@@ -1,0 +1,10 @@
+.icon {
+    $icon-size: 20px;
+
+    svg {
+        // Keep svg centered in its container
+        display: flex;
+        max-width: $icon-size;
+        max-height: $icon-size;
+    }
+}

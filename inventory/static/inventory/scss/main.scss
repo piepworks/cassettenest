@@ -9,6 +9,7 @@
 @import './partials/reminder';
 @import './partials/forms';
 @import './partials/buttons';
+@import './partials/icons';
 @import './partials/form-field';
 @import './partials/tables';
 @import './partials/elements';
@@ -44,5 +45,7 @@ body {
         padding: 0;
 
         @include breakpoint('L') { margin-top: 2rem; }
+
+        > .onboarding { @import './partials/onboarding'; }
     }
 }

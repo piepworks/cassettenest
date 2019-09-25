@@ -19,7 +19,7 @@
 {% if film_counts %}
 {% include 'inventory/_form-load-camera.html' %}
 {% else %}
-<p>No film to load.</p>
+<p>No film to load. <a href="{% url 'rolls-add' %}">Add some!</a></p>
 {% endif %}
 
 {% else %}

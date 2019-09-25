@@ -38,10 +38,12 @@ def index(request):
         ).count()
 
         context = {
+            'email': owner.email,
             'cameras_total': cameras_total,
             'cameras_empty': cameras_empty,
             'projects_current': projects_current,
             'projects_count': projects_count,
+            'rolls': rolls,
             'rolls_loaded': rolls_loaded,
             'rolls_ready_count': rolls_ready_count,
             'rolls_storage_count': rolls_storage_count,

@@ -1,6 +1,11 @@
 {% extends 'base_site.html' %}
 
 {% block content %}
+
+{% if not cameras_total or not rolls or not email %}
+{% include 'inventory/_onboarding.html' %}
+{% endif %}
+
 {% if projects_current %}
 <section>
     <h2 class="c-heading">Projects</h2>

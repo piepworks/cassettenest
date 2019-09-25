@@ -1,0 +1,25 @@
+& {
+    background: $gold;
+    padding: 1rem 2rem 1.5rem;
+
+    a {
+        color: black;
+
+        &:hover {
+            background: $bw;
+            color: white;
+            text-decoration: none;
+        }
+    }
+
+    ol,
+    ul { padding: 0; }
+
+    li {
+        margin-bottom: 1rem;
+        display: flex;
+        list-style-type: none;
+
+        .icon { margin-right: .5rem; }
+    }
+}
