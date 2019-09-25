@@ -2,6 +2,10 @@
     <h2>Welcome! Let&rsquo;s get started!</h2>
     <ol>
         <li>
+            <span class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</span>
+            Register
+        </li>
+        <li>
             {% if cameras_total %}
             <span class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</span>
             {% else %}
@@ -16,14 +20,6 @@
             <span class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</span>
             {% endif %}
             <a href="{% url 'rolls-add' %}">Add rolls</a>
-        </li>
-        <li>
-            {% if email %}
-            <span class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</span>
-            {% else %}
-            <span class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</span>
-            {% endif %}
-            <a href="{% url 'settings' %}">Add your email address</a>
         </li>
     </ol>
 </section>

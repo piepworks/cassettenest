@@ -3,6 +3,7 @@ from django.views.generic.detail import DetailView
 from django.db.models import Count
 from django.db import IntegrityError
 from django.contrib.auth.models import User
+from django.contrib.auth import login, authenticate
 from django.views.generic.detail import DetailView
 from django.views.decorators.http import require_POST
 from django.utils.encoding import force_text
@@ -122,6 +123,26 @@ def settings(request):
         }
 
         return render(request, 'inventory/settings.html', context)
+
+
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            # Automatically log in
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+
+            return redirect('index')
+    else:
+        form = RegisterForm()
+
+    return render(request, 'registration/register.html', {'form': form})
 
 
 @login_required

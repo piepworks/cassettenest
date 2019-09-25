@@ -1,7 +1,16 @@
 from django import forms
 from django.forms import ModelForm, ModelChoiceField, widgets
+from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from .models import Camera, Roll, Project, Journal, User
+
+
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
 
 
 class CameraChoiceField(ModelChoiceField):
