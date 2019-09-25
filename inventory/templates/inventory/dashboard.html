@@ -7,7 +7,6 @@
 <h1>Dashboard</h1>
 
 <div class="wrapper">
-    {% if rolls %}
     <ul>
         <li>
             <p><a href="{% url 'inventory' %}">Storage: {{ rolls_storage }}</a></p>
@@ -22,28 +21,33 @@
             <form method="post">
                 {% csrf_token %}
                 <p><a href="{% url 'logbook' %}?status=processing">Processing: {{ rolls_processing }}</a></p>
+                {% if rolls_processing %}
                 {% include 'inventory/_form-status.html' with current_status='processing' updated_status='processed' %}
+                {% endif %}
             </form>
         </li>
         <li>
             <form method="post">
                 {% csrf_token %}
                 <p><a href="{% url 'logbook' %}?status=processed">Processed: {{ rolls_processed }}</a></p>
+                {% if rolls_processed %}
                 {% include 'inventory/_form-status.html' with current_status='processed' updated_status='scanned' %}
+                {% endif %}
             </form>
         </li>
         <li>
             <form method="post">
                 {% csrf_token %}
                 <p><a href="{% url 'logbook' %}?status=scanned">Scanned: {{ rolls_scanned }}</a></p>
+                {% if rolls_scanned %}
                 {% include 'inventory/_form-status.html' with current_status='scanned' updated_status='archived' %}
+                {% endif %}
             </form>
         </li>
         <li>
             <p><a href="{% url 'logbook' %}?status=archived">Archived: {{ rolls_archived }}</a></p>
         </li>
     </ul>
-    {% endif %}
 </div>
 </div>
 {% endblock %}
