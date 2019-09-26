@@ -1411,8 +1411,14 @@ def camera_add(request):
             )
 
             messages.success(request, 'Camera added!')
-            return redirect(reverse('camera-detail', args=(camera.id,)))
+
+            if 'another' in request.POST:
+                return redirect('camera-add')
+            else:
+                return redirect(reverse('camera-detail', args=(camera.id,)))
         else:
+            # TODO: Output the actual error from the form instead of this
+            # hardcoded one.
             messages.error(request, 'You already have that camera.')
             return redirect(reverse('camera-add'),)
     else:

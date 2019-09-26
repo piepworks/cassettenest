@@ -13,7 +13,11 @@
     {% include 'inventory/_form-field.html' with field=form.format %}
     {% include 'inventory/_form-field.html' with field=form.notes %}
     {% include 'inventory/_form-field.html' with field=form.unavailable %}
-    <div class="action"><input type="submit" value="Add camera"></div>
+
+    <div class="action">
+        <p><input type="submit" value="Save camera" /></p>
+        <p><input type="submit" class="secondary" name="another" value="Save camera and add another" /></p>
+    </div>
 </form>
 </div>
 {% endblock %}
