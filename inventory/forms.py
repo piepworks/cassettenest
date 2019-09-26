@@ -6,6 +6,7 @@ from .models import Camera, Roll, Project, Journal, User
 
 
 class RegisterForm(UserCreationForm):
+    # Make the email field required.
     email = forms.EmailField()
 
     class Meta:
@@ -73,6 +74,9 @@ class ReadyForm(forms.Form):
 
 
 class UserForm(ModelForm):
+    # Make the email field required.
+    email = forms.EmailField()
+
     # https://gist.github.com/gregplaysguitar/1184995#file-upgrade_user_admin-py-L44-L53
     def clean_email(self):
         qs = User.objects.filter(email=self.cleaned_data['email'])

@@ -21,5 +21,11 @@
             {% endif %}
             <a href="{% url 'rolls-add' %}">Add rolls</a>
         </li>
+        {% if not email %}
+        <li>
+            <span class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</span>
+            <a href="{% url 'settings' %}">Add your email address</a>
+        </li>
+        {% endif %}
     </ol>
 </section>
