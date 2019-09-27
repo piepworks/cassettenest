@@ -132,8 +132,6 @@ STATICFILES_FINDERS = (
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
-LOGIN_URL = '/login/'
-
 try:
     from .local_settings import *
 except ImportError:
