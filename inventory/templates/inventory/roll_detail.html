@@ -84,14 +84,14 @@
     {% endif %}
 </ul>
 
+{% if roll.status != '01_storage' %}
+<p><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
+{% endif %}
+
 {% if journal_entries %}
 <hr />
 
 <div class="journal-entries overflow-x">
-    {% if roll.status != '01_storage' %}
-    <p><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
-    {% endif %}
-
     <table>
         <thead>
             <tr>
