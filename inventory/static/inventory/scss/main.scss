@@ -28,13 +28,6 @@ body {
 
     > .messages { @import './partials/messages'; }
 
-    > footer {
-        padding: 1.25rem;
-        font-size: 0.6rem;
-
-        @include breakpoint('M') { font-size: 0.9rem; }
-    }
-
     > main,
     > footer {
         margin: 0 auto;
@@ -47,5 +40,11 @@ body {
         @include breakpoint('L') { margin-top: 2rem; }
 
         > .onboarding { @import './partials/onboarding'; }
+    }
+
+    > footer {
+        margin-top: 4rem;
+        padding: 1.25rem;
+        font-size: 0.6rem;
     }
 }
