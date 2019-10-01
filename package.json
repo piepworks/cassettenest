@@ -1,0 +1,23 @@
+{
+  "name": "cassettenest",
+  "version": "1.0.0",
+  "description": "A way for analog photographers to track their film use from box to binder.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/trey/cassettenest.git"
+  },
+  "keywords": [],
+  "author": "Trey Piepmeier <trey@treypiepmeier.com> (http://treylabs.com/)",
+  "license": "UNLICENSED",
+  "private": true,
+  "bugs": {
+    "url": "https://github.com/trey/cassettenest/issues"
+  },
+  "homepage": "https://github.com/trey/cassettenest#readme",
+  "devDependencies": {
+    "stylelint-config-standard": "^19.0.0"
+  }
+}

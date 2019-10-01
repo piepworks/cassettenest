@@ -24,6 +24,14 @@ Copyright &copy; 2019 Trey Labs LLC. All rights reserved.
     - View on your local machine at `http://localhost:8000`.
     - View on your phone or other computers on the local network at `http://[local IP address]:8000`.
 
+## Development
+
+- Get [stylelint](https://stylelint.io/) setup (only in your editor for now).
+    1. `nvm use`
+    2. `npm i`.
+- Running Python tests
+    1. …
+
 Once everything's set up, the next time you want to run it:
 
 1. `cd` into the project folder.
