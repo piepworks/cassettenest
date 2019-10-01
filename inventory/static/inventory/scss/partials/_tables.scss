@@ -7,12 +7,10 @@ table {
     td {
         padding: 5px 20px 5px 0;
         white-space: nowrap;
+        border-bottom: 1px solid #eee;
 
         &.wrap { white-space: normal; }
     }
-
-    th,
-    td { border-bottom: 1px solid #eee; }
 
     thead th { border-bottom: 1px solid #000; }
 

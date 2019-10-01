@@ -1,4 +1,4 @@
-$spacing: .6rem;
+$spacing: 0.6rem;
 
 $breakpoints: (
     S:  '(min-width: 580px)',
@@ -17,16 +17,16 @@ $breakpoints: (
 }
 
 @mixin gradient($color) {
-  background: $color;
-  background-image: linear-gradient($color, darken($color, 10%));
+    background: $color;
+    background-image: linear-gradient($color, darken($color, 10%));
 
-  &:hover {
-    background: darken($color, 15%);
-    background-image: linear-gradient(darken($color, 15%), darken($color, 20%));
-  }
+    &:hover {
+        background: darken($color, 15%);
+        background-image: linear-gradient(darken($color, 15%), darken($color, 20%));
+    }
 }
 
-$divider-width: .2rem;
+$divider-width: 0.2rem;
 
 @mixin divider {
     border-color: #eee;
@@ -44,14 +44,12 @@ $divider-width: .2rem;
     border-style: dashed;
 }
 
-
 // For wide tables or whatever.
 .overflow-x { overflow-x: auto; }
 
 // For parts of the app that still need to be properly designed.
 .raw {
     $raw-padding: 1.25rem;
-
     padding: $raw-padding;
     padding-top: 0;
 
@@ -93,7 +91,7 @@ html.has-js {
 
         &[href^='http'] {
             text-decoration: underline;
-            &:after { content: ' (' attr(href) ')'; }
+            &::after { content: ' (' attr(href) ')'; }
         }
     }
 

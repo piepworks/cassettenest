@@ -30,9 +30,9 @@ body {
 
     > footer {
         padding: 1.25rem;
-        font-size: .6rem;
+        font-size: 0.6rem;
 
-        @include breakpoint('M') { font-size: .9rem; }
+        @include breakpoint('M') { font-size: 0.9rem; }
     }
 
     > main,

@@ -4,10 +4,10 @@ input[type=submit] {
     border: 0;
     color: white;
     cursor: pointer;
-    padding: .5rem 1rem;
+    padding: 0.5rem 1rem;
     display: inline-block;
 
-    & + & { margin-left: .5rem; }
+    & + & { margin-left: 0.5rem; }
 
     &:hover { background: $button-hover; }
 

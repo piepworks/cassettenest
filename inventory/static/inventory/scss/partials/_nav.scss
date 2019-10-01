@@ -5,12 +5,12 @@ $logo-size: 35px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: .6rem 1rem;
+    padding: 0.6rem 1rem;
     border-bottom: 1px solid $bw;
 
     a {
         text-decoration: none;
-        color: rgba(255, 255, 255, .8);
+        color: rgba(255, 255, 255, 0.8);
 
         &:hover { text-decoration: underline; }
     }
@@ -19,7 +19,7 @@ $logo-size: 35px;
         margin: 0;
         padding: 0;
         font-size: 1rem;
-        color: rgba(255, 255, 255, .7);
+        color: rgba(255, 255, 255, 0.7);
         font-weight: normal;
 
         @include breakpoint('S') { font-size: 1.5rem; }
@@ -45,14 +45,14 @@ $logo-size: 35px;
 
         ul {
             margin: 0;
-            font-size: .8rem;
+            font-size: 0.8rem;
 
-            @include breakpoint('S') { font-size: .9rem; }
+            @include breakpoint('S') { font-size: 0.9rem; }
         }
 
         li {
             display: inline-block;
-            margin-left: .5rem;
+            margin-left: 0.5rem;
             margin-bottom: 0;
 
             &:first-child { margin-left: 0; }
