@@ -3,7 +3,7 @@
         <form onsubmit="return confirmRemove('film');" action="{% url 'project-rolls-remove' project.id %}" method="post" class="do-not-print">
             {% csrf_token %}
             <input type="hidden" name="film" value="{{ film.id }}" />
-            <button class="icon icon-remove" title="Remove from project">
+            <button class="icon icon-destructive" title="Remove from project">
                 {% include 'inventory/_github-icon.html' with id='x' %}
             </button>
         </form>
@@ -13,7 +13,7 @@
             {% csrf_token %}
             <input type="hidden" name="camera" value="{{ camera.id }}" />
             <input type="hidden" name="action" value="remove" />
-            <button class="icon icon-remove" title="Remove from project">
+            <button class="icon icon-destructive" title="Remove from project">
                 {% include 'inventory/_github-icon.html' with id='x' %}
             </button>
         </form>
@@ -23,7 +23,7 @@
             {% csrf_token %}
             <input type="hidden" name="camera" value="{{ roll.camera.id }}" />
             <input type="hidden" name="action" value="remove" />
-            <button class="icon icon-remove" title="Remove from project">
+            <button class="icon icon-destructive" title="Remove from project">
                 {% include 'inventory/_github-icon.html' with id='x' %}
             </button>
         </form>

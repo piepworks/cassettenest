@@ -127,7 +127,7 @@
     {% endif %}
     <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
         {% csrf_token %}
-        <input type="submit" {% if roll.status == '02_loaded' %}class="secondary"{% endif %} value="Delete" />
+        <input type="submit" class="destructive" value="Delete" />
     </form>
 </div>
 {% endblock %}

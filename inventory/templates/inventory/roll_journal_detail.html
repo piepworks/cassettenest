@@ -27,7 +27,7 @@
 <div class="action">
     <form onsubmit="return confirmDelete('journal entry');" action="{% url 'roll-journal-delete' roll.id entry.id %}" method="post">
         {% csrf_token %}
-        <input type="submit" value="Delete entry" />
+        <input type="submit" class="destructive" value="Delete entry" />
     </form>
 </div>
 {% endblock %}

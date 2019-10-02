@@ -21,6 +21,12 @@ input[type=submit] {
         }
     }
 
+    &.destructive {
+        background: $destructive;
+
+        &:hover { background: darken($destructive, 10%); }
+    }
+
     &.icon {
         padding: 0;
         background: none;
@@ -31,6 +37,6 @@ input[type=submit] {
 
         &:hover { fill: black; }
 
-        &-remove:hover { fill: red; }
+        &-destructive:hover { fill: $destructive; }
     }
 }
