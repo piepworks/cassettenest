@@ -550,7 +550,32 @@ def project_edit(request, pk):
             project.name = form.cleaned_data['name']
             project.notes = form.cleaned_data['notes']
             project.save()
-            messages.success(request, 'Project updated!')
+
+            if project.status == 'archived':
+                rolls = Roll.objects.filter(
+                    owner=owner,
+                    project=project,
+                    status=status_number('storage')
+                )
+                roll_count = rolls.count()
+
+                if rolls:
+                    rolls.update(project=None)
+
+                    messages.success(
+                        request,
+                        '''
+                        Project updated and %s %s now available for other
+                        projects.
+                        '''
+                        % (roll_count, pluralize('roll', roll_count))
+                    )
+                else:
+                    # No unused rolls
+                    messages.success(request, 'Project updated!')
+            else:
+                # Status not changed to 'archived'
+                messages.success(request, 'Project updated!')
 
             return redirect(reverse('project-detail', args=(project.id,)))
     else:
