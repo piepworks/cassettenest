@@ -565,14 +565,14 @@ def project_edit(request, pk):
                     messages.success(
                         request,
                         '''
-                        Project updated and %s %s now available for other
+                        Project archived and %s %s now available for other
                         projects.
                         '''
                         % (roll_count, pluralize('roll', roll_count))
                     )
                 else:
                     # No unused rolls
-                    messages.success(request, 'Project updated!')
+                    messages.success(request, 'Project archived!')
             else:
                 # Status not changed to 'archived'
                 messages.success(request, 'Project updated!')
