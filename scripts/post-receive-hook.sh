@@ -16,4 +16,6 @@ pip install -r requirements.txt
 ./manage.py migrate --noinput
 deactivate
 
+s3cmd put $backup_file s3://cassettenest/backups-code-push/
+
 touch /var/www/app_cassettenest_com_wsgi.py
