@@ -1,9 +1,16 @@
+{% load tz %}
+{% get_current_timezone as TIME_ZONE %}
+
 <section class="onboarding">
     <h2>Welcome! Let&rsquo;s get started!</h2>
     <ol>
         <li>
             {% include 'inventory/_status-check.html' with check=True %}
             Register
+        </li>
+        <li>
+            {% include 'inventory/_status-check.html' with check=True %}
+            Timezone set to&nbsp;<a href="{% url 'settings' %}">{{ TIME_ZONE }}</a>
         </li>
         <li>
             {% include 'inventory/_status-check.html' with check=cameras_total %}

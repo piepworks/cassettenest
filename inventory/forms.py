@@ -2,7 +2,7 @@ from django import forms
 from django.forms import ModelForm, ModelChoiceField, widgets
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
-from .models import Camera, Roll, Project, Journal, User
+from .models import Camera, Roll, Project, Journal, User, Profile
 
 
 class RegisterForm(UserCreationForm):
@@ -91,6 +91,12 @@ class UserForm(ModelForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['timezone']
 
 
 class PatternsForm(forms.Form):

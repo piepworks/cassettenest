@@ -101,13 +101,15 @@ def settings(request):
     owner = request.user
 
     if request.method == 'POST':
-        form = UserForm(request.POST, instance=owner)
+        user_form = UserForm(request.POST, instance=owner)
+        profile_form = ProfileForm(request.POST, instance=owner)
 
-        if form.is_valid():
+        if user_form.is_valid() and profile_form.is_valid():
             user = owner
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            user.email = form.cleaned_data['email']
+            user.first_name = user_form.cleaned_data['first_name']
+            user.last_name = user_form.cleaned_data['last_name']
+            user.email = user_form.cleaned_data['email']
+            user.profile.timezone = profile_form.cleaned_data['timezone']
             user.save()
 
             messages.success(request, 'Settings updated!')
@@ -117,9 +119,11 @@ def settings(request):
             return redirect(reverse('settings'))
     else:
         user_form = UserForm(instance=owner)
+        profile_form = ProfileForm(instance=owner.profile)
 
         context = {
-            'user_form': user_form
+            'user_form': user_form,
+            'profile_form': profile_form
         }
 
         return render(request, 'inventory/settings.html', context)

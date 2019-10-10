@@ -1,5 +1,7 @@
 {% load static %}
 {% load compress %}
+{% load tz %}
+{% get_current_timezone as TIME_ZONE %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,6 +35,7 @@
     </main>
     <footer>
         <p>Copyright &copy; {% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
+        <p class="timezone">Current timezone: {{ TIME_ZONE }}</p>
     </footer>
     <script src="{% static 'inventory/js/main.js' %}"></script>
 

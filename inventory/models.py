@@ -1,8 +1,41 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from .utils import *
 import datetime
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    timezone = models.CharField(
+        max_length=40,
+        blank=True,
+        choices=settings.TIME_ZONES,
+        default=settings.TIME_ZONE
+    )
+
+    def __str__(self):
+        return 'Settings for %s' % self.user
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    # This apparently works since the user record is updated on every login
+    # (last_login)
+    try:
+        instance.profile.save()
+    except Profile.DoesNotExist:
+        Profile.objects.create(user=instance)
+        instance.profile.save()
 
 
 class Manufacturer(models.Model):

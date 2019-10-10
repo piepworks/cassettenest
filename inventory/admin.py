@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 from .models import *
 
 
@@ -72,9 +74,31 @@ class ProjectAdmin(admin.ModelAdmin):
     )
 
 
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'profile'
+
+
+class UserAdmin(BaseUserAdmin):
+    inlines = (ProfileInline,)
+    list_display = (
+        'username',
+        'email',
+        'first_name',
+        'last_name',
+        'date_joined',
+    )
+    ordering = ('-date_joined',)
+
+
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Camera, CameraAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Journal, JournalAdmin)
+
+# Customize the default User admin.
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)

@@ -12,6 +12,9 @@
         {% for field in user_form %}
             {% include 'inventory/_form-field.html' with field=field %}
         {% endfor %}
+        {% for field in profile_form %}
+            {% include 'inventory/_form-field.html' with field=field %}
+        {% endfor %}
         <div class="action"><input type="submit" value="Save settings" /></div>
     </form>
     <p><a href="{% url 'password_change' %}">Change your password</a></p>
