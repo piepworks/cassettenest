@@ -2,11 +2,13 @@
 
 {% block bodytag %}class="landing"{% endblock %}
 
+{% block title %}{% if signedup %}Thanks for signing up!{% endif %}{% endblock %}
+
 {% block content %}
 {% if signedup %}
 <div class="raw">
     <h2>Thanks! We'll be in touch.</h2>
-    <p><a href="https://twitter.com/cassettenest">Follow us on Twitter</a> if you're so inclined.</p>
+    <p><a href="https://twitter.com/cassettenest">Follow us on Twitter</a> if you&rsquo;re so inclined.</p>
 </div>
 {% else %}
 <div class="raw">
