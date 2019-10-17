@@ -83,7 +83,7 @@ import sys
 
 # https://help.pythonanywhere.com/pages/environment-variables-for-web-apps/
 from dotenv import load_dotenv
-project_folder = os.path.expanduser('~/film')  # adjust as appropriate
+project_folder = os.path.expanduser('~/film/film')  # adjust as appropriate
 load_dotenv(os.path.join(project_folder, '.env'))
 
 # assuming your django settings file is at '/home/treypiepmeier/mysite/mysite/settings.py'

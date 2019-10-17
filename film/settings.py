@@ -35,7 +35,7 @@ SECRET_KEY = '34834u74c+h8r)tu9eo@(rog@icjnr$qus^de)tv@r$_p_a#mw'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool_env('DEBUG')
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS')
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
 
 # Application definition
@@ -141,7 +141,7 @@ LOGOUT_REDIRECT_URL = 'index'
 # https://github.com/torchbox/django-libsass
 # https://github.com/django-compressor/django-compressor/
 
-STATIC_ROOT = 'static/'
+STATIC_ROOT = os.getenv('STATIC_ROOT')
 
 COMPRESS_PRECOMPILERS = (
     ('text/x-scss', 'django_libsass.SassCompiler'),
@@ -157,3 +157,9 @@ STATICFILES_FINDERS = (
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = bool_env('EMAIL_USE_TLS')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')

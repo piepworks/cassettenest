@@ -1,8 +1,9 @@
 export DEBUG=False
 export DATABASE_FILE='filename.sqlite3'
-export ALLOWED_HOSTS=['www.example.com']
+export ALLOWED_HOSTS='www.example.com'
 export STATIC_ROOT='/path/to/project/static'
 export SECRET_KEY=''
+export EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 export EMAIL_HOST=''
 export EMAIL_PORT=587
 export EMAIL_HOST_USER=''
