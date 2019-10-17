@@ -6,3 +6,4 @@ local_settings.py
 prod_settings.py
 __pycache__/
 node_modules/
+.env*

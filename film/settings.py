@@ -13,6 +13,15 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 from pytz import common_timezones
 
+
+def bool_env(val):
+    '''
+    Replaces string based environment values with Python booleans
+    via https://wellfire.co/learn/easier-12-factor-django/
+    '''
+    return True if os.getenv(val) == 'True' else False
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -24,9 +33,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '34834u74c+h8r)tu9eo@(rog@icjnr$qus^de)tv@r$_p_a#mw'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = bool_env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS')
 
 
 # Application definition
@@ -73,6 +82,17 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'film.wsgi.application'
+
+
+# Database
+# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, os.getenv('DATABASE_FILE'))
+    }
+}
 
 
 # Password validation
@@ -136,12 +156,4 @@ STATICFILES_FINDERS = (
 
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
-try:
-    from .local_settings import *
-except ImportError:
-    pass
-
-try:
-    from .prod_settings import *
-except ImportError:
-    pass
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
