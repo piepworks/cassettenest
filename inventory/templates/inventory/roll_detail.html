@@ -103,7 +103,11 @@
         <tbody>
             {% for entry in journal_entries %}
             <tr>
-                <td><a href="{% url 'roll-journal-detail' roll.id entry.id %}">{{ entry.date|date:'M j' }}</a></td>
+                <td>
+                    <a href="{% url 'roll-journal-detail' roll.id entry.id %}" title="{{ entry.date|date:'l, F j, Y' }}">
+                        {{ entry.date|date:'M j' }}
+                    </a>
+                </td>
                 <td>
                     {{ entry.starting_frame }}
                     {% if entry.frame != entry.starting_frame %}
