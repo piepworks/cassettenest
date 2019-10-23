@@ -8,7 +8,7 @@
     <option value="archived" {% if updated_status == 'archived' %}selected{% endif %}>Archived</option>
 </select>
 {% if page == 'logbook' %}
-<input type="submit" value="Update Selected" />
+<input id="update-selected" type="submit" value="Update selected" />
 {% else %}
 <input type="submit" value="Update All" />
 {% endif %}

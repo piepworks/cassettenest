@@ -16,3 +16,32 @@ $('.toggle-button').click(function(e) {
     $this.text($this.text() === 'Show' ? 'Hide' : 'Show');
     $toggle.toggle();
 });
+
+$('.select-all').change((e) => {
+    const $selectAllToggle = $(e.target);
+    const $tbody = $selectAllToggle.closest('table').find('tbody');
+    const $checkboxes = $tbody.find('input[type=checkbox]');
+    const $updateButton = $('#update-selected');
+    let checked = $selectAllToggle.prop('checked');
+
+    $checkboxes.prop('checked', checked);
+
+    if (checked) {
+        $updateButton.val(`Update all ${$checkboxes.length} selected`);
+    } else {
+        $updateButton.val('Update selected');
+    }
+});
+
+$('tbody input[type=checkbox]').change((e) => {
+    const $tbody = $(e.target).closest('tbody');
+    const checkboxCount = $tbody.find('input[type=checkbox]:checked').length;
+
+    $('.select-all').prop('checked', false);
+
+    if (checkboxCount) {
+        $('#update-selected').val(`Update ${checkboxCount} selected`);
+    } else {
+        $('#update-selected').val('Update selected');
+    }
+});

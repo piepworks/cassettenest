@@ -42,3 +42,9 @@ table {
         .push-pull td { color: #999; }
     }
 }
+
+.select-all {
+    visibility: hidden;
+
+    html.has-js & { visibility: visible; }
+}

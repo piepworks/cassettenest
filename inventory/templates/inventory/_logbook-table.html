@@ -4,8 +4,9 @@
         <thead>
             <tr>
                 {% if page != 'project' %}
-                {# <th><input type="checkbox" disabled title="This will select/deselect all rows when it works." /></th> #}
-                <th class="do-not-print"></th>
+                <th class="do-not-print">
+                    <input class="select-all" type="checkbox" title="Select or deselect all items" />
+                </th>
                 {% endif %}
                 <th>Code</th>
                 <th>Film</th>
