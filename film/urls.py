@@ -3,6 +3,10 @@ from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from inventory import views
 
+admin.site.site_header = "Cassette Nest Admin"
+admin.site.site_title = "Cassette Nest Admin"
+admin.site.index_title = "Cassette Nest’s innards"
+
 urlpatterns = [
     # Users
     path('admin/', admin.site.urls),
