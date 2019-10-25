@@ -17,5 +17,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        @media print { white-space: normal; }
     }
 }

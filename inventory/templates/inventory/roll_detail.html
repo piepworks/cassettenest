@@ -85,7 +85,7 @@
 </ul>
 
 {% if roll.status != '01_storage' %}
-<p><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
+<p class="do-not-print"><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
 {% endif %}
 
 {% if journal_entries %}
@@ -115,7 +115,10 @@
                         {{ entry.frame }}
                     {% endif %}
                 </td>
-                <td class="wrap">{{ entry.notes }}</td>
+                <td>
+                    <span class="do-not-print">{{ entry.notes }}</span>
+                    <div class="print-only">{{ entry.notes|markdown }}</div>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -129,7 +132,7 @@
     {% if roll.status == '02_loaded' %}
     {% include 'inventory/_form-finish-roll.html' with camera=roll.camera roll=roll %}
     {% endif %}
-    <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
+    <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post" class="do-not-print">
         {% csrf_token %}
         <input type="submit" class="destructive" value="Delete" />
     </form>

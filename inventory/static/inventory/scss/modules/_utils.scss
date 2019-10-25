@@ -84,6 +84,8 @@ html.has-js {
 }
 
 // Print
+.print-only { display: none; }
+
 @media print {
     a {
         text-decoration: none;
@@ -96,4 +98,6 @@ html.has-js {
     }
 
     .do-not-print { display: none; }
+
+    .print-only { display: block; }
 }
