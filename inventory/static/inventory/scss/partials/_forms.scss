@@ -1,3 +1,13 @@
+@mixin input-style {
+    border: 2px solid $bw;
+    padding: 0.5rem;
+}
+
+@mixin input-focus-style {
+    outline: none;
+    box-shadow: 0 0 1px 4px $gold;
+}
+
 form {
     margin-bottom: 1.2rem;
 
@@ -35,23 +45,14 @@ input:not([type=checkbox]):not([type=submit]):not([type=date]),
 textarea { -webkit-appearance: none; }
 
 input:not([type=checkbox]):not([type=submit]),
-textarea,
-.StripeElement {
-    border: 2px solid $bw;
-    padding: 0.5rem;
-}
+textarea { @include input-style; }
 
 textarea { width: 100%; }
 
 input,
 select,
 textarea,
-button {
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 1px 4px $gold;
-    }
-}
+button { &:focus { @include input-focus-style; } }
 
 label input[type=checkbox] { margin-right: 0.5rem; }
 
@@ -64,3 +65,18 @@ legend {
 }
 
 input[type=number] { width: 5em; }
+
+.StripeElement {
+    @include input-style;
+    max-width: 50ch;
+
+    &--focus { @include input-focus-style; }
+
+    &--invalid {
+        box-shadow: 0 0 1px 4px $destructive;
+        border-color: $destructive;
+    }
+
+    // TODO: Figure out how this should look and keep the color in _colors.scss
+    &--webkit-autofill { background-color: #fefde5 !important; }
+}

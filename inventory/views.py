@@ -130,6 +130,7 @@ def user_settings(request):
         return render(request, 'inventory/settings.html', context)
 
 
+@login_required
 def subscribe(request):
     owner = request.user
 
@@ -144,6 +145,7 @@ def subscribe(request):
     return render(request, 'inventory/subscribe.html', context)
 
 
+@login_required
 def subscribe_success(request):
     owner = request.user
 
