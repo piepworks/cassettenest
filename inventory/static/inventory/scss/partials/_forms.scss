@@ -72,10 +72,9 @@ input[type=number] { width: 5em; }
 
     &--focus { @include input-focus-style; }
 
-    &--invalid {
-        box-shadow: 0 0 1px 4px $destructive;
-        border-color: $destructive;
-    }
+    &--invalid { border-color: $destructive; }
+
+    &--focus#{&}--invalid { box-shadow: 0 0 1px 4px $destructive; }
 
     // TODO: Figure out how this should look and keep the color in _colors.scss
     &--webkit-autofill { background-color: #fefde5 !important; }
