@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'inventory.apps.InventoryConfig',
     'compressor',
     'markdown_deux',
+    'djstripe',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

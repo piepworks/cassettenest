@@ -35,7 +35,8 @@ input:not([type=checkbox]):not([type=submit]):not([type=date]),
 textarea { -webkit-appearance: none; }
 
 input:not([type=checkbox]):not([type=submit]),
-textarea {
+textarea,
+.StripeElement {
     border: 2px solid $bw;
     padding: 0.5rem;
 }

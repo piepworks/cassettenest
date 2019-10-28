@@ -21,7 +21,7 @@ urlpatterns = [
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('settings/', views.settings, name='settings'),
+    path('settings/', views.user_settings, name='settings'),
 
     # Rolls
     path('rolls/add/', views.rolls_add, name='rolls-add'),
@@ -68,4 +68,12 @@ urlpatterns = [
     path('camera/<int:pk>/load/', views.camera_load, name='camera-load'),
     path('camera/<int:pk>/edit/', views.camera_edit, name='camera-edit'),
     path('camera/<int:pk>/delete/', views.camera_delete, name='camera-delete'),
+
+    # Subscribe
+    path('subscribe/', views.subscribe, name='subscribe'),
+    path('subscribe/success/',
+         views.subscribe_success, name='subscribe-success'),
+
+    # Stripe Webhooks
+    path('stripe/', include('djstripe.urls', namespace='djstripe')),
 ]

@@ -10,6 +10,7 @@ from django.utils.encoding import force_text
 from django.urls import reverse, resolve
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.conf import settings
 from .models import *
 from .forms import *
 from .utils import *
@@ -97,7 +98,7 @@ def patterns(request):
 
 
 @login_required
-def settings(request):
+def user_settings(request):
     owner = request.user
 
     if request.method == 'POST':
@@ -127,6 +128,28 @@ def settings(request):
         }
 
         return render(request, 'inventory/settings.html', context)
+
+
+def subscribe(request):
+    owner = request.user
+
+    stripe_key = settings.STRIPE_LIVE_PUBLIC_KEY\
+        if settings.STRIPE_LIVE_MODE\
+        else settings.STRIPE_TEST_PUBLIC_KEY
+
+    context = {
+        'stripe_key': stripe_key
+    }
+
+    return render(request, 'inventory/subscribe.html', context)
+
+
+def subscribe_success(request):
+    owner = request.user
+
+    context = {}
+
+    return render(request, 'inventory/subscribe_success.html', context)
 
 
 def register(request):

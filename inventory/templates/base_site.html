@@ -13,6 +13,7 @@
     {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'inventory/scss/main.scss' %}" />
     {% endcompress %}
+    <script src="https://js.stripe.com/v3/"></script>
     <script src="{% static 'inventory/js/vendor/jquery.min.js' %}"></script>
 </head>
 
@@ -38,6 +39,7 @@
         <p class="timezone">Current timezone: {{ TIME_ZONE }}</p>
     </footer>
     <script src="{% static 'inventory/js/main.js' %}"></script>
+    {% block page_js %}{% endblock %}
 
     {% if not user.is_authenticated %}
     <script type="text/javascript">

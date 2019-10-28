@@ -1,8 +1,13 @@
+certifi==2019.9.11
+chardet==3.0.4
+dj-stripe==2.1.1
 Django==2.2.6
 django-appconf==1.0.2
 django-compressor==2.2
 django-libsass==0.7
 django-markdown-deux==1.0.5
+idna==2.8
+jsonfield==2.0.2
 libsass==0.14.5
 markdown2==2.3.5
 model-mommy==1.6.0
@@ -10,6 +15,9 @@ pycodestyle==2.4.0
 python-dotenv==0.10.3
 pytz==2018.3
 rcssmin==1.0.6
+requests==2.22.0
 rjsmin==1.0.12
 six==1.11.0
 sqlparse==0.3.0
+stripe==2.37.2
+urllib3==1.25.6
