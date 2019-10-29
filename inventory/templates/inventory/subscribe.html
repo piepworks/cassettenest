@@ -1,10 +1,5 @@
 {% extends 'base_site.html' %}
 
-{% comment %}
-    Make this more like:
-    https://github.com/dj-stripe/dj-stripe/blob/master/tests/apps/example/templates/purchase_subscription.html
-{% endcomment %}
-
 {% block title %}Subscribe{% endblock %}
 {% block bodytag %}class="subscribe"{% endblock %}
 
@@ -12,36 +7,89 @@
 <div class="raw">
     <h1>Subscribe</h1>
 
-    <form action="/charge" method="post" id="payment-form">
-      <div class="form-row" style="margin: 1rem 0;">
-        <label for="card-element">Credit or debit card</label>
-        <div id="card-element">
-          <!-- A Stripe Element will be inserted here. -->
+    <form method="post" id="payment-form">
+        {% csrf_token %}
+        {{ form }}
+
+        <div class="form-row">
+            <label for="card-element">Credit or debit card</label>
+            <div id="card-element">
+                <!-- A Stripe Element will be inserted here. -->
+            </div>
+
+            <!-- Used to display Element errors. -->
+            <div id="card-errors" role="alert"></div>
         </div>
 
-        <!-- Used to display Element errors. -->
-        <div id="card-errors" role="alert"></div>
-      </div>
-
-      <button>Submit payment</button>
+        <button>Submit payment</button>
     </form>
 </div>
 {% endblock %}
 
 {% block page_js %}
 <script>
+    // Create a Stripe client.
     var stripe = Stripe('{{ stripe_key }}');
+
+    // Create an instance of Elements.
     var elements = stripe.elements();
 
+    // Some basic styles to match the rest of the app.
     var style = {
         base: {
-            // Add your base input styles here. For example:
             fontSize: '16px',
-            color: "#32325d"
+        },
+        invalid: {
+            color: '#fc3434' // darken `$destructive` by 10%.
         }
     };
 
+    // Create an instance of the card Element.
     var card = elements.create('card', {style: style});
+
+    // Add an instance of the card Element into `#card-element`.
     card.mount('#card-element');
+
+    // Handle real-time validation errors from the card Element.
+    card.addEventListener('change', function(event) {
+        var displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    // Handle form submission.
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Note - slightly different from the Stripe JS Quickstart because
+        // we use stripe.createSource instead of createToken
+        stripe.createSource(card).then(function (result) {
+            if (result.error) {
+                // Inform the user if there was an error.
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+            } else {
+                // Send the token to the server.
+                stripeSourceHandler(result.source);
+            }
+        });
+    });
+
+    // Submit the form with the source ID.
+    function stripeSourceHandler(source) {
+        // Insert the source ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput = document.createElement('input');
+        hiddenInput.setAttribute('type', 'hidden');
+        hiddenInput.setAttribute('name', 'stripe_source');
+        hiddenInput.setAttribute('value', source.id);
+        form.appendChild(hiddenInput);
+        // Submit the form
+        form.submit();
+    }
 </script>
 {% endblock %}

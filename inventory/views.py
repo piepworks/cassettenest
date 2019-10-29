@@ -131,6 +131,8 @@ def user_settings(request):
 
 
 @login_required
+# TODO: Just copy/modify the example code from dj-stripe. Who cares if they're
+# Class-based but none of my other views are?
 def subscribe(request):
     owner = request.user
 
