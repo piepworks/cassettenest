@@ -3,6 +3,7 @@ from django.forms import ModelForm, ModelChoiceField, widgets
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from .models import Camera, Roll, Project, Journal, User, Profile
+import djstripe.models
 
 
 class RegisterForm(UserCreationForm):
@@ -130,4 +131,11 @@ class PatternsForm(forms.Form):
     checkbox = forms.BooleanField(
         help_text=help_text,
         required=False
+    )
+
+
+class PurchaseSubscriptionForm(forms.Form):
+    plan = forms.ModelChoiceField(queryset=djstripe.models.Plan.objects.all())
+    stripe_source = forms.CharField(
+        max_length="255", widget=forms.HiddenInput(), required=False
     )

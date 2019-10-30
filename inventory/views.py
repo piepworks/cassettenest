@@ -6,7 +6,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
 from django.views.generic.detail import DetailView
 from django.views.decorators.http import require_POST
+from django.views.generic import DetailView, FormView
 from django.utils.encoding import force_text
+from django.utils.decorators import method_decorator
 from django.urls import reverse, resolve
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -15,6 +17,8 @@ from .models import *
 from .forms import *
 from .utils import *
 import datetime
+import stripe
+import djstripe.models
 
 
 def index(request):
@@ -130,30 +134,81 @@ def user_settings(request):
         return render(request, 'inventory/settings.html', context)
 
 
-@login_required
-# TODO: Just copy/modify the example code from dj-stripe. Who cares if they're
-# Class-based but none of my other views are?
-def subscribe(request):
-    owner = request.user
+@method_decorator(login_required, name='dispatch')
+class PurchaseSubscriptionView(FormView):
+    '''
+    Example view to demonstrate how to use dj-stripe to:
+    * create a Customer
+    * add a card to the Customer
+    * create a Subscription using that card
+    '''
+    template_name = 'inventory/subscribe.html'
+    form_class = PurchaseSubscriptionForm
 
-    stripe_key = settings.STRIPE_LIVE_PUBLIC_KEY\
-        if settings.STRIPE_LIVE_MODE\
-        else settings.STRIPE_TEST_PUBLIC_KEY
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
 
-    context = {
-        'stripe_key': stripe_key
-    }
+        if djstripe.models.Plan.objects.count() == 0:
+            raise Exception(
+                'No Product Plans in the dj-stripe database - create some in '
+                'your stripe account and then '
+                'run `./manage.py djstripe_sync_plans_from_stripe` '
+                '(or use the dj-stripe webhooks)'
+            )
 
-    return render(request, 'inventory/subscribe.html', context)
+        ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
+
+        return ctx
+
+    def form_valid(self, form):
+        stripe_source = form.cleaned_data['stripe_source']
+        plan = form.cleaned_data['plan']
+        user = self.request.user
+
+        # Create the Stripe Customer, by default subscriber Model is User,
+        # this can be overridden with settings.DJSTRIPE_SUBSCRIBER_MODEL
+        customer, created = djstripe.models.Customer.get_or_create(
+            subscriber=user
+        )
+
+        # Add the source as the customer's default card
+        customer.add_card(stripe_source)
+
+        # Using the Stripe API, create a subscription for this customer,
+        # using the customer's default payment source
+        stripe_subscription = stripe.Subscription.create(
+            customer=customer.id,
+            items=[{'plan': plan.id}],
+            billing='charge_automatically',
+            # tax_percent=15,
+            api_key=djstripe.settings.STRIPE_SECRET_KEY,
+        )
+
+        # Sync the Stripe API return data to the database,
+        # this way we don't need to wait for a webhook-triggered sync
+        subscription = djstripe.models.Subscription.sync_from_stripe_data(
+            stripe_subscription
+        )
+
+        self.request.subscription = subscription
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse(
+            'subscription-success',
+            kwargs={'id': self.request.subscription.id},
+        )
 
 
-@login_required
-def subscribe_success(request):
-    owner = request.user
+@method_decorator(login_required, name='dispatch')
+class PurchaseSubscriptionSuccessView(DetailView):
+    template_name = 'inventory/subscribe_success.html'
 
-    context = {}
-
-    return render(request, 'inventory/subscribe_success.html', context)
+    queryset = djstripe.models.Subscription.objects.all()
+    slug_field = 'id'
+    slug_url_kwarg = 'id'
+    context_object_name = 'subscription'
 
 
 def register(request):

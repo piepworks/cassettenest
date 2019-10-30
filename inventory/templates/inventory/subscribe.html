@@ -9,7 +9,9 @@
 
     <form method="post" id="payment-form">
         {% csrf_token %}
+        <div class="form-row">
         {{ form }}
+        </div>
 
         <div class="form-row">
             <label for="card-element">Credit or debit card</label>
@@ -29,7 +31,7 @@
 {% block page_js %}
 <script>
     // Create a Stripe client.
-    var stripe = Stripe('{{ stripe_key }}');
+    var stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
 
     // Create an instance of Elements.
     var elements = stripe.elements();
@@ -83,11 +85,8 @@
     function stripeSourceHandler(source) {
         // Insert the source ID into the form so it gets submitted to the server
         var form = document.getElementById('payment-form');
-        var hiddenInput = document.createElement('input');
-        hiddenInput.setAttribute('type', 'hidden');
-        hiddenInput.setAttribute('name', 'stripe_source');
+        var hiddenInput = form.elements["stripe_source"];
         hiddenInput.setAttribute('value', source.id);
-        form.appendChild(hiddenInput);
         // Submit the form
         form.submit();
     }

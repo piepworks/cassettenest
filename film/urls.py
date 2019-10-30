@@ -70,9 +70,16 @@ urlpatterns = [
     path('camera/<int:pk>/delete/', views.camera_delete, name='camera-delete'),
 
     # Subscribe
-    path('subscribe/', views.subscribe, name='subscribe'),
-    path('subscribe/success/',
-         views.subscribe_success, name='subscribe-success'),
+    path(
+        'subscribe/',
+        views.PurchaseSubscriptionView.as_view(),
+        name='subscribe',
+    ),
+    path(
+        'subscription-success/<id>',
+        views.PurchaseSubscriptionSuccessView.as_view(),
+        name='subscription-success',
+    ),
 
     # Stripe Webhooks
     path('stripe/', include('djstripe.urls', namespace='djstripe')),
