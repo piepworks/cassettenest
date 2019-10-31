@@ -18,5 +18,24 @@
         <div class="action"><input type="submit" value="Save settings" /></div>
     </form>
     <p><a href="{% url 'password_change' %}">Change your password</a></p>
+
+    {% if user.is_staff %}
+    <hr />
+
+    <h2>Manage your subscription</h2>
+
+    <p>If you have a subscription:</p>
+    <ul>
+        <li>Show current plan</li>
+        <li>Show last 4 of current card</li>
+        <li>Link to update card</li>
+    </ul>
+
+    <p>If you don’t have a subscription:</p>
+    <ul>
+        <li>Pick plan (radio buttons?)</li>
+        <li>Enter credit card</li>
+    </ul>
+    {% endif %}
 </div>
 {% endblock %}

@@ -88,6 +88,7 @@ class UserAdmin(BaseUserAdmin):
         'first_name',
         'last_name',
         'date_joined',
+        'is_staff',
     )
     ordering = ('-date_joined',)
 
