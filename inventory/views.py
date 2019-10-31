@@ -127,10 +127,18 @@ def user_settings(request):
         user_form = UserForm(instance=owner)
         profile_form = ProfileForm(instance=owner.profile)
 
+        try:
+            plan = djstripe.models.Subscription.objects.get(
+                customer__subscriber=owner
+            ).plan
+        except djstripe.models.Subscription.DoesNotExist:
+            plan = False
+
         context = {
             'owner': owner,
             'user_form': user_form,
             'profile_form': profile_form,
+            'plan': plan,
         }
 
         return render(request, 'inventory/settings.html', context)
@@ -158,8 +166,15 @@ class PurchaseSubscriptionView(FormView):
                 '(or use the dj-stripe webhooks)'
             )
 
-        ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
+        try:
+            plan = djstripe.models.Subscription.objects.get(
+                customer__subscriber=self.request.user
+            ).plan
+        except djstripe.models.Subscription.DoesNotExist:
+            plan = False
+        ctx['plan'] = plan
         ctx['owner'] = self.request.user
+        ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
 
         return ctx
 

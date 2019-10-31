@@ -22,6 +22,10 @@
     {% if user.is_staff %}
     <hr />
 
+    {% if plan and user.profile.has_active_subscription %}
+    <p>You’re subscribed to the <b>{{ plan }}</b> plan.</p>
+    {% endif %}
+
     <h2>Manage your subscription</h2>
 
     <p>If you have a subscription:</p>

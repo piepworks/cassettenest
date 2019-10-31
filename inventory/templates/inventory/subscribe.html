@@ -9,6 +9,11 @@
 
     {% if owner.profile.has_active_subscription %}
     <p>You’re already subscribed!</p>
+    {% if plan %}
+    <p>Subscription/Plan: <b>{{ plan }}</b></p>
+    {% else %}
+    <p>You are a power user that doesn’t need a plan!</p>
+    {% endif %}
     {% else %}
     <form method="post" id="payment-form">
         {% csrf_token %}
