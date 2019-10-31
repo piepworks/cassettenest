@@ -4,8 +4,10 @@ from django.urls import reverse
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.functional import cached_property
 from .utils import *
 import datetime
+from djstripe.utils import subscriber_has_active_subscription
 
 
 class Profile(models.Model):
@@ -19,6 +21,11 @@ class Profile(models.Model):
 
     def __str__(self):
         return 'Settings for %s' % self.user
+
+    @cached_property
+    def has_active_subscription(self):
+        '''Checks if a user has an active subscription.'''
+        return subscriber_has_active_subscription(self.user)
 
 
 @receiver(post_save, sender=User)

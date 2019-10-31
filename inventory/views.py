@@ -128,8 +128,9 @@ def user_settings(request):
         profile_form = ProfileForm(instance=owner.profile)
 
         context = {
+            'owner': owner,
             'user_form': user_form,
-            'profile_form': profile_form
+            'profile_form': profile_form,
         }
 
         return render(request, 'inventory/settings.html', context)
@@ -158,6 +159,7 @@ class PurchaseSubscriptionView(FormView):
             )
 
         ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
+        ctx['owner'] = self.request.user
 
         return ctx
 
