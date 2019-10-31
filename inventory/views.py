@@ -19,6 +19,7 @@ from .utils import *
 import datetime
 import stripe
 import djstripe.models
+from djstripe.decorators import subscription_payment_required
 
 
 def index(request):
@@ -209,6 +210,18 @@ class PurchaseSubscriptionSuccessView(DetailView):
     slug_field = 'id'
     slug_url_kwarg = 'id'
     context_object_name = 'subscription'
+
+
+@login_required
+@subscription_payment_required
+def restricted(request):
+    '''
+    An example page that you must have a subscription to view.
+    '''
+
+    context = {}
+
+    return render(request, 'inventory/restricted.html', context)
 
 
 def register(request):

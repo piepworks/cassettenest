@@ -80,6 +80,7 @@ urlpatterns = [
         views.PurchaseSubscriptionSuccessView.as_view(),
         name='subscription-success',
     ),
+    path('restricted/', views.restricted, name='restricted'),
 
     # Stripe Webhooks
     path('stripe/', include('djstripe.urls', namespace='djstripe')),
