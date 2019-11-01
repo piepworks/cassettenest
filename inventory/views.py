@@ -128,17 +128,25 @@ def user_settings(request):
         profile_form = ProfileForm(instance=owner.profile)
 
         try:
-            plan = djstripe.models.Subscription.objects.get(
+            subscription = djstripe.models.Subscription.objects.get(
                 customer__subscriber=owner
-            ).plan
+            )
         except djstripe.models.Subscription.DoesNotExist:
-            plan = False
+            subscription = False
+
+        try:
+            payment_method = djstripe.models.Source.objects.get(
+                customer__subscriber=owner
+            ).source_data
+        except djstripe.models.Source.DoesNotExist:
+            payment_method = False
 
         context = {
             'owner': owner,
             'user_form': user_form,
             'profile_form': profile_form,
-            'plan': plan,
+            'subscription': subscription,
+            'payment_method': payment_method,
         }
 
         return render(request, 'inventory/settings.html', context)
@@ -167,12 +175,21 @@ class PurchaseSubscriptionView(FormView):
             )
 
         try:
-            plan = djstripe.models.Subscription.objects.get(
+            subscription = djstripe.models.Subscription.objects.get(
                 customer__subscriber=self.request.user
-            ).plan
+            )
         except djstripe.models.Subscription.DoesNotExist:
             plan = False
-        ctx['plan'] = plan
+
+        try:
+            payment_method = djstripe.models.Source.objects.get(
+                customer__subscriber=self.request.user
+            ).source_data
+        except djstripe.models.Source.DoesNotExist:
+            payment_method = False
+
+        ctx['subscription'] = subscription
+        ctx['payment_method'] = payment_method
         ctx['owner'] = self.request.user
         ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
 

@@ -22,8 +22,10 @@
     {% if user.is_staff %}
     <hr />
 
-    {% if plan and user.profile.has_active_subscription %}
-    <p>You’re subscribed to the <b>{{ plan }}</b> plan.</p>
+    {% if subscription and user.profile.has_active_subscription %}
+    <p>You’re subscribed to the <b>{{ subscription.plan }}</b> plan.</p>
+    <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
+    <p>Your current payment source is a <b>{{ payment_method.brand }}</b> ending in <b>{{ payment_method.last4 }}</b>.</p>
     {% endif %}
 
     <h2>Manage your subscription</h2>
