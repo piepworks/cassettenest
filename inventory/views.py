@@ -135,10 +135,13 @@ def user_settings(request):
             subscription = False
 
         try:
+            source_id = djstripe.models.Customer.objects.get(
+                subscriber=owner
+            ).default_source.id
             payment_method = djstripe.models.Source.objects.get(
-                customer__subscriber=owner
+                id=source_id
             ).source_data
-        except djstripe.models.Source.DoesNotExist:
+        except djstripe.models.Customer.DoesNotExist:
             payment_method = False
 
         context = {
@@ -182,10 +185,13 @@ class PurchaseSubscriptionView(FormView):
             plan = False
 
         try:
+            source_id = djstripe.models.Customer.objects.get(
+                subscriber=self.request.user
+            ).default_source.id
             payment_method = djstripe.models.Source.objects.get(
-                customer__subscriber=self.request.user
+                id=source_id
             ).source_data
-        except djstripe.models.Source.DoesNotExist:
+        except djstripe.models.Customer.DoesNotExist:
             payment_method = False
 
         ctx['subscription'] = subscription
