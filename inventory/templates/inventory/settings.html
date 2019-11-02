@@ -22,18 +22,30 @@
     {% if user.is_staff %}
     <hr />
 
+    <h2>Manage your subscription</h2>
+
     {% if subscription and user.profile.has_active_subscription %}
-    <p>You’re subscribed to the <b>{{ subscription.plan }}</b> plan.</p>
-    <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
-    <p>Your current payment source is a <b>{{ payment_method.brand }}</b> ending in <b>{{ payment_method.last4 }}</b>.</p>
+        <p>You’re subscribed to the <b>{{ subscription.plan }}</b> plan.</p>
+        {% if subscription.cancel_at_period_end %}
+            <p><i>You requested that your subscription be canceled.</i></p>
+            <p>Your subscription is scheduled to end on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
+        {% else %}
+            <p>Your current payment source is a <b>{{ payment_method.brand }}</b> ending in <b>{{ payment_method.last4 }}</b>.</p>
+            <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
+            <form method="post" onsubmit="return confirm('Are you sure?')" action="{% url 'subscription-cancel' %}">
+                {% csrf_token %}
+                <button>Cancel subscription</button>
+            </form>
+        {% endif %}
     {% endif %}
 
-    <h2>Manage your subscription</h2>
+    <hr />
+    <hr />
 
     <p>If you have a subscription:</p>
     <ul>
-        <li>Show current plan</li>
-        <li>Show last 4 of current card</li>
+        <li>☑️ Show current plan</li>
+        <li>☑️ Show last 4 of current card</li>
         <li>Link to update card</li>
     </ul>
 

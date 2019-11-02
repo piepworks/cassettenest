@@ -135,12 +135,13 @@ def user_settings(request):
             subscription = False
 
         try:
-            source_id = djstripe.models.Customer.objects.get(
-                subscriber=owner
-            ).default_source.id
-            payment_method = djstripe.models.Source.objects.get(
-                id=source_id
-            ).source_data
+            subscriber = djstripe.models.Customer.objects.get(subscriber=owner)
+            try:
+                payment_method = djstripe.models.Source.objects.get(
+                    id=subscriber.default_source.id
+                ).source_data
+            except AttributeError:
+                payment_method = False
         except djstripe.models.Customer.DoesNotExist:
             payment_method = False
 
@@ -182,15 +183,18 @@ class PurchaseSubscriptionView(FormView):
                 customer__subscriber=self.request.user
             )
         except djstripe.models.Subscription.DoesNotExist:
-            plan = False
+            subscription = False
 
         try:
-            source_id = djstripe.models.Customer.objects.get(
+            subscriber = djstripe.models.Customer.objects.get(
                 subscriber=self.request.user
-            ).default_source.id
-            payment_method = djstripe.models.Source.objects.get(
-                id=source_id
-            ).source_data
+            )
+            try:
+                payment_method = djstripe.models.Source.objects.get(
+                    id=subscriber.default_source.id
+                ).source_data
+            except AttributeError:
+                payment_method = False
         except djstripe.models.Customer.DoesNotExist:
             payment_method = False
 
@@ -250,6 +254,27 @@ class PurchaseSubscriptionSuccessView(DetailView):
     slug_field = 'id'
     slug_url_kwarg = 'id'
     context_object_name = 'subscription'
+
+
+@require_POST
+@login_required
+def subscription_cancel(request):
+    owner = request.user
+
+    try:
+        # TODO: Find out if a user can have more than one subscription
+        # Answer: Definitely, but maybe we can prevent it by using the
+        # subscription.update method if we need to un-cancel a subscription.
+        # https://stackoverflow.com/a/28515799/96257
+        subscription = djstripe.models.Subscription.objects.get(
+            customer__subscriber=owner
+        )
+        subscription.cancel(at_period_end=True)
+    except djstripe.models.Subscription.DoesNotExist:
+        # TODO: Display an error
+        pass
+
+    return redirect('settings')
 
 
 @login_required

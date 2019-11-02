@@ -8,38 +8,51 @@
     <h1>Subscribe</h1>
 
     {% if owner.profile.has_active_subscription %}
-    <p>You’re already subscribed!</p>
-    {% if subscription %}
-    <p>You’re subscribed to the <b>{{ subscription.plan }}</b> plan.</p>
-    <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
-    <p>Your current payment source is a <b>{{ payment_method.brand }}</b> ending in <b>{{ payment_method.last4 }}</b>.</p>
-    {% else %}
-    <p>You are a power user that doesn’t need a plan!</p>
-    {% endif %}
-    {% else %}
-    <form method="post" id="payment-form">
-        {% csrf_token %}
-        <div class="form-row">
-        {{ form }}
-        </div>
+        <p>You’re already subscribed!</p>
+        {% if subscription and user.profile.has_active_subscription %}
+            <p>You’re subscribed to the <b>{{ subscription.plan }}</b> plan.</p>
+            {% if subscription.cancel_at_period_end %}
+                <p><i>You requested that your subscription be canceled.</i></p>
+                <p>Your subscription is scheduled to end on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
+            {% else %}
+                <p>Your current payment source is a <b>{{ payment_method.brand }}</b> ending in <b>{{ payment_method.last4 }}</b>.</p>
+                <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
+                <form method="post" onsubmit="return confirm('Are you sure?')" action="{% url 'subscription-cancel' %}">
+                    {% csrf_token %}
+                    <button>Cancel subscription</button>
+                </form>
+            {% endif %}
+        {% else %}
+        <p>You are a power user that doesn’t need a plan!</p>
+        {% endif %}
 
-        <div class="form-row">
-            <label for="card-element">Credit or debit card</label>
-            <div id="card-element">
-                <!-- A Stripe Element will be inserted here. -->
+    {% endif %}
+
+    {% if not owner.profile.has_active_subscription %}
+        <form method="post" id="payment-form">
+            {% csrf_token %}
+            <div class="form-row">
+            {{ form }}
             </div>
 
-            <!-- Used to display Element errors. -->
-            <div id="card-errors" role="alert"></div>
-        </div>
+            <div class="form-row">
+                <label for="card-element">Credit or debit card</label>
+                <div id="card-element">
+                    <!-- A Stripe Element will be inserted here. -->
+                </div>
 
-        <button>Submit payment</button>
-    </form>
+                <!-- Used to display Element errors. -->
+                <div id="card-errors" role="alert"></div>
+            </div>
+
+            <button>Submit payment</button>
+        </form>
     {% endif %}
 </div>
 {% endblock %}
 
 {% block page_js %}
+{% if not owner.profile.has_active_subscription %}
 <script>
     // Create a Stripe client.
     var stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
@@ -102,4 +115,5 @@
         form.submit();
     }
 </script>
+{% endif %}
 {% endblock %}
