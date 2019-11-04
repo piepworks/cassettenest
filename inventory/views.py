@@ -126,13 +126,16 @@ def user_settings(request):
     else:
         user_form = UserForm(instance=owner)
         profile_form = ProfileForm(instance=owner.profile)
+        subscription = False
 
         try:
-            subscription = djstripe.models.Subscription.objects.filter(
+            subscriptions = djstripe.models.Subscription.objects.filter(
                 customer__subscriber=owner
-            )[0]
+            )
+            if subscriptions:
+                subscription = subscriptions[0]
         except djstripe.models.Subscription.DoesNotExist:
-            subscription = False
+            pass
 
         try:
             subscriber = djstripe.models.Customer.objects.get(subscriber=owner)
@@ -178,12 +181,16 @@ class PurchaseSubscriptionView(FormView):
                 '(or use the dj-stripe webhooks)'
             )
 
+        subscription = False
+
         try:
-            subscription = djstripe.models.Subscription.objects.filter(
+            subscriptions = djstripe.models.Subscription.objects.filter(
                 customer__subscriber=self.request.user
-            )[0]
+            )
+            if subscriptions:
+                subscription = subscriptions[0]
         except djstripe.models.Subscription.DoesNotExist:
-            subscription = False
+            pass
 
         try:
             subscriber = djstripe.models.Customer.objects.get(
