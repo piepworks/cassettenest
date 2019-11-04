@@ -128,9 +128,9 @@ def user_settings(request):
         profile_form = ProfileForm(instance=owner.profile)
 
         try:
-            subscription = djstripe.models.Subscription.objects.get(
+            subscription = djstripe.models.Subscription.objects.filter(
                 customer__subscriber=owner
-            )
+            )[0]
         except djstripe.models.Subscription.DoesNotExist:
             subscription = False
 
@@ -179,9 +179,9 @@ class PurchaseSubscriptionView(FormView):
             )
 
         try:
-            subscription = djstripe.models.Subscription.objects.get(
+            subscription = djstripe.models.Subscription.objects.filter(
                 customer__subscriber=self.request.user
-            )
+            )[0]
         except djstripe.models.Subscription.DoesNotExist:
             subscription = False
 
