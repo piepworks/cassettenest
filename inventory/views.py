@@ -148,12 +148,20 @@ def user_settings(request):
         except djstripe.models.Customer.DoesNotExist:
             payment_method = False
 
+        try:
+            charges = djstripe.models.Invoice.objects.filter(
+                customer__subscriber=owner
+            )
+        except djstripe.models.Invoice.DoesNotExist:
+            charges = False
+
         context = {
             'owner': owner,
             'user_form': user_form,
             'profile_form': profile_form,
             'subscription': subscription,
             'payment_method': payment_method,
+            'charges': charges,
         }
 
         return render(request, 'inventory/settings.html', context)

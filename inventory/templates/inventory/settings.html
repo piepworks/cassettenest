@@ -39,6 +39,18 @@
         {% endif %}
     {% endif %}
 
+    {% if charges %}
+    <h3>Payment history</h3>
+    <ul>
+        {% for charge in charges %}
+            <li>
+                <b>{{ charge.charge }}</b> on
+                {{ charge.date|date:'F j, Y' }}
+            </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
     <hr />
     <hr />
 
