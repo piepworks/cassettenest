@@ -76,9 +76,14 @@ urlpatterns = [
     path('subscription-success/<id>',
          views.PurchaseSubscriptionSuccessView.as_view(),
          name='subscription-success'),
-    path('restricted/', views.restricted, name='restricted'),
+    path('subscribe/update_card',
+         views.subscription_update_card,
+         name='subscription-update-card'),
     path('subscribe/cancel/<id>',
          views.subscription_cancel, name='subscription-cancel'),
+
+    # Sample page that you can’t see without a subscription.
+    path('restricted/', views.restricted, name='restricted'),
 
     # Stripe Webhooks
     path('stripe/', include('djstripe.urls', namespace='djstripe')),

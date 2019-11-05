@@ -1,0 +1,62 @@
+<script>
+    // Create a Stripe client.
+    var stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
+
+    // Create an instance of Elements.
+    var elements = stripe.elements();
+
+    // Some basic styles to match the rest of the app.
+    var style = {
+        base: {
+            fontSize: '16px',
+        },
+        invalid: {
+            color: '#fc3434' // darken `$destructive` by 10%.
+        }
+    };
+
+    // Create an instance of the card Element.
+    var card = elements.create('card', {style: style});
+
+    // Add an instance of the card Element into `#card-element`.
+    card.mount('#card-element');
+
+    // Handle real-time validation errors from the card Element.
+    card.addEventListener('change', function(event) {
+        var displayError = document.getElementById('card-errors');
+        if (event.error) {
+            displayError.textContent = event.error.message;
+        } else {
+            displayError.textContent = '';
+        }
+    });
+
+    // Handle form submission.
+    var form = document.getElementById('payment-form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Note - slightly different from the Stripe JS Quickstart because
+        // we use stripe.createSource instead of createToken
+        stripe.createSource(card).then(function (result) {
+            if (result.error) {
+                // Inform the user if there was an error.
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+            } else {
+                // Send the token to the server.
+                stripeSourceHandler(result.source);
+            }
+        });
+    });
+
+    // Submit the form with the source ID.
+    function stripeSourceHandler(source) {
+        // Insert the source ID into the form so it gets submitted to the server
+        var form = document.getElementById('payment-form');
+        var hiddenInput = form.elements["stripe_source"];
+        hiddenInput.setAttribute('value', source.id);
+        // Submit the form
+        form.submit();
+    }
+</script>

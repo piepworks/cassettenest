@@ -126,6 +126,7 @@ def user_settings(request):
     else:
         user_form = UserForm(instance=owner)
         profile_form = ProfileForm(instance=owner.profile)
+        stripe_form = UpdateCardForm()
         subscription = False
 
         try:
@@ -159,9 +160,11 @@ def user_settings(request):
             'owner': owner,
             'user_form': user_form,
             'profile_form': profile_form,
+            'stripe_form': stripe_form,
             'subscription': subscription,
             'payment_method': payment_method,
             'charges': charges,
+            'STRIPE_PUBLIC_KEY': djstripe.settings.STRIPE_PUBLIC_KEY,
         }
 
         return render(request, 'inventory/settings.html', context)
@@ -269,6 +272,32 @@ class PurchaseSubscriptionSuccessView(DetailView):
     slug_field = 'id'
     slug_url_kwarg = 'id'
     context_object_name = 'subscription'
+
+
+@require_POST
+@login_required
+def subscription_update_card(request):
+    form = UpdateCardForm(request.POST)
+
+    if form.is_valid():
+        customer = djstripe.models.Customer.objects.get(
+            subscriber=request.user
+        )
+
+        # Delete all existing payment sources
+        sources = djstripe.models.Source.objects.filter(customer=customer)
+        for source in sources:
+            source.detach()
+
+        # Set a new default payment source
+        stripe_source = form.cleaned_data['stripe_source']
+        customer.add_card(stripe_source)
+
+        messages.error(request, 'Card updated!')
+    else:
+        messages.error(request, 'Something is not right.')
+
+    return redirect(reverse('settings'),)
 
 
 @require_POST

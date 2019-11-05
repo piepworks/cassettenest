@@ -9,23 +9,7 @@
 
     {% if owner.profile.has_active_subscription %}
         <p>You’re already subscribed!</p>
-        {% if subscription and user.profile.has_active_subscription %}
-            <p>You’re subscribed to the <b>{{ subscription.plan }}</b> plan.</p>
-            {% if subscription.cancel_at_period_end %}
-                <p><i>You requested that your subscription be canceled.</i></p>
-                <p>Your subscription is scheduled to end on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
-            {% else %}
-                <p>Your current payment source is a <b>{{ payment_method.brand }}</b> ending in <b>{{ payment_method.last4 }}</b>.</p>
-                <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
-                <form method="post" onsubmit="return confirm('Are you sure?')" action="{% url 'subscription-cancel' %}">
-                    {% csrf_token %}
-                    <button>Cancel subscription</button>
-                </form>
-            {% endif %}
-        {% else %}
-        <p>You are a power user that doesn’t need a plan!</p>
-        {% endif %}
-
+        <p>View <a href="{% url 'settings' %}">your settings</a> to make changes.</p>
     {% endif %}
 
     {% if not owner.profile.has_active_subscription %}
@@ -35,15 +19,7 @@
             {{ form }}
             </div>
 
-            <div class="form-row">
-                <label for="card-element">Credit or debit card</label>
-                <div id="card-element">
-                    <!-- A Stripe Element will be inserted here. -->
-                </div>
-
-                <!-- Used to display Element errors. -->
-                <div id="card-errors" role="alert"></div>
-            </div>
+            {% include 'inventory/_stripe-card-field.html' %}
 
             <button>Submit payment</button>
         </form>
@@ -53,67 +29,6 @@
 
 {% block page_js %}
 {% if not owner.profile.has_active_subscription %}
-<script>
-    // Create a Stripe client.
-    var stripe = Stripe('{{ STRIPE_PUBLIC_KEY }}');
-
-    // Create an instance of Elements.
-    var elements = stripe.elements();
-
-    // Some basic styles to match the rest of the app.
-    var style = {
-        base: {
-            fontSize: '16px',
-        },
-        invalid: {
-            color: '#fc3434' // darken `$destructive` by 10%.
-        }
-    };
-
-    // Create an instance of the card Element.
-    var card = elements.create('card', {style: style});
-
-    // Add an instance of the card Element into `#card-element`.
-    card.mount('#card-element');
-
-    // Handle real-time validation errors from the card Element.
-    card.addEventListener('change', function(event) {
-        var displayError = document.getElementById('card-errors');
-        if (event.error) {
-            displayError.textContent = event.error.message;
-        } else {
-            displayError.textContent = '';
-        }
-    });
-
-    // Handle form submission.
-    var form = document.getElementById('payment-form');
-    form.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        // Note - slightly different from the Stripe JS Quickstart because
-        // we use stripe.createSource instead of createToken
-        stripe.createSource(card).then(function (result) {
-            if (result.error) {
-                // Inform the user if there was an error.
-                var errorElement = document.getElementById('card-errors');
-                errorElement.textContent = result.error.message;
-            } else {
-                // Send the token to the server.
-                stripeSourceHandler(result.source);
-            }
-        });
-    });
-
-    // Submit the form with the source ID.
-    function stripeSourceHandler(source) {
-        // Insert the source ID into the form so it gets submitted to the server
-        var form = document.getElementById('payment-form');
-        var hiddenInput = form.elements["stripe_source"];
-        hiddenInput.setAttribute('value', source.id);
-        // Submit the form
-        form.submit();
-    }
-</script>
+    {% include 'inventory/_stripe-javascript.html' %}
 {% endif %}
 {% endblock %}

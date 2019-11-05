@@ -139,3 +139,9 @@ class PurchaseSubscriptionForm(forms.Form):
     stripe_source = forms.CharField(
         max_length="255", widget=forms.HiddenInput(), required=False
     )
+
+
+class UpdateCardForm(forms.Form):
+    stripe_source = forms.CharField(
+        max_length="255", widget=forms.HiddenInput(), required=False
+    )

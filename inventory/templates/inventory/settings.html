@@ -30,16 +30,34 @@
             <p><i>You requested that your subscription be canceled.</i></p>
             <p>Your subscription is scheduled to end on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
         {% else %}
-            <p>Your current payment source is a <b>{{ payment_method.brand }}</b> ending in <b>{{ payment_method.last4 }}</b>.</p>
             <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
             <form method="post" onsubmit="return confirm('Are you sure?')" action="{% url 'subscription-cancel' subscription.id %}">
                 {% csrf_token %}
                 <button>Cancel subscription</button>
             </form>
+
+            <hr />
+
+            <p>Your current payment method:
+            <ul>
+                <li>{{ payment_method.brand }}</li>
+                <li>Last four digits: <b>{{ payment_method.last4 }}</b></li>
+                <li>Expiring: <b>{{ payment_method.exp_month }}/{{ payment_method.exp_year }}</b></li>
+            </ul>
+
+            <form method="post" action="{% url 'subscription-update-card' %}" id="payment-form">
+                {% csrf_token %}
+                {{ stripe_form }}
+                {% include 'inventory/_stripe-card-field.html' %}
+                <button>Update card</button>
+            </form>
         {% endif %}
+
     {% endif %}
 
     {% if charges %}
+    <hr />
+
     <h3>Recent payment history</h3>
     <ul>
     {% for charge in charges %}
@@ -68,14 +86,25 @@
     <ul>
         <li>☑️ Show current plan</li>
         <li>☑️ Show last 4 of current card</li>
-        <li>Link to update card</li>
+        <li>☑️ Ability to update card</li>
     </ul>
 
     <p>If you don’t have a subscription:</p>
     <ul>
-        <li>Pick plan (radio buttons?)</li>
-        <li>Enter credit card</li>
+        <li>
+            Link to subscribe page
+            <ul>
+                <li>Pick plan (radio buttons?)</li>
+                <li>Enter credit card</li>
+            </ul>
+        </li>
     </ul>
     {% endif %}
 </div>
+{% endblock %}
+
+{% block page_js %}
+{% if subscription %}
+    {% include 'inventory/_stripe-javascript.html' %}
+{% endif %}
 {% endblock %}
