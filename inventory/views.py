@@ -149,10 +149,10 @@ def user_settings(request):
             payment_method = False
 
         try:
-            charges = djstripe.models.Invoice.objects.filter(
+            charges = djstripe.models.Charge.objects.filter(
                 customer__subscriber=owner
-            )
-        except djstripe.models.Invoice.DoesNotExist:
+            )[:5]
+        except djstripe.models.Charge.DoesNotExist:
             charges = False
 
         context = {

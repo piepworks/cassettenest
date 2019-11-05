@@ -40,14 +40,24 @@
     {% endif %}
 
     {% if charges %}
-    <h3>Payment history</h3>
+    <h3>Recent payment history</h3>
     <ul>
-        {% for charge in charges %}
-            <li>
-                <b>{{ charge.charge }}</b> on
-                {{ charge.date|date:'F j, Y' }}
-            </li>
-        {% endfor %}
+    {% for charge in charges %}
+        <li>
+            <b>{{ charge.amount }} {{ charge.currency|upper }}</b> on
+            {% if charge.receipt_url %}
+                <a href="{{ charge.receipt_url }}">{{ charge.created|date:'F j, Y' }}</a>
+            {% else %}
+                {{ charge.created|date:'F j, Y' }}
+            {% endif %}
+            {% if charge.status == 'succeeded' %}
+                {# thumbs up #}
+                &#128077;
+            {% else %}
+                ({{ charge.status }})
+            {% endif %}
+        </li>
+    {% endfor %}
     </ul>
     {% endif %}
 
