@@ -19,7 +19,7 @@
     </form>
     <p><a href="{% url 'password_change' %}">Change your password</a></p>
 
-    {% if user.is_staff %}
+{% if user.is_staff %}
     <hr />
 
     <h2>Manage your subscription</h2>
@@ -38,7 +38,7 @@
 
             <hr />
 
-            <p>Your current payment method:
+            <h3>Current payment method</h3>
             <ul>
                 <li>{{ payment_method.brand }}</li>
                 <li>Last four digits: <b>{{ payment_method.last4 }}</b></li>
@@ -52,54 +52,38 @@
                 <button>Update card</button>
             </form>
         {% endif %}
-
+    {% else %}
+        {% if user.profile.has_active_subscription %}
+            <p>You’re good to go. You have a special account and you don’t need to subscribe!</p>
+        {% else %}
+            <p>You don’t have a subscription yet. <a href="{% url 'subscribe' %}">Please subscribe now!</a></p>
+        {% endif %}
     {% endif %}
 
     {% if charges %}
-    <hr />
+        <hr />
 
-    <h3>Recent payment history</h3>
-    <ul>
-    {% for charge in charges %}
-        <li>
-            <b>{{ charge.amount }} {{ charge.currency|upper }}</b> on
-            {% if charge.receipt_url %}
-                <a href="{{ charge.receipt_url }}">{{ charge.created|date:'F j, Y' }}</a>
-            {% else %}
-                {{ charge.created|date:'F j, Y' }}
-            {% endif %}
-            {% if charge.status == 'succeeded' %}
-                {# thumbs up #}
-                &#128077;
-            {% else %}
-                ({{ charge.status }})
-            {% endif %}
-        </li>
-    {% endfor %}
-    </ul>
+        <h3>Recent payment history</h3>
+        <ul>
+        {% for charge in charges %}
+            <li>
+                <b>{{ charge.amount }} {{ charge.currency|upper }}</b> on
+                {% if charge.receipt_url %}
+                    <a href="{{ charge.receipt_url }}">{{ charge.created|date:'F j, Y' }}</a>
+                {% else %}
+                    {{ charge.created|date:'F j, Y' }}
+                {% endif %}
+                {% if charge.status == 'succeeded' %}
+                    {# thumbs up #}
+                    &#128077;
+                {% else %}
+                    ({{ charge.status }})
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
     {% endif %}
-
-    <hr />
-    <hr />
-
-    <p>If you have a subscription:</p>
-    <ul>
-        <li>☑️ Show current plan</li>
-        <li>☑️ Show last 4 of current card</li>
-        <li>☑️ Ability to update card</li>
-    </ul>
-
-    <p>If you don’t have a subscription:</p>
-    <ul>
-        <li>
-            Link to subscribe page
-            <ul>
-                <li>Pick plan (radio buttons?)</li>
-                <li>Enter credit card</li>
-            </ul>
-        </li>
-    </ul>
-    {% endif %}
+{% endif %}
 </div>
 {% endblock %}
 
