@@ -32,7 +32,7 @@
         {% else %}
             <p>Your current payment source is a <b>{{ payment_method.brand }}</b> ending in <b>{{ payment_method.last4 }}</b>.</p>
             <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
-            <form method="post" onsubmit="return confirm('Are you sure?')" action="{% url 'subscription-cancel' %}">
+            <form method="post" onsubmit="return confirm('Are you sure?')" action="{% url 'subscription-cancel' subscription.id %}">
                 {% csrf_token %}
                 <button>Cancel subscription</button>
             </form>

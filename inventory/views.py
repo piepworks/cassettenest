@@ -273,16 +273,13 @@ class PurchaseSubscriptionSuccessView(DetailView):
 
 @require_POST
 @login_required
-def subscription_cancel(request):
+def subscription_cancel(request, id):
     owner = request.user
 
     try:
-        # TODO: Find out if a user can have more than one subscription
-        # Answer: Definitely, but maybe we can prevent it by using the
-        # subscription.update method if we need to un-cancel a subscription.
-        # https://stackoverflow.com/a/28515799/96257
         subscription = djstripe.models.Subscription.objects.get(
-            customer__subscriber=owner
+            customer__subscriber=owner,
+            id=id
         )
         subscription.cancel(at_period_end=True)
     except djstripe.models.Subscription.DoesNotExist:

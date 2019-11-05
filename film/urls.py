@@ -77,7 +77,7 @@ urlpatterns = [
          views.PurchaseSubscriptionSuccessView.as_view(),
          name='subscription-success'),
     path('restricted/', views.restricted, name='restricted'),
-    path('subscribe/cancel/',
+    path('subscribe/cancel/<id>',
          views.subscription_cancel, name='subscription-cancel'),
 
     # Stripe Webhooks
