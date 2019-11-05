@@ -12,7 +12,6 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse, resolve
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.conf import settings
 from .models import *
 from .forms import *
 from .utils import *
@@ -103,7 +102,7 @@ def patterns(request):
 
 
 @login_required
-def user_settings(request):
+def settings(request):
     owner = request.user
 
     if request.method == 'POST':
@@ -157,7 +156,6 @@ def user_settings(request):
             charges = False
 
         context = {
-            'owner': owner,
             'user_form': user_form,
             'profile_form': profile_form,
             'stripe_form': stripe_form,

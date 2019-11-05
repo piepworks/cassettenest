@@ -13,7 +13,9 @@
     {% compress css %}
     <link rel="stylesheet" type="text/x-scss" href="{% static 'inventory/scss/main.scss' %}" />
     {% endcompress %}
+    {% if user.is_staff %}
     <script src="https://js.stripe.com/v3/"></script>
+    {% endif %}
     <script src="{% static 'inventory/js/vendor/jquery.min.js' %}"></script>
 </head>
 

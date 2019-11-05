@@ -21,7 +21,7 @@ urlpatterns = [
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    path('settings/', views.user_settings, name='settings'),
+    path('settings/', views.settings, name='settings'),
 
     # Rolls
     path('rolls/add/', views.rolls_add, name='rolls-add'),
