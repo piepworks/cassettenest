@@ -151,7 +151,7 @@ def user_settings(request):
         try:
             charges = djstripe.models.Charge.objects.filter(
                 customer__subscriber=owner
-            )[:5]
+            ).order_by('-created')[:5]
         except djstripe.models.Charge.DoesNotExist:
             charges = False
 
