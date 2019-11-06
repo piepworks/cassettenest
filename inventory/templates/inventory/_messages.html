@@ -1,5 +1,5 @@
 {% if messages %}
-<ul class="messages">
+<ul class="messages do-not-print">
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
         {% if 'safe' in message.tags %}
@@ -12,7 +12,7 @@
 </ul>
 {% endif %}
 {% if form.errors %}
-<ul class="messages errors">
+<ul class="messages errors do-not-print">
     {% if form.non_field_errors %}
         {{ form.non_field_errors }}
     {% else %}

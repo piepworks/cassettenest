@@ -105,7 +105,8 @@
             <tr>
                 <td>
                     <a href="{% url 'roll-journal-detail' roll.id entry.id %}" title="{{ entry.date|date:'l, F j, Y' }}">
-                        {{ entry.date|date:'M j' }}
+                        <span class="do-not-print">{{ entry.date|date:'M j' }}</span>
+                        <span class="print-only">{{ entry.date|date:'M j, Y' }}</span>
                     </a>
                 </td>
                 <td>
