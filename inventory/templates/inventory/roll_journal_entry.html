@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="raw">
-    <h1>Journal entry for <span><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</span> / {{ roll.started_on|date:'Y' }}</a></h1>
+    <h1>Journal entry for <a href="{% url 'roll-detail' roll.id %}">{{ roll.code }} / {{ roll.started_on|date:'Y' }}</a></h1>
 
     {% block entry %}{% endblock %}
 </div>
