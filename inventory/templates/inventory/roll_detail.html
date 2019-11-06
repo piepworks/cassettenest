@@ -9,8 +9,7 @@
 <div class="raw">
 <h1>{{ roll }}</h1>
 {% if roll.status != '01_storage' %}
-<h2>{% include 'inventory/_film-name-display.html' with film=roll.film %}</h2>
-
+<h2>{{ roll.film.manufacturer }} <a href="{% url 'film-rolls' roll.film.slug %}">{{ roll.film.name }} in {{ roll.film.get_format_display }}</a> </h2>
 {% endif %}
 
 <div class="do-not-print">

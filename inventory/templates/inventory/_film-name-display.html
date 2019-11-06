@@ -5,8 +5,7 @@
 {% endif %}
 
 {% if film.url %}
-    <a href="{{ film.url }}">{{ film.name }}</a>
+    <a href="{{ film.url }}">{{ film.name }} in {{ film.get_format_display }}</a>
 {% else %}
-    {{ film.name }}
+    {{ film.name }} in {{ film.get_format_display }}
 {% endif %}
-    in {{ film.get_format_display }}
