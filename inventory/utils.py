@@ -1,3 +1,8 @@
+import os
+import markdown2
+from django.conf import settings
+
+
 def iso_variables(request):
     range = None
     value = None
@@ -119,3 +124,12 @@ def pluralize(noun, count):
     if count != 1:
         return noun + 's'
     return noun
+
+
+def render_markdown(file):
+    file_path = os.path.join(
+        settings.BASE_DIR,
+        'inventory/templates/',
+        file
+    )
+    return markdown2.markdown_path(file_path)

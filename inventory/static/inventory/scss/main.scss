@@ -25,6 +25,7 @@ body {
     &.journal-entry { @import './partials/journal-entry'; }
     &.dashboard { @import './partials/dashboard'; }
     &.landing { @import './partials/landing'; }
+    &.purpose { @import './partials/purpose'; }
 
     > .messages { @import './partials/messages'; }
 

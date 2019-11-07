@@ -14,7 +14,8 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 
     # Static pages
-    path('patterns/', views.patterns, name='patterns'),
+    path('purpose', views.purpose, name='purpose'),
+    path('patterns', views.patterns, name='patterns'),
 
     # Top-Level
     path('', views.index, name='index'),

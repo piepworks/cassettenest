@@ -65,6 +65,14 @@ def index(request):
         return render(request, 'inventory/landing.html', context)
 
 
+def purpose(request):
+    markdown = render_markdown('purpose.md')
+    context = {
+        'markdown': markdown,
+    }
+    return render(request, 'purpose.html', context)
+
+
 def patterns(request):
     roll1 = {
         'film': {
