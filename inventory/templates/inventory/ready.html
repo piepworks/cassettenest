@@ -4,8 +4,8 @@
 {% block bodytag %}class="ready"{% endblock %}
 
 {% block content %}
-{% if rolls %}
 <div class="raw">
+{% if rolls %}
 <h2>You have {{ rolls.count }} roll{{ rolls.count|pluralize }} ready to process.</h2>
 
 <div class="overflow-x">
