@@ -1,63 +1,107 @@
 {% extends 'base_site.html' %}
 {% block title %}Pattern Library{% endblock %}
+{% block bodytag %}class="patterns"{% endblock %}
+
 {% block content %}
 <div class="raw">
     <h1>Pattern Library</h1>
 
-    <h2>Form Fields</h2>
-    {% for field in form %}
+    <section class="pattern">
+        <h2>Form Fields</h2>
+        {% for field in form %}
         {% include 'inventory/_form-field.html' with field=field %}
-    {% endfor %}
+        {% endfor %}
 
-    <div class="c-field">
-        <fieldset>
-            <legend>Fieldset & Legend</legend>
-            {{ form.choice }}
-            {{ form.number }}
-        </fieldset>
-    </div>
+        <div class="c-field">
+            <fieldset>
+                <legend>Fieldset & Legend</legend>
+                {{ form.choice }}
+                {{ form.number }}
+            </fieldset>
+        </div>
+    </section>
 
-    <h2>Buttons</h2>
-    <div><button>Button Tag</button></div>
-    <hr />
-    <div><input type="submit" value="Input Button"></div>
-    <hr />
-    <div>
-        <button>Primary (default)</button>
-        <button class="secondary">Secondary</button>
-        <button class="destructive" title="DANGER!">Destructive</button>
-    </div>
-    <hr />
-    <div>
-        <button class="icon icon-destructive">
-            {% include 'inventory/_github-icon.html' with id='x' %}
-        </button>
-        <button class="icon icon-edit">
-            {% include 'inventory/_github-icon.html' with id='pencil' %}
-        </button>
-    </div>
+    <section class="pattern space">
+        <h2>Buttons</h2>
 
-    <h2>Icons</h2>
+        <div><button>Button Tag</button></div>
+        <div><input type="submit" value="Input Button"></div>
+        <div>
+            <button>Primary (default)</button>
+            <button class="secondary">Secondary</button>
+            <button class="destructive" title="DANGER!">Destructive</button>
+        </div>
+    </section>
 
-    <div title="x" class="icon">{% include 'inventory/_github-icon.html' with id='x' %}</div>
-    <div title="pencil" class="icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</div>
-    <div title="check" class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</div>
-    <div title="dot" class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</div>
+    <section class="pattern">
+        <h2>Icons</h2>
+        <div title="x" class="icon">{% include 'inventory/_github-icon.html' with id='x' %}</div>
+        <div title="pencil" class="icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</div>
+        <div title="check" class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</div>
+        <div title="dot" class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</div>
 
-    <h2>Cards</h2>
-    {% include 'inventory/_card.html' with name='Plain card' %}
-    {% include 'inventory/_card.html' with name='Plain card with count' slot='count' %}
-    <hr />
-    {% include 'inventory/_card.html' with name='Film count: E6' slot='count' count=50 type='film' film_type='e6' %}
-    {% include 'inventory/_card.html' with name='Film count: C41' slot='count' count=25 type='film' film_type='c41' %}
-    {% include 'inventory/_card.html' with name='Film count: B&W' slot='count' count=12 type='film' film_type='bw' %}
-    <hr />
-    {% include 'inventory/_card.html' with name='Camera card with empty reminder' slot='reminder' %}
-    {% include 'inventory/_card.html' with name='Camera card with E6 film reminder' slot='reminder' roll=roll1 %}
-    {% include 'inventory/_card.html' with name='Camera card with pushed C41 film reminder' slot='reminder' roll=roll2 %}
-    {% include 'inventory/_card.html' with name='Camera card with pulled B&W film reminder' slot='reminder' roll=roll3 %}
+        <h3>Icon Buttons</h3>
+        <div>
+            <button class="icon icon-destructive">
+                {% include 'inventory/_github-icon.html' with id='x' %}
+            </button>
+            <button class="icon icon-edit">
+                {% include 'inventory/_github-icon.html' with id='pencil' %}
+            </button>
+        </div>
 
-    <h2>Tables</h2>
-    <p>&hellip;</p>
+        <h3>Icon Links</h3>
+        <div>
+            <a href="#" class="button icon icon-destructive">
+                {% include 'inventory/_github-icon.html' with id='x' %}
+            </a>
+            <a href="#" class="button icon">
+                {% include 'inventory/_github-icon.html' with id='pencil' %}
+            </a>
+        </div>
+    </section>
+
+    <section class="pattern space">
+        <h2>Cards</h2>
+        <div>
+            {% include 'inventory/_card.html' with name='Plain card' %}
+            {% include 'inventory/_card.html' with name='Plain card with count' slot='count' %}
+        </div>
+        <div>
+            {% include 'inventory/_card.html' with name='Film count: E6' slot='count' count=50 type='film' film_type='e6' %}
+            {% include 'inventory/_card.html' with name='Film count: C41' slot='count' count=25 type='film' film_type='c41' %}
+            {% include 'inventory/_card.html' with name='Film count: B&W' slot='count' count=12 type='film' film_type='bw' %}
+        </div>
+        <div>
+            {% include 'inventory/_card.html' with name='Camera card with empty reminder' slot='reminder' %}
+            {% include 'inventory/_card.html' with name='Camera card with E6 film reminder' slot='reminder' roll=roll1 %}
+            {% include 'inventory/_card.html' with name='Camera card with pushed C41 film reminder' slot='reminder' roll=roll2 %}
+            {% include 'inventory/_card.html' with name='Camera card with pulled B&W film reminder' slot='reminder' roll=roll3 %}
+        </div>
+    </section>
+
+    <section class="pattern">
+        <h2>Headings</h2>
+
+        <h3>Homepage</h3>
+        <h2 class="c-heading c-heading--home">Loaded Cameras</h2>
+
+        <h3>Page Detail</h3>
+        <h1 class="c-heading">35-bw-11</h1>
+
+        <h3>Page Detail with buttons</h3>
+        <header class="c-heading">
+            <h1>35-bw-11</h1>
+            <div class="action">
+                <a href="#" class="button icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</a>
+                <a href="#" class="button icon icon-destructive">{% include 'inventory/_github-icon.html' with id='x' %}</a>
+            </div>
+        </header>
+    </section>
+
+    <section class="pattern">
+        <h2>Tables</h2>
+        <p>&hellip;</p>
+    </section>
 </div>
 {% endblock %}

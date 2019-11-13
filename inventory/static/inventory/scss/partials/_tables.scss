@@ -7,12 +7,12 @@ table {
     td {
         padding: 5px 20px 5px 0;
         white-space: nowrap;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid $light;
 
         &.wrap { white-space: normal; }
     }
 
-    thead th { border-bottom: 1px solid #000; }
+    thead th { border-bottom: 1px solid $dark; }
 
     tbody tr:last-child {
         th,
@@ -30,16 +30,16 @@ table {
 
         th:last-child,
         td:last-child {
-            border-left: 1px solid #000;
+            border-left: 1px solid $dark;
             padding-left: 10px;
         }
 
         .totals {
             th,
-            td { border-top: 1px solid #000; }
+            td { border-top: 1px solid $dark; }
         }
 
-        .push-pull td { color: #999; }
+        .push-pull td { color: $medium-dark; }
     }
 }
 

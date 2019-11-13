@@ -1,8 +1,8 @@
 @import './vendor/normalize';
 @import './modules/reset';
+@import './modules/colors';
 @import './modules/utils';
 // @import './modules/breakpoint-display';
-@import './modules/colors';
 @import './partials/nav';
 @import './partials/heading';
 @import './partials/card';
@@ -14,8 +14,6 @@
 @import './partials/tables';
 @import './partials/elements';
 
-html { font-size: 16px; }
-
 body {
     font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
@@ -26,6 +24,7 @@ body {
     &.dashboard { @import './partials/dashboard'; }
     &.landing { @import './partials/landing'; }
     &.purpose { @import './partials/purpose'; }
+    &.patterns { @import './partials/patterns'; }
 
     > .messages { @import './partials/messages'; }
 
