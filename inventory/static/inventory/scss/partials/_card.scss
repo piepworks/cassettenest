@@ -21,7 +21,7 @@
     }
 
     &--default {
-        @include gradient(#eee);
+        @include gradient($light);
 
         a {
             color: #000;

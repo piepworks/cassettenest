@@ -1,9 +1,23 @@
 .c-heading {
-    margin: 0;
-    margin-bottom: 1px;
-    font-size: 1rem;
-    padding: 0.8rem 1.25rem;
-    color: #eee;
-    font-weight: normal;
-    background-color: $dark;
+    display: flex;
+    align-items: center;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 { margin: 0; }
+
+    &--home {
+        margin: 0;
+        margin-bottom: 1px;
+        font-size: 1rem;
+        padding: 0.8rem 1.25rem;
+        color: $light;
+        font-weight: normal;
+        background-color: $dark;
+    }
+
+    .action { margin-left: 1.5rem; }
 }

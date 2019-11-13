@@ -29,7 +29,7 @@ $breakpoints: (
 $divider-width: 0.2rem;
 
 @mixin divider {
-    border-color: #eee;
+    border-color: $light;
     // Define where you want the border to show up after including the mixin.
     border-width: 0;
 }
@@ -55,7 +55,7 @@ $divider-width: 0.2rem;
 
     // Let the slightly more sophisticated Card and Heading styles break out of
     // the .raw padding.
-    .c-heading,
+    .c-heading--home,
     .c-card {
         margin-left: -$raw-padding;
         margin-right: -$raw-padding;
@@ -64,7 +64,7 @@ $divider-width: 0.2rem;
 
 // TODO: Make this better and more flexible.
 .toggle {
-    background: #eee;
+    background: $light;
     padding: 0 1rem 2rem;
 
     p {
