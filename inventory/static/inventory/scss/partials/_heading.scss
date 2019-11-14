@@ -10,6 +10,16 @@
     h5,
     h6 { margin: 0; }
 
+    small {
+        color: $dark;
+        font-size: 0.75rem;
+        margin-left: 0.5rem;
+        background: $light;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+        border: 1px solid $medium;
+    }
+
     &--home {
         margin: 0;
         margin-bottom: 1px;
@@ -30,6 +40,6 @@
 
     a.button,
     button {
-        &.icon { fill: $medium-light; }
+        &.icon { fill: $medium; }
     }
 }
