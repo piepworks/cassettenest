@@ -11,6 +11,12 @@
         <h1>{{ roll }}</h1>
         <div class="action">
             <a class="button icon icon-edit" href="{% url 'roll-edit' roll.id %}">{% include 'inventory/_github-icon.html' with id='pencil' %}</a>
+            <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
+                {% csrf_token %}
+                <button class="icon icon-destructive">
+                    {% include 'inventory/_github-icon.html' with id='x' %}
+                </button>
+            </form>
         </div>
     </header>
 {% if roll.status != '01_storage' %}
@@ -132,9 +138,5 @@
     {% if roll.status == '02_loaded' %}
     {% include 'inventory/_form-finish-roll.html' with camera=roll.camera roll=roll %}
     {% endif %}
-    <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post" class="do-not-print">
-        {% csrf_token %}
-        <input type="submit" class="destructive" value="Delete" />
-    </form>
 </div>
 {% endblock %}
