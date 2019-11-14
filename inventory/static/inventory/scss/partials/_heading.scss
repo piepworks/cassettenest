@@ -19,5 +19,11 @@
         background-color: $dark;
     }
 
-    .action { margin-left: 1.5rem; }
+    .action {
+        margin-left: 1.5rem;
+
+        @media print { display: none; }
+
+        form { display: inline; }
+    }
 }

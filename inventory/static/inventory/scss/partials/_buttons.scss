@@ -38,6 +38,6 @@ input[type=submit] {
 
         &:hover { fill: black; }
 
-        &-destructive:hover { fill: $destructive; }
+        &-destructive:hover { fill: darken($destructive, 10%); }
     }
 }
