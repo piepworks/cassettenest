@@ -8,7 +8,12 @@
 {% block content %}
 <div class="raw">
     <header class="c-heading">
+        {% if roll.code %}
+        <h1>{{ roll.code }}</h1>
+        <small class="year">{{ roll.started_on|date:'Y' }}</small>
+        {% else %}
         <h1>{{ roll }}</h1>
+        {% endif %}
         <div class="action">
             <a class="button icon icon-edit" href="{% url 'roll-edit' roll.id %}">{% include 'inventory/_github-icon.html' with id='pencil' %}</a>
             <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
@@ -23,12 +28,8 @@
 <h2>{{ roll.film.manufacturer }} <a href="{% url 'film-rolls' roll.film.slug %}">{{ roll.film.name }} in {{ roll.film.get_format_display }}</a> </h2>
 {% endif %}
 
-<ul>
-    <li>Status: <a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></li>
-
-    {% if roll.code %}
-    <li>Code: {{ roll.code }}</li>
-    {% endif %}
+<ul class="meta">
+    <li><a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></li>
 
     {% if roll.camera %}
     <li>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></li>
@@ -51,11 +52,11 @@
     {% endif %}
 
     {% if roll.started_on %}
-    <li>Started on: {{ roll.started_on }}</li>
+    <li>Started: {{ roll.started_on }}</li>
     {% endif %}
 
     {% if roll.ended_on %}
-    <li>Finished on: {{ roll.ended_on }}</li>
+    <li>Finished: {{ roll.ended_on }}</li>
     {% endif %}
 
     {% if roll.notes %}

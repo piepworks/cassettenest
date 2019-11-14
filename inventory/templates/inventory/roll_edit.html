@@ -1,10 +1,18 @@
 {% extends 'base_site.html' %}
 
-{% block title %}{{ roll }}{% endblock %}
+{% block title %}Edit: {{ roll }}{% endblock %}
 
 {% block content %}
 <div class="raw">
-    <h1>Edit {{ roll }}</h1>
+
+    <header class="c-heading">
+        {% if roll.code %}
+        <h1>Edit: {{ roll.code }}</h1>
+        <small class="year">{{ roll.started_on|date:'Y' }}</small>
+        {% else %}
+        <h1>Edit: {{ roll }}</h1>
+        {% endif %}
+    </header>
 
     <form method="post">
         {% csrf_token %}
