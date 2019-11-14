@@ -1,6 +1,7 @@
 .c-heading {
     display: flex;
     align-items: center;
+    margin-top: 1.5rem;
 
     h1,
     h2,
@@ -25,5 +26,10 @@
         @media print { display: none; }
 
         form { display: inline; }
+    }
+
+    a.button,
+    button {
+        &.icon { fill: $medium-light; }
     }
 }
