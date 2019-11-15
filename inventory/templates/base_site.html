@@ -22,7 +22,7 @@
 <body {% block bodytag %}{% endblock %}>
     <header class="c-site-nav">
         {% if request.get_full_path != index_url or user.is_authenticated %}
-        <h1><a href="{% url 'index' %}"><img src="{% static 'inventory/img/icon.svg' %}" alt="Cassette Nest" /></a></h1>
+        <div class="film-icon"><a href="{% url 'index' %}"><img src="{% static 'inventory/img/icon.svg' %}" alt="Cassette Nest Icon" /></a></div>
         {% endif %}
         {% include 'inventory/_nav.html' %}
     </header>

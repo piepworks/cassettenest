@@ -15,24 +15,7 @@ $logo-size: 35px;
         &:hover { text-decoration: underline; }
     }
 
-    h1 {
-        margin: 0;
-        padding: 0;
-        font-size: 1rem;
-        color: rgba(255, 255, 255, 0.7);
-        font-weight: normal;
-
-        @include breakpoint('S') { font-size: 1.5rem; }
-
-        a {
-            font-weight: bold;
-
-            &:active {
-                position: relative;
-                top: 1px;
-            }
-        }
-
+    .film-icon {
         &,
         img {
             height: $logo-size;

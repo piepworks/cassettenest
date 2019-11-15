@@ -1,4 +1,9 @@
 {% load static %}
-<svg>
+<svg role="img">
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>{{ id }}</title>
+    {% endif %}
     <use xlink:href="{% static 'inventory/img/vendor/github/sprite.svg' %}#{{ id }}"></use>
 </svg>

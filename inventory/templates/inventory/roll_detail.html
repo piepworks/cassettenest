@@ -15,11 +15,11 @@
         <h1>{{ roll }}</h1>
         {% endif %}
         <div class="action">
-            <a class="button icon icon-edit" href="{% url 'roll-edit' roll.id %}">{% include 'inventory/_github-icon.html' with id='pencil' %}</a>
+            <a aria-label="Edit roll" class="button icon icon-edit" href="{% url 'roll-edit' roll.id %}">{% include 'inventory/_github-icon.html' with id='pencil' title='Edit roll' %}</a>
             <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
                 {% csrf_token %}
-                <button class="icon icon-destructive">
-                    {% include 'inventory/_github-icon.html' with id='x' %}
+                <button aria-label="Delete roll" class="icon icon-destructive">
+                    {% include 'inventory/_github-icon.html' with id='x' title='Delete roll' %}
                 </button>
             </form>
         </div>
