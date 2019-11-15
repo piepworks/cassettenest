@@ -18,10 +18,10 @@
     <p>Format: {{ camera.get_format_display }}</p>
 
     {% if camera.status == 'loaded' %}
-    {% include 'inventory/_camera-loaded.html' %}
-    {% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}
+        {% include 'inventory/_camera-loaded.html' %}
+        <div class="action">{% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}</div>
     {% elif camera.status != 'unavailable' %}
-    <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
+        <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
     {% endif %}
 
     {% if camera.notes %}

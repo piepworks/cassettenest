@@ -1,25 +1,31 @@
 .development { background: $light; }
 
-.journal-entries table {
-    width: 100%;
-    table-layout: fixed;
-    white-space: nowrap;
+.journal-entries {
+    margin-top: 3rem;
 
-    th.entry {
-        &-date,
-        &-frames { width: 25%; }
-    }
-
-    th,
-    td { padding: 0.5rem; }
-
-    td {
+    table {
+        width: 100%;
+        table-layout: fixed;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
 
-        @media print { white-space: normal; }
+        th.entry {
+            &-date,
+            &-frames { width: 25%; }
+        }
+
+        th,
+        td { padding: 0.5rem; }
+
+        td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            @media print { white-space: normal; }
+        }
     }
+
+    .action { margin-top: 1.5rem; }
 }
 
 .meta {
