@@ -90,14 +90,8 @@
     {% endif %}
 </ul>
 
-{% if roll.status != '01_storage' %}
-<p class="do-not-print"><a href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
-{% endif %}
-
-{% if journal_entries %}
-<hr />
-
 <div class="journal-entries overflow-x">
+    {% if journal_entries %}
     <table>
         <thead>
             <tr>
@@ -130,14 +124,18 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
-{% endif %}
+    {% endif %}
 
-<hr />
-
-<div class="action">
-    {% if roll.status == '02_loaded' %}
-    {% include 'inventory/_form-finish-roll.html' with camera=roll.camera roll=roll %}
+    {% if roll.status != '01_storage' %}
+    <div class="action"><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></div>
     {% endif %}
 </div>
+
+
+{% if roll.status == '02_loaded' %}
+<hr />
+<div class="action">
+    {% include 'inventory/_form-finish-roll.html' with camera=roll.camera roll=roll %}
+</div>
+{% endif %}
 {% endblock %}
