@@ -8,25 +8,29 @@
 {% block content %}
 <div class="raw">
     <header class="c-heading">
-        {% if roll.code %}
-        <h1>{{ roll.code }}</h1>
-        <small class="year">{{ roll.started_on|date:'Y' }}</small>
-        {% else %}
-        <h1>{{ roll }}</h1>
-        {% endif %}
-        <div class="action">
-            <a aria-label="Edit roll" class="button icon icon-edit" href="{% url 'roll-edit' roll.id %}">{% include 'inventory/_github-icon.html' with id='pencil' title='Edit roll' %}</a>
-            <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
-                {% csrf_token %}
-                <button aria-label="Delete roll" class="icon icon-destructive">
-                    {% include 'inventory/_github-icon.html' with id='x' title='Delete roll' %}
-                </button>
-            </form>
+        <div class="flex">
+            {% if roll.code %}
+            <h1>{{ roll.code }}</h1>
+            <small class="year">{{ roll.started_on|date:'Y' }}</small>
+            {% else %}
+            <h1>{{ roll }}</h1>
+            {% endif %}
+
+            <div class="action">
+                <a aria-label="Edit roll" class="button icon icon-edit" href="{% url 'roll-edit' roll.id %}">{% include 'inventory/_github-icon.html' with id='pencil' title='Edit roll' %}</a>
+                <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
+                    {% csrf_token %}
+                    <button aria-label="Delete roll" class="icon icon-destructive">
+                        {% include 'inventory/_github-icon.html' with id='trashcan' title='Delete roll' %}
+                    </button>
+                </form>
+            </div>
         </div>
+
+        {% if roll.status != '01_storage' %}
+        <h2>{{ roll.film.manufacturer }} <a href="{% url 'film-rolls' roll.film.slug %}">{{ roll.film.name }} in {{ roll.film.get_format_display }}</a> </h2>
+        {% endif %}
     </header>
-{% if roll.status != '01_storage' %}
-<h2>{{ roll.film.manufacturer }} <a href="{% url 'film-rolls' roll.film.slug %}">{{ roll.film.name }} in {{ roll.film.get_format_display }}</a> </h2>
-{% endif %}
 
 <ul class="meta">
     <li><a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></li>

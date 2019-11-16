@@ -1,7 +1,5 @@
 .c-heading {
-    display: flex;
-    align-items: center;
-    margin-top: 1.5rem;
+    margin: 1.5rem 0 3rem;
 
     h1,
     h2,
@@ -30,12 +28,26 @@
         background-color: $dark;
     }
 
+    .flex {
+        display: flex;
+        align-items: center;
+
+        & + * { margin-top: 1.5rem; }
+    }
+
     .action {
-        margin-left: 1.5rem;
-
         @media print { display: none; }
+        margin-left: 1.5rem;
+        flex-shrink: 0;
 
-        form { display: inline; }
+        // A little redundant of the button + button style,
+        // but this works for button + form.
+        > * + * { margin-left: 1rem; }
+
+        form {
+            display: inline;
+            margin-bottom: 0;
+        }
     }
 
     a.button,

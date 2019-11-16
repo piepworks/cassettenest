@@ -35,11 +35,65 @@
     </section>
 
     <section class="pattern">
-        <h2>Icons</h2>
-        <div title="x" class="icon">{% include 'inventory/_github-icon.html' with id='x' %}</div>
-        <div title="pencil" class="icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</div>
-        <div title="check" class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</div>
-        <div title="dot" class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</div>
+        <h2>Icons (<a href="https://octicons.github.com">from GitHub</a> for now)</h2>
+        <table>
+            <tr>
+                <td>X</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='x' %}</div></td>
+            </tr>
+            <tr>
+                <td>Pencil</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</div></td>
+            </tr>
+            <tr>
+                <td>Check</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</div></td>
+            </tr>
+            <tr>
+                <td>Dot</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</div></td>
+            </tr>
+            <tr>
+                <td>Calendar</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='calendar' %}</div></td>
+            </tr>
+            <tr>
+                <td>Arrow-Both</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='arrow-both' %}</div></td>
+            </tr>
+            <tr>
+                <td>Camera</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='camera' %}</div></td>
+            </tr>
+            <tr>
+                <td>Trashcan</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='trashcan' %}</div></td>
+            </tr>
+            <tr>
+                <td>Globe</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='globe' %}</div></td>
+            </tr>
+            <tr>
+                <td>Location</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='location' %}</div></td>
+            </tr>
+            <tr>
+                <td>Archive</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='archive' %}</div></td>
+            </tr>
+            <tr>
+                <td>Book</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='book' %}</div></td>
+            </tr>
+            <tr>
+                <td>Notes</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='notes' %}</div></td>
+            </tr>
+            <tr>
+                <td>Beaker</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='beaker' %}</div></td>
+            </tr>
+        </table>
 
         <h3>Icon Buttons</h3>
         <div>
@@ -92,10 +146,12 @@
 
         <h3>Page Detail with buttons</h3>
         <header class="c-heading">
-            <h1>35-bw-11</h1>
-            <div class="action">
-                <a href="#" class="button icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</a>
-                <a href="#" class="button icon icon-destructive">{% include 'inventory/_github-icon.html' with id='x' %}</a>
+            <div class="flex">
+                <h1>35-bw-11</h1>
+                <div class="action">
+                    <a href="#" class="button icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</a>
+                    <a href="#" class="button icon icon-destructive">{% include 'inventory/_github-icon.html' with id='trashcan' %}</a>
+                </div>
             </div>
         </header>
     </section>
