@@ -4,7 +4,19 @@
 }
 
 .space {
-    > div + div { margin-top: 1.5rem; }
+    > div + div:not(.wrap) { margin-top: 1.5rem; }
+}
+
+.wrap {
+    margin-top: 1rem;
+
+    // Override the default in _buttons.scss:
+    button + button { margin-left: 0; }
+
+    button {
+        margin-right: 1rem;
+        margin-top: 0.5rem;
+    }
 }
 
 section.pattern {
