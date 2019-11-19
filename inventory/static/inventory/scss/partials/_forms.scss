@@ -16,11 +16,7 @@ form {
 
     .c-card & { margin: auto 1.2rem; }
 
-    .action {
-        margin-top: 1rem;
-
-        @media print { display: none; }
-    }
+    .action { margin-top: 1rem; }
 }
 
 fieldset {
