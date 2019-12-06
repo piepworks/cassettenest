@@ -10,10 +10,10 @@ idna==2.8
 jsonfield==2.0.2
 libsass==0.14.5
 markdown2==2.3.5
-model-mommy==1.6.0
+model-bakery==1.0.2
 pycodestyle==2.4.0
 python-dotenv==0.10.3
-pytz==2018.3
+pytz==2019.3
 rcssmin==1.0.6
 requests==2.22.0
 rjsmin==1.0.12

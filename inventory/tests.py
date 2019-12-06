@@ -1,5 +1,5 @@
 from django.test import TestCase
-from model_mommy import mommy
+from model_bakery import baker
 from .models import Roll
 from .utils import *
 import datetime
@@ -7,44 +7,44 @@ import datetime
 
 class RollTestCase(TestCase):
     def test_loaded_rolls_get_code_and_status(self):
-        roll = mommy.make(Roll)
+        roll = baker.make(Roll)
         roll.started_on = datetime.date.today()
         roll.save()
         self.assertEqual(roll.code, '35-c41-1')
         self.assertEqual(roll.status, status_number('loaded'))
 
     def test_rolls_get_correct_code_sequence(self):
-        roll1 = mommy.make(
+        roll1 = baker.make(
             Roll,
             owner__id=1,
             film__type='e6',
             started_on=datetime.date.today()
         )
-        roll2 = mommy.make(
+        roll2 = baker.make(
             Roll,
             owner__id=1,
             film__type='c41',
             started_on=datetime.date.today()
         )
-        roll3 = mommy.make(
+        roll3 = baker.make(
             Roll,
             owner__id=1,
             film__type='e6',
             started_on=datetime.date.today()
         )
-        roll4 = mommy.make(
+        roll4 = baker.make(
             Roll,
             owner__id=1,
             film__type='c41',
             started_on=datetime.date.today()
         )
-        roll5 = mommy.make(
+        roll5 = baker.make(
             Roll,
             owner__id=1,
             film__type='bw',
             started_on=datetime.date.today()
         )
-        roll6 = mommy.make(
+        roll6 = baker.make(
             Roll,
             owner__id=2,
             film__type='bw',
