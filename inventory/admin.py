@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import *
+from .models import Camera, Film, Journal, Manufacturer, Profile, Project, Roll
 
 
 class ManufacturerAdmin(admin.ModelAdmin):

@@ -1,24 +1,43 @@
+import datetime
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic.detail import DetailView
+from django.views.generic import DetailView, FormView
 from django.db.models import Count
 from django.db import IntegrityError
-from django.contrib.auth.models import User
 from django.contrib.auth import login, authenticate
-from django.views.generic.detail import DetailView
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, FormView
 from django.utils.encoding import force_text
 from django.utils.decorators import method_decorator
-from django.urls import reverse, resolve
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import *
-from .forms import *
-from .utils import *
-import datetime
 import stripe
 import djstripe.models
 from djstripe.decorators import subscription_payment_required
+from .models import Camera, Film, Journal, Project, Roll
+from .forms import (
+    CameraForm,
+    JournalForm,
+    PatternsForm,
+    ProfileForm,
+    ProjectForm,
+    PurchaseSubscriptionForm,
+    ReadyForm,
+    RegisterForm,
+    RollForm,
+    UpdateCardForm,
+    UserForm
+)
+from .utils import (
+    development_statuses,
+    get_project_or_none,
+    iso_filter,
+    iso_variables,
+    pluralize,
+    render_markdown,
+    status_description,
+    status_keys,
+    status_number
+)
 
 
 def index(request):
@@ -128,7 +147,7 @@ def settings(request):
             messages.success(request, 'Settings updated!')
             return redirect(reverse('index'))
         else:
-            messages.error(request, form.errors)
+            messages.error(request, user_form.errors)
             return redirect(reverse('settings'))
     else:
         user_form = UserForm(instance=owner)
@@ -1027,7 +1046,6 @@ def rolls_add(request):
 
     if request.method == 'POST':
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
-        status = request.POST.get('status')
 
         try:
             quantity = int(request.POST.get('quantity', ''))
@@ -1345,7 +1363,7 @@ def roll_journal_add(request, roll_pk):
             frame = form.cleaned_data['frame']
 
             try:
-                journal = Journal.objects.create(
+                Journal.objects.create(
                     roll=roll,
                     date=date,
                     notes=notes,
@@ -1686,6 +1704,7 @@ def camera_edit(request, pk):
                 camera.status = 'empty'
             camera.name = name
             camera.format = format
+            camera.notes = notes
             camera.save()
 
             messages.success(request, 'Camera updated!')

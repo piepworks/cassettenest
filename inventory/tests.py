@@ -1,8 +1,8 @@
+import datetime
 from django.test import TestCase
 from model_bakery import baker
 from .models import Roll
-from .utils import *
-import datetime
+from .utils import status_number
 
 
 class RollTestCase(TestCase):
