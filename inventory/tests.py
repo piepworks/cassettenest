@@ -1,7 +1,7 @@
 import datetime
 from django.test import TestCase
 from model_bakery import baker
-from .models import Roll
+from .models import Roll, Camera
 from .utils import status_number
 
 
@@ -64,3 +64,24 @@ class RollTestCase(TestCase):
         self.assertEqual(roll4.code, '35-c41-2')
         self.assertEqual(roll5.code, '35-bw-1')
         self.assertEqual(roll6.code, '35-bw-1')
+
+    def test_rolls_change_from_loaded_to_storage(self):
+        roll = baker.make(Roll)
+        camera = baker.make(Camera)
+
+        roll.started_on = datetime.date.today()
+        roll.camera = camera
+        camera.status = 'loaded'
+        # Save to create a code for the roll.
+        roll.save()
+
+        self.assertEqual(camera.status, 'loaded')
+        self.assertIsNotNone(roll.camera)
+
+        roll.status = status_number('storage')
+        # Save again to reset code and unload camera.
+        roll.save()
+
+        self.assertEqual(roll.code, '')
+        self.assertIsNone(roll.camera)
+        self.assertEqual(camera.status, 'empty')
