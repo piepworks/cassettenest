@@ -291,7 +291,6 @@ class Roll(models.Model):
         # 2. Get the type from `film.type`
         # 3. Query the Roll table to count everything with that format and type
         #    within the year of the `started_on` field. Add one to that number.
-
         if not self.code and self.started_on:
             sequence = Roll.objects\
                 .filter(film__type=self.film.type)\
@@ -307,9 +306,43 @@ class Roll(models.Model):
             if self.status == status_number('storage'):
                 self.status = status_number('loaded')
 
+        # If we change the status from loaded to any status other than storage,
+        # 1. Unload the associated camera
+        # 2. Set ended_on
+        if self.code and self.status not in [
+            status_number('storage'),
+            status_number('loaded')
+        ] and self.ended_on is None:
+
+            # If the camera is still loaded with this roll, unload it.
+            if self.camera.status == 'loaded':
+                camera_roll = Roll.objects.filter(
+                    camera=self.camera,
+                    status=status_number('loaded')
+                )[0]
+
+                if camera_roll == self:
+                    self.camera.status = 'empty'
+                    self.camera.save()
+
+            self.ended_on = datetime.date.today()
+
+        # If we’ve loaded this roll, set the associated camera’s status to
+        # 'loaded'.
+        if (self.status == status_number('loaded')
+                and self.camera.status == 'empty'):
+            self.camera.status = 'loaded'
+
+            # If we’re changing the status to 'loaded' but it has an ended_on
+            # set, clear it. This is if you accidentally changed something
+            # from loaded and want to get it back.
+            if self.ended_on is not None:
+                self.ended_on = None
+
+            self.camera.save()
+
         # If we've changed our minds and put something back into storage, set
         # everything back to factory condition.
-
         if self.code and self.status == status_number('storage'):
             # Unload camera
             if self.camera:

@@ -3,7 +3,7 @@
     <table>
         <thead>
             <tr>
-                {% if page != 'project' %}
+                {% if page != 'project' and status in bulk_status_keys %}
                 <th class="do-not-print">
                     <input class="select-all" type="checkbox" title="Select or deselect all items" />
                 </th>
@@ -22,7 +22,7 @@
         </thead>
         {% for roll in rolls %}
         <tr>
-            {% if page != 'project' %}
+            {% if page != 'project' and status in bulk_status_keys %}
             <td class="do-not-print"><input type="checkbox" value="{{ roll.id }}" name="roll" /></td>
             {% endif %}
             <td><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></td>

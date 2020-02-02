@@ -41,11 +41,13 @@
 
 {% if rolls %}
 <form method="post" action="{% url 'rolls-update' %}">
-    {% csrf_token %}
-    <div class="bulk-status do-not-print">
-        <p>Bulk update the status of these rolls.</p>
-        {% include 'inventory/_form-status.html' with page='logbook' current_status=status %}
-    </div>
+    {% if status in bulk_status_keys %}
+        {% csrf_token %}
+        <div class="bulk-status do-not-print">
+            <p>Bulk update the status of these rolls.</p>
+            {% include 'inventory/_form-status.html' with page='logbook' current_status=status %}
+        </div>
+    {% endif %}
 
     {% include 'inventory/_logbook-table.html' with page='logbook' %}
 </form>

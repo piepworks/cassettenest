@@ -29,6 +29,8 @@ from .forms import (
 )
 from .utils import (
     development_statuses,
+    bulk_statuses,
+    bulk_status_keys,
     get_project_or_none,
     iso_filter,
     iso_variables,
@@ -471,7 +473,8 @@ def logbook(request):
         'description': description,
         'year': year,
         'all_years': all_years,
-        'all_years_count': all_years_count
+        'all_years_count': all_years_count,
+        'bulk_status_keys': bulk_status_keys
     }
 
     return render(request, 'inventory/logbook.html', context)
@@ -638,7 +641,8 @@ def dashboard(request):
         current_status = request.POST.get('current_status', '')
         updated_status = request.POST.get('updated_status', '')
 
-        if current_status in status_keys and updated_status in status_keys:
+        if (current_status in bulk_status_keys
+                and updated_status in bulk_status_keys):
             rolls.filter(
                     status=status_number(current_status)
                 ).update(
@@ -684,7 +688,7 @@ def rolls_update(request):
         messages.error(request, 'Something is not right.')
         return redirect(reverse('ready'),)
 
-    if updated_status in status_keys:
+    if updated_status in bulk_status_keys:
         # Bulk update selected rows.
         # Verify that the selected row IDs belong to request.user.
         roll_count = 0
@@ -1518,8 +1522,6 @@ def camera_load(request, pk):
         roll.push_pull = push_pull
         roll.started_on = datetime.date.today()
         roll.save()
-        camera.status = 'loaded'
-        camera.save()
         messages.success(
             request,
             '%s loaded with %s %s (code: %s)!' % (
@@ -1600,10 +1602,7 @@ def camera_detail(request, pk):
     if request.method == 'POST':
         roll = get_object_or_404(Roll, id=request.POST.get('roll', ''))
         roll.status = status_number('shot')
-        roll.ended_on = datetime.date.today()
         roll.save()
-        camera.status = 'empty'
-        camera.save()
         messages.success(
             request,
             'Roll of %s %s (code: %s) finished!' % (

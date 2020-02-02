@@ -96,16 +96,30 @@ valid_statuses = {
     },
 }
 
-
 status_keys = list(valid_statuses)
 
+special_keys = {
+    'not_development': ['storage', 'loaded', 'shot'],
+    'not_bulk': ['storage', 'loaded']
+}
 
 # Statuses once a roll has begun development.
 # Useful for showing a subset of metadata in some places.
 development_statuses = {
     value['number'] for key, value in valid_statuses.items()
-    if key not in ['storage', 'loaded', 'shot']
+    if key not in special_keys['not_development']
 }
+
+# Statuses that can be bulk updated.
+# Anything else has to be changed one-at-a-time.
+bulk_statuses = {
+    value['number'] for key, value in valid_statuses.items()
+    if key not in special_keys['not_bulk']
+}
+
+bulk_status_keys = [
+    key for key in valid_statuses if key not in special_keys['not_bulk']
+]
 
 
 def status_number(status):
