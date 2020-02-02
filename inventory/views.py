@@ -620,6 +620,7 @@ def ready(request):
         'rolls_push2_e6_120': rolls_push2_e6_120,
         'rolls_push3_e6_135': rolls_push3_e6_135,
         'rolls_push3_e6_120': rolls_push3_e6_120,
+        'bulk_status_keys': bulk_status_keys
     }
 
     return render(request, 'inventory/ready.html', context)
