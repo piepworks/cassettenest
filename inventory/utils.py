@@ -112,11 +112,6 @@ development_statuses = {
 
 # Statuses that can be bulk updated.
 # Anything else has to be changed one-at-a-time.
-bulk_statuses = {
-    value['number'] for key, value in valid_statuses.items()
-    if key not in special_keys['not_bulk']
-}
-
 bulk_status_keys = [
     key for key in valid_statuses if key not in special_keys['not_bulk']
 ]

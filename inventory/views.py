@@ -29,7 +29,6 @@ from .forms import (
 )
 from .utils import (
     development_statuses,
-    bulk_statuses,
     bulk_status_keys,
     get_project_or_none,
     iso_filter,
