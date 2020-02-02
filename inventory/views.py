@@ -643,12 +643,22 @@ def dashboard(request):
 
         if (current_status in bulk_status_keys
                 and updated_status in bulk_status_keys):
-            rolls.filter(
-                    status=status_number(current_status)
-                ).update(
-                    status=status_number(updated_status)
+            rolls_to_update = rolls.filter(
+                status=status_number(current_status)
+            )
+            roll_count = rolls_to_update.count()
+            rolls_to_update.update(
+                status=status_number(updated_status)
+            )
+            messages.success(
+                request,
+                '%s %s updated from %s to %s!' % (
+                    roll_count,
+                    pluralize('roll', roll_count),
+                    current_status,
+                    updated_status
                 )
-            messages.success(request, 'Rolls updated!')
+            )
 
         return redirect(reverse('dashboard'))
 
@@ -674,6 +684,7 @@ def rolls_update(request):
     '''
     owner = request.user
     form = ReadyForm(request.POST)
+    current_status = request.POST.get('current_status')
     updated_status = request.POST.get('updated_status')
     rolls = request.POST.getlist('roll')
 
@@ -710,9 +721,11 @@ def rolls_update(request):
 
         messages.success(
             request,
-            'Status updated on %s selected %s!' % (
+            '%s %s updated from %s to %s!' % (
                 roll_count,
-                pluralize('roll', roll_count)
+                pluralize('roll', roll_count),
+                current_status,
+                updated_status
             )
         )
     else:
