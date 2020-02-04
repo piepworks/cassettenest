@@ -10,8 +10,8 @@ GIT_WORK_TREE=/home/treypiepmeier/film git checkout -f
 now=$(date +"%F_%H-%M-%s")
 backup_file="../backups/cassettenest_$now.json"
 
-# BACKUP THE DATABASE
-# -------------------
+# BACKUP THE DATABASE AND UPDATE THINGS
+# -------------------------------------
 # Go to the live code folder.
 cd $HOME/film
 # Start up virtualenvwrapper
@@ -21,15 +21,15 @@ source /usr/local/bin/virtualenvwrapper.sh
 workon film
 # Install any new Python dependencies .
 pip install -r requirements.txt
+# Run a database migration if it's needed
+./manage.py migrate --noinput
 # Actually backup the database.
 ./manage.py dumpdata > $backup_file
 # Process static files like Sass
 ./manage.py collectstatic --noinput
-# Run a database migration if it's needed
-./manage.py migrate --noinput
 # Deactivate the `film` virtualenv
 deactivate
-# -------------------
+# -------------------------------------
 
 # Send backup file to DigitalOcean.
 s3cmd put $backup_file s3://cassettenest/backups-code-push/
