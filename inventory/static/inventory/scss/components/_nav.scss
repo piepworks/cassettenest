@@ -16,11 +16,8 @@ $logo-size: 35px;
     }
 
     .film-icon {
-        &,
-        img {
-            height: $logo-size;
-            width: $logo-size;
-        }
+        height: $logo-size;
+        width: $logo-size;
     }
 
     nav {

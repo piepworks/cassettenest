@@ -19,14 +19,14 @@
     <div class="wrapper">
         <header class="c-site-nav">
             {% if request.path != index_url or user.is_authenticated %}
-            <div class="film-icon"><a href="{% url 'index' %}"><img src="{% static 'inventory/img/icon.svg' %}" alt="Cassette Nest Icon" /></a></div>
+            <div class="film-icon"><a href="{% url 'index' %}"><img src="{% static 'inventory/img/icon.svg' %}" height="35" width="35" alt="Cassette Nest Icon" /></a></div>
             {% endif %}
             {% include 'inventory/_nav.html' %}
         </header>
         {% include 'inventory/_messages.html' %}
         {% if request.path == index_url and not user.is_authenticated %}
         <div class="icon">
-            <img src="{% static 'inventory/img/full-icon.svg' %}" alt="Cassette Nest" />
+            <img src="{% static 'inventory/img/full-icon.svg' %}" height="200" width="200" alt="Cassette Nest Icon" />
         </div>
         {% endif %}
 
