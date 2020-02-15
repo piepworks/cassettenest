@@ -1,0 +1,27 @@
+body { background: $dark; }
+
+.wrapper {
+    background: $white;
+    min-height: 100vh;
+
+    > main,
+    > footer {
+        margin: 0 auto;
+        max-width: 60rem;
+    }
+
+    > main {
+        padding: 0;
+
+        @include breakpoint('L') { margin-top: 2rem; }
+    }
+
+    > footer {
+        margin-top: 4rem;
+        padding: 1.25rem;
+        padding-bottom: 3rem;
+        font-size: 0.6rem;
+
+        .timezone { color: $medium; }
+    }
+}

@@ -1,59 +1,7 @@
-@import './vendor/normalize';
-@import './modules/reset';
-@import './modules/colors';
-@import './modules/utils';
-// @import './modules/breakpoint-display';
-@import './partials/nav';
-@import './partials/heading';
-@import './partials/card';
-@import './partials/reminder';
-@import './partials/forms';
-@import './partials/buttons';
-@import './partials/icons';
-@import './partials/form-field';
-@import './partials/tables';
-@import './partials/elements';
+@import 'vendor/all';
+@import 'modules/all';
+@import 'base/all';
+@import 'components/all';
+@import 'pages/all';
 
-body {
-    font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background: $dark;
-
-    &.logbook { @import './partials/logbook'; }
-    &.ready { @import './partials/ready'; }
-    &.roll-detail { @import './partials/roll-detail'; }
-    &.journal-entry { @import './partials/journal-entry'; }
-    &.dashboard { @import './partials/dashboard'; }
-    &.landing { @import './partials/landing'; }
-    &.purpose { @import './partials/purpose'; }
-    &.patterns { @import './partials/patterns'; }
-
-    .wrapper {
-        background: $white;
-        min-height: 100vh;
-    }
-
-    .wrapper > .messages { @import './partials/messages'; }
-
-    .wrapper > main,
-    .wrapper > footer {
-        margin: 0 auto;
-        max-width: 60rem;
-    }
-
-    .wrapper > main {
-        padding: 0;
-
-        @include breakpoint('L') { margin-top: 2rem; }
-
-        > .onboarding { @import './partials/onboarding'; }
-    }
-
-    .wrapper > footer {
-        margin-top: 4rem;
-        padding: 1.25rem;
-        padding-bottom: 3rem;
-        font-size: 0.6rem;
-
-        .timezone { color: $medium; }
-    }
-}
+// Have a nice day.
