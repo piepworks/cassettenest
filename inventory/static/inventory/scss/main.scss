@@ -16,6 +16,7 @@
 
 body {
     font-family: -apple-system, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: $dark;
 
     &.logbook { @import './partials/logbook'; }
     &.ready { @import './partials/ready'; }
@@ -26,15 +27,20 @@ body {
     &.purpose { @import './partials/purpose'; }
     &.patterns { @import './partials/patterns'; }
 
-    > .messages { @import './partials/messages'; }
+    .wrapper {
+        background: $white;
+        min-height: 100vh;
+    }
 
-    > main,
-    > footer {
+    .wrapper > .messages { @import './partials/messages'; }
+
+    .wrapper > main,
+    .wrapper > footer {
         margin: 0 auto;
         max-width: 60rem;
     }
 
-    > main {
+    .wrapper > main {
         padding: 0;
 
         @include breakpoint('L') { margin-top: 2rem; }
@@ -42,9 +48,10 @@ body {
         > .onboarding { @import './partials/onboarding'; }
     }
 
-    > footer {
+    .wrapper > footer {
         margin-top: 4rem;
         padding: 1.25rem;
+        padding-bottom: 3rem;
         font-size: 0.6rem;
 
         .timezone { color: $medium; }
