@@ -1,4 +1,4 @@
-{% load static %}{% load compress %}{% load tz %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
+{% load static %}{% load compress %}{% load tz %}{% get_current_timezone as TIME_ZONE %}{% load capture_tags %}<!DOCTYPE html>
 <html lang="en">
 <head>
     {% url 'index' as index_url %}
@@ -14,8 +14,8 @@
     {% endif %}
     <script src="{% static 'inventory/js/vendor/jquery.min.js' %}"></script>
 </head>
-
-<body {% block bodytag %}{% endblock %}>
+{% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
+<body{% if bodytag %} {{ bodytag }}{% endif %}>
     <div class="wrapper">
         <header class="c-site-nav">
             {% if request.path != index_url or user.is_authenticated %}

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'compressor',
     'markdown_deux',
     'djstripe',
+    'capture_tag',
 ]
 
 MIDDLEWARE = [
