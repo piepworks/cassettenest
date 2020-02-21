@@ -1,3 +1,4 @@
+export SECRET_KEY=''
 export DEBUG=True
 export DATABASE_FILE='db.sqlite3'
 export ALLOWED_HOSTS='*'
