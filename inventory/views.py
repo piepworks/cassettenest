@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import stripe
 import djstripe.models
+import requests
 from djstripe.decorators import subscription_payment_required
 from .models import Camera, Film, Journal, Project, Roll
 from .forms import (
@@ -127,6 +128,28 @@ def patterns(request):
     }
 
     return render(request, 'patterns.html', context)
+
+
+@require_POST
+def newsletter(request):
+    '''
+    Try to filter out spam subscriptions.
+    '''
+    email = request.POST.get('email')
+    email2 = request.POST.get('email2')
+    url = 'https://app.e2ma.net/app2/audience/signup/1902957/31622/?r=signup'
+
+    if email2 == '':
+        r = requests.post(
+            url,
+            data={
+                'group_10062726': '10062726',
+                'email': email
+            }
+        )
+
+    # Always act like the signup was successful.
+    return redirect(reverse('index') + '?signedup=true')
 
 
 @login_required
