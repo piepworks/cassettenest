@@ -12,8 +12,10 @@
         {% endif %}
         {% if user.is_superuser %}
         <li><a href="{% url 'admin:index' %}">Admin</a></li>
+        {% else %}
+        <li class="feedback"><a href="https://trey.wufoo.com/forms/cassette-nest-feedback/?Field1={{ user.username }}&Field3={{ user.email }}" target="_blank" rel="noopener">Submit Feedback</a></li>
         {% endif %}
-        <li><a href="{% url 'logout' %}">Log out</a></li>
+        <li><a href="{% url 'logout' %}">Log Out</a></li>
     {% elif request.path != login_url %}
         <li><a href="{{ login_url }}">Log in</a></li>
     {% endif %}

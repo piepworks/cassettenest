@@ -36,6 +36,8 @@ $logo-size: 35px;
             margin-bottom: 0;
 
             &:first-child { margin-left: 0; }
+
+            &.feedback a { color: $gold; }
         }
     }
 }
