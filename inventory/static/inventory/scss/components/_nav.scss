@@ -25,7 +25,7 @@ $logo-size: 35px;
 
         ul {
             margin: 0;
-            font-size: 0.8rem;
+            font-size: 0.6rem;
 
             @include breakpoint('S') { font-size: 0.9rem; }
         }

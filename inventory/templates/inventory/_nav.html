@@ -13,7 +13,7 @@
         {% if user.is_superuser %}
         <li><a href="{% url 'admin:index' %}">Admin</a></li>
         {% else %}
-        <li class="feedback"><a href="https://trey.wufoo.com/forms/cassette-nest-feedback/?Field1={{ user.username }}&Field3={{ user.email }}" target="_blank" rel="noopener">Submit feedback</a></li>
+        <li class="feedback"><a href="https://trey.wufoo.com/forms/cassette-nest-feedback/?Field1={{ user.username }}&Field3={{ user.email }}" target="_blank" rel="noopener">Feedback</a></li>
         {% endif %}
         <li><a href="{% url 'logout' %}">Log out</a></li>
     {% elif request.path != login_url %}
