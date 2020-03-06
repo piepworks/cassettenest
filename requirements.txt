@@ -2,7 +2,7 @@ asgiref==3.2.3
 certifi==2019.11.28
 chardet==3.0.4
 dj-stripe==2.2.2
-Django==3.0.3
+Django==3.0.4
 django-appconf==1.0.3
 django-capture-tag==1.0
 django-compressor==2.4
