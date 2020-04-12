@@ -130,7 +130,13 @@ class Camera(models.Model):
         choices=STATUS_CHOICES,
         default='empty',
     )
-    multiple_backs = models.BooleanField(default=False)
+    multiple_backs = models.BooleanField(
+        default=False,
+        help_text='''
+            Select this option if you have multiple interchangeable film
+            cassette backs for this camera that can be swapped mid-roll.
+        '''
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

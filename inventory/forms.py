@@ -33,7 +33,14 @@ class CameraForm(ModelForm):
 
     class Meta:
         model = Camera
-        fields = ['name', 'format', 'notes', 'owner', 'unavailable']
+        fields = [
+            'name',
+            'format',
+            'notes',
+            'owner',
+            'multiple_backs',
+            'unavailable'
+        ]
 
 
 class RollForm(ModelForm):

@@ -12,6 +12,9 @@
         {% include 'inventory/_form-field.html' with field=form.name %}
         {% include 'inventory/_form-field.html' with field=form.format %}
         {% include 'inventory/_form-field.html' with field=form.notes %}
+        {% if camera.format == '120' %}
+        {% include 'inventory/_form-field.html' with field=form.multiple_backs %}
+        {% endif %}
         {% if camera.status != 'loaded' %}
         {% include 'inventory/_form-field.html' with field=form.unavailable %}
         {% endif %}
