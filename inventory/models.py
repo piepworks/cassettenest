@@ -130,6 +130,7 @@ class Camera(models.Model):
         choices=STATUS_CHOICES,
         default='empty',
     )
+    multiple_backs = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -142,6 +143,30 @@ class Camera(models.Model):
 
     def get_absolute_url(self):
         return reverse('camera-detail', args=(self.id,))
+
+
+class CameraBack(models.Model):
+    """
+    Backs to load with film (instead of a camera directly) for compatible
+    cameras (ones with multiple_backs=True).
+    """
+
+    # Identical to STATUS_CHOICES on the Camera model.
+    STATUS_CHOICES = (
+        ('empty', 'Empty'),
+        ('loaded', 'Loaded'),
+        ('unavailable', 'Unavailable'),
+    )
+    camera = models.ForeignKey(Camera, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    notes = models.TextField(blank=True)
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='empty',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class Project(models.Model):
@@ -210,6 +235,13 @@ class Roll(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
+    )
+    camera_back = models.ForeignKey(
+        # If `camera_back` is set, `camera` must be set as well.
+        CameraBack,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True
     )
     lens = models.CharField(
         max_length=255,
