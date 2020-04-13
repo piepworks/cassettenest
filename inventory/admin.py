@@ -1,7 +1,16 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
-from .models import Camera, Film, Journal, Manufacturer, Profile, Project, Roll
+from .models import (
+    Camera,
+    CameraBack,
+    Film,
+    Journal,
+    Manufacturer,
+    Profile,
+    Project,
+    Roll,
+)
 
 
 class ManufacturerAdmin(admin.ModelAdmin):
@@ -37,7 +46,12 @@ class RollAdmin(admin.ModelAdmin):
     )
 
 
+class CameraBackInline(admin.StackedInline):
+    model = CameraBack
+
+
 class CameraAdmin(admin.ModelAdmin):
+    inlines = [CameraBackInline]
     list_filter = ('owner',)
     list_display = (
         'owner',
@@ -81,7 +95,7 @@ class ProfileInline(admin.StackedInline):
 
 
 class UserAdmin(BaseUserAdmin):
-    inlines = (ProfileInline,)
+    inlines = [ProfileInline]
     list_display = (
         'username',
         'email',
@@ -97,6 +111,7 @@ admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Camera, CameraAdmin)
+admin.site.register(CameraBack)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Journal, JournalAdmin)
 
