@@ -14,7 +14,7 @@ import stripe
 import djstripe.models
 import requests
 from djstripe.decorators import subscription_payment_required
-from .models import Camera, Film, Journal, Project, Roll
+from .models import Camera, CameraBack, Film, Journal, Project, Roll
 from .forms import (
     CameraForm,
     JournalForm,
@@ -46,7 +46,11 @@ def index(request):
     if request.user.is_authenticated:
         owner = request.user
         cameras_total = Camera.objects.filter(owner=owner)
-        cameras_empty = cameras_total.filter(status='empty')
+        camera_backs_total = CameraBack.objects.filter(camera__owner=owner)
+        cameras_empty = cameras_total.filter(
+            status='empty'
+        ).exclude(multiple_backs=True)
+        camera_backs_empty = camera_backs_total.filter(status='empty')
         rolls = Roll.objects.filter(owner=owner)
         rolls_loaded = rolls.filter(status=status_number('loaded'))
         rolls_ready_count = rolls.filter(status=status_number('shot')).count()
@@ -68,6 +72,7 @@ def index(request):
             'email': owner.email,
             'cameras_total': cameras_total,
             'cameras_empty': cameras_empty,
+            'camera_backs_empty': camera_backs_empty,
             'projects_current': projects_current,
             'projects_count': projects_count,
             'rolls': rolls,

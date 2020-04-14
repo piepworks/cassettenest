@@ -25,13 +25,21 @@
 </section>
 {% endif %}
 
-{% if cameras_empty %}
+{% if cameras_empty or camera_backs_empty %}
 <section>
     <h2 class="c-heading c-heading--home">Ready to Load</h2>
+    {% if cameras_empty %}
     {% for camera in cameras_empty %}
         {% url 'camera-load' camera.id as camera_load %}
         {% include 'inventory/_card.html' with name=camera.name location=camera_load slot='reminder' %}
     {% endfor %}
+    {% endif %}
+    {% if camera_backs_empty %}
+    {% for back in camera_backs_empty %}
+        {% url 'camera-load' back.camera.id as camera_load %}
+        {% include 'inventory/_card.html' with name=back location=camera_load slot='reminder' %}
+    {% endfor %}
+    {% endif %}
 </section>
 {% endif %}
 
