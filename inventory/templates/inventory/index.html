@@ -20,7 +20,11 @@
     <h2 class="c-heading c-heading--home">Loaded Cameras</h2>
     {% for roll in rolls_loaded %}
         {% url 'roll-detail' roll.id as roll_detail %}
-        {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
+        {% if roll.camera_back %}
+            {% include 'inventory/_card.html' with name=roll.camera_back location=roll_detail slot='reminder' roll=roll %}
+        {% else %}
+            {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
+        {% endif %}
     {% endfor %}
 </section>
 {% endif %}
@@ -36,8 +40,8 @@
     {% endif %}
     {% if camera_backs_empty %}
     {% for back in camera_backs_empty %}
-        {% url 'camera-load' back.camera.id as camera_load %}
-        {% include 'inventory/_card.html' with name=back location=camera_load slot='reminder' %}
+        {% url 'camera-back-load' back.camera.id back.id as camera_back_load %}
+        {% include 'inventory/_card.html' with name=back location=camera_back_load slot='reminder' %}
     {% endfor %}
     {% endif %}
 </section>

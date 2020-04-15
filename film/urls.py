@@ -68,6 +68,8 @@ urlpatterns = [
     path('camera/add/', views.camera_add, name='camera-add'),
     path('camera/<int:pk>/', views.camera_detail, name='camera-detail'),
     path('camera/<int:pk>/load/', views.camera_load, name='camera-load'),
+    path('camera/<int:pk>/back/<int:back_pk>/load/',
+         views.camera_load, name='camera-back-load'),
     path('camera/<int:pk>/edit/', views.camera_edit, name='camera-edit'),
     path('camera/<int:pk>/delete/', views.camera_delete, name='camera-delete'),
 

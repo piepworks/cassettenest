@@ -1522,7 +1522,7 @@ def cameras(request):
 
 
 @login_required
-def camera_load(request, pk):
+def camera_load(request, pk, back_pk=None):
     owner = request.user
     current_project = None
 
@@ -1534,14 +1534,23 @@ def camera_load(request, pk):
 
     if request.method == 'POST':
         camera = get_object_or_404(Camera, id=pk, owner=owner)
+        if back_pk:
+            camera_back = get_object_or_404(
+                CameraBack,
+                id=back_pk,
+                camera__owner=owner
+            )
+        else:
+            camera_back = None
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
         push_pull = request.POST.get('push_pull', '')
         rolls = Roll.objects.filter(
                 owner=owner,
                 film=film,
-                film__format=camera.format,
                 status=status_number('storage'),
             )
+        if not camera_back:
+            rolls = rolls.filter(film__format=camera.format)
 
         # Hidden form field
         if request.POST.get('project'):
@@ -1560,6 +1569,8 @@ def camera_load(request, pk):
             roll = rolls.order_by('created_at')[0]
 
         roll.camera = camera
+        if camera_back:
+            roll.camera_back = camera_back
         roll.push_pull = push_pull
         roll.started_on = datetime.date.today()
         roll.save()
@@ -1581,6 +1592,14 @@ def camera_load(request, pk):
             return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         camera = get_object_or_404(Camera, id=pk, owner=owner)
+        if back_pk:
+            camera_back = get_object_or_404(
+                CameraBack,
+                id=back_pk,
+                camera__owner=owner
+            )
+        else:
+            camera_back = None
         projects = Project.objects.filter(owner=owner, status='current')
         iso = iso_variables(request)
 
@@ -1597,8 +1616,6 @@ def camera_load(request, pk):
                     roll__owner=owner,
                     roll__status=status_number('storage'),
                     roll__project=current_project
-                ).filter(
-                    format=camera.format
                 ).annotate(
                     count=Count('name')
                 ).order_by(
@@ -1606,12 +1623,12 @@ def camera_load(request, pk):
                     'manufacturer__name',
                     'name',
                 )
+            if not camera_back:
+                film_counts = film_counts.filter(format=camera.format)
         else:
             film_counts = Film.objects.filter(
                     roll__owner=owner,
                     roll__status=status_number('storage')
-                ).filter(
-                    format=camera.format
                 ).annotate(
                     count=Count('name')
                 ).order_by(
@@ -1619,12 +1636,15 @@ def camera_load(request, pk):
                     'manufacturer__name',
                     'name',
                 )
+            if not camera_back:
+                film_counts = film_counts.filter(format=camera.format)
 
         film_counts = iso_filter(iso, film_counts)
 
         context = {
             'owner': owner,
             'camera': camera,
+            'camera_back': camera_back,
             'current_project': current_project,
             'projects': projects,
             'film_counts': film_counts,
@@ -1632,7 +1652,10 @@ def camera_load(request, pk):
             'iso_value': iso['value'],
         }
 
-        return render(request, 'inventory/camera_load.html', context)
+        if camera_back:
+            return render(request, 'inventory/camera_back_load.html', context)
+        else:
+            return render(request, 'inventory/camera_load.html', context)
 
 
 @login_required

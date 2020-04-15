@@ -175,7 +175,7 @@ class CameraBack(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return 'Back “%s” for %s' % (self.name, self.camera)
+        return '%s, Back “%s”' % (self.camera, self.name)
 
 
 class Project(models.Model):
@@ -368,19 +368,23 @@ class Roll(models.Model):
 
             self.ended_on = datetime.date.today()
 
-        # If we’ve loaded this roll, set the associated camera’s status to
-        # 'loaded'.
-        if (self.status == status_number('loaded')
-                and self.camera.status == 'empty'):
-            self.camera.status = 'loaded'
+        # If we’ve loaded this roll, set the associated camera’s (and perhaps
+        # camera_back’s) status to 'loaded'.
+        if (self.status == status_number('loaded')):
+            # Should we just ignore camera.status if there’s a camera_back?
+            if (self.camera.status == 'empty'):
+                self.camera.status = 'loaded'
+                self.camera.save()
+
+            if (self.camera_back and self.camera_back.status == 'empty'):
+                self.camera_back.status = 'loaded'
+                self.camera_back.save()
 
             # If we’re changing the status to 'loaded' but it has an ended_on
             # set, clear it. This is if you accidentally changed something
             # from loaded and want to get it back.
             if self.ended_on is not None:
                 self.ended_on = None
-
-            self.camera.save()
 
         # If we've changed our minds and put something back into storage, set
         # everything back to factory condition.
@@ -390,6 +394,12 @@ class Roll(models.Model):
                 self.camera.status = 'empty'
                 self.camera.save()
                 self.camera = None
+
+            # Unload back
+            if self.camera_back:
+                self.camera_back.status = 'empty'
+                self.camera_back.save()
+                self.camera_back = None
 
             self.code = ''
             self.push_pull = ''

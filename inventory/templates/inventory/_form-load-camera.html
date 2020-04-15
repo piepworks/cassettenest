@@ -1,4 +1,9 @@
-<form action="{% url 'camera-load' camera.id %}" method="post">
+{% if camera_back %}
+    {% url 'camera-back-load' camera_back.id as load_url %}
+{% else %}
+    {% url 'camera-load' camera.id as load_url %}
+{% endif %}
+<form action="{{ load_url }}" method="post">
     {% csrf_token %}
     <input type="hidden" name="project" value="{{ current_project.id }}" />
     {% regroup film_counts by get_type_display as film_list %}
@@ -9,7 +14,13 @@
             {% for type in film_list %}
             <optgroup label="{{ type.grouper }}">
                 {% for film in type.list %}
-                <option value="{{ film.id }}">{{ film.manufacturer }} {{ film.name }} ({{ film.count }})</option>
+                <option value="{{ film.id }}">
+                    {{ film.manufacturer }} {{ film.name }}
+                    {% if camera_back %}
+                    in {{ film.get_format_display }}
+                    {% endif %}
+                    ({{ film.count }})
+                </option>
                 {% endfor %}
             </optgroup>
             {% endfor %}
