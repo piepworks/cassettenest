@@ -1708,6 +1708,11 @@ def camera_detail(request, pk):
 
 
 @login_required
+def camera_back_detail(request, camera_pk, back_pk):
+    pass
+
+
+@login_required
 def camera_add(request):
     owner = request.user
 
