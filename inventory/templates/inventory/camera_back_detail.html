@@ -1,0 +1,10 @@
+{% extends 'base_site.html' %}
+{% load markdown_deux_tags %}
+
+{% block title %}{{ camera_back }}{% endblock %}
+
+{% block content %}
+<div class="raw">
+    <h1><a href="{% url 'camera-detail' camera_back.camera.id %}">{{ camera_back.camera }}</a>, Back “{{ camera_back.name }}”</h1>
+</div>
+{% endblock %}

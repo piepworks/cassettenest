@@ -1709,7 +1709,18 @@ def camera_detail(request, pk):
 
 @login_required
 def camera_back_detail(request, camera_pk, back_pk):
-    pass
+    owner = request.user
+
+    camera_back = get_object_or_404(
+        CameraBack, id=back_pk, camera__id=camera_pk, camera__owner=owner
+    )
+
+    context = {
+        'camera_back': camera_back
+    }
+
+    return render(request, 'inventory/camera_back_detail.html', context)
+
 
 
 @login_required
