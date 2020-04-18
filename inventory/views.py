@@ -413,19 +413,19 @@ def inventory(request):
         roll__status=status_number('storage'),
     )
     film_counts = total_film_count.annotate(
-            count=Count('roll')
-        ).order_by(
-            'type',
-            '-format',
-            'manufacturer__name',
-            'name',
-        )
+        count=Count('roll')
+    ).order_by(
+        'type',
+        '-format',
+        'manufacturer__name',
+        'name',
+    )
     format_counts = Film.objects.filter(
-            roll__owner=owner,
-            roll__status=status_number('storage')
-        ).values('format').annotate(
-            count=Count('format')
-        ).distinct().order_by('format')
+        roll__owner=owner,
+        roll__status=status_number('storage')
+    ).values('format').annotate(
+        count=Count('format')
+    ).distinct().order_by('format')
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
@@ -436,11 +436,11 @@ def inventory(request):
         )
 
     type_counts = Film.objects.filter(
-            roll__owner=owner,
-            roll__status=status_number('storage')
-        ).values('type').annotate(
-            count=Count('type')
-        ).distinct().order_by('type')
+        roll__owner=owner,
+        roll__status=status_number('storage')
+    ).values('type').annotate(
+        count=Count('type')
+    ).distinct().order_by('type')
 
     # Get the display name of types choices.
     type_choices = dict(Film._meta.get_field('type').flatchoices)
@@ -466,13 +466,13 @@ def logbook(request):
     status = 0
     description = ''
     rolls = Roll.objects.filter(owner=owner).exclude(
-            status=status_number('storage')
-        ).order_by(
-            'status',
-            '-ended_on',
-            '-started_on',
-            '-code'
-        )
+        status=status_number('storage')
+    ).order_by(
+        'status',
+        '-ended_on',
+        '-started_on',
+        '-code'
+    )
     year = ''
     all_years = {}
     all_years_count = rolls.count()
@@ -512,13 +512,13 @@ def ready(request):
     owner = request.user
     form = ReadyForm()
     rolls = Roll.objects.filter(
-            owner=owner,
-            status=status_number('shot')
-        ).order_by(
-            '-ended_on',
-            '-started_on',
-            '-code'
-        )
+        owner=owner,
+        status=status_number('shot')
+    ).order_by(
+        '-ended_on',
+        '-started_on',
+        '-code'
+    )
     rolls_by_format = rolls.order_by('film__format')
     rolls_by_type = rolls.order_by('film__type')
     rolls_135 = rolls.filter(film__format=135).count()
@@ -769,11 +769,11 @@ def rolls_update(request):
 def projects(request):
     owner = request.user
     projects = Project.objects.filter(
-            owner=owner
-        ).order_by(
-            '-status',
-            '-updated_at',
-        )
+        owner=owner
+    ).order_by(
+        '-status',
+        '-updated_at',
+    )
     context = {
         'projects': projects,
     }
@@ -920,13 +920,13 @@ def project_detail(request, pk):
         roll__status=status_number('storage'),
     )
     film_counts = total_film_count.annotate(
-            count=Count('roll')
-        ).order_by(
-            'type',
-            '-format',
-            'manufacturer__name',
-            'name',
-        )
+        count=Count('roll')
+    ).order_by(
+        'type',
+        '-format',
+        'manufacturer__name',
+        'name',
+    )
 
     format_counts = {
         '135': film_counts.filter(format='135'),
@@ -935,31 +935,31 @@ def project_detail(request, pk):
 
     # rolls available to be added to a project
     film_available_count = Film.objects.filter(
-            roll__owner=owner,
-            roll__project=None,
-            roll__status=status_number('storage'),
-        ).annotate(
-            count=Count('roll')
-        ).order_by(
-            'type',
-            'manufacturer__name',
-            'name',
-        )
+        roll__owner=owner,
+        roll__project=None,
+        roll__status=status_number('storage'),
+    ).annotate(
+        count=Count('roll')
+    ).order_by(
+        'type',
+        'manufacturer__name',
+        'name',
+    )
 
     # Filter available films by ISO if set. Return the unaltered list if not.
     film_available_count = iso_filter(iso, film_available_count)
 
     roll_logbook = Roll.objects.filter(
-            owner=owner,
-            project=project
-        ).exclude(
-            status=status_number('storage')
-        ).order_by(
-            'status',
-            '-ended_on',
-            '-started_on',
-            '-code'
-        )
+        owner=owner,
+        project=project
+    ).exclude(
+        status=status_number('storage')
+    ).order_by(
+        'status',
+        '-ended_on',
+        '-started_on',
+        '-code'
+    )
 
     context = {
         'owner': owner,
@@ -1204,10 +1204,10 @@ def film_rolls(request, slug):
     rolls = Roll.objects.filter(owner=owner, film__slug=slug)
     rolls_storage = rolls.filter(status=status_number('storage'))
     rolls_history = rolls.exclude(
-            status=status_number('storage')
-        ).order_by(
-            '-started_on'
-        )
+        status=status_number('storage')
+    ).order_by(
+        '-started_on'
+    )
 
     # Querystring.
     if request.GET.get('project'):
@@ -1242,12 +1242,12 @@ def film_format(request, format):
         format=format,
     )
     film_counts = total_film_count.annotate(
-            count=Count('roll')
-        ).order_by(
-            'type',
-            'manufacturer__name',
-            'name',
-        )
+        count=Count('roll')
+    ).order_by(
+        'type',
+        'manufacturer__name',
+        'name',
+    )
     format_choices = dict(Film._meta.get_field('format').flatchoices)
     context = {
         'format': force_text(format_choices[format], strings_only=True),
@@ -1269,12 +1269,12 @@ def film_type(request, type):
         type=type,
     )
     film_counts = total_film_count.annotate(
-            count=Count('roll')
-        ).order_by(
-            '-format',
-            'manufacturer__name',
-            'name',
-        )
+        count=Count('roll')
+    ).order_by(
+        '-format',
+        'manufacturer__name',
+        'name',
+    )
     type_choices = dict(Film._meta.get_field('type').flatchoices)
     context = {
         'type': force_text(type_choices[type], strings_only=True),
@@ -1509,11 +1509,11 @@ def roll_journal_delete(request, roll_pk, entry_pk):
 def cameras(request):
     owner = request.user
     cameras = Camera.objects.filter(
-            owner=owner
-        ).order_by(
-            '-status',
-            '-updated_at',
-        )
+        owner=owner
+    ).order_by(
+        '-status',
+        '-updated_at',
+    )
     context = {
         'cameras': cameras,
     }
@@ -1545,10 +1545,10 @@ def camera_load(request, pk, back_pk=None):
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
         push_pull = request.POST.get('push_pull', '')
         rolls = Roll.objects.filter(
-                owner=owner,
-                film=film,
-                status=status_number('storage'),
-            )
+            owner=owner,
+            film=film,
+            status=status_number('storage'),
+        )
         if not camera_back:
             rolls = rolls.filter(film__format=camera.format)
 
@@ -1563,8 +1563,8 @@ def camera_load(request, pk, back_pk=None):
         # The the oldest roll we have of that film in storage.
         if current_project is not None and current_project != 0:
             roll = rolls.filter(
-                    project=current_project
-                ).order_by('created_at')[0]
+                project=current_project
+            ).order_by('created_at')[0]
         else:
             roll = rolls.order_by('created_at')[0]
 
@@ -1604,29 +1604,29 @@ def camera_load(request, pk, back_pk=None):
 
         if current_project is not None and current_project != 0:
             film_counts = Film.objects.filter(
-                    roll__owner=owner,
-                    roll__status=status_number('storage'),
-                    roll__project=current_project
-                ).annotate(
-                    count=Count('name')
-                ).order_by(
-                    'type',
-                    'manufacturer__name',
-                    'name',
-                )
+                roll__owner=owner,
+                roll__status=status_number('storage'),
+                roll__project=current_project
+            ).annotate(
+                count=Count('name')
+            ).order_by(
+                'type',
+                'manufacturer__name',
+                'name',
+            )
             if not camera_back:
                 film_counts = film_counts.filter(format=camera.format)
         else:
             film_counts = Film.objects.filter(
-                    roll__owner=owner,
-                    roll__status=status_number('storage')
-                ).annotate(
-                    count=Count('name')
-                ).order_by(
-                    'type',
-                    'manufacturer__name',
-                    'name',
-                )
+                roll__owner=owner,
+                roll__status=status_number('storage')
+            ).annotate(
+                count=Count('name')
+            ).order_by(
+                'type',
+                'manufacturer__name',
+                'name',
+            )
             if not camera_back:
                 film_counts = film_counts.filter(format=camera.format)
 
