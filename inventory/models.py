@@ -163,7 +163,11 @@ class CameraBack(models.Model):
         ('loaded', 'Loaded'),
         ('unavailable', 'Unavailable'),
     )
-    camera = models.ForeignKey(Camera, on_delete=models.CASCADE)
+    camera = models.ForeignKey(
+        Camera,
+        on_delete=models.CASCADE,
+        related_name='camera_backs'
+    )
     name = models.CharField(max_length=255)
     notes = models.TextField(blank=True)
     status = models.CharField(

@@ -1525,6 +1525,15 @@ def cameras(request):
 def camera_load(request, pk, back_pk=None):
     owner = request.user
     current_project = None
+    camera = get_object_or_404(Camera, id=pk, owner=owner)
+    if back_pk:
+        camera_back = get_object_or_404(
+            CameraBack,
+            id=back_pk,
+            camera__owner=owner
+        )
+    else:
+        camera_back = None
 
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
@@ -1533,15 +1542,6 @@ def camera_load(request, pk, back_pk=None):
     # Set the roll's camera to this camera
 
     if request.method == 'POST':
-        camera = get_object_or_404(Camera, id=pk, owner=owner)
-        if back_pk:
-            camera_back = get_object_or_404(
-                CameraBack,
-                id=back_pk,
-                camera__owner=owner
-            )
-        else:
-            camera_back = None
         film = get_object_or_404(Film, id=request.POST.get('film', ''))
         push_pull = request.POST.get('push_pull', '')
         rolls = Roll.objects.filter(
@@ -1591,15 +1591,6 @@ def camera_load(request, pk, back_pk=None):
         else:
             return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
-        camera = get_object_or_404(Camera, id=pk, owner=owner)
-        if back_pk:
-            camera_back = get_object_or_404(
-                CameraBack,
-                id=back_pk,
-                camera__owner=owner
-            )
-        else:
-            camera_back = None
         projects = Project.objects.filter(owner=owner, status='current')
         iso = iso_variables(request)
 
@@ -1659,9 +1650,19 @@ def camera_load(request, pk, back_pk=None):
 
 
 @login_required
-def camera_detail(request, pk):
+def camera_or_back_detail(request, pk, back_pk=None):
     owner = request.user
     camera = get_object_or_404(Camera, id=pk, owner=owner)
+    if back_pk:
+        camera_back = get_object_or_404(
+            CameraBack,
+            id=back_pk,
+            camera__owner=owner
+        )
+        camera_or_back = camera_back
+    else:
+        camera_back = None
+        camera_or_back = camera
 
     if request.method == 'POST':
         roll = get_object_or_404(Roll, id=request.POST.get('roll', ''))
@@ -1682,45 +1683,43 @@ def camera_detail(request, pk):
             return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         roll = ''
-        rolls_history = Roll.objects.filter(
-            owner=owner,
-            camera=pk
-        ).exclude(
-            status=status_number('loaded')
-        ).order_by(
-            '-started_on'
-        )
-
-        if camera.status == 'loaded':
-            roll = Roll.objects.filter(
-                camera=camera,
+        # put an if statement here to only show the history for the back. or
+        # maybe don't show history at all. who cares?
+        if camera_back:
+            rolls_history = ''
+        else:
+            rolls_history = Roll.objects.filter(
+                owner=owner,
+                camera=pk
+            ).exclude(
                 status=status_number('loaded')
-            )[0]
+            ).order_by(
+                '-started_on'
+            )
+
+        if camera_back:
+            if camera_back.status == 'loaded':
+                roll = Roll.objects.filter(
+                    camera_back=camera_back,
+                    status=status_number('loaded')
+                )[0]
+        else:
+            if camera.status == 'loaded':
+                roll = Roll.objects.filter(
+                    camera=camera,
+                    status=status_number('loaded')
+                )[0]
 
         context = {
             'owner': owner,
             'camera': camera,
+            'camera_back': camera_back,
+            'camera_or_back': camera_or_back,
             'roll': roll,
             'rolls_history': rolls_history,
         }
 
-        return render(request, 'inventory/camera_detail.html', context)
-
-
-@login_required
-def camera_back_detail(request, camera_pk, back_pk):
-    owner = request.user
-
-    camera_back = get_object_or_404(
-        CameraBack, id=back_pk, camera__id=camera_pk, camera__owner=owner
-    )
-
-    context = {
-        'camera_back': camera_back
-    }
-
-    return render(request, 'inventory/camera_back_detail.html', context)
-
+        return render(request, 'inventory/camera_or_back_detail.html', context)
 
 
 @login_required
@@ -1765,7 +1764,7 @@ def camera_add(request):
 
 
 @login_required
-def camera_edit(request, pk):
+def camera_or_back_edit(request, pk, back_pk=None):
     owner = request.user
     camera = get_object_or_404(Camera, id=pk, owner=owner)
 
