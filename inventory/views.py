@@ -1580,7 +1580,7 @@ def camera_or_back_load(request, pk, back_pk=None):
         messages.success(
             request,
             '%s loaded with %s %s (code: %s)!' % (
-                camera.name,
+                camera_or_back,
                 roll.film.manufacturer,
                 roll.film.name,
                 roll.code,
@@ -1720,7 +1720,14 @@ def camera_or_back_detail(request, pk, back_pk=None):
             'rolls_history': rolls_history,
         }
 
-        return render(request, 'inventory/camera_or_back_detail.html', context)
+        if camera_back:
+            return render(
+                request, 'inventory/camera_back_detail.html', context
+            )
+        else:
+            return render(
+                request, 'inventory/camera_detail.html', context
+            )
 
 
 @login_required

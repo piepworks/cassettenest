@@ -1,0 +1,73 @@
+{% extends 'base_site.html' %}
+{% load markdown_deux_tags %}
+
+{% block title %}{{ camera.name }}{% endblock %}
+
+{% block content %}
+<div class="raw">
+    <h1>{{ camera.name }}</h1>
+
+    <div class="do-not-print">
+        <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
+    </div>
+
+    {% if not camera.multiple_backs %}
+        {% comment %}Don’t show status for a camera with backs.{% endcomment %}
+        <section class="status">
+            <h2>Status: {{ camera.get_status_display }}</h2>
+        </section>
+    {% endif %}
+
+    {% if camera.get_format_display %}
+        <p>Format: {{ camera.get_format_display }}</p>
+    {% endif %}
+
+    {% if not camera.multiple_backs and camera.status == 'loaded' %}
+        {% include 'inventory/_camera-loaded.html' %}
+        <div class="action">{% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}</div>
+    {% elif camera.status != 'unavailable' %}
+        {% if camera.multiple_backs %}
+            <p>You can load this camera via one of its backs.</p>
+        {% else %}
+            <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
+        {% endif %}
+    {% endif %}
+
+    {% if camera.multiple_backs %}
+        <section class="backs">
+            <h3>Camera Backs</h3>
+            {% if camera.camera_backs.all %}
+            <ul>
+                {% for back in camera.camera_backs.all %}
+                <li>
+                    <a href="{% url 'camera-back-detail' camera.id back.id %}">Back {{ back.name }}</a>
+                    ({{ back.get_status_display }})
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No camera backs found.</p>
+            {% endif %}
+            <div class="do-not-print">
+                <p><a href="{% url 'camera-back-add' camera.id %}">Add a camera back</a></p>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if camera.notes %}
+        <h2>Notes</h2>
+        <div>{{ camera.notes|markdown }}</div>
+    {% endif %}
+
+    {% if rolls_history %}
+        <section class="history">
+            <h3>{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
+            <ul>
+                {% for roll in rolls_history %}
+                <li><a href="{% url 'roll-detail' roll.id %}">{{ roll }}</a></li>
+                {% endfor %}
+            </ul>
+        </section>
+    {% endif %}
+</div>
+{% endblock %}

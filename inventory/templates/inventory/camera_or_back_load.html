@@ -12,7 +12,7 @@
 </h1>
 <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
 
-{% if camera.status != 'loaded' %}
+{% if camera_or_back.status != 'loaded' %}
     <h2>Pick a film to load: {% if not camera_back %}<small>(Format: {{ camera.get_format_display }})</small>{% endif %}</h2>
 
     {% if projects %}

@@ -1,0 +1,36 @@
+{% extends 'base_site.html' %}
+{% load markdown_deux_tags %}
+
+{% block title %}{{ camera_back }}{% endblock %}
+
+{% block content %}
+<div class="raw">
+    <h1>
+        <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>, Back “{{ camera_back.name }}”
+    </h1>
+
+    <div class="do-not-print">
+        <p><a href="{% url 'camera-back-edit' camera.id camera_back.id %}">Edit this camera back</a></p>
+    </div>
+
+    <section class="status">
+        <h2>Status: {{ camera_back.get_status_display }}</h2>
+    </section>
+
+    {% if camera_back.get_format_display %}
+        <p>Format: {{ camera_back.get_format_display }}</p>
+    {% endif %}
+
+    {% if camera_back.status == 'loaded' %}
+        {% include 'inventory/_camera-loaded.html' %}
+        <div class="action">{% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}</div>
+    {% elif camera_back.status != 'unavailable' %}
+        <p><a href="{% url 'camera-back-load' camera.id camera_back.id %}">Load this camera back</a></p>
+    {% endif %}
+
+    {% if camera_back.notes %}
+        <h2>Notes</h2>
+        <div>{{ camera_back.notes|markdown }}</div>
+    {% endif %}
+</div>
+{% endblock %}
