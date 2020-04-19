@@ -36,7 +36,7 @@
     <li><a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></li>
 
     {% if roll.camera_back %}
-    <li>Camera: <a href="{% url 'camera-back-detail' roll.camera.id roll.camera_back.id %}">{{ roll.camera_back }}</a></li>
+    <li>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a>, <a href="{% url 'camera-back-detail' roll.camera.id roll.camera_back.id %}">Back “{{ roll.camera_back.name }}”</a></li>
     {% elif roll.camera %}
     <li>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></li>
     {% endif %}

@@ -352,7 +352,7 @@ class Roll(models.Model):
                 self.status = status_number('loaded')
 
         # If we change the status from loaded to any status other than storage,
-        # 1. Unload the associated camera
+        # 1. Unload the associated camera (and perhaps camera_back).
         # 2. Set ended_on
         if self.code and self.status not in [
             status_number('storage'),
@@ -369,6 +369,17 @@ class Roll(models.Model):
                 if camera_roll == self:
                     self.camera.status = 'empty'
                     self.camera.save()
+
+            # If the camera back is still loaded with this roll, unload it.
+            if self.camera_back.status == 'loaded':
+                camera_roll = Roll.objects.filter(
+                    camera_back=self.camera_back,
+                    status=status_number('loaded')
+                )[0]
+
+                if camera_roll == self:
+                    self.camera_back.status = 'empty'
+                    self.camera_back.save()
 
             self.ended_on = datetime.date.today()
 

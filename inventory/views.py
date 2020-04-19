@@ -1532,8 +1532,10 @@ def camera_or_back_load(request, pk, back_pk=None):
             id=back_pk,
             camera__owner=owner
         )
+        camera_or_back = camera_back
     else:
         camera_back = None
+        camera_or_back = camera
 
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
@@ -1636,6 +1638,7 @@ def camera_or_back_load(request, pk, back_pk=None):
             'owner': owner,
             'camera': camera,
             'camera_back': camera_back,
+            'camera_or_back': camera_or_back,
             'current_project': current_project,
             'projects': projects,
             'film_counts': film_counts,
@@ -1643,10 +1646,7 @@ def camera_or_back_load(request, pk, back_pk=None):
             'iso_value': iso['value'],
         }
 
-        if camera_back:
-            return render(request, 'inventory/camera_back_load.html', context)
-        else:
-            return render(request, 'inventory/camera_load.html', context)
+        return render(request, 'inventory/camera_or_back_load.html', context)
 
 
 @login_required
@@ -1765,6 +1765,7 @@ def camera_add(request):
 
 @login_required
 def camera_or_back_edit(request, pk, back_pk=None):
+    # Maybe this should be just for cameras and we create another for backs.
     owner = request.user
     camera = get_object_or_404(Camera, id=pk, owner=owner)
 
