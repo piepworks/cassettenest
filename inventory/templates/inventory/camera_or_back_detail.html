@@ -42,7 +42,10 @@
         <h3>Camera Backs</h3>
         <ul>
             {% for back in camera.camera_backs.all %}
-            <li><a href="{% url 'camera-back-detail' camera.id back.id %}">{{ back }}</a></li>
+            <li>
+                <a href="{% url 'camera-back-detail' camera.id back.id %}">{{ back }}</a>
+                ({{ back.get_status_display }})
+            </li>
             {% endfor %}
         </ul>
     </section>

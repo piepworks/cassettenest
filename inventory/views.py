@@ -1522,7 +1522,7 @@ def cameras(request):
 
 
 @login_required
-def camera_load(request, pk, back_pk=None):
+def camera_or_back_load(request, pk, back_pk=None):
     owner = request.user
     current_project = None
     camera = get_object_or_404(Camera, id=pk, owner=owner)

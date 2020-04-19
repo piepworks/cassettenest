@@ -63,7 +63,7 @@ urlpatterns = [
     path('film/format/<format>/', views.film_format, name='film-format'),
     path('film/<slug:slug>/', views.film_rolls, name='film-rolls'),
 
-    # Cameras
+    # Cameras and Backs
     path('cameras/', views.cameras, name='cameras'),
     path('camera/add/', views.camera_add, name='camera-add'),
     path('camera/<int:pk>/',
@@ -71,9 +71,9 @@ urlpatterns = [
     path('camera/<int:pk>/back/<int:back_pk>/',
          views.camera_or_back_detail, name='camera-back-detail'),
     path('camera/<int:pk>/load/',
-         views.camera_load, name='camera-load'),
+         views.camera_or_back_load, name='camera-load'),
     path('camera/<int:pk>/back/<int:back_pk>/load/',
-         views.camera_load, name='camera-back-load'),
+         views.camera_or_back_load, name='camera-back-load'),
     path('camera/<int:pk>/edit/',
          views.camera_or_back_edit, name='camera-edit'),
     path('camera/<int:pk>/edit/back/<int:back_pk>',
