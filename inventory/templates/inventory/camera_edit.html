@@ -8,7 +8,7 @@
 
     <form method="post">
         {% csrf_token %}
-        <input type="hidden" name="owner" value="{{ owner.id }}">
+        <input type="hidden" name="owner" value="{{ owner.id }}" />
         {% include 'inventory/_form-field.html' with field=form.name %}
         {% include 'inventory/_form-field.html' with field=form.format %}
         {% include 'inventory/_form-field.html' with field=form.notes %}

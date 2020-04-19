@@ -18,7 +18,6 @@
         <p><a href="{% url 'camera-back-edit' camera.id camera_back.id %}">Edit this back</a></p>
         {% else %}
         <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
-        <p><a href="#">Add a camera back</a></p>
         {% endif %}
     </div>
 
@@ -48,14 +47,21 @@
     {% if not camera_back and camera.multiple_backs %}
     <section class="backs">
         <h3>Camera Backs</h3>
+        {% if camera.camera_backs.all %}
         <ul>
             {% for back in camera.camera_backs.all %}
             <li>
-                <a href="{% url 'camera-back-detail' camera.id back.id %}">{{ back }}</a>
+                <a href="{% url 'camera-back-detail' camera.id back.id %}">Back {{ back.name }}</a>
                 ({{ back.get_status_display }})
             </li>
             {% endfor %}
         </ul>
+        {% else %}
+        <p>No camera backs found.</p>
+        {% endif %}
+        <div class="do-not-print">
+            <p><a href="{% url 'camera-back-add' camera.id %}">Add a camera back</a></p>
+        </div>
     </section>
     {% endif %}
 

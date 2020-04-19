@@ -66,6 +66,8 @@ urlpatterns = [
     # Cameras and Backs
     path('cameras/', views.cameras, name='cameras'),
     path('camera/add/', views.camera_add, name='camera-add'),
+    path('camera/<int:pk>/back/add/',
+         views.camera_back_add, name='camera-back-add'),
     path('camera/<int:pk>/',
          views.camera_or_back_detail, name='camera-detail'),
     path('camera/<int:pk>/back/<int:back_pk>/',
@@ -75,11 +77,13 @@ urlpatterns = [
     path('camera/<int:pk>/back/<int:back_pk>/load/',
          views.camera_or_back_load, name='camera-back-load'),
     path('camera/<int:pk>/edit/',
-         views.camera_or_back_edit, name='camera-edit'),
-    path('camera/<int:pk>/edit/back/<int:back_pk>',
-         views.camera_or_back_edit, name='camera-back-edit'),
+         views.camera_edit, name='camera-edit'),
+    path('camera/<int:pk>/back/<int:back_pk>/edit/',
+         views.camera_back_edit, name='camera-back-edit'),
     path('camera/<int:pk>/delete/',
          views.camera_delete, name='camera-delete'),
+    path('camera/<int:pk>/back/<int:back_pk>/delete/',
+         views.camera_back_delete, name='camera-back-delete'),
 
     # Subscribe
     path('subscribe/',

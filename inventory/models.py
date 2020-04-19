@@ -371,7 +371,7 @@ class Roll(models.Model):
                     self.camera.save()
 
             # If the camera back is still loaded with this roll, unload it.
-            if self.camera_back.status == 'loaded':
+            if self.camera_back and self.camera_back.status == 'loaded':
                 camera_roll = Roll.objects.filter(
                     camera_back=self.camera_back,
                     status=status_number('loaded')

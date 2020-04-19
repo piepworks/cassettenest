@@ -3,7 +3,7 @@ from django.forms import ModelForm, ModelChoiceField, widgets
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 import djstripe.models
-from .models import Camera, Roll, Project, Journal, User, Profile
+from .models import Camera, CameraBack, Roll, Project, Journal, User, Profile
 
 
 class RegisterForm(UserCreationForm):
@@ -39,6 +39,26 @@ class CameraForm(ModelForm):
             'notes',
             'owner',
             'multiple_backs',
+            'unavailable'
+        ]
+
+
+class CameraBackForm(ModelForm):
+    unavailable = forms.BooleanField(
+        label='Unavailable',
+        required=False,
+        help_text='''
+            Keep this camera back in your collection, but prevent it from being
+            available to load. Good for cameras backs you no longer own or only
+            borrowed.
+        '''
+    )
+
+    class Meta:
+        model = CameraBack
+        fields = [
+            'name',
+            'notes',
             'unavailable'
         ]
 

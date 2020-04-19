@@ -1,0 +1,27 @@
+{% extends 'base_site.html' %}
+
+{% block title %}Edit a camera back{% endblock %}
+
+{% block content %}
+<div class="raw">
+    <h1>Edit <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>, Back “{{ camera_back.name }}”</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {% include 'inventory/_form-field.html' with field=form.name %}
+        {% include 'inventory/_form-field.html' with field=form.notes %}
+        {% if camera.status != 'loaded' %}
+        {% include 'inventory/_form-field.html' with field=form.unavailable %}
+        {% endif %}
+        <div class="action"><input type="submit" value="Update camera back" /></div>
+    </form>
+
+    {% if not camera_back.roll_set.all %}
+    <form onsubmit="return confirmDelete('camera back')"  action="{% url 'camera-back-delete' camera.id camera_back.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="camera_back" value="{{ camera_back.id }}" />
+        <div class="action">Since you've never used this, you can <input type="submit" class="destructive" value="delete this camera back" /></div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

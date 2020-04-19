@@ -1,0 +1,21 @@
+{% extends 'base_site.html' %}
+
+{% block title %}Add a camera back for {{ camera.name }}{% endblock %}
+
+{% block content %}
+<div class="raw">
+<h1>Add a camera back for <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></h1>
+
+<form method="post">
+    {% csrf_token %}
+    {% include 'inventory/_form-field.html' with field=form.name %}
+    {% include 'inventory/_form-field.html' with field=form.notes %}
+    {% include 'inventory/_form-field.html' with field=form.unavailable %}
+
+    <div class="action">
+        <p><input type="submit" value="Save camera back" /></p>
+        <p><input type="submit" class="secondary" name="another" value="Save camera back and add another" /></p>
+    </div>
+</form>
+</div>
+{% endblock %}

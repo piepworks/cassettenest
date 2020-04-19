@@ -17,6 +17,7 @@ from djstripe.decorators import subscription_payment_required
 from .models import Camera, CameraBack, Film, Journal, Project, Roll
 from .forms import (
     CameraForm,
+    CameraBackForm,
     JournalForm,
     PatternsForm,
     ProfileForm,
@@ -1764,8 +1765,52 @@ def camera_add(request):
 
 
 @login_required
-def camera_or_back_edit(request, pk, back_pk=None):
-    # Maybe this should be just for cameras and we create another for backs.
+def camera_back_add(request, pk):
+    owner = request.user
+    camera = get_object_or_404(Camera, id=pk, owner=owner)
+
+    if request.method == 'POST':
+        form = CameraBackForm(request.POST)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            notes = form.cleaned_data['notes']
+            unavailable = form.cleaned_data['unavailable']
+            camera_back = CameraBack.objects.create(
+                name=name,
+                camera=camera,
+                notes=notes,
+                status='unavailable' if unavailable else 'empty'
+            )
+
+            messages.success(
+                request, 'Camera back for %s added!' % (camera.name)
+            )
+
+            if 'another' in request.POST:
+                return redirect(reverse('camera-back-add', args=(camera.id,)))
+            else:
+                return redirect(reverse(
+                    'camera-back-detail', args=(camera.id, camera_back.id)
+                ))
+        else:
+            # TODO: Output the actual error from the form instead of this
+            # hardcoded one.
+            messages.error(request, 'You already have that back.')
+            return redirect(reverse('camera-back-add', args=(camera.id)),)
+    else:
+        form = CameraBackForm()
+        context = {
+            'owner': owner,
+            'form': form,
+            'camera': camera,
+        }
+
+        return render(request, 'inventory/camera_back_add.html', context)
+
+
+@login_required
+def camera_edit(request, pk):
     owner = request.user
     camera = get_object_or_404(Camera, id=pk, owner=owner)
 
@@ -1801,6 +1846,45 @@ def camera_or_back_edit(request, pk, back_pk=None):
         return render(request, 'inventory/camera_edit.html', context)
 
 
+@login_required
+def camera_back_edit(request, pk, back_pk):
+    owner = request.user
+    camera = get_object_or_404(Camera, id=pk, owner=owner)
+    camera_back = get_object_or_404(CameraBack, id=back_pk, camera=camera)
+
+    if request.method == 'POST':
+        form = CameraBackForm(request.POST, instance=camera_back)
+
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            notes = form.cleaned_data['notes']
+            unavailable = form.cleaned_data['unavailable']
+            if unavailable and camera_back.status != 'loaded':
+                camera_back.status = 'unavailable'
+            elif camera_back.status != 'loaded':
+                camera_back.status = 'empty'
+            camera_back.name = name
+            camera_back.notes = notes
+            camera_back.save()
+
+            messages.success(request, 'Camera back updated!')
+            return redirect(
+                reverse('camera-back-detail', args=(camera.id, camera_back.id))
+            )
+    else:
+        form = CameraBackForm(instance=camera_back)
+        form.fields['unavailable'].initial = camera_back.status == 'unavailable'
+
+        context = {
+            'owner': owner,
+            'form': form,
+            'camera': camera,
+            'camera_back': camera_back,
+        }
+
+        return render(request, 'inventory/camera_back_edit.html', context)
+
+
 @require_POST
 @login_required
 def camera_delete(request, pk):
@@ -1815,3 +1899,20 @@ def camera_delete(request, pk):
         'Camera %s successfully deleted.' % (name)
     )
     return redirect(reverse('index'))
+
+
+@require_POST
+@login_required
+def camera_back_delete(request, pk, back_pk):
+    owner = request.user
+    camera = get_object_or_404(Camera, id=pk, owner=owner)
+    camera_back = get_object_or_404(CameraBack, id=back_pk, camera=camera)
+    name = camera_back
+
+    camera_back.delete()
+
+    messages.success(
+        request,
+        '%s successfully deleted.' % (name)
+    )
+    return redirect(reverse('camera-detail', args=(camera.id,)))

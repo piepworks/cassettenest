@@ -1,7 +1,7 @@
 import datetime
 from django.test import TestCase
 from model_bakery import baker
-from .models import Roll, Camera
+from .models import Roll, Camera, CameraBack
 from .utils import status_number
 
 
@@ -145,3 +145,20 @@ class RollTestCase(TestCase):
 
         self.assertIsNone(roll.ended_on)
         self.assertEqual(camera.status, 'loaded')
+
+    def test_loading_and_unloading_camera_back(self):
+        roll = baker.make(Roll)
+        camera = baker.make(Camera)
+        camera_back = baker.make(CameraBack)
+
+        roll.camera = camera
+        roll.camera_back = camera_back
+        roll.started_on = datetime.date.today()
+        roll.save()
+
+        self.assertEqual(camera_back.status, 'loaded')
+
+        roll.status = status_number('shot')
+        roll.save()
+
+        self.assertEqual(camera_back.status, 'empty')
