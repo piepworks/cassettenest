@@ -18,9 +18,7 @@
         </section>
     {% endif %}
 
-    {% if camera.get_format_display %}
-        <p>Format: {{ camera.get_format_display }}</p>
-    {% endif %}
+    <p>Format: {{ camera.get_format_display }}</p>
 
     {% if not camera.multiple_backs and camera.status == 'loaded' %}
         {% include 'inventory/_camera-loaded.html' %}
