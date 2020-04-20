@@ -1684,8 +1684,6 @@ def camera_or_back_detail(request, pk, back_pk=None):
             return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         roll = ''
-        # put an if statement here to only show the history for the back. or
-        # maybe don't show history at all. who cares?
         if camera_back:
             rolls_history = ''
         else:
