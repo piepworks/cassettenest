@@ -6,27 +6,34 @@
 
 {% block content %}
 <div class="raw">
-<h1>Load
-    <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
-    {% if camera_back %}, <a href="{% url 'camera-back-detail' camera.id camera_back.id %}">Back “{{ camera_back.name }}”</a>{% endif %}
-</h1>
-<p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
+    <h1>Load
+        <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
+        {% if camera_back %}, <a href="{% url 'camera-back-detail' camera.id camera_back.id %}">Back “{{ camera_back.name }}”</a>{% endif %}
+    </h1>
 
-{% if camera_or_back.status != 'loaded' %}
-    <h2>Pick a film to load: {% if not camera_back %}<small>(Format: {{ camera.get_format_display }})</small>{% endif %}</h2>
+    <div class="do-not-print">
+        {% if camera_back %}
+            <p><a href="{% url 'camera-back-edit' camera.id camera_back.id %}">Edit this camera back</a></p>
+        {% else %}
+            <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
+        {% endif %}
+    </div>
 
-    {% if projects %}
-        {% include 'inventory/_form-project.html' %}
-    {% endif %}
+    {% if camera_or_back.status != 'loaded' %}
+        <h2>Pick a film to load: {% if not camera_back %}<small>(Format: {{ camera.get_format_display }})</small>{% endif %}</h2>
 
-    {% if film_counts %}
-        {% include 'inventory/_form-load-camera.html' %}
+        {% if projects %}
+            {% include 'inventory/_form-project.html' %}
+        {% endif %}
+
+        {% if film_counts %}
+            {% include 'inventory/_form-load-camera.html' %}
+        {% else %}
+            <p>No film to load. <a href="{% url 'rolls-add' %}">Add some!</a></p>
+        {% endif %}
+
     {% else %}
-        <p>No film to load. <a href="{% url 'rolls-add' %}">Add some!</a></p>
+        <p><a href="{% url 'camera-detail' camera.id %}">This camera</a> is already loaded.</p>
     {% endif %}
-
-{% else %}
-    <p><a href="{% url 'camera-detail' camera.id %}">This camera</a> is already loaded.</p>
-{% endif %}
 </div>
 {% endblock %}
