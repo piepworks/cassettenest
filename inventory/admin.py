@@ -61,6 +61,16 @@ class CameraAdmin(admin.ModelAdmin):
     )
 
 
+class CameraBackAdmin(admin.ModelAdmin):
+    list_filter = ('camera__owner',)
+    list_display = (
+        'name',
+        'camera',
+        'format',
+        'status',
+    )
+
+
 class JournalAdmin(admin.ModelAdmin):
     list_filter = ('roll__owner',)
     list_display = (
@@ -111,7 +121,7 @@ admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
 admin.site.register(Camera, CameraAdmin)
-admin.site.register(CameraBack)
+admin.site.register(CameraBack, CameraBackAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Journal, JournalAdmin)
 

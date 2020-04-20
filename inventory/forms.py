@@ -59,6 +59,7 @@ class CameraBackForm(ModelForm):
         fields = [
             'name',
             'notes',
+            'format',
             'unavailable'
         ]
 

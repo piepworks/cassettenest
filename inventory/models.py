@@ -163,6 +163,11 @@ class CameraBack(models.Model):
         ('loaded', 'Loaded'),
         ('unavailable', 'Unavailable'),
     )
+    # Identical to FORMAT_CHOICES on the Camera model.
+    FORMAT_CHOICES = (
+        ('135', '35mm'),
+        ('120', '120'),
+    )
     camera = models.ForeignKey(
         Camera,
         on_delete=models.CASCADE,
@@ -174,6 +179,12 @@ class CameraBack(models.Model):
         max_length=20,
         choices=STATUS_CHOICES,
         default='empty',
+    )
+    format = models.CharField(
+        max_length=20,
+        choices=FORMAT_CHOICES,
+        default='120',
+        blank=True,
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
