@@ -9,6 +9,7 @@
 <form method="post">
     {% csrf_token %}
     {% include 'inventory/_form-field.html' with field=form.name %}
+    {% include 'inventory/_form-field.html' with field=form.format %}
     {% include 'inventory/_form-field.html' with field=form.notes %}
     {% include 'inventory/_form-field.html' with field=form.unavailable %}
 
