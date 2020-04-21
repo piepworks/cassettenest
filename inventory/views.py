@@ -1876,7 +1876,8 @@ def camera_back_edit(request, pk, back_pk):
             )
     else:
         form = CameraBackForm(instance=camera_back)
-        form.fields['unavailable'].initial = camera_back.status == 'unavailable'
+        camera_back_status = camera_back.status == 'unavailable'
+        form.fields['unavailable'].initial = camera_back_status
 
         context = {
             'owner': owner,

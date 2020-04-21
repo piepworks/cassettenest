@@ -1,10 +1,10 @@
 {% extends 'base_site.html' %}
 
-{% block title %}Edit a camera{% endblock %}
+{% block title %}Edit {{ camera.name }}{% endblock %}
 
 {% block content %}
 <div class="raw">
-    <h1>Edit &ldquo;<a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>&rdquo;</h1>
+    <h1>Edit <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></h1>
 
     <form method="post">
         {% csrf_token %}
