@@ -16,8 +16,8 @@
                 {% for film in type.list %}
                 <option value="{{ film.id }}">
                     {{ film.manufacturer }} {{ film.name }}
-                    {% if camera_back %}
-                    in {{ film.get_format_display }}
+                    {% if camera_back and not camera_back.format %}
+                        in {{ film.get_format_display }}
                     {% endif %}
                     ({{ film.count }})
                 </option>

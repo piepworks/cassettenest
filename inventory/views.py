@@ -1552,8 +1552,6 @@ def camera_or_back_load(request, pk, back_pk=None):
             film=film,
             status=status_number('storage'),
         )
-        if not camera_back:
-            rolls = rolls.filter(film__format=camera.format)
 
         # Hidden form field
         if request.POST.get('project'):
@@ -1617,8 +1615,8 @@ def camera_or_back_load(request, pk, back_pk=None):
                 'manufacturer__name',
                 'name',
             )
-            if not camera_back:
-                film_counts = film_counts.filter(format=camera.format)
+            if camera_or_back.format:
+                film_counts = film_counts.filter(format=camera_or_back.format)
         else:
             film_counts = Film.objects.filter(
                 roll__owner=owner,
@@ -1630,8 +1628,8 @@ def camera_or_back_load(request, pk, back_pk=None):
                 'manufacturer__name',
                 'name',
             )
-            if not camera_back:
-                film_counts = film_counts.filter(format=camera.format)
+            if camera_or_back.format:
+                film_counts = film_counts.filter(format=camera_or_back.format)
 
         film_counts = iso_filter(iso, film_counts)
 

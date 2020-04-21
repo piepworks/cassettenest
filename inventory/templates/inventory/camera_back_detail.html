@@ -5,9 +5,7 @@
 
 {% block content %}
 <div class="raw">
-    <h1>
-        <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>, Back “{{ camera_back.name }}”
-    </h1>
+    <h1><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>, Back “{{ camera_back.name }}”</h1>
 
     <div class="do-not-print">
         <p><a href="{% url 'camera-back-edit' camera.id camera_back.id %}">Edit this camera back</a></p>

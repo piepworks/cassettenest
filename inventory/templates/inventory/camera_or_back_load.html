@@ -6,10 +6,7 @@
 
 {% block content %}
 <div class="raw">
-    <h1>Load
-        <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>
-        {% if camera_back %}, <a href="{% url 'camera-back-detail' camera.id camera_back.id %}">Back “{{ camera_back.name }}”</a>{% endif %}
-    </h1>
+    <h1>Load <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>{% if camera_back %}, <a href="{% url 'camera-back-detail' camera.id camera_back.id %}">Back “{{ camera_back.name }}”</a> {% endif %}</h1>
 
     <div class="do-not-print">
         {% if camera_back %}
@@ -20,7 +17,7 @@
     </div>
 
     {% if camera_or_back.status != 'loaded' %}
-        <h2>Pick a film to load: {% if not camera_back %}<small>(Format: {{ camera.get_format_display }})</small>{% endif %}</h2>
+        <h2>Pick a film to load: {% if camera_or_back.format %}<small>(Format: {{ camera_or_back.get_format_display }})</small>{% endif %}</h2>
 
         {% if projects %}
             {% include 'inventory/_form-project.html' %}
