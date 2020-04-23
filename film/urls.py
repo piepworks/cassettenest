@@ -9,7 +9,7 @@ admin.site.index_title = "Cassette Nest’s innards"
 
 urlpatterns = [
     # Users
-    path('admin/', admin.site.urls),
+    path('innards/', admin.site.urls),
     path('register/', views.register, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
 
