@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'markdown_deux',
     'djstripe',
     'capture_tag',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -63,6 +64,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'inventory.middleware.TimezoneMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'film.urls'
@@ -174,3 +176,6 @@ STRIPE_TEST_SECRET_KEY = os.getenv('STRIPE_TEST_SECRET_KEY')
 STRIPE_LIVE_MODE = bool_env('STRIPE_LIVE_MODE')
 DJSTRIPE_WEBHOOK_SECRET = os.getenv('DJSTRIPE_WEBHOOK_SECRET')
 DJSTRIPE_SUBSCRIPTION_REDIRECT = 'subscribe'
+
+# Django Debug Toolbar
+INTERNAL_IPS = ['127.0.0.1']
