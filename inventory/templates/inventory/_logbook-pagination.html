@@ -5,8 +5,8 @@
             <a title="First page" href="?page=1">«</a>
             <a title="Previous page" href="?page={{ page_obj.previous_page_number }}">‹</a>
         {% else %}
-            <span class="placeholder">«</span>
-            <span class="placeholder">‹</span>
+            <span title="No previous page" class="placeholder">«</span>
+            <span title="No previous page" class="placeholder">‹</span>
         {% endif %}
 
         <span class="current">
@@ -14,11 +14,11 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">›</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">»</a>
+            <a title="Next page" href="?page={{ page_obj.next_page_number }}">›</a>
+            <a title="Last page" href="?page={{ page_obj.paginator.num_pages }}">»</a>
         {% else %}
-            <span class="placeholder">›</span>
-            <span class="placeholder">»</span>
+            <span title="No next page" class="placeholder">›</span>
+            <span title="No next page" class="placeholder">»</span>
         {% endif %}
     </span>
 </div>
