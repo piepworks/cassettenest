@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 import stripe
 import djstripe.models
 import requests
@@ -494,10 +495,16 @@ def logbook(request):
         year = request.GET.get('year')
         rolls = rolls.filter(started_on__year=year)
 
+    # Pagination / 20 per page
+    paginator = Paginator(rolls, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'owner': owner,
         'rolls': rolls,
         'status': status,
+        'page_obj': page_obj,
         'description': description,
         'year': year,
         'all_years': all_years,
@@ -598,10 +605,16 @@ def ready(request):
     rolls_push3_e6_120 = rolls.filter(
         film__type='e6', film__format='120', push_pull='+3').count()
 
+    # Pagination / 20 per page
+    paginator = Paginator(rolls, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'owner': owner,
         'form': form,
         'rolls': rolls,
+        'page_obj': page_obj,
         'rolls_by_format': rolls_by_format,
         'rolls_by_type': rolls_by_type,
         'rolls_135': rolls_135,
@@ -962,6 +975,11 @@ def project_detail(request, pk):
         '-code'
     )
 
+    # Pagination / 20 per page
+    paginator = Paginator(roll_logbook, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     context = {
         'owner': owner,
         'project': project,
@@ -976,6 +994,7 @@ def project_detail(request, pk):
         'iso_range': iso['range'],
         'iso_value': iso['value'],
         'roll_logbook': roll_logbook,
+        'page_obj': page_obj,
     }
 
     return render(request, 'inventory/project_detail.html', context)

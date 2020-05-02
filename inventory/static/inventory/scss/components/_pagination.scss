@@ -1,0 +1,25 @@
+.pagination {
+    margin-top: 3rem;
+
+    a,
+    .placeholder {
+        padding: 0.5rem 1rem;
+        background: $light;
+        border-radius: 5px;
+    }
+
+    a {
+        color: $dark;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+            color: $light;
+            background: $dark;
+        }
+    }
+
+    .placeholder { color: $medium; }
+
+    .current { padding: 0 1rem; }
+}

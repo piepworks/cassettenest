@@ -20,7 +20,7 @@
                 {% endif %}
             </tr>
         </thead>
-        {% for roll in rolls %}
+        {% for roll in page_obj %}
         <tr>
             {% if page != 'project' and status in bulk_status_keys %}
             <td class="do-not-print"><input type="checkbox" value="{{ roll.id }}" name="roll" /></td>
@@ -39,3 +39,5 @@
         {% endfor %}
     </table>
 </div>
+
+{% include 'inventory/_logbook-pagination.html' %}
