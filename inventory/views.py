@@ -1035,7 +1035,7 @@ def project_rolls_add(request, pk):
         else:
             messages.error(
                 request,
-                'You don\'t have that many rolls available.'
+                'You don’t have that many rolls available.'
             )
 
     return redirect(reverse('project-detail', args=(project.id,)))
