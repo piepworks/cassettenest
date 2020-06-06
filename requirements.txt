@@ -3,7 +3,7 @@ autopep8==1.5.2
 certifi==2020.4.5.1
 chardet==3.0.4
 dj-stripe==2.3.0
-Django==3.0.6
+Django==3.0.7
 django-appconf==1.0.4
 django-capture-tag==1.0
 django-compressor==2.4
