@@ -10,17 +10,12 @@ Copyright &copy; 2018-2020 Trey Labs LLC. All rights reserved.
 
 1. `git clone` as `film` and `cd` into it.
     - Why `film`? I just started out building it this way and kind of like it.
-2. `mkvirtualenv film`
-    - Make sure it's activated before running the next command.
-3. `pip install -r requirements.txt`
+2. Create a new a `film/film/.env` file based on `film/film/env-example-local.sh`.
+    - Adjust as needed, but you shouldn't need to do anything.
+3. `pipenv install`
 4. Symlink SQLite database from Dropbox.
     - Something like `ln -s [Dropbox path]/db.sqlite3 .`
-5. Create a new a `film/film/.env` file based on `film/film/env-example-local.sh`.
-    - Adjust as needed, but you shouldn't need to do anything.
-6. Add the contents of `film/scripts/postactivate.sh` your virtualenv's `postactivate` script.
-    - It should be somewhere like `~/.virtualenvs/film/bin/postactivate`.
-    - Adjust the path to point to your new `.env` file.
-7. Run the app with the command `./manage.py runserver 0:8000`
+5. Run the app with the command `./manage.py runserver 0:8000`
     - View on your local machine at `http://localhost:8000`.
     - View on your phone or other computers on the local network at `http://[local IP address]:8000`.
 
