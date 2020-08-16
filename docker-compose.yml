@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: python /code/manage.py runserver 0.0.0.0:8000
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - DEBUG=${DEBUG}
+      - DATABASE_FILE=${DATABASE_FILE}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - EMAIL_BACKEND=${EMAIL_BACKEND}
+      - STATIC_ROOT=${STATIC_ROOT}
+      - STRIPE_LIVE_PUBLIC_KEY=${STRIPE_LIVE_PUBLIC_KEY}
+      - STRIPE_LIVE_SECRET_KEY=${STRIPE_LIVE_SECRET_KEY}
+      - STRIPE_TEST_PUBLIC_KEY=${STRIPE_TEST_PUBLIC_KEY}
+      - STRIPE_TEST_SECRET_KEY=${STRIPE_TEST_SECRET_KEY}
+      - STRIPE_LIVE_MODE=${STRIPE_LIVE_MODE}
+      - DJSTRIPE_WEBHOOK_SECRET=${DJSTRIPE_WEBHOOK_SECRET}
+    volumes:
+      - .:/code
+    ports:
+      - '8000:8000'
