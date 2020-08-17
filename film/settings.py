@@ -15,6 +15,18 @@ from pytz import common_timezones
 from django.core.management.utils import get_random_secret_key
 
 
+def env_var(key, default=None):
+    '''
+    Retrieves env vars and makes Python boolean replacements
+    https://wellfire.co/learn/easier-12-factor-django/
+    '''
+    val = os.environ.get(key, default)
+    if val == 'True' or val == '1':
+        val = True
+    elif val == 'False':
+        val = False
+    return val
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -172,3 +184,8 @@ DJSTRIPE_SUBSCRIPTION_REDIRECT = 'subscribe'
 
 # Django Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1']
+
+# `source_comments` takes the value of DEBUG no matter what apparently and it’s
+# not happy with `0` or `1`
+# https://github.com/torchbox/django-libsass#settings
+LIBSASS_SOURCE_COMMENTS = env_var('DEBUG')
