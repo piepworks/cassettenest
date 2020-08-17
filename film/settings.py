@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+import socket
 from pytz import common_timezones
 from django.core.management.utils import get_random_secret_key
 
@@ -189,3 +190,7 @@ INTERNAL_IPS = ['127.0.0.1']
 # not happy with `0` or `1`
 # https://github.com/torchbox/django-libsass#settings
 LIBSASS_SOURCE_COMMENTS = env_var('DEBUG')
+
+# Django Debug Toolbar w/ Docker
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
