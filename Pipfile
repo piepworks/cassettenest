@@ -34,6 +34,7 @@ sqlparse = "==0.3.1"
 stripe = "==2.47.0"
 urllib3 = "==1.25.9"
 Django = "==3.0.7"
+psycopg2-binary = "==2.8.5"
 
 [requires]
 python_version = "3.8"

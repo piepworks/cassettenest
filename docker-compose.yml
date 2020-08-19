@@ -7,7 +7,9 @@ services:
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=${DEBUG}
-      - DATABASE_FILE=${DATABASE_FILE}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - EMAIL_BACKEND=${EMAIL_BACKEND}
       - STATIC_ROOT=${STATIC_ROOT}
@@ -21,3 +23,16 @@ services:
       - .:/code
     ports:
       - '8000:8000'
+    depends_on:
+      - db
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+volumes:
+  postgres_data:
