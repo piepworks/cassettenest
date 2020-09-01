@@ -120,7 +120,6 @@ class RollTestCase(TestCase):
         roll.save()
 
         self.assertEqual(roll.code, '35-c41-1')
-        self.assertEqual(roll.camera.id, 1)
         self.assertEqual(roll.ended_on, roll.started_on)
         self.assertEqual(camera.status, 'empty')
 
