@@ -4,29 +4,29 @@
     {% url 'index' as index_url %}
     <title>{% block title %}{% endblock %}{% if request.path != index_url %} / {% endif %}Cassette Nest</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/png" href="{% static 'inventory/img/favicon.png' %}" />
-    <link rel="apple-touch-icon" href="{% static 'inventory/img/apple-touch-icon.png' %}" />
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
+    <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" />
     {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="{% static 'inventory/scss/main.scss' %}" />
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/main.scss' %}" />
     {% endcompress %}
     {% if user.is_staff %}
     <script src="https://js.stripe.com/v3/"></script>
     {% endif %}
-    <script src="{% static 'inventory/js/vendor/jquery.min.js' %}"></script>
+    <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 <body{% if bodytag %} {{ bodytag }}{% endif %}>
     <div class="wrapper">
         <header class="c-site-nav">
             {% if request.path != index_url or user.is_authenticated %}
-            <div class="film-icon"><a href="{% url 'index' %}"><img src="{% static 'inventory/img/icon.svg' %}" height="35" width="35" alt="Cassette Nest Icon" /></a></div>
+            <div class="film-icon"><a href="{% url 'index' %}"><img src="{% static 'img/icon.svg' %}" height="35" width="35" alt="Cassette Nest Icon" /></a></div>
             {% endif %}
             {% include 'inventory/_nav.html' %}
         </header>
         {% include 'inventory/_messages.html' %}
         {% if request.path == index_url and not user.is_authenticated %}
         <div class="icon">
-            <img src="{% static 'inventory/img/full-icon.svg' %}" height="200" width="200" alt="Cassette Nest Icon" />
+            <img src="{% static 'img/full-icon.svg' %}" height="200" width="200" alt="Cassette Nest Icon" />
         </div>
         {% endif %}
 
@@ -40,7 +40,7 @@
         </footer>
     </div>
 
-    <script src="{% static 'inventory/js/main.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
     {% block page_js %}{% endblock %}
 
     {% if not user.is_authenticated %}

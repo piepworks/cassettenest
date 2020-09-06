@@ -1,6 +1,6 @@
 *.sqlite3
 *.css
-static/
+staticfiles/
 !inventory/static
 __pycache__/
 node_modules/
