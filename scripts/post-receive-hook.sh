@@ -1,11 +1,14 @@
 #!/bin/bash
 # https://blog.pythonanywhere.com/87/
-# I live in ~/bare-repos/cassettenest.git/hooks/post-receive
+# I live in ~/repos/cassettenest.git/hooks/post-receive
 
 # Update the live code. The `-f` is to force git to blow away any differences in
 # that codebase to what just came in from the git push.
-GIT_WORK_TREE=/home/treypiepmeier/film git checkout -f
+GIT_WORK_TREE=/home/trey/apps/cassettenest git checkout -f
 
+# The way backups worked on PythonAnywhere.
+# Uncomment this and make it work with DigitalOcean.
+: <<'END'
 # Set variables
 now=$(date +"%F_%H-%M-%s")
 backup_file="../backups/cassettenest_$now.json"
@@ -36,6 +39,14 @@ s3cmd put $backup_file s3://cassettenest/backups-code-push/
 
 # Make sure daily backup script is executable.
 chmod +x scripts/daily-backup.sh
+END
 
-# Reboot the app
-touch /var/www/app_cassettenest_com_wsgi.py
+# Go to the live code folder.
+cd /home/trey/apps/cassettenest
+
+# Update and run.
+docker-compose exec web python manage.py migrate
+docker-compose up -d --build
+mkdir -p staticfiles
+docker-compose exec -T web python manage.py collectstatic --noinput
+docker-compose restart
