@@ -26,5 +26,4 @@ Copyright &copy; 2018-2020 Trey Labs LLC. All rights reserved.
 Once everything's set up, the next time you want to run it:
 
 1. `cd` into the project folder.
-2. `workon film`
-3. `./manage.py runserver 0:8000`
+2. `docker-compose up -d`
