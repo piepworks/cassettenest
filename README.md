@@ -8,16 +8,12 @@ Copyright &copy; 2018-2020 Trey Labs LLC. All rights reserved.
 
 ## Local Setup
 
-1. `git clone` as `film` and `cd` into it.
-    - Why `film`? I just started out building it this way and kind of like it.
-2. Create a new a `film/film/.env` file based on `film/film/env-example-local.sh`.
+1. Create a new a `.env` file based on [the example](example-local.env).
     - Adjust as needed, but you shouldn't need to do anything.
-3. `pipenv install`
-4. Symlink SQLite database from Dropbox.
-    - Something like `ln -s [Dropbox path]/db.sqlite3 .`
-5. Run the app with the command `./manage.py runserver 0:8000`
-    - View on your local machine at `http://localhost:8000`.
-    - View on your phone or other computers on the local network at `http://[local IP address]:8000`.
+2. `docker-compose up -d --build`
+3. `docker-compose exec web python manage.py migrate`
+4. Import a database dump if you want.
+    - If not, run `docker-compose exec web python manage.py createsuperuser`.
 
 ## Development
 
