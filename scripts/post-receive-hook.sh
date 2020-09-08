@@ -46,7 +46,6 @@ cd /home/trey/apps/cassettenest
 
 # Update and run.
 docker-compose exec web python manage.py migrate
-docker-compose up -d --build
 mkdir -p staticfiles
 docker-compose exec -T web python manage.py collectstatic --noinput
-docker-compose restart
+docker-compose down && docker-compose up -d --build
