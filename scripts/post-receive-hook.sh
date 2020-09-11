@@ -8,44 +8,33 @@ GIT_WORK_TREE=/home/trey/apps/cassettenest git checkout docker -f
 
 # The way backups worked on PythonAnywhere.
 # Uncomment this and make it work with DigitalOcean.
-: <<'END'
 # Set variables
 now=$(date +"%F_%H-%M-%s")
-backup_file="../backups/cassettenest_$now.json"
+backup_file="$HOME/backups/cassettenest_digitalocean_$now.json"
 
 # BACKUP THE DATABASE AND UPDATE THINGS
 # -------------------------------------
 # Go to the live code folder.
-cd $HOME/film
-# Start up virtualenvwrapper
-export WORKON_HOME=$HOME/.virtualenvs
-source /usr/local/bin/virtualenvwrapper.sh
-# Activate the `film` virtualenv.
-workon film
-# Install any new Python dependencies .
-pip install -r requirements.txt
-# Run a database migration if it's needed
-./manage.py migrate --noinput
+cd $HOME/apps/cassettenest
+# Install any new Python dependencies.
+docker-compose exec web pipenv install --system
+# Run a database migration if it's needed.
+docker-compose exec web python manage.py migrate --noinput
 # Actually backup the database.
-./manage.py dumpdata > $backup_file
-# Process static files like Sass
-./manage.py collectstatic --noinput
-# Deactivate the `film` virtualenv
-deactivate
+docker-compose exec web python manage.py dumpdata > $backup_file
+# Process static files (including Sass).
+mkdir staticfiles
+docker-compose exec web python manage.py collectstatic --noinput
 # -------------------------------------
 
-# Send backup file to DigitalOcean.
+# Send backup file to DigitalOcean Space.
 s3cmd put $backup_file s3://cassettenest/backups-code-push/
 
 # Make sure daily backup script is executable.
 chmod +x scripts/daily-backup.sh
-END
-
-# Go to the live code folder.
-cd /home/trey/apps/cassettenest
 
 # Update and run.
-docker-compose exec web python manage.py migrate
-mkdir -p staticfiles
-docker-compose exec -T web python manage.py collectstatic --noinput
+# TODO: test this out with just restarting and see if it works.
+# docker-compose restart
+# Maybe not, though, since we may be installing new Python stuff?
 docker-compose down && docker-compose up -d --build
