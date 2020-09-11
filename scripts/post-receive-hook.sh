@@ -17,14 +17,14 @@ backup_file="$HOME/backups/cassettenest_digitalocean_$now.json"
 # Go to the live code folder.
 cd $HOME/apps/cassettenest
 # Install any new Python dependencies.
-docker-compose exec web pipenv install --system
+docker-compose exec -T web pipenv install --system
 # Run a database migration if it's needed.
-docker-compose exec web python manage.py migrate --noinput
+docker-compose exec -T web python manage.py migrate --noinput
 # Actually backup the database.
-docker-compose exec web python manage.py dumpdata > $backup_file
+docker-compose exec -T web python manage.py dumpdata > $backup_file
 # Process static files (including Sass).
-mkdir staticfiles
-docker-compose exec web python manage.py collectstatic --noinput
+mkdir -p staticfiles
+docker-compose exec -T web python manage.py collectstatic --noinput
 # -------------------------------------
 
 # Send backup file to DigitalOcean Space.
