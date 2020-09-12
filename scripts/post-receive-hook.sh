@@ -4,7 +4,7 @@
 
 # Update the live code. The `-f` is to force git to blow away any differences in
 # that codebase to what just came in from the git push.
-GIT_WORK_TREE=/home/trey/apps/cassettenest git checkout docker -f
+GIT_WORK_TREE=/home/trey/apps/cassettenest git checkout -f
 
 # The way backups worked on PythonAnywhere.
 # Uncomment this and make it work with DigitalOcean.
