@@ -10,7 +10,7 @@ GIT_WORK_TREE=/home/trey/apps/cassettenest git checkout -f
 # Uncomment this and make it work with DigitalOcean.
 # Set variables
 now=$(date +"%F_%H-%M-%s")
-backup_file="$HOME/backups/cassettenest_digitalocean_$now.json"
+backup_file="$HOME/backups/cassettenest_$now.json"
 
 # BACKUP THE DATABASE AND UPDATE THINGS
 # -------------------------------------

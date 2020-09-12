@@ -2,7 +2,7 @@
 
 # Set variables
 now=$(date +"%F_%H-%M-%s")
-backup_file="$HOME/backups/cassettenest_digitalocean_$now.json"
+backup_file="$HOME/backups/cassettenest_$now.json"
 
 # Backup the database.
 cd $HOME/apps/cassettenest
