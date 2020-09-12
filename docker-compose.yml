@@ -39,7 +39,7 @@ services:
       - web
     labels:
       - traefik.backend=cassettenest_web_1
-      - traefik.frontend.rule=Host:digitalocean.cassettenest.com
+      - traefik.frontend.rule=Host:app.cassettenest.com
       - traefik.docker.network=web
       - traefik.port=8001
     depends_on:
