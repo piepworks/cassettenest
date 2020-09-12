@@ -6,7 +6,7 @@ backup_file="$HOME/backups/cassettenest_digitalocean_$now.json"
 
 # Backup the database.
 cd $HOME/apps/cassettenest
-docker-compose exec web python manage.py dumpdata > $backup_file
+docker-compose exec -T web python manage.py dumpdata > $backup_file
 
 # Send backup file to DigitalOcean Space.
 s3cmd put $backup_file s3://cassettenest/backups-daily/
