@@ -6,8 +6,6 @@
 # that codebase to what just came in from the git push.
 GIT_WORK_TREE=/home/trey/apps/cassettenest git checkout -f
 
-# The way backups worked on PythonAnywhere.
-# Uncomment this and make it work with DigitalOcean.
 # Set variables
 now=$(date +"%F_%H-%M-%s")
 backup_file="$HOME/backups/cassettenest_$now.json"
@@ -34,7 +32,4 @@ s3cmd put $backup_file s3://cassettenest/backups-code-push/
 chmod +x scripts/daily-backup.sh
 
 # Update and run.
-# TODO: test this out with just restarting and see if it works.
-# docker-compose restart
-# Maybe not, though, since we may be installing new Python stuff?
 docker-compose down && docker-compose up -d --build
