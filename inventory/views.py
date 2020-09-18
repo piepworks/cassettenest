@@ -44,61 +44,46 @@ from .utils import (
 )
 
 
+@login_required
 def index(request):
-    if request.user.is_authenticated:
-        owner = request.user
-        cameras_total = Camera.objects.filter(owner=owner)
-        camera_backs_total = CameraBack.objects.filter(camera__owner=owner)
-        cameras_empty = cameras_total.filter(
-            status='empty'
-        ).exclude(multiple_backs=True)
-        camera_backs_empty = camera_backs_total.filter(status='empty')
-        rolls = Roll.objects.filter(owner=owner)
-        rolls_loaded = rolls.filter(status=status_number('loaded'))
-        rolls_ready_count = rolls.filter(status=status_number('shot')).count()
-        rolls_storage_count = rolls.filter(
-            status=status_number('storage')
-        ).count()
-        all_projects = Project.objects.filter(
-            owner=owner,
-        ).order_by('-updated_at',)
-        projects_current = all_projects.filter(status='current')
-        projects_count = all_projects.count()
-        rolls_outstanding_count = rolls.exclude(
-            status=status_number('storage')
-        ).exclude(
-            status=status_number('archived')
-        ).count()
+    owner = request.user
+    cameras_total = Camera.objects.filter(owner=owner)
+    camera_backs_total = CameraBack.objects.filter(camera__owner=owner)
+    cameras_empty = cameras_total.filter(
+        status='empty'
+    ).exclude(multiple_backs=True)
+    camera_backs_empty = camera_backs_total.filter(status='empty')
+    rolls = Roll.objects.filter(owner=owner)
+    rolls_loaded = rolls.filter(status=status_number('loaded'))
+    rolls_ready_count = rolls.filter(status=status_number('shot')).count()
+    rolls_storage_count = rolls.filter(
+        status=status_number('storage')
+    ).count()
+    all_projects = Project.objects.filter(
+        owner=owner,
+    ).order_by('-updated_at',)
+    projects_current = all_projects.filter(status='current')
+    projects_count = all_projects.count()
+    rolls_outstanding_count = rolls.exclude(
+        status=status_number('storage')
+    ).exclude(
+        status=status_number('archived')
+    ).count()
 
-        context = {
-            'email': owner.email,
-            'cameras_total': cameras_total,
-            'cameras_empty': cameras_empty,
-            'camera_backs_empty': camera_backs_empty,
-            'projects_current': projects_current,
-            'projects_count': projects_count,
-            'rolls': rolls,
-            'rolls_loaded': rolls_loaded,
-            'rolls_ready_count': rolls_ready_count,
-            'rolls_storage_count': rolls_storage_count,
-            'rolls_outstanding_count': rolls_outstanding_count,
-        }
-        return render(request, 'inventory/index.html', context)
-    else:
-        context = {}
-        if request.GET.get('signedup'):
-            context = {
-                'signedup': True
-            }
-        return render(request, 'inventory/landing.html', context)
-
-
-def purpose(request):
-    markdown = render_markdown('purpose.md')
     context = {
-        'markdown': markdown,
+        'email': owner.email,
+        'cameras_total': cameras_total,
+        'cameras_empty': cameras_empty,
+        'camera_backs_empty': camera_backs_empty,
+        'projects_current': projects_current,
+        'projects_count': projects_count,
+        'rolls': rolls,
+        'rolls_loaded': rolls_loaded,
+        'rolls_ready_count': rolls_ready_count,
+        'rolls_storage_count': rolls_storage_count,
+        'rolls_outstanding_count': rolls_outstanding_count,
     }
-    return render(request, 'purpose.html', context)
+    return render(request, 'inventory/index.html', context)
 
 
 def patterns(request):
@@ -135,28 +120,6 @@ def patterns(request):
     }
 
     return render(request, 'patterns.html', context)
-
-
-@require_POST
-def newsletter(request):
-    '''
-    Try to filter out spam subscriptions.
-    '''
-    email = request.POST.get('email')
-    email2 = request.POST.get('email2')
-    url = 'https://app.e2ma.net/app2/audience/signup/1902957/31622/?r=signup'
-
-    if email2 == '':
-        r = requests.post(
-            url,
-            data={
-                'group_10062726': '10062726',
-                'email': email
-            }
-        )
-
-    # Always act like the signup was successful.
-    return redirect(reverse('index') + '?signedup=true')
 
 
 @login_required

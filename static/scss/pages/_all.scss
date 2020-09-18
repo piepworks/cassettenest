@@ -4,7 +4,5 @@ body {
     &.roll-detail { @import 'roll-detail'; }
     &.journal-entry { @import 'journal-entry'; }
     &.dashboard { @import 'dashboard'; }
-    &.landing { @import 'landing'; }
-    &.purpose { @import 'purpose'; }
     &.patterns { @import 'patterns'; }
 }
