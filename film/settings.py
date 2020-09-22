@@ -194,6 +194,7 @@ INTERNAL_IPS = ['127.0.0.1']
 # not happy with `0` or `1`
 # https://github.com/torchbox/django-libsass#settings
 LIBSASS_SOURCE_COMMENTS = env_var('DEBUG')
+LIBSASS_SOURCEMAPS = env_var('DEBUG')
 
 # Django Debug Toolbar w/ Docker
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
