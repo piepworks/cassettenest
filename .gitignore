@@ -2,8 +2,5 @@
 *.css
 staticfiles/
 !inventory/static
-__pycache__/
 node_modules/
 .env*
-.vscode/
-.nova/
