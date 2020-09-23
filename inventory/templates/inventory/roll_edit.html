@@ -7,8 +7,10 @@
 
     <header class="c-heading">
         {% if roll.code %}
-        <h1>Edit: {{ roll.code }}</h1>
-        <small class="year">{{ roll.started_on|date:'Y' }}</small>
+        <div class="flex">
+            <h1>Edit: {{ roll.code }}</h1>
+            <small class="year">{{ roll.started_on|date:'Y' }}</small>
+        </div>
         {% else %}
         <h1>Edit: {{ roll }}</h1>
         {% endif %}
