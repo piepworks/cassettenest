@@ -33,3 +33,4 @@ chmod +x scripts/daily-backup.sh
 
 # Update and run.
 docker-compose down && docker-compose up -d --build
+docker-compose restart # Get new assets to show up.
