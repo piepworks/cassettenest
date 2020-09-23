@@ -9,7 +9,7 @@ networks:
 services:
   web:
     build: .
-    command: gunicorn film.wsgi -b 0.0.0.0:8001
+    command: gunicorn ${RELOAD} film.wsgi -b 0.0.0.0:8001
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=${DEBUG}
