@@ -8,7 +8,7 @@
 
 {% if projects_current %}
 <section>
-    <h2 class="c-heading c-heading--home">Projects</h2>
+    <h2 class="c-heading c-heading--divider">Projects</h2>
     {% for project in projects_current %}
         {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot='count' count=project.get_rolls_remaining %}
     {% endfor %}
@@ -17,7 +17,7 @@
 
 {% if rolls_loaded %}
 <section>
-    <h2 class="c-heading c-heading--home">Loaded Cameras</h2>
+    <h2 class="c-heading c-heading--divider">Loaded Cameras</h2>
     {% for roll in rolls_loaded %}
         {% url 'roll-detail' roll.id as roll_detail %}
         {% if roll.camera_back %}
@@ -31,7 +31,7 @@
 
 {% if cameras_empty or camera_backs_empty %}
 <section>
-    <h2 class="c-heading c-heading--home">Ready to Load</h2>
+    <h2 class="c-heading c-heading--divider">Ready to Load</h2>
     {% if cameras_empty %}
     {% for camera in cameras_empty %}
         {% url 'camera-load' camera.id as camera_load %}
@@ -48,7 +48,7 @@
 {% endif %}
 
 <section>
-    <h2 class="c-heading c-heading--home">Inventory</h2>
+    <h2 class="c-heading c-heading--divider">Inventory</h2>
     {# Inventory #}
     {% url 'ready' as ready_url %}
     {% url 'inventory' as inventory_url %}
@@ -62,7 +62,7 @@
     {% include 'inventory/_card.html' with name='Cameras' location=cameras_url slot='count' count=cameras_total.count %}
     {% include 'inventory/_card.html' with name='Logbook' location=logbook_url %}
 
-    <h2 class="c-heading c-heading--home">Add to Inventory</h2>
+    <h2 class="c-heading c-heading--divider">Add to Inventory</h2>
     {# Add #}
     {% url 'camera-add' as camera_add_url %}
     {% url 'roll-add' as roll_add_url %}
