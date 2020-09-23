@@ -13,7 +13,9 @@
     {% if user.is_staff %}
     <script src="https://js.stripe.com/v3/"></script>
     {% endif %}
+    {% if js_needed %}
     <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
+    {% endif %}
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 <body{% if bodytag %} {{ bodytag }}{% endif %}>
@@ -41,8 +43,10 @@
         </footer>
     </div>
 
+    {% if js_needed %}
     <script src="{% static 'js/main.js' %}"></script>
     {% block page_js %}{% endblock %}
+    {% endif %}
 
     {% if not user.is_authenticated %}
     <script type="text/javascript">

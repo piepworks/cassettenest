@@ -837,6 +837,7 @@ def project_edit(request, pk):
             'form': form,
             'project': project,
             'action': 'Edit',
+            'js_needed': True,
         }
 
         return render(request, 'inventory/project_add_edit.html', context)
@@ -958,6 +959,7 @@ def project_detail(request, pk):
         'iso_value': iso['value'],
         'roll_logbook': roll_logbook,
         'page_obj': page_obj,
+        'js_needed': True,
     }
 
     return render(request, 'inventory/project_detail.html', context)
@@ -1279,7 +1281,8 @@ def roll_detail(request, pk):
         'owner': owner,
         'roll': roll,
         'development_statuses': development_statuses,
-        'journal_entries': journal_entries
+        'journal_entries': journal_entries,
+        'js_needed': True,
     }
 
     return render(request, 'inventory/roll_detail.html', context)
@@ -1368,6 +1371,7 @@ def roll_journal_detail(request, roll_pk, entry_pk):
     context = {
         'roll': roll,
         'entry': entry,
+        'js_needed': True,
     }
 
     return render(
@@ -1826,6 +1830,7 @@ def camera_edit(request, pk):
             'owner': owner,
             'form': form,
             'camera': camera,
+            'js_needed': True,
         }
 
         return render(request, 'inventory/camera_edit.html', context)
@@ -1866,6 +1871,7 @@ def camera_back_edit(request, pk, back_pk):
             'form': form,
             'camera': camera,
             'camera_back': camera_back,
+            'js_needed': True,
         }
 
         return render(request, 'inventory/camera_back_edit.html', context)
