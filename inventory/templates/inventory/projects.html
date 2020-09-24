@@ -8,18 +8,19 @@
 
 <p><a href="{% url 'project-add' %}">Add a project</a></p>
 
-<ul>
+<section>
     {% regroup projects by get_status_display as status_list %}
     {% for status in status_list %}
-    <ul>
-        <li>{{ status.grouper }}
-            <ul>
-                {% for project in status.list %}
-                <li><a href="{% url 'project-detail' project.id %}">{{ project.name }}</a></li>
-                {% endfor %}
-            </ul>
-        </li>
-    </ul>
+        <h2 class="c-heading c-heading--divider">{{ status.grouper }}</h2>
+        {% for project in status.list %}
+            {% if project.get_rolls_remaining %}
+                {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot='count' count=project.get_rolls_remaining %}
+            {% else %}
+                {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url %}
+            {% endif %}
+        {% endfor %}
     {% endfor %}
-</ul>
+</section>
+
+</div>
 {% endblock %}
