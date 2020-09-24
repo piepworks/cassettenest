@@ -23,14 +23,21 @@ Copyright &copy; 2018-2020 Trey Labs LLC. All rights reserved.
 - Running Python tests
     1. …
 
+---
+
 Once everything's set up, the next time you want to run it:
 
-1. `cd` into the project folder.
-2. `docker-compose up -d`
+```shell
+docker-compose up -d
+```
 
-# Browsersync
+If you want to use [Browsersync](https://www.browsersync.io)…
 
 - `nvm use`
 - `npm i -g browser-sync`
-- `browser-sync start --no-open --proxy "localhost:8001" --files "**/*.scss" "**/*.html" "**/*.py"`
-- View the [Browsersync](https://www.browsersync.io)’d app at http://localhost:3000
+
+Then you can just run…
+
+```shell
+scripts/browsersync
+```
