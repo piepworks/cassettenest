@@ -37,6 +37,7 @@ $logo-size: 35px;
 
             &:first-child { margin-left: 0; }
 
+            &.admin a,
             &.feedback a { color: $gold; }
         }
     }

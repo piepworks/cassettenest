@@ -23,6 +23,7 @@ docker-compose exec -T web python manage.py dumpdata > $backup_file
 # Process static files (including Sass).
 mkdir -p staticfiles
 docker-compose exec -T web python manage.py collectstatic --noinput
+docker-compose exec -T web python manage.py compress --force
 # -------------------------------------
 
 # Send backup file to DigitalOcean Space.
@@ -33,4 +34,3 @@ chmod +x scripts/daily-backup.sh
 
 # Update and run.
 docker-compose down && docker-compose up -d --build
-docker-compose restart # Get new assets to show up.
