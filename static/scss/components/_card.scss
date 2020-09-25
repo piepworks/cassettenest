@@ -6,7 +6,10 @@
         display: flex;
         justify-content: space-between;
         align-items: stretch;
-        flex-grow: 1;
+
+        &,
+        > header,
+        > header h1 { flex-grow: 1; }
 
         > header {
             display: flex;
