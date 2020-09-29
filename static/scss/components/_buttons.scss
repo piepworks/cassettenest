@@ -3,6 +3,7 @@ button,
 input[type=submit] {
     background: $button;
     border: 0;
+    border-radius: 0;
     color: white;
     cursor: pointer;
     padding: 0.5rem 1rem;
