@@ -1,4 +1,5 @@
 #!/bin/sh
 
+. ~/.nvm/nvm.sh
 nvm use
 browser-sync start --no-open --proxy "localhost:8001" --files "**/*.scss" "**/*.html" "**/*.py"
