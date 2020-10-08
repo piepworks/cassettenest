@@ -21,14 +21,14 @@ Copyright &copy; 2018-2020 Trey Labs LLC. All rights reserved.
     1. `nvm use`
     2. `npm i`.
 - Running Python tests
-    1. …
+    1. `docker-compose exec web python manage.py test`
 
 ---
 
 Once everything's set up, the next time you want to run it:
 
 ```shell
-docker-compose up -d
+dev/server
 ```
 
 If you want to use [Browsersync](https://www.browsersync.io)…
@@ -39,5 +39,5 @@ If you want to use [Browsersync](https://www.browsersync.io)…
 Then you can just run…
 
 ```shell
-scripts/browsersync
+dev/browsersync
 ```

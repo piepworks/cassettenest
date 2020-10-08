@@ -1,4 +1,4 @@
 #!/bin/sh
 
-docker-compose up -d
+nvm use
 browser-sync start --no-open --proxy "localhost:8001" --files "**/*.scss" "**/*.html" "**/*.py"
