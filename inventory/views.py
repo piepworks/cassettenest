@@ -11,6 +11,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.core.mail import send_mail
 import stripe
 import djstripe.models
 import requests
@@ -361,6 +362,15 @@ def register(request):
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
+
+            # Send Trey an email about this.
+            email = form.cleaned_data.get('email')
+            send_mail(
+                subject='New Cassette Nest user!',
+                message=f'{username} / {email} just signed up!',
+                from_email='trey@cassettenest.com',
+                recipient_list=['boss@treylabs.com']
+            )
 
             return redirect('index')
     else:
