@@ -21,7 +21,7 @@
     <form onsubmit="return confirmDelete('camera back')"  action="{% url 'camera-back-delete' camera.id camera_back.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="camera_back" value="{{ camera_back.id }}" />
-        <div class="action">Since you've never used this, you can <input type="submit" class="destructive" value="delete this camera back" /></div>
+        <div class="action">Since you’ve never used this, you can <input type="submit" class="destructive" value="delete this camera back" /></div>
     </form>
     {% endif %}
 </div>

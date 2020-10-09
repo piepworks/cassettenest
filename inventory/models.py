@@ -412,7 +412,7 @@ class Roll(models.Model):
             if self.ended_on is not None:
                 self.ended_on = None
 
-        # If we've changed our minds and put something back into storage, set
+        # If we’ve changed our minds and put something back into storage, set
         # everything back to factory condition.
         if self.code and self.status == status_number('storage'):
             # Unload camera
