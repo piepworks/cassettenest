@@ -6,6 +6,8 @@
 <div class="raw">
     <h2>Create an account to continue</h2>
 
+    {% include 'inventory/_subscription-note.html' %}
+
     <form method="post">
         {% csrf_token %}
         {% for field in form %}

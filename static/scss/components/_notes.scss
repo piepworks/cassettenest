@@ -1,0 +1,27 @@
+.notes {
+    display: flex;
+    margin: 2rem 0 1rem;
+    padding: 1.25rem;
+    background: $gold;
+    color: rgba(0, 0, 0, 0.8);
+    box-shadow: -5px 5px 2px rgba(0, 0, 0, 0.5);
+    line-height: 1.5;
+    font-size: 1.2rem;
+
+    p { margin: 0; }
+
+    p + p { margin-top: 1.5rem; }
+
+    svg {
+        flex-shrink: 0;
+        margin: 0.5rem 1.2rem 0 0.2rem;
+        max-width: 30px;
+        max-height: 30px;
+        fill: rgba(0, 0, 0, 0.8);
+
+        @include breakpoint('S') {
+            align-self: center;
+            margin-top: 0;
+        }
+    }
+}
