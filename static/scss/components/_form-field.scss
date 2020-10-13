@@ -31,5 +31,10 @@
                 border-color: $medium;
             }
         }
+
+        input[type=checkbox] {
+            transform: scale(1.2);
+            margin-right: 0.8rem;
+        }
     }
 }

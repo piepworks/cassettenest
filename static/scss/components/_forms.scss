@@ -50,8 +50,6 @@ input,
 textarea,
 button { &:focus { @include input-focus-style; } }
 
-label input[type=checkbox] { margin-right: 0.5rem; }
-
 label { display: block; }
 
 label,
