@@ -47,7 +47,6 @@ textarea { @include input-style; }
 textarea { width: 100%; }
 
 input,
-select,
 textarea,
 button { &:focus { @include input-focus-style; } }
 
@@ -62,6 +61,8 @@ legend {
 }
 
 input[type=number] { width: 5em; }
+
+select:focus { outline: 5px solid $gold; }
 
 // Stripe
 // ------
