@@ -19,9 +19,15 @@
         ul { padding-left: 1rem; }
     }
 
-    &--checkbox {
+    input[type=checkbox],
+    input[type=radio] {
+        transform: scale(1.2);
+        margin-right: 0.8rem;
+    }
+
+    &--checkbox,
+    &--radio {
         label {
-            display: inline-flex;
             align-items: center;
             background: $light;
             padding: 1rem;
@@ -32,9 +38,10 @@
             }
         }
 
-        input[type=checkbox] {
-            transform: scale(1.2);
-            margin-right: 0.8rem;
-        }
+        fieldset { display: block; }
     }
+
+    &--checkbox label { display: inline-flex; }
+
+    &--radio label { display: flex; }
 }

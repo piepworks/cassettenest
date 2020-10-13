@@ -38,7 +38,7 @@ input[type='number'] { width: 5em; }
 
 // Make sure cool outline happens on mobile Safari and that empty date field
 // doesn't collapse.
-input:not([type=checkbox]):not([type=submit]):not([type=date]),
+input:not([type=checkbox]):not([type=submit]):not([type=date]):not([type=radio]),
 textarea { -webkit-appearance: none; }
 
 input:not([type=checkbox]):not([type=submit]),
