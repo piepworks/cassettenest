@@ -4,9 +4,9 @@
 
 {% block content %}
 <div class="raw">
-    <h2>Log in to continue.</h2>
+    <h1>Log in to continue.</h1>
 
-    {% include 'inventory/_subscription-note.html' %}
+    {% include 'inventory/_note-subscription.html' %}
 
     <form method="post">
         {% csrf_token %}

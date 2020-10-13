@@ -9,6 +9,8 @@
     <p>For best results with the auto-generated code/label, be sure to add things in strict chronological order from oldest to newest.</p>
     <p><i>To mark a roll as "Loaded," go to <a href="{% url 'index' %}">the home page</a> and choose a "Ready to Load" camera.</i></p>
 
+    {% include 'inventory/_note-missing-film.html' %}
+
     <form action="{% url 'roll-add' %}" method="post">
         {% csrf_token %}
         <div class="c-field">

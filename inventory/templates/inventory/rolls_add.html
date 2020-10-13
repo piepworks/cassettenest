@@ -6,6 +6,9 @@
 <div class="raw">
     <h1>Add rolls to storage</h1>
     <p>Or <a href="{% url 'roll-add' %}">add a roll to your logbook</a>.</p>
+
+    {% include 'inventory/_note-missing-film.html' %}
+
     <form method="post">
         {% csrf_token %}
         <div class="c-field">
