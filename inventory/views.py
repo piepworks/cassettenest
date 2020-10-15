@@ -1,7 +1,7 @@
 import datetime
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, FormView
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.contrib.auth import login, authenticate
 from django.views.decorators.http import require_POST
@@ -1092,7 +1092,8 @@ def rolls_add(request):
         return redirect(reverse('inventory'))
 
     else:
-        films = Film.objects.all()
+        # Exclude films that are flagged as `personal` and not created by the current user.
+        films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner))
         context = {
             'films': films
         }

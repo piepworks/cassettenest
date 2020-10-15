@@ -81,6 +81,11 @@ class Film(models.Model):
         choices=FORMAT_CHOICES,
         default='135',
     )
+    personal = models.BooleanField(
+        default=False,
+        help_text='For user-submitted films. Only visible to the user who added it if this is true.'
+    )
+    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     iso = models.IntegerField(verbose_name='ISO')
     name = models.CharField(max_length=50)
     slug = models.SlugField(max_length=50, unique=True)
