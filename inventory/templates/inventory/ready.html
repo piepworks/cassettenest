@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="raw">
-{% if rolls %}
+{% if rolls.all %}
 <h2>You have {{ rolls.all }} roll{{ rolls.all|pluralize }} ready to process.</h2>
 
 <div class="overflow-x">
