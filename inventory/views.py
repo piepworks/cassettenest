@@ -1097,7 +1097,8 @@ def rolls_add(request):
         # Exclude films that are flagged as `personal` and not created by the current user.
         films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner))
         context = {
-            'films': films
+            'films': films,
+            'js_needed': True,
         }
 
         return render(request, 'inventory/rolls_add.html', context)
@@ -1164,6 +1165,7 @@ def roll_add(request):
             'owner': owner,
             'form': form,
             'films': films,
+            'js_needed': True,
         }
 
         return render(request, 'inventory/roll_add.html', context)
@@ -1307,7 +1309,7 @@ def film_add(request):
                     return redirect(reverse('film-add') + '?destination=add-logbook')
                 else:
                     # Go back to add roll to logbook page.
-                    return redirect(reverse('roll-add'))
+                    return redirect(reverse('roll-add') + f'?film={film.id}')
             else:
                 if 'another' in request.POST:
                     return redirect('film-add')

@@ -31,3 +31,13 @@
     </form>
 </div>
 {% endblock %}
+
+{% block page_js %}
+<script>
+    // Automatically select a film if possible.
+    // ?film=[film id]
+    (new URL(window.location)).searchParams.forEach((x, y) => {
+        document.getElementById(`id_${y}`).value = x;
+    });
+</script>
+{% endblock %}
