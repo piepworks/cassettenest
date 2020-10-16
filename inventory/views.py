@@ -7,6 +7,7 @@ from django.contrib.auth import login, authenticate
 from django.views.decorators.http import require_POST
 from django.utils.encoding import force_text
 from django.utils.decorators import method_decorator
+from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -16,7 +17,7 @@ import stripe
 import djstripe.models
 import requests
 from djstripe.decorators import subscription_payment_required
-from .models import Camera, CameraBack, Film, Journal, Project, Roll
+from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll
 from .forms import (
     CameraForm,
     CameraBackForm,
@@ -28,6 +29,7 @@ from .forms import (
     ReadyForm,
     RegisterForm,
     RollForm,
+    FilmForm,
     UpdateCardForm,
     UserForm
 )
@@ -1256,6 +1258,70 @@ def film_type(request, type):
     }
 
     return render(request, 'inventory/film_type.html', context)
+
+
+@login_required
+def film_add(request):
+    if request.method == 'POST':
+        form = FilmForm(request.POST, user=request.user)
+        output = 'error'
+
+        if form.is_valid():
+            if form.cleaned_data['new_manufacturer']:
+                # Create new manufactuter and get a reference to it.
+                new_manufacturer = form.cleaned_data['new_manufacturer']
+                try:
+                    manufacturer = Manufacturer.objects.create(
+                        personal=True,
+                        added_by=request.user,
+                        name=new_manufacturer,
+                        slug=slugify(new_manufacturer)
+                    )
+                except IntegrityError:
+                    messages.error(request, 'There’s already a manufacturer with that name.')
+                    context = {'form': form}
+
+                    return render(request, 'inventory/film_add.html', context)
+            else:
+                manufacturer = form.cleaned_data['manufacturer']
+
+            film = Film.objects.create(
+                personal=True,
+                added_by=request.user,
+                manufacturer=manufacturer,
+                name=form.cleaned_data['name'],
+                slug=slugify(form.cleaned_data['name']),
+                format=form.cleaned_data['format'],
+                type=form.cleaned_data['type'],
+                iso=form.cleaned_data['iso'],
+                url=form.cleaned_data['url'],
+                description=form.cleaned_data['description'],
+            )
+            messages.success(request, f'New film “{film}” added!')
+
+            if form.cleaned_data['destination'] != 'add-storage':
+                if 'another' in request.POST:
+                    return redirect(reverse('film-add') + '?destination=add-logbook')
+                else:
+                    # Go back to add roll to logbook page.
+                    return redirect(reverse('roll-add'))
+            else:
+                if 'another' in request.POST:
+                    return redirect('film-add')
+                else:
+                    # Go back to add rolls to storage page.
+                    return redirect(reverse('rolls-add'))
+        else:
+            context = {'form': form}
+    else:
+        destination = request.GET.get('destination')
+        if destination:
+            form = FilmForm(user=request.user, initial={'destination': destination})
+        else:
+            form = FilmForm(user=request.user, initial={'destination': 'add-storage'})
+        context = {'form': form}
+
+    return render(request, 'inventory/film_add.html', context)
 
 
 @login_required

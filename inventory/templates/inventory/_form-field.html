@@ -1,3 +1,6 @@
+{% if field.field.widget.input_type == 'hidden' %}
+    {{ field }}
+{% else %}
 <div class="c-field {% if not field.field.widget.input_type %} c-field--textarea{% else %}c-field--{{field.field.widget.input_type}}{% endif %}">
     {% if field.field.widget.input_type == 'checkbox' %}
         {% if field.help_text %}
@@ -15,3 +18,4 @@
         {{ field }}
     {% endif %}
 </div>
+{% endif %}

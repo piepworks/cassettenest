@@ -14,13 +14,14 @@ from .models import (
 
 
 class ManufacturerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'created_at',)
+    list_display = ('name', 'created_at', 'added_by', 'personal',)
+    list_filter = ('personal', 'added_by',)
     prepopulated_fields = {'slug': ('name',)}
 
 
 class FilmAdmin(admin.ModelAdmin):
-    list_filter = ('format', 'type', 'manufacturer', 'iso',)
-    list_display = ('__str__', 'type', 'iso',)
+    list_filter = ('format', 'type', 'manufacturer', 'iso', 'personal', 'added_by',)
+    list_display = ('__str__', 'type', 'iso', 'added_by',)
     prepopulated_fields = {'slug': ('name', 'format',)}
 
 

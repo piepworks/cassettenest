@@ -2,8 +2,10 @@ from django import forms
 from django.forms import ModelForm, ModelChoiceField, widgets
 from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 import djstripe.models
-from .models import Camera, CameraBack, Roll, Project, Journal, User, Profile
+from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile
 
 
 class RegisterForm(UserCreationForm):
@@ -72,6 +74,34 @@ class RollForm(ModelForm):
             'started_on': widgets.DateInput(attrs={'type': 'date'}),
             'ended_on': widgets.DateInput(attrs={'type': 'date'}),
         }
+
+
+class FilmForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user')
+        super(FilmForm, self).__init__(*args, **kwargs)
+        self.fields['manufacturer'] = forms.ModelChoiceField(
+            queryset=Manufacturer.objects.all().exclude(Q(personal=True) & ~Q(added_by=self.user)),
+            required=False
+        )
+
+    new_manufacturer = forms.CharField(
+        label='Or add a new manufacturer',
+        required=False
+    )
+    destination = forms.CharField(widget=forms.HiddenInput(), required=False)
+
+    class Meta:
+        model = Film
+        fields = ['manufacturer', 'new_manufacturer', 'name', 'type', 'format', 'iso', 'url', 'description']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        new_manufacturer = cleaned_data.get('new_manufacturer')
+        manufacturer = cleaned_data.get('manufacturer')
+
+        if not (manufacturer or new_manufacturer):
+            raise ValidationError('Please choose an existing manufacturer or add a new one.')
 
 
 class ProjectForm(ModelForm):
