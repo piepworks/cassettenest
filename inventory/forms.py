@@ -82,12 +82,12 @@ class FilmForm(ModelForm):
         super(FilmForm, self).__init__(*args, **kwargs)
         self.fields['manufacturer'] = forms.ModelChoiceField(
             queryset=Manufacturer.objects.all().exclude(Q(personal=True) & ~Q(added_by=self.user)),
-            required=False
+            required=False,
         )
 
     new_manufacturer = forms.CharField(
         label='Or add a new manufacturer',
-        required=False
+        required=False,
     )
     destination = forms.CharField(widget=forms.HiddenInput(), required=False)
 

@@ -1277,13 +1277,13 @@ def film_add(request):
                         personal=True,
                         added_by=request.user,
                         name=new_manufacturer,
-                        slug=slugify(new_manufacturer)
+                        slug=slugify(new_manufacturer),
                     )
                 except IntegrityError:
                     messages.error(request, 'There’s already a manufacturer with that name.')
                     context = {
                         'form': form,
-                        'js_needed': True
+                        'js_needed': True,
                     }
 
                     return render(request, 'inventory/film_add.html', context)
@@ -1319,7 +1319,7 @@ def film_add(request):
         else:
             context = {
                 'form': form,
-                'js_needed': True
+                'js_needed': True,
             }
     else:
         destination = request.GET.get('destination')
@@ -1329,7 +1329,7 @@ def film_add(request):
             form = FilmForm(user=request.user, initial={'destination': 'add-storage'})
         context = {
             'form': form,
-            'js_needed': True
+            'js_needed': True,
         }
 
     return render(request, 'inventory/film_add.html', context)
