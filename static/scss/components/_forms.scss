@@ -47,8 +47,10 @@ textarea { @include input-style; }
 textarea { width: 100%; }
 
 input,
+input[type=submit],
 textarea,
-button { &:focus { @include input-focus-style; } }
+button,
+a.button { &:focus { @include input-focus-style; } }
 
 label { display: block; }
 
