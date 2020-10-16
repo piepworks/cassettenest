@@ -21,7 +21,11 @@
         {% csrf_token %}
 
         {% for field in form %}
-            {% include 'inventory/_form-field.html' with field=field %}
+            {% if field.name == 'manufacturer' or field.name == 'new_manufacturer'%}
+                {% include 'inventory/_form-field.html' with field=field progressive_link=True %}
+            {% else %}
+                {% include 'inventory/_form-field.html' with field=field %}
+            {% endif %}
         {% endfor %}
 
         <div class="action">
@@ -51,15 +55,15 @@
     function showExisting() {
         $newManufacturer.val('').attr('required', false);
         $newManufacturerContainer.hide();
-        $existingManufacturerContainer.append($showNewLink).show();
-        $existingManufacturer.attr('required', true).focus();
+        $existingManufacturerContainer.show().find('.js-link').append($showNewLink);
+        $existingManufacturer.attr('required', true);
     }
 
     function showNew() {
         $existingManufacturer.attr('required', false);
         $existingManufacturerContainer.hide();
-        $newManufacturerContainer.append($showExistingLink).show();
-        $newManufacturer.attr('required', true).focus();
+        $newManufacturerContainer.show().find('.js-link').append($showExistingLink);
+        $newManufacturer.attr('required', true);
     }
 
     $showExistingLink.click(() => showExisting());

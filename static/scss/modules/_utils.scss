@@ -75,12 +75,15 @@ $divider-width: 0.2rem;
     .action { margin-top: 0; }
 }
 
+.js-link,
 .toggle-button { display: none; }
 
 html.has-js {
     .toggle { display: none; }
 
     .toggle-button { display: inline; }
+
+    .js-link { display: block; }
 }
 
 // Print
