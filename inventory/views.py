@@ -1279,7 +1279,10 @@ def film_add(request):
                     )
                 except IntegrityError:
                     messages.error(request, 'There’s already a manufacturer with that name.')
-                    context = {'form': form}
+                    context = {
+                        'form': form,
+                        'js_needed': True
+                    }
 
                     return render(request, 'inventory/film_add.html', context)
             else:
@@ -1312,14 +1315,20 @@ def film_add(request):
                     # Go back to add rolls to storage page.
                     return redirect(reverse('rolls-add'))
         else:
-            context = {'form': form}
+            context = {
+                'form': form,
+                'js_needed': True
+            }
     else:
         destination = request.GET.get('destination')
         if destination:
             form = FilmForm(user=request.user, initial={'destination': destination})
         else:
             form = FilmForm(user=request.user, initial={'destination': 'add-storage'})
-        context = {'form': form}
+        context = {
+            'form': form,
+            'js_needed': True
+        }
 
     return render(request, 'inventory/film_add.html', context)
 

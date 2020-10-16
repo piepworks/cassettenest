@@ -10,9 +10,12 @@ $logo-size: 35px;
 
     a {
         text-decoration: none;
-        color: rgba(255, 255, 255, 0.8);
+        color: $medium;
 
-        &:hover { text-decoration: underline; }
+        &:hover {
+            text-decoration: underline;
+            background: none;
+        }
     }
 
     .film-icon {
