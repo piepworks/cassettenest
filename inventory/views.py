@@ -1315,7 +1315,7 @@ def film_add(request):
                     return redirect('film-add')
                 else:
                     # Go back to add rolls to storage page.
-                    return redirect(reverse('rolls-add'))
+                    return redirect(reverse('rolls-add') + f'?film={film.id}')
         else:
             context = {
                 'form': form,
