@@ -111,6 +111,7 @@ class Film(models.Model):
 
     class Meta:
         ordering = ['manufacturer__name', 'name']
+        unique_together = (('manufacturer', 'name', 'format',),)
 
     def __str__(self):
         return '%s %s in %s' % (
