@@ -187,6 +187,7 @@ def settings(request):
             'payment_method': payment_method,
             'charges': charges,
             'STRIPE_PUBLIC_KEY': djstripe.settings.STRIPE_PUBLIC_KEY,
+            'js_needed': True,
         }
 
         return render(request, 'inventory/settings.html', context)
@@ -242,6 +243,7 @@ class PurchaseSubscriptionView(FormView):
         ctx['payment_method'] = payment_method
         ctx['owner'] = self.request.user
         ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
+        ctx['js_needed'] = True
 
         return ctx
 
