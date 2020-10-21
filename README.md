@@ -4,7 +4,7 @@ A way for analog photographers to track their film use from box to binder.
 
 [cassettenest.com](http://cassettenest.com)
 
-Copyright &copy; 2018-2020 Trey Labs LLC. All rights reserved.
+Copyright &copy; 2016-2020 Trey Labs LLC. All rights reserved.
 
 ## Local Setup
 
