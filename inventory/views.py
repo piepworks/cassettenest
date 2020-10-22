@@ -1306,6 +1306,17 @@ def film_add(request):
             )
             messages.success(request, f'New film “{film}” added!')
 
+            if 'new_manufacturer' in locals():
+                message_addendum = f' “{new_manufacturer}” is a new manufacturer.'
+            else:
+                message_addendum = ''
+            send_mail(
+                subject='New film added!',
+                message=f'{request.user} added “{film}.”{message_addendum}',
+                from_email='trey@cassettenest.com',
+                recipient_list=['boss@treylabs.com']
+            )
+
             if form.cleaned_data['destination'] != 'add-storage':
                 if 'another' in request.POST:
                     return redirect(reverse('film-add') + '?destination=add-logbook')
