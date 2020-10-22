@@ -16,12 +16,5 @@
 
     <div class="action"><input type="submit" value="Save project" /></div>
 </form>
-
-{% if project %}
-<form onsubmit="return confirmDelete('project');" action="{% url 'project-delete' project.id %}" method="post">
-    {% csrf_token %}
-    <div class="action"><input type="submit" class="destructive" value="Delete project" /></div>
-</form>
-{% endif %}
 </div>
 {% endblock %}

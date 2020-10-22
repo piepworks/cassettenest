@@ -1,0 +1,9 @@
+<div class="action">
+    <a aria-label="Edit {{ name }}" class="button icon icon-edit" href="{% url name|add:'-edit' item.id %}">{% include 'inventory/_github-icon.html' with id='pencil' title='Edit '|add:name %}</a>
+    <form action="{% url name|add:'-delete' item.id %}" onsubmit="return confirmDelete('{{ name }}');" method="post">
+        {% csrf_token %}
+        <button aria-label="Delete {{ name }}" class="icon icon-destructive">
+            {% include 'inventory/_github-icon.html' with id='trashcan' title='Delete '|add:name %}
+        </button>
+    </form>
+</div>

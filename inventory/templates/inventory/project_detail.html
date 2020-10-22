@@ -5,13 +5,14 @@
 
 {% block content %}
 <div class="raw">
-<h1>{{ project.name }}</h1>
+<header class="c-heading">
+    <div class="flex">
+        <h1>{{ project.name }}</h1>
+        {% include 'inventory/_heading-buttons.html' with item=project name='project' %}
+    </div>
+</header>
 
 <p>Status: {{ project.get_status_display }}</p>
-
-<div class="do-not-print">
-    <p><a href="{% url 'project-edit' project.id %}">Edit project</a></p>
-</div>
 
 {% if project.cameras.all %}
     {% include 'inventory/_project-cameras.html' %}

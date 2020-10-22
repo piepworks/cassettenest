@@ -16,15 +16,7 @@
             <h1>{{ roll }}</h1>
             {% endif %}
 
-            <div class="action">
-                <a aria-label="Edit roll" class="button icon icon-edit" href="{% url 'roll-edit' roll.id %}">{% include 'inventory/_github-icon.html' with id='pencil' title='Edit roll' %}</a>
-                <form action="{% url 'roll-delete' roll.id %}" onsubmit="return confirmDelete('roll');" method="post">
-                    {% csrf_token %}
-                    <button aria-label="Delete roll" class="icon icon-destructive">
-                        {% include 'inventory/_github-icon.html' with id='trashcan' title='Delete roll' %}
-                    </button>
-                </form>
-            </div>
+            {% include 'inventory/_heading-buttons.html' with item=roll name='roll' %}
         </div>
 
         <h2>{{ roll.film.manufacturer }} <a href="{% url 'film-rolls' roll.film.slug %}">{{ roll.film.name }} in {{ roll.film.get_format_display }}</a> </h2>
