@@ -5,10 +5,11 @@
 
 {% block content %}
 <div class="raw">
-    <h1>{{ camera.name }}</h1>
-
-    <div class="do-not-print">
-        <p><a href="{% url 'camera-edit' camera.id %}">Edit this camera</a></p>
+    <div class="c-heading">
+        <div class="flex">
+            <h1>{{ camera.name }}</h1>
+            {% include 'inventory/_heading-buttons.html' with item=camera name='camera' prevent_delete=True %}
+        </div>
     </div>
 
     {% if not camera.multiple_backs %}
