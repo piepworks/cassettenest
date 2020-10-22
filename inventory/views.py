@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
+from django.contrib.sites.shortcuts import get_current_site
 import stripe
 import djstripe.models
 import requests
@@ -1306,13 +1307,19 @@ def film_add(request):
             )
             messages.success(request, f'New film “{film}” added!')
 
+            current_site = get_current_site(request)
             if 'new_manufacturer' in locals():
-                message_addendum = f' “{new_manufacturer}” is a new manufacturer.'
+                message_addendum = f'''“{new_manufacturer}” is a new manufacturer.\n
+                    https://{current_site}{reverse('admin:inventory_manufacturer_change', args=(manufacturer.id,))}
+                '''
             else:
                 message_addendum = ''
             send_mail(
                 subject='New film added!',
-                message=f'{request.user} added “{film}.”{message_addendum}',
+                message=f'''{request.user} added “{film}.”\n
+                    https://{current_site}{reverse('admin:inventory_film_change', args=(film.id,))}\n
+                    {message_addendum}
+                ''',
                 from_email='trey@cassettenest.com',
                 recipient_list=['boss@treylabs.com']
             )
