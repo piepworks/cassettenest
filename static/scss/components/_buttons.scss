@@ -50,6 +50,8 @@ input[type=submit] {
 
         &:hover { fill: black; }
 
+        &-back { padding-right: 0.5rem; }
+
         &-destructive:hover { fill: darken($destructive, 10%); }
     }
 }

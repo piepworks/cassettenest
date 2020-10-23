@@ -7,6 +7,7 @@
 <div class="raw">
 <header class="c-heading">
     <div class="flex">
+        {% include 'inventory/_heading-back.html' with url='projects' name='projects' %}
         <h1>{{ project.name }}</h1>
         {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
     </div>
