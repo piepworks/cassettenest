@@ -1,16 +1,16 @@
 <div class="action">
     {% if parent_item %}
-        <a aria-label="Edit {{ name }}" class="button icon icon-edit" href="{% url name|add:'-edit' parent_item.id item.id %}">
+        <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id item.id %}">
     {% else %}
-        <a aria-label="Edit {{ name }}" class="button icon icon-edit" href="{% url name|add:'-edit' item.id %}">
+        <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' item.id %}">
     {% endif %}
             {% include 'inventory/_github-icon.html' with id='pencil' title='Edit '|add:name %}
         </a>
     {% if not prevent_delete %}
         {% if parent_item %}
-            <form action="{% url name|add:'-delete' parent_item.id item.id %}" onsubmit="return confirmDelete('{{ name }}');" method="post">
+            <form action="{% url url|add:'-delete' parent_item.id item.id %}" onsubmit="return confirmDelete('{{ title|default:name }}');" method="post">
         {% else %}
-            <form action="{% url name|add:'-delete' item.id %}" onsubmit="return confirmDelete('{{ name }}');" method="post">
+            <form action="{% url url|add:'-delete' item.id %}" onsubmit="return confirmDelete('{{ name }}');" method="post">
         {% endif %}
                 {% csrf_token %}
                 <button aria-label="Delete {{ name }}" class="icon icon-destructive">

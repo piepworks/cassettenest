@@ -5,7 +5,12 @@
 
 {% block content %}
 <div class="raw">
-    <h1>Journal entry for <a href="{% url 'roll-detail' roll.id %}">{{ roll.code }} / {{ roll.started_on|date:'Y' }}</a></h1>
+    <div class="c-heading">
+        <div class="flex">
+            <h1>Journal entry for <a href="{% url 'roll-detail' roll.id %}">{{ roll.code }} / {{ roll.started_on|date:'Y' }}</a></h1>
+            {% include 'inventory/_heading-buttons.html' with item=entry parent_item=roll url='roll-journal' name='journal entry' %}
+        </div>
+    </div>
 
     {% block entry %}{% endblock %}
 </div>

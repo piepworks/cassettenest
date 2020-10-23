@@ -16,7 +16,7 @@
             <h1>{{ roll }}</h1>
             {% endif %}
 
-            {% include 'inventory/_heading-buttons.html' with item=roll name='roll' %}
+            {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
         </div>
 
         <h2>{{ roll.film.manufacturer }} <a href="{% url 'film-rolls' roll.film.slug %}">{{ roll.film.name }} in {{ roll.film.get_format_display }}</a> </h2>

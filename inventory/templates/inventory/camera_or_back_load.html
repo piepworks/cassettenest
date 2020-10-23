@@ -10,9 +10,9 @@
         <div class="flex">
             <h1>Load <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>{% if camera_back %}, <a href="{% url 'camera-back-detail' camera.id camera_back.id %}">Back “{{ camera_back.name }}”</a> {% endif %}</h1>
             {% if camera_back %}
-                {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera name='camera-back' prevent_delete=True %}
+                {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True %}
             {% else %}
-                {% include 'inventory/_heading-buttons.html' with item=camera name='camera' prevent_delete=True %}
+                {% include 'inventory/_heading-buttons.html' with item=camera url='camera' url='camera' name='camera' prevent_delete=True %}
             {% endif %}
         </div>
     </div>

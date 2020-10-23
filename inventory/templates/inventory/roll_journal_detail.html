@@ -2,8 +2,6 @@
 {% load markdown_deux_tags %}
 
 {% block entry %}
-<p><a href="{% url 'roll-journal-edit' roll.id entry.id %}">Edit entry</a></p>
-
 <div class="c-field">
     <label>Date</label>
     <p>{{ entry.date|date:'l, F j, Y' }}</p>
@@ -22,12 +20,5 @@
 <div class="c-field">
     <label>Notes</label>
     {{ entry.notes|markdown }}
-</div>
-
-<div class="action">
-    <form onsubmit="return confirmDelete('journal entry');" action="{% url 'roll-journal-delete' roll.id entry.id %}" method="post">
-        {% csrf_token %}
-        <input type="submit" class="destructive" value="Delete entry" />
-    </form>
 </div>
 {% endblock %}

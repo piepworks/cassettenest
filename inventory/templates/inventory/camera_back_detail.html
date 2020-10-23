@@ -8,7 +8,7 @@
     <div class="c-heading">
         <div class="flex">
             <h1><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>, Back “{{ camera_back.name }}”</h1>
-            {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera name='camera-back' prevent_delete=True %}
+            {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True %}
         </div>
     </div>
 

@@ -1507,11 +1507,12 @@ def roll_journal_add(request, roll_pk):
             'owner': owner,
             'roll': roll,
             'form': form,
+            'action': 'Add',
         }
 
         return render(
             request,
-            'inventory/roll_journal_form.html',
+            'inventory/roll_journal_add_edit.html',
             context
         )
 
@@ -1550,11 +1551,12 @@ def roll_journal_edit(request, roll_pk, entry_pk):
             'roll': roll,
             'form': form,
             'starting_frame': entry.starting_frame,
+            'action': 'Edit',
         }
 
         return render(
             request,
-            'inventory/roll_journal_form.html',
+            'inventory/roll_journal_add_edit.html',
             context
         )
 
