@@ -1,4 +1,6 @@
 import datetime
+import csv
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, FormView
 from django.db.models import Count, Q
@@ -1996,3 +1998,78 @@ def camera_back_delete(request, pk, back_pk):
         '%s successfully deleted.' % (name)
     )
     return redirect(reverse('camera-detail', args=(camera.id,)))
+
+
+# EXPORT
+# ------
+@login_required
+def export_rolls(request):
+    rolls = Roll.objects.filter(owner=request.user)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="rolls.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'Code',
+        'Status',
+        'Film',
+        'Film ID',
+        'Push/Pull',
+        'Camera',
+        'Camera ID',
+        'Camera Back',
+        'Camera Back ID',
+        'Lens(es)',
+        'Project',
+        'Project ID',
+        'Location',
+        'Notes',
+        'Lab',
+        'Scanner',
+        'Notes on Development',
+        'Created',
+        'Updated',
+        'Started',
+        'Ended'
+    ])
+
+    for roll in rolls:
+        try:
+            camera_id = roll.camera.id
+        except AttributeError:
+            camera_id = ''
+        try:
+            camera_back_id = roll.camera_back.id
+        except AttributeError:
+            camera_back_id = ''
+        try:
+            project_id = roll.project.id
+        except AttributeError:
+            project_id = ''
+
+        writer.writerow([
+            roll.code,
+            roll.status,
+            roll.film,
+            roll.film.id,
+            roll.push_pull,
+            roll.camera,
+            camera_id,
+            roll.camera_back,
+            camera_back_id,
+            roll.lens,
+            roll.project,
+            project_id,
+            roll.location,
+            roll.notes,
+            roll.lab,
+            roll.scanner,
+            roll.notes_on_development,
+            roll.created_at,
+            roll.updated_at,
+            roll.started_on,
+            roll.ended_on
+        ])
+
+    return response

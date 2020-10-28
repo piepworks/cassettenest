@@ -19,6 +19,15 @@
     </form>
     <p><a href="{% url 'password_change' %}">Change your password</a></p>
 
+    <hr />
+
+    <h2>Export your data.</h2>
+    <ul>
+        <li><a href="{% url 'export-rolls' %}">Download your roll data.</a></li>
+        <li title="Coming soon…">Download your camera data.</li>
+        <li title="Coming soon…">Download your project and journal data.</li>
+    </ul>
+
 {% if user.is_staff %}
     <hr />
 

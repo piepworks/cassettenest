@@ -94,6 +94,9 @@ urlpatterns = [
     path('camera/<int:pk>/back/<int:back_pk>/delete/',
          views.camera_back_delete, name='camera-back-delete'),
 
+    # Export
+    path('export/rolls', views.export_rolls, name='export-rolls'),
+
     # Subscribe
     path('subscribe/',
          views.PurchaseSubscriptionView.as_view(),
