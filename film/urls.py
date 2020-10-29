@@ -96,6 +96,7 @@ urlpatterns = [
 
     # Export
     path('export/rolls', views.export_rolls, name='export-rolls'),
+    path('export/cameras', views.export_cameras, name='export-cameras'),
 
     # Subscribe
     path('subscribe/',

@@ -2031,7 +2031,7 @@ def export_rolls(request):
         'Created',
         'Updated',
         'Started',
-        'Ended'
+        'Ended',
     ])
 
     for roll in rolls:
@@ -2069,7 +2069,39 @@ def export_rolls(request):
             roll.created_at,
             roll.updated_at,
             roll.started_on,
-            roll.ended_on
+            roll.ended_on,
+        ])
+
+    return response
+
+
+@login_required
+def export_cameras(request):
+    cameras = Camera.objects.filter(owner=request.user)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="cameras.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'ID',
+        'Name',
+        'Notes',
+        'Status',
+        'Multiple Backs',
+        'Created',
+        'Updated',
+    ])
+
+    for camera in cameras:
+        writer.writerow([
+            camera.id,
+            camera.name,
+            camera.notes,
+            camera.status,
+            camera.multiple_backs,
+            camera.created_at,
+            camera.updated_at,
         ])
 
     return response
