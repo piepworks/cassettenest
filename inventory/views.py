@@ -156,6 +156,12 @@ def settings(request):
         profile_form = ProfileForm(instance=owner.profile)
         stripe_form = UpdateCardForm()
         subscription = False
+        exportable = {
+            'rolls': Roll.objects.filter(owner=request.user).count(),
+            'cameras': Camera.objects.filter(owner=request.user).count(),
+            'camera_backs': CameraBack.objects.filter(camera__owner=request.user).count(),
+        }
+        exportable_data = True if sum(exportable.values()) else False
 
         try:
             subscriptions = djstripe.models.Subscription.objects.filter(
@@ -190,6 +196,8 @@ def settings(request):
             'stripe_form': stripe_form,
             'subscription': subscription,
             'payment_method': payment_method,
+            'exportable': exportable,
+            'exportable_data': exportable_data,
             'charges': charges,
             'STRIPE_PUBLIC_KEY': djstripe.settings.STRIPE_PUBLIC_KEY,
             'js_needed': True,
@@ -2102,6 +2110,40 @@ def export_cameras(request):
             camera.multiple_backs,
             camera.created_at,
             camera.updated_at,
+        ])
+
+    return response
+
+
+@login_required
+def export_camera_backs(request):
+    camera_backs = CameraBack.objects.filter(camera__owner=request.user)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="camera-backs.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'ID',
+        'Camera',
+        'Camera ID',
+        'Name',
+        'Notes',
+        'Status',
+        'Created',
+        'Updated',
+    ])
+
+    for back in camera_backs:
+        writer.writerow([
+            back.id,
+            back.camera,
+            back.camera.id,
+            back.name,
+            back.notes,
+            back.status,
+            back.created_at,
+            back.updated_at,
         ])
 
     return response
