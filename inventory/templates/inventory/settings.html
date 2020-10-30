@@ -33,8 +33,9 @@
         {% if exportable.camera_backs %}
         <li><a href="{% url 'export-camera-backs' %}">Download your camera back data.</a></li>
         {% endif %}
-        <li>Coming soon: Download your project data.</li>
-        <li>Coming soon: Download your journal data.</li>
+        {% if exportable.projects %}
+        <li><a href="{% url 'export-projects' %}">Download your project data.</a></li>
+        {% endif %}
     </ul>
     {% endif %}
 

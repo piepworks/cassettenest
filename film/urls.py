@@ -98,6 +98,7 @@ urlpatterns = [
     path('export/rolls', views.export_rolls, name='export-rolls'),
     path('export/cameras', views.export_cameras, name='export-cameras'),
     path('export/camera_backs', views.export_camera_backs, name='export-camera-backs'),
+    path('export/projects', views.export_projects, name='export-projects'),
 
     # Subscribe
     path('subscribe/',

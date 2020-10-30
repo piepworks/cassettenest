@@ -160,6 +160,7 @@ def settings(request):
             'rolls': Roll.objects.filter(owner=request.user).count(),
             'cameras': Camera.objects.filter(owner=request.user).count(),
             'camera_backs': CameraBack.objects.filter(camera__owner=request.user).count(),
+            'projects': Project.objects.filter(owner=request.user).count(),
         }
         exportable_data = True if sum(exportable.values()) else False
 
@@ -2144,6 +2145,49 @@ def export_camera_backs(request):
             back.status,
             back.created_at,
             back.updated_at,
+        ])
+
+    return response
+
+
+@login_required
+def export_projects(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="projets.csv"'
+    writer = csv.writer(response)
+    projects = Project.objects.filter(owner=request.user)
+
+    writer.writerow([
+        'ID',
+        'Name',
+        'Notes',
+        'Status',
+        'Cameras',
+        'Rolls',
+        'Created',
+        'Updated',
+    ])
+
+    for project in projects:
+        rolls = Roll.objects.filter(project=project)
+        rolls_output = []
+        for roll in rolls:
+            rolls_output.append(roll.id)
+
+        cameras = Camera.objects.filter(project=project)
+        cameras_output = []
+        for camera in cameras:
+            cameras_output.append(camera.id)
+
+        writer.writerow([
+            project.id,
+            project.name,
+            project.notes,
+            project.status,
+            cameras_output,
+            rolls_output,
+            project.created_at,
+            project.updated_at,
         ])
 
     return response
