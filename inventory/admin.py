@@ -114,10 +114,14 @@ class UserAdmin(BaseUserAdmin):
         'email',
         'first_name',
         'last_name',
+        'timezone',
         'date_joined',
         'is_staff',
     )
     ordering = ('-date_joined',)
+
+    def timezone(self, instance):
+        return instance.profile.timezone
 
 
 admin.site.register(Film, FilmAdmin)
