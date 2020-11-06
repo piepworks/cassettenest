@@ -15,12 +15,12 @@
 <ul class="messages errors do-not-print">
     {% if form.non_field_errors %}
         {% for error in form.non_field_errors  %}
-            <li>{{ error|escape }}</li>
+            <li class="error">{{ error|escape }}</li>
         {% endfor %}
     {% else %}
         {% for field in form %}
             {% for error in field.errors %}
-                <li>{{ error|escape }}</li>
+                <li class="error">{{ error|escape }}</li>
             {% endfor %}
         {% endfor %}
     {% endif %}

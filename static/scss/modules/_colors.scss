@@ -6,7 +6,19 @@ $medium-dark: rgba(0, 0, 0, 0.5);
 $medium: #ccc;
 $light: #eee;
 $gold: #f3ba4c;
+$gold-light: #f5d327;
 $button: darken($c41, 20%);
 $button-hover: darken($button, 10%);
 $destructive: #fd6666; // "Salmon" from macOS color picker's "Pencils" panel
 $white: #fff;
+
+// From Bootstrap
+// https://getbootstrap.com/docs/3.3/components/#alerts
+$bs-green: #3c763d;
+$bs-green-bg: #dff0d8;
+$bs-blue: #31708f;
+$bs-blue-bg: #d9edf7;
+$bs-red: #a94442;
+$bs-red-bg: #f2dede;
+$bs-yellow: #8a6d3b;
+$bs-yellow-bg: #fcf8e3;

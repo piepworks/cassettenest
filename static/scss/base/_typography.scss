@@ -8,7 +8,7 @@ a {
     text-decoration: underline;
 
     &:hover {
-        background: lighten($gold, 30%);
+        background: lighten($button, 55%);
         color: $dark;
     }
 }
@@ -16,13 +16,6 @@ a {
 .wrapper {
     > footer {
         font-size: 0.6rem;
-
-        a {
-            color: $dark;
-
-            &:hover,
-            &:focus { background: $gold; }
-        }
 
         .timezone { color: $medium; }
     }
