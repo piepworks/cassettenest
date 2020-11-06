@@ -42,6 +42,7 @@ services:
       - traefik.frontend.rule=Host:app.cassettenest.com
       - traefik.docker.network=web
       - traefik.port=8001
+      - traefik.frontend.headers.customResponseHeaders=Strict-Transport-Security:15552000
     depends_on:
       - db
   db:
