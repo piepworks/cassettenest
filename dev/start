@@ -1,0 +1,4 @@
+#!/bin/sh
+
+$(dirname "$0")/server
+$(dirname "$0")/browsersync
