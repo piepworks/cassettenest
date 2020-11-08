@@ -1,5 +1,4 @@
-import datetime
-import csv
+import datetime, csv, io
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, FormView
@@ -34,7 +33,8 @@ from .forms import (
     RollForm,
     FilmForm,
     UpdateCardForm,
-    UserForm
+    UserForm,
+    UploadCSVForm,
 )
 from .utils import (
     development_statuses,
@@ -43,10 +43,9 @@ from .utils import (
     iso_filter,
     iso_variables,
     pluralize,
-    render_markdown,
     status_description,
     status_keys,
-    status_number
+    status_number,
 )
 
 
@@ -155,6 +154,7 @@ def settings(request):
         user_form = UserForm(instance=owner)
         profile_form = ProfileForm(instance=owner.profile)
         stripe_form = UpdateCardForm()
+        csv_form = UploadCSVForm()
         subscription = False
         exportable = {
             'rolls': Roll.objects.filter(owner=request.user).count(),
@@ -195,6 +195,7 @@ def settings(request):
             'user_form': user_form,
             'profile_form': profile_form,
             'stripe_form': stripe_form,
+            'csv_form': csv_form,
             'subscription': subscription,
             'payment_method': payment_method,
             'exportable': exportable,
@@ -1987,7 +1988,7 @@ def camera_delete(request, pk):
 
     messages.success(
         request,
-        'Camera %s successfully deleted.' % (name)
+        f'Camera “{name}” successfully deleted.'
     )
     return redirect(reverse('index'))
 
@@ -2009,7 +2010,7 @@ def camera_back_delete(request, pk, back_pk):
     return redirect(reverse('camera-detail', args=(camera.id,)))
 
 
-# EXPORT
+# EXPORT / IMPORT
 # ------
 @login_required
 def export_rolls(request):
@@ -2115,6 +2116,47 @@ def export_cameras(request):
 
     return response
 
+
+@require_POST
+@login_required
+def import_cameras(request):
+    form = UploadCSVForm(request.POST, request.FILES)
+
+    if form.is_valid():
+        csv_file = request.FILES['csv']
+        print(csv_file.name)
+        print(csv_file.size)
+
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Please choose a CSV file.')
+            return redirect(reverse('settings'))
+
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        next(io_string)
+
+        for column in csv.reader(io_string, delimiter=',', quotechar="|"):
+            _, created = Camera.objects.update_or_create(
+                owner=request.user,
+                id=column[0],
+                name=column[1],
+                notes=column[2],
+                status=column[3],
+                multiple_backs=column[4],
+                created_at=column[5],
+                updated_at=column[6],
+            )
+
+        messages.success(request, 'Cameras added maybe!!')
+        return redirect(reverse('cameras'))
+    else:
+        messages.error(request, 'Nope.')
+        return redirect(reverse('settings'))
+
+        # Write a message telling how many records were added.
+        # Maybe redirect to the cameras page?
+
+    # if it's not valid, spit out some error and redirect back to the settings page.
 
 @login_required
 def export_camera_backs(request):

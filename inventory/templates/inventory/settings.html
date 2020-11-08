@@ -39,6 +39,23 @@
     </ul>
 {% endif %}
 
+    <hr>
+
+    <h2>Import previously exported data</h2>
+    <ul>
+        <li>Rolls</li>
+        <li>
+            Cameras
+            <form method="post" action="{% url 'import-cameras' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ csv_form.csv }}
+                <input type="submit" value="Upload" />
+            </form>
+        </li>
+        <li>Camera Backs</li>
+        <li>Projects</li>
+    </ul>
+
 {% if user.is_staff %}
     <hr />
 

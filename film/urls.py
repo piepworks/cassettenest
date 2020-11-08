@@ -100,6 +100,9 @@ urlpatterns = [
     path('export/camera_backs', views.export_camera_backs, name='export-camera-backs'),
     path('export/projects', views.export_projects, name='export-projects'),
 
+    # Import
+    path('import/cameras', views.import_cameras, name='import-cameras'),
+
     # Subscribe
     path('subscribe/',
          views.PurchaseSubscriptionView.as_view(),
