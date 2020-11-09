@@ -2124,8 +2124,6 @@ def import_cameras(request):
 
     if form.is_valid():
         csv_file = request.FILES['csv']
-        print(csv_file.name)
-        print(csv_file.size)
 
         if not csv_file.name.endswith('.csv'):
             messages.error(request, 'Please choose a CSV file.')
@@ -2135,14 +2133,17 @@ def import_cameras(request):
         io_string = io.StringIO(data_set)
         next(io_string)
 
-        for column in csv.reader(io_string, delimiter=',', quotechar="|"):
-            _, created = Camera.objects.update_or_create(
+        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+            obj, created = Camera.objects.update_or_create(
                 owner=request.user,
                 id=column[0],
                 name=column[1],
                 notes=column[2],
                 status=column[3],
                 multiple_backs=column[4],
+            )
+            # Keep the original created and updated dates and times.
+            Camera.objects.filter(id=column[0]).update(
                 created_at=column[5],
                 updated_at=column[6],
             )
