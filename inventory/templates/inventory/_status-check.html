@@ -1,5 +1,5 @@
 {% if check %}
-<span class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</span>
+<span class="icon" aria-label="Completed">{% include 'inventory/_github-icon.html' with id='check' title="Completed" %}</span>
 {% else %}
-<span class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</span>
+<span class="icon" aria-label="Incomplete">{% include 'inventory/_github-icon.html' with id='dot' title="Incomplete" %}</span>
 {% endif %}

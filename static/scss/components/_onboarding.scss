@@ -1,9 +1,13 @@
+$onboarding-foreground: black;
+$onboarding-background: $bs-blue-bg;
+
 .wrapper > main > .onboarding {
-    background: $gold;
+    color: $onboarding-foreground;
+    background: $onboarding-background;
     padding: 1rem 2rem 1.5rem;
 
     a {
-        color: black;
+        color: $onboarding-foreground;
 
         &:hover {
             background: $bw;
@@ -23,5 +27,7 @@
         .icon { margin-right: 0.5rem; }
     }
 
-    hr { border-color: darken($gold, 10%); }
+    hr { border-color: darken($onboarding-background, 5%); }
+
+    svg { fill: $onboarding-foreground; }
 }
