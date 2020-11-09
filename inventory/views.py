@@ -2095,6 +2095,7 @@ def export_cameras(request):
     writer = csv.writer(response)
     writer.writerow([
         'ID',
+        'Format',
         'Name',
         'Notes',
         'Status',
@@ -2106,6 +2107,7 @@ def export_cameras(request):
     for camera in cameras:
         writer.writerow([
             camera.id,
+            camera.format,
             camera.name,
             camera.notes,
             camera.status,
@@ -2138,15 +2140,16 @@ def import_cameras(request):
             obj, created = Camera.objects.update_or_create(
                 owner=request.user,
                 id=column[0],
-                name=column[1],
-                notes=column[2],
-                status=column[3],
-                multiple_backs=column[4],
+                format=column[1],
+                name=column[2],
+                notes=column[3],
+                status=column[4],
+                multiple_backs=column[5],
             )
             # Keep the original created and updated dates and times.
             Camera.objects.filter(id=column[0]).update(
-                created_at=column[5],
-                updated_at=column[6],
+                created_at=column[6],
+                updated_at=column[7],
             )
 
             if created:
