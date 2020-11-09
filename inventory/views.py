@@ -2094,14 +2094,14 @@ def export_cameras(request):
 
     writer = csv.writer(response)
     writer.writerow([
-        'ID',
-        'Format',
-        'Name',
-        'Notes',
-        'Status',
-        'Multiple Backs',
-        'Created',
-        'Updated',
+        'id',
+        'format',
+        'name',
+        'notes',
+        'status',
+        'multiple_backs',
+        'created',
+        'updated',
     ])
 
     for camera in cameras:
@@ -2133,23 +2133,23 @@ def import_cameras(request):
 
         data_set = csv_file.read().decode('UTF-8')
         io_string = io.StringIO(data_set)
-        next(io_string)  # Ignore the column headings.
         count = 0
 
-        for column in csv.reader(io_string, delimiter=',', quotechar='|'):
+        reader = csv.DictReader(io_string, delimiter=',', quotechar='|')
+        for row in reader:
             obj, created = Camera.objects.update_or_create(
                 owner=request.user,
-                id=column[0],
-                format=column[1],
-                name=column[2],
-                notes=column[3],
-                status=column[4],
-                multiple_backs=column[5],
+                id=row['id'],
+                format=row['format'],
+                name=row['name'],
+                notes=row['notes'],
+                status=row['status'],
+                multiple_backs=row['multiple_backs'],
             )
             # Keep the original created and updated dates and times.
-            Camera.objects.filter(id=column[0]).update(
-                created_at=column[6],
-                updated_at=column[7],
+            Camera.objects.filter(id=row['id']).update(
+                created_at=row['created'],
+                updated_at=row['updated'],
             )
 
             if created:
