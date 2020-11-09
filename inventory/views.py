@@ -2131,7 +2131,8 @@ def import_cameras(request):
 
         data_set = csv_file.read().decode('UTF-8')
         io_string = io.StringIO(data_set)
-        next(io_string)
+        next(io_string)  # Ignore the column headings.
+        count = 0
 
         for column in csv.reader(io_string, delimiter=',', quotechar='|'):
             obj, created = Camera.objects.update_or_create(
@@ -2148,16 +2149,18 @@ def import_cameras(request):
                 updated_at=column[6],
             )
 
-        messages.success(request, 'Cameras added maybe!!')
+            if created:
+                count += 1
+
+        if count:
+            messages.success(request, f'Imported {count} {pluralize("camera", count)}.')
+        else:
+            messages.info(request, 'No cameras imported.')
         return redirect(reverse('cameras'))
     else:
         messages.error(request, 'Nope.')
         return redirect(reverse('settings'))
 
-        # Write a message telling how many records were added.
-        # Maybe redirect to the cameras page?
-
-    # if it's not valid, spit out some error and redirect back to the settings page.
 
 @login_required
 def export_camera_backs(request):
