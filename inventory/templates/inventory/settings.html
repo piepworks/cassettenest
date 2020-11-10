@@ -43,7 +43,14 @@
 
     <h2>Import previously exported data</h2>
     <ul>
-        <li>Rolls</li>
+        <li>
+            Rolls
+            <form method="post" action="{% url 'import-rolls' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ csv_form.csv }}
+                <input type="submit" value="Upload" />
+            </form>
+        </li>
         <li>
             Cameras
             <form method="post" action="{% url 'import-cameras' %}" enctype="multipart/form-data">

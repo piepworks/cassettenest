@@ -102,6 +102,7 @@ urlpatterns = [
 
     # Import
     path('import/cameras', views.import_cameras, name='import-cameras'),
+    path('import/rolls', views.import_rolls, name='import-rolls'),
 
     # Subscribe
     path('subscribe/',

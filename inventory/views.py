@@ -2021,27 +2021,28 @@ def export_rolls(request):
 
     writer = csv.writer(response)
     writer.writerow([
-        'Code',
-        'Status',
-        'Film',
-        'Film ID',
-        'Push/Pull',
-        'Camera',
-        'Camera ID',
-        'Camera Back',
-        'Camera Back ID',
-        'Lens(es)',
-        'Project',
-        'Project ID',
-        'Location',
-        'Notes',
-        'Lab',
-        'Scanner',
-        'Notes on Development',
-        'Created',
-        'Updated',
-        'Started',
-        'Ended',
+        'id',
+        'code',
+        'status',
+        'film',
+        'film_id',
+        'push_pull',
+        'camera',
+        'camera_id',
+        'camera_back',
+        'camera_back_id',
+        'lens',
+        'project',
+        'project_id',
+        'location',
+        'notes',
+        'lab',
+        'scanner',
+        'notes_on_development',
+        'created',
+        'updated',
+        'started',
+        'ended',
     ])
 
     for roll in rolls:
@@ -2059,6 +2060,7 @@ def export_rolls(request):
             project_id = ''
 
         writer.writerow([
+            roll.id,
             roll.code,
             roll.status,
             roll.film,
@@ -2083,6 +2085,78 @@ def export_rolls(request):
         ])
 
     return response
+
+
+@require_POST
+@login_required
+def import_rolls(request):
+    form = UploadCSVForm(request.POST, request.FILES)
+
+    if form.is_valid():
+        csv_file = request.FILES['csv']
+
+        if not csv_file.name.endswith('.csv'):
+            messages.error(request, 'Please choose a CSV file.')
+            return redirect(reverse('settings'))
+
+        data_set = csv_file.read().decode('UTF-8')
+        io_string = io.StringIO(data_set)
+        count = 0
+
+        reader = csv.DictReader(io_string, delimiter=',', quotechar='|')
+        for row in reader:
+            obj, created = Roll.objects.update_or_create(
+                owner=request.user,
+                id=row['id'],
+                code=row['code'],
+                push_pull=row['push_pull'],
+                film=Film.objects.get(id=row['film_id']),
+                location=row['location'],
+                lens=row['lens'],
+                notes=row['notes'],
+                lab=row['lab'],
+                scanner=row['scanner'],
+                notes_on_development=row['notes_on_development'],
+            )
+
+            # Add optional foreign keys
+            if row['camera_id']:
+                obj.camera = Camera.objects.get(id=row['camera_id'], owner=request.user)
+            if row['camera_back_id']:
+                obj.camera_back = CameraBack.objects.get(id=row['camera_back_id'], owner=request.user)
+            if row['project_id']:
+                obj.project = Project.objecst.get(id=row['project_id'], owner=request.user)
+
+            # Add optional dates
+            if row['started']:
+                obj.started_on = datetime.datetime.strptime(row['started'], '%Y-%m-%d').date()
+            if row['ended']:
+                obj.ended_on = datetime.datetime.strptime(row['ended'], '%Y-%m-%d').date()
+
+            # Set status after potentially setting the camera, started, and
+            # endedso things are happy with the Roll model’s automatic `save`
+            # fanciness.
+            obj.status = row['status']
+
+            obj.save()
+
+            # Keep the original created and updated dates and times.
+            Roll.objects.filter(id=row['id']).update(
+                created_at=row['created'],
+                updated_at=row['updated'],
+            )
+
+            if created:
+                count += 1
+
+        if count:
+            messages.success(request, f'Imported {count} {pluralize("roll", count)}.')
+        else:
+            messages.info(request, 'No rolls imported.')
+        return redirect(reverse('inventory'))
+    else:
+        messages.error(request, 'Nope.')
+        return redirect(reverse('settings'))
 
 
 @login_required
