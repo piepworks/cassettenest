@@ -2273,6 +2273,12 @@ def export_camera_backs(request):
     return response
 
 
+@require_POST
+@login_required
+def import_camera_backs(request):
+    pass
+
+
 @login_required
 def export_projects(request):
     response = HttpResponse(content_type='text/csv')
@@ -2314,3 +2320,20 @@ def export_projects(request):
         ])
 
     return response
+
+
+@require_POST
+@login_required
+def import_projects(request):
+    pass
+
+
+@login_required
+def export_journals(request):
+    pass
+
+
+@require_POST
+@login_required
+def import_journals(request):
+    pass

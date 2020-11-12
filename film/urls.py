@@ -99,10 +99,14 @@ urlpatterns = [
     path('export/cameras', views.export_cameras, name='export-cameras'),
     path('export/camera_backs', views.export_camera_backs, name='export-camera-backs'),
     path('export/projects', views.export_projects, name='export-projects'),
+    path('export/journals', views.export_journals, name='export-journals'),
 
     # Import
-    path('import/cameras', views.import_cameras, name='import-cameras'),
     path('import/rolls', views.import_rolls, name='import-rolls'),
+    path('import/cameras', views.import_cameras, name='import-cameras'),
+    path('import/camera_backs', views.import_camera_backs, name='import-camera_backs'),
+    path('import/projects', views.import_projects, name='import-projects'),
+    path('import/journals', views.import_journals, name='import-journals'),
 
     # Subscribe
     path('subscribe/',
