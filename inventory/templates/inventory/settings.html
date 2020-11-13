@@ -60,7 +60,14 @@
             </form>
         </li>
         <li>Camera Backs</li>
-        <li>Projects</li>
+        <li>
+            Projects
+            <form method="post" action="{% url 'import-projects' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ csv_form.csv }}
+                <input type="submit" value="Upload" />
+            </form>
+        </li>
     </ul>
 
 {% if user.is_staff %}

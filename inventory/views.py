@@ -2336,6 +2336,8 @@ def export_projects(request):
 @require_POST
 @login_required
 def import_projects(request):
+    # Hey, make class-based views because you keep repeating yourself making
+    # these import and export views.
     pass
 
 
