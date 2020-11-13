@@ -116,6 +116,7 @@ class UserAdmin(BaseUserAdmin):
         'journals',
         'projects',
         'timezone',
+        'last_login',
         'date_joined',
     )
     ordering = ('-date_joined',)
