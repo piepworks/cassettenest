@@ -2289,34 +2289,43 @@ def export_projects(request):
     projects = Project.objects.filter(owner=request.user)
 
     writer.writerow([
-        'ID',
-        'Name',
-        'Notes',
-        'Status',
-        'Cameras',
-        'Rolls',
-        'Created',
-        'Updated',
+        'id',
+        'name',
+        'notes',
+        'status',
+        'camera_ids',
+        'camera_names',
+        'roll_ids',
+        'roll_names',
+        'created',
+        'updated',
     ])
 
     for project in projects:
         rolls = Roll.objects.filter(project=project)
-        rolls_output = []
+        roll_ids = []
+        roll_names = []
         for roll in rolls:
-            rolls_output.append(roll.id)
-
+            roll_ids.append(roll.id)
+            roll_code = f'{roll.code} / ' if roll.code else ''
+            roll_name = f'{roll_code}{roll.film.__str__()} / {roll.get_status_display()}'
+            roll_names.append(roll_name)
         cameras = Camera.objects.filter(project=project)
-        cameras_output = []
+        camera_ids = []
+        camera_names = []
         for camera in cameras:
-            cameras_output.append(camera.id)
+            camera_ids.append(camera.id)
+            camera_names.append(camera.__str__())
 
         writer.writerow([
             project.id,
             project.name,
             project.notes,
             project.status,
-            cameras_output,
-            rolls_output,
+            camera_ids,
+            camera_names,
+            roll_ids,
+            roll_names,
             project.created_at,
             project.updated_at,
         ])
