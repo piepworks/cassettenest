@@ -111,17 +111,29 @@ class UserAdmin(BaseUserAdmin):
     inlines = [ProfileInline]
     list_display = (
         'username',
-        'email',
-        'first_name',
-        'last_name',
+        'rolls',
+        'cameras',
+        'journals',
+        'projects',
         'timezone',
         'date_joined',
-        'is_staff',
     )
     ordering = ('-date_joined',)
 
     def timezone(self, instance):
         return instance.profile.timezone
+
+    def rolls(self, instance):
+        return Roll.objects.filter(owner=instance).count()
+
+    def cameras(self, instance):
+        return Camera.objects.filter(owner=instance).count()
+
+    def journals(self, instance):
+        return Journal.objects.filter(roll__owner=instance).count()
+
+    def projects(self, instance):
+        return Project.objects.filter(owner=instance).count()
 
 
 admin.site.register(Film, FilmAdmin)
