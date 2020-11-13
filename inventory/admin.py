@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import User
+from django.db.models import Count
 from .models import (
     Camera,
     CameraBack,
@@ -121,20 +122,36 @@ class UserAdmin(BaseUserAdmin):
     )
     ordering = ('-date_joined',)
 
-    def timezone(self, instance):
-        return instance.profile.timezone
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.annotate(
+            roll_count=Count('roll', distinct=True),
+            camera_count=Count('camera', distinct=True),
+            journal_count=Count('roll__journal', distinct=True),
+            project_count=Count('project', distinct=True),
+        )
+        return qs
 
-    def rolls(self, instance):
-        return Roll.objects.filter(owner=instance).count()
+    def timezone(self, obj):
+        return obj.profile.timezone
 
-    def cameras(self, instance):
-        return Camera.objects.filter(owner=instance).count()
+    def rolls(self, obj):
+        return obj.roll_count
 
-    def journals(self, instance):
-        return Journal.objects.filter(roll__owner=instance).count()
+    def cameras(self, obj):
+        return obj.camera_count
 
-    def projects(self, instance):
-        return Project.objects.filter(owner=instance).count()
+    def journals(self, obj):
+        return obj.journal_count
+
+    def projects(self, obj):
+        return obj.project_count
+
+    rolls.admin_order_field = 'roll_count'
+    cameras.admin_order_field = 'camera_count'
+    journals.admin_order_field = 'journal_count'
+    projects.admin_order_field = 'project_count'
+    timezone.admin_order_field = 'profile__timezone'
 
 
 admin.site.register(Film, FilmAdmin)
