@@ -1,4 +1,6 @@
-import datetime, csv, io
+import datetime
+import csv
+import io
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import DetailView, FormView
