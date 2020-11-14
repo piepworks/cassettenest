@@ -1,0 +1,4 @@
+#!/bin/sh
+
+$(dirname "$0")/static
+$(dirname "$0")/restart
