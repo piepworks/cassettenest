@@ -1,8 +1,31 @@
-{% extends 'base_site.html' %}
-{% block title %}Something is broken.{% endblock %}
-{% block content %}
-<div class="raw">
-    <h1>Something is broken.</h1>
-    <p>Sorry about that. I'm on the case and will hopefully have this fixed soon. <a href="https://twitter.com/cassettenest">Contact me</a> if you have any questions.</p>
-</div>
-{% endblock %}
+{% load static %}{% load compress %}<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Whoops! / Cassette Nest</title>
+    <meta name="description" content="An easy and fun way to build an lifelong archive of metadata about your film photography." />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
+    <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" />
+    {% compress css %}
+    <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/main.scss' %}" />
+    {% endcompress %}
+</head>
+<body class="landing error" ontouchstart>
+    <div class="wrapper">
+        <div class="icon">
+            <img src="{% static 'img/icon.svg' %}" height="100" width="100" alt="Cassette Nest Icon" />
+        </div>
+
+        <main>
+            <div class="raw">
+                <h1>Something is broken.</h1>
+                <p>Sorry about that. I’m on the case and will have this fixed soon.</p>
+                <p><a href="https://cassettenest.com/feedback/?choice=bug" rel="noopener">Contact me</a> if you have any questions.</p>
+            </div>
+        </main>
+        <footer>
+            <p>Copyright &copy; 2016–{% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
