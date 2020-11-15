@@ -29,6 +29,9 @@ def env_var(key, default=None):
     return val
 
 
+# Folks who get an email when things break.
+ADMINS = [('Trey', 'treypiepmeier@fastmail.com'), ]
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
