@@ -2362,6 +2362,14 @@ class ImportCSV(View):
             messages.error(request, 'Nope.')
             return False
 
+    def redirect(self, request, count, item):
+        if count:
+            messages.success(request, f'Imported {count} {pluralize(item["noun"], count)}.')
+        else:
+            messages.info(request, f'No {item["noun"]}s imported.')
+
+        return redirect(reverse(item["redirect_url"]))
+
 
 @method_decorator(login_required, name='dispatch')
 class ImportProjectsView(ImportCSV):
@@ -2379,11 +2387,12 @@ class ImportProjectsView(ImportCSV):
 
             count += 1
 
-        if count:
-            messages.success(request, f'Imported {count} {pluralize("project", count)}.')
-        else:
-            messages.info(request, 'No projects imported.')
-        return redirect(reverse('projects'))
+        item = {
+            'noun': 'projet',
+            'redirect_url': 'projects',
+        }
+
+        return self.redirect(request, count, item)
 
 
 @login_required
