@@ -3,6 +3,7 @@ import csv
 import io
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views import View
 from django.views.generic import DetailView, FormView
 from django.db.models import Count, Q
 from django.db import IntegrityError
@@ -2106,6 +2107,9 @@ def import_rolls(request):
         count = 0
 
         reader = csv.DictReader(io_string, delimiter=',', quotechar='|')
+
+        # EVERYTHING BELOW THIS IS WHAT I WANT IN INDIVIDUAL SUB-CLASS VIEWS
+
         for row in reader:
             obj, created = Roll.objects.update_or_create(
                 owner=request.user,
@@ -2333,12 +2337,53 @@ def export_projects(request):
     return response
 
 
-@require_POST
-@login_required
-def import_projects(request):
-    # Hey, make class-based views because you keep repeating yourself making
-    # these import and export views.
+class ExportCSV(View):
     pass
+
+
+class ImportCSV(View):
+    form_class = UploadCSVForm
+
+    def read_csv(self, request):
+        form = self.form_class(request.POST, request.FILES)
+
+        if form.is_valid():
+            csv_file = request.FILES['csv']
+
+            if not csv_file.name.endswith('.csv'):
+                messages.error(request, 'Please choose a CSV file.')
+                return False
+
+            data_set = csv_file.read().decode('UTF-8')
+            io_string = io.StringIO(data_set)
+
+            return csv.DictReader(io_string, delimiter=',', quotechar='|')
+        else:
+            messages.error(request, 'Nope.')
+            return False
+
+
+@method_decorator(login_required, name='dispatch')
+class ImportProjectsView(ImportCSV):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            print(f'ROW! {row["id"]}')
+            # TODO: make things happen here.
+
+            count += 1
+
+        if count:
+            messages.success(request, f'Imported {count} {pluralize("project", count)}.')
+        else:
+            messages.info(request, 'No projects imported.')
+        return redirect(reverse('projects'))
 
 
 @login_required

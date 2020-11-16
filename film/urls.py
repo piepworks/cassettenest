@@ -105,7 +105,7 @@ urlpatterns = [
     path('import/rolls', views.import_rolls, name='import-rolls'),
     path('import/cameras', views.import_cameras, name='import-cameras'),
     path('import/camera_backs', views.import_camera_backs, name='import-camera_backs'),
-    path('import/projects', views.import_projects, name='import-projects'),
+    path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
     path('import/journals', views.import_journals, name='import-journals'),
 
     # Subscribe
