@@ -2131,7 +2131,7 @@ def import_rolls(request):
             if row['camera_back_id']:
                 obj.camera_back = CameraBack.objects.get(id=row['camera_back_id'], owner=request.user)
             if row['project_id']:
-                obj.project = Project.objecst.get(id=row['project_id'], owner=request.user)
+                obj.project = Project.objects.get(id=row['project_id'], owner=request.user)
 
             # Add optional dates
             if row['started']:
