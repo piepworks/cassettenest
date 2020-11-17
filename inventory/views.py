@@ -1,6 +1,7 @@
 import datetime
 import csv
 import io
+import json
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, DetailView, FormView
@@ -2327,10 +2328,23 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
         count = 0
 
         for row in reader:
-            print(f'ROW! {row["id"]}')
-            # TODO: make things happen here.
+            roll_ids = json.loads(row['roll_ids'])
 
-            count += 1
+            for id in roll_ids:
+                print(f'Roll ID: {id}')
+
+            # obj, created = Roll.objects.update_or_create(
+            #     owner=request.user,
+            #     id=row['id'],
+            #     name=row['name'],
+            #     notes=row['notes'],
+            #     status=row['status'],
+            #     # How do we handle cameras and rolls here?
+            #     # Loop through the array in the CSV?
+            # )
+
+            # if created:
+            #     count += 1
 
         item = {
             'noun': 'projet',

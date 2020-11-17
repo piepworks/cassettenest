@@ -21,7 +21,7 @@ class ReadCSVMixin(object):
             data_set = csv_file.read().decode('UTF-8')
             io_string = io.StringIO(data_set)
 
-            return csv.DictReader(io_string, delimiter=',', quotechar='|')
+            return csv.DictReader(io_string, delimiter=',', quotechar='"')
         else:
             messages.error(request, 'Nope.')
             return False
