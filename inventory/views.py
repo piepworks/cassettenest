@@ -3,8 +3,7 @@ import csv
 import io
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views import View
-from django.views.generic import DetailView, FormView
+from django.views.generic import View, DetailView, FormView
 from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.contrib.auth import login, authenticate
@@ -50,6 +49,7 @@ from .utils import (
     status_keys,
     status_number,
 )
+from .mixins import (ReadCSVMixin, RedirectAfterImportMixin)
 
 
 @login_required
@@ -2341,38 +2341,8 @@ class ExportCSV(View):
     pass
 
 
-class ImportCSV(View):
-    form_class = UploadCSVForm
-
-    def read_csv(self, request):
-        form = self.form_class(request.POST, request.FILES)
-
-        if form.is_valid():
-            csv_file = request.FILES['csv']
-
-            if not csv_file.name.endswith('.csv'):
-                messages.error(request, 'Please choose a CSV file.')
-                return False
-
-            data_set = csv_file.read().decode('UTF-8')
-            io_string = io.StringIO(data_set)
-
-            return csv.DictReader(io_string, delimiter=',', quotechar='|')
-        else:
-            messages.error(request, 'Nope.')
-            return False
-
-    def redirect(self, request, count, item):
-        if count:
-            messages.success(request, f'Imported {count} {pluralize(item["noun"], count)}.')
-        else:
-            messages.info(request, f'No {item["noun"]}s imported.')
-
-        return redirect(reverse(item["redirect_url"]))
-
-
 @method_decorator(login_required, name='dispatch')
-class ImportProjectsView(ImportCSV):
+class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
         reader = self.read_csv(request)
 
