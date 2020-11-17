@@ -2199,23 +2199,16 @@ def export_cameras(request):
     return response
 
 
-@require_POST
-@login_required
-def import_cameras(request):
-    form = UploadCSVForm(request.POST, request.FILES)
+@method_decorator(login_required, name='dispatch')
+class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
 
-    if form.is_valid():
-        csv_file = request.FILES['csv']
-
-        if not csv_file.name.endswith('.csv'):
-            messages.error(request, 'Please choose a CSV file.')
+        if not reader:
             return redirect(reverse('settings'))
 
-        data_set = csv_file.read().decode('UTF-8')
-        io_string = io.StringIO(data_set)
         count = 0
 
-        reader = csv.DictReader(io_string, delimiter=',', quotechar='|')
         for row in reader:
             obj, created = Camera.objects.update_or_create(
                 owner=request.user,
@@ -2235,14 +2228,12 @@ def import_cameras(request):
             if created:
                 count += 1
 
-        if count:
-            messages.success(request, f'Imported {count} {pluralize("camera", count)}.')
-        else:
-            messages.info(request, 'No cameras imported.')
-        return redirect(reverse('cameras'))
-    else:
-        messages.error(request, 'Nope.')
-        return redirect(reverse('settings'))
+        item = {
+            'noun': 'camera',
+            'redirect_url': 'cameras',
+        }
+
+        return self.redirect(request, count, item)
 
 
 @login_required
@@ -2335,10 +2326,6 @@ def export_projects(request):
         ])
 
     return response
-
-
-class ExportCSV(View):
-    pass
 
 
 @method_decorator(login_required, name='dispatch')
