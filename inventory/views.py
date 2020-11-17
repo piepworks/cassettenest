@@ -2090,25 +2090,15 @@ def export_rolls(request):
     return response
 
 
-@require_POST
-@login_required
-def import_rolls(request):
-    form = UploadCSVForm(request.POST, request.FILES)
+@method_decorator(login_required, name='dispatch')
+class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
 
-    if form.is_valid():
-        csv_file = request.FILES['csv']
-
-        if not csv_file.name.endswith('.csv'):
-            messages.error(request, 'Please choose a CSV file.')
+        if not reader:
             return redirect(reverse('settings'))
 
-        data_set = csv_file.read().decode('UTF-8')
-        io_string = io.StringIO(data_set)
         count = 0
-
-        reader = csv.DictReader(io_string, delimiter=',', quotechar='|')
-
-        # EVERYTHING BELOW THIS IS WHAT I WANT IN INDIVIDUAL SUB-CLASS VIEWS
 
         for row in reader:
             obj, created = Roll.objects.update_or_create(
@@ -2155,14 +2145,12 @@ def import_rolls(request):
             if created:
                 count += 1
 
-        if count:
-            messages.success(request, f'Imported {count} {pluralize("roll", count)}.')
-        else:
-            messages.info(request, 'No rolls imported.')
-        return redirect(reverse('inventory'))
-    else:
-        messages.error(request, 'Nope.')
-        return redirect(reverse('settings'))
+        item = {
+            'noun': 'roll',
+            'redirect_url': 'inventory',
+        }
+
+        return self.redirect(request, count, item)
 
 
 @login_required

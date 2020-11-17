@@ -102,7 +102,7 @@ urlpatterns = [
     path('export/journals', views.export_journals, name='export-journals'),
 
     # Import
-    path('import/rolls', views.import_rolls, name='import-rolls'),
+    path('import/rolls', views.ImportRollsView.as_view(), name='import-rolls'),
     path('import/cameras', views.ImportCamerasView.as_view(), name='import-cameras'),
     path('import/camera_backs', views.import_camera_backs, name='import-camera_backs'),
     path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
