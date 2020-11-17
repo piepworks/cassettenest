@@ -2329,22 +2329,35 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
         for row in reader:
             roll_ids = json.loads(row['roll_ids'])
+            camera_ids = json.loads(row['camera_ids'])
 
-            for id in roll_ids:
-                print(f'Roll ID: {id}')
+            obj, created = Project.objects.update_or_create(
+                owner=request.user,
+                id=row['id'],
+                name=row['name'],
+                notes=row['notes'],
+                status=row['status'],
+            )
 
-            # obj, created = Roll.objects.update_or_create(
-            #     owner=request.user,
-            #     id=row['id'],
-            #     name=row['name'],
-            #     notes=row['notes'],
-            #     status=row['status'],
-            #     # How do we handle cameras and rolls here?
-            #     # Loop through the array in the CSV?
-            # )
+            if created:
+                count += 1
 
-            # if created:
-            #     count += 1
+                if roll_ids:
+                    for id in roll_ids:
+                        roll = get_object_or_404(Roll, id=id, owner=request.user)
+                        roll.project = obj
+                        roll.save()
+
+                if camera_ids:
+                    for id in camera_ids:
+                        obj.cameras.add(get_object_or_404(Camera, id=id, owner=request.user))
+
+                    obj.save()
+
+                Project.objects.filter(id=row['id'], owner=request.user).update(
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
 
         item = {
             'noun': 'projet',
