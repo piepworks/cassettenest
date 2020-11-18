@@ -2123,7 +2123,7 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
                 if row['camera_back_id']:
                     obj.camera_back = get_object_or_404(CameraBack, id=row['camera_back_id'], camera__owner=request.user)
                 if row['project_id']:
-                    obj.project = Project.objects.get(id=row['project_id'], owner=request.user)
+                    obj.project = get_object_or_404(Project, id=row['project_id'], owner=request.user)
 
                 # Add optional dates
                 if row['started']:
