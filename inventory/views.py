@@ -2244,6 +2244,7 @@ def export_camera_backs(request):
         'name',
         'notes',
         'status',
+        'format',
         'created',
         'updated',
     ])
@@ -2256,6 +2257,7 @@ def export_camera_backs(request):
             back.name,
             back.notes,
             back.status,
+            back.format,
             back.created_at,
             back.updated_at,
         ])
@@ -2263,10 +2265,41 @@ def export_camera_backs(request):
     return response
 
 
-@require_POST
-@login_required
-def import_camera_backs(request):
-    pass
+@method_decorator(login_required, name='dispatch')
+class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            obj, created = CameraBack.objects.update_or_create(
+                id=row['id'],
+                camera=get_object_or_404(Camera, id=row['camera_id'], owner=request.user),
+                name=row['name'],
+                notes=row['notes'],
+                status=row['status'],
+                format=row['format'],
+            )
+
+            if created:
+                count += 1
+
+                # Keep the original created and updated dates and times.
+                CameraBack.objects.filter(id=row['id'], camera__owner=request.user).update(
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
+        item = {
+            'noun': 'camera back',
+            'redirect_url': 'cameras',
+        }
+
+        return self.redirect(request, count, item)
 
 
 @login_required
