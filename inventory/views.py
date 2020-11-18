@@ -2019,11 +2019,10 @@ def camera_back_delete(request, pk, back_pk):
 @login_required
 def export_rolls(request):
     rolls = Roll.objects.filter(owner=request.user)
-
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="rolls.csv"'
-
     writer = csv.writer(response)
+
     writer.writerow([
         'id',
         'code',
@@ -2157,11 +2156,10 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
 @login_required
 def export_cameras(request):
     cameras = Camera.objects.filter(owner=request.user)
-
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="cameras.csv"'
-
     writer = csv.writer(response)
+
     writer.writerow([
         'id',
         'format',
@@ -2228,20 +2226,19 @@ class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
 @login_required
 def export_camera_backs(request):
     camera_backs = CameraBack.objects.filter(camera__owner=request.user)
-
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="camera-backs.csv"'
-
     writer = csv.writer(response)
+
     writer.writerow([
-        'ID',
-        'Camera',
-        'Camera ID',
-        'Name',
-        'Notes',
-        'Status',
-        'Created',
-        'Updated',
+        'id',
+        'camera',
+        'camera_id',
+        'name',
+        'notes',
+        'status',
+        'created',
+        'updated',
     ])
 
     for back in camera_backs:
