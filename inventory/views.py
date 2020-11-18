@@ -2108,7 +2108,7 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
         count = 0
 
         for row in reader:
-            obj, created = Roll.objects.update_or_create(
+            obj, created = Roll.objects.get_or_create(
                 owner=request.user,
                 id=row['id'],
                 film=get_object_or_404(Film, id=row['film_id']),
@@ -2205,7 +2205,7 @@ class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
         count = 0
 
         for row in reader:
-            obj, created = Camera.objects.update_or_create(
+            obj, created = Camera.objects.get_or_create(
                 owner=request.user,
                 id=row['id'],
                 format=row['format'],
@@ -2277,7 +2277,7 @@ class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
         count = 0
 
         for row in reader:
-            obj, created = CameraBack.objects.update_or_create(
+            obj, created = CameraBack.objects.get_or_create(
                 id=row['id'],
                 camera=get_object_or_404(Camera, id=row['camera_id'], owner=request.user),
                 name=row['name'],
@@ -2369,7 +2369,7 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
             roll_ids = json.loads(row['roll_ids'])
             camera_ids = json.loads(row['camera_ids'])
 
-            obj, created = Project.objects.update_or_create(
+            obj, created = Project.objects.get_or_create(
                 owner=request.user,
                 id=row['id'],
                 name=row['name'],
