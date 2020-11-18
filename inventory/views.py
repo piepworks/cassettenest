@@ -2215,7 +2215,7 @@ class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
                 multiple_backs=row['multiple_backs'],
             )
             # Keep the original created and updated dates and times.
-            Camera.objects.filter(id=row['id']).update(
+            Camera.objects.filter(id=row['id'], owner=request.user).update(
                 created_at=row['created'],
                 updated_at=row['updated'],
             )
