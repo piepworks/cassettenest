@@ -24,18 +24,11 @@
 
     <h2>Export your data</h2>
     <ul>
-        {% if exportable.rolls %}
-            <li><a href="{% url 'export-rolls' %}">Download your roll data.</a></li>
-        {% endif %}
-        {% if exportable.cameras %}
-            <li><a href="{% url 'export-cameras' %}">Download your camera data.</a></li>
-        {% endif %}
-        {% if exportable.camera_backs %}
-            <li><a href="{% url 'export-camera-backs' %}">Download your camera back data.</a></li>
-        {% endif %}
-        {% if exportable.projects %}
-            <li><a href="{% url 'export-projects' %}">Download your project data.</a></li>
-        {% endif %}
+        {% for k, v in exportable.items %}
+            {% if v.count %}
+                <li><a href="{% url v.url %}">Download your {{ v.name }} data.</a></li>
+            {% endif %}
+        {% endfor %}
     </ul>
 {% endif %}
 
@@ -43,6 +36,7 @@
 
     <h2>Import previously exported data</h2>
     <ul>
+        {% comment %} TODO: PUT A LOOP HERE {% endcomment %}
         <li>
             Rolls
             <form method="post" action="{% url 'import-rolls' %}" enctype="multipart/form-data">

@@ -161,12 +161,28 @@ def settings(request):
         csv_form = UploadCSVForm()
         subscription = False
         exportable = {
-            'rolls': Roll.objects.filter(owner=request.user).count(),
-            'cameras': Camera.objects.filter(owner=request.user).count(),
-            'camera_backs': CameraBack.objects.filter(camera__owner=request.user).count(),
-            'projects': Project.objects.filter(owner=request.user).count(),
+            'rolls': {
+                'name': 'roll',
+                'url': 'export-rolls',
+                'count': Roll.objects.filter(owner=request.user).count(),
+            },
+            'cameras': {
+                'name': 'camera',
+                'url': 'export-cameras',
+                'count': Camera.objects.filter(owner=request.user).count(),
+            },
+            'camera_backs': {
+                'name': 'camera back',
+                'url': 'export-camera-backs',
+                'count': CameraBack.objects.filter(camera__owner=request.user).count(),
+            },
+            'projects': {
+                'name': 'project',
+                'url': 'export-projects',
+                'count': Project.objects.filter(owner=request.user).count(),
+            },
         }
-        exportable_data = True if sum(exportable.values()) else False
+        exportable_data = True if sum(d['count'] for d in exportable.values() if d) else False
 
         try:
             subscriptions = djstripe.models.Subscription.objects.filter(
