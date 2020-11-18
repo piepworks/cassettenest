@@ -2111,46 +2111,47 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
             obj, created = Roll.objects.update_or_create(
                 owner=request.user,
                 id=row['id'],
-                code=row['code'],
-                push_pull=row['push_pull'],
                 film=get_object_or_404(Film, id=row['film_id']),
-                location=row['location'],
-                lens=row['lens'],
-                notes=row['notes'],
-                lab=row['lab'],
-                scanner=row['scanner'],
-                notes_on_development=row['notes_on_development'],
-            )
-
-            # Add optional foreign keys
-            if row['camera_id']:
-                obj.camera = get_object_or_404(Camera, id=row['camera_id'], owner=request.user)
-            if row['camera_back_id']:
-                obj.camera_back = get_object_or_404(CameraBack, id=row['camera_back_id'], camera__owner=request.user)
-            if row['project_id']:
-                obj.project = Project.objects.get(id=row['project_id'], owner=request.user)
-
-            # Add optional dates
-            if row['started']:
-                obj.started_on = datetime.datetime.strptime(row['started'], '%Y-%m-%d').date()
-            if row['ended']:
-                obj.ended_on = datetime.datetime.strptime(row['ended'], '%Y-%m-%d').date()
-
-            # Set status after potentially setting the camera, started, and
-            # endedso things are happy with the Roll model’s automatic `save`
-            # fanciness.
-            obj.status = row['status']
-
-            obj.save()
-
-            # Keep the original created and updated dates and times.
-            Roll.objects.filter(id=row['id'], owner=request.user).update(
-                created_at=row['created'],
-                updated_at=row['updated'],
             )
 
             if created:
                 count += 1
+
+                # Add optional foreign keys
+                if row['camera_id']:
+                    obj.camera = get_object_or_404(Camera, id=row['camera_id'], owner=request.user)
+                if row['camera_back_id']:
+                    obj.camera_back = get_object_or_404(CameraBack, id=row['camera_back_id'], camera__owner=request.user)
+                if row['project_id']:
+                    obj.project = Project.objects.get(id=row['project_id'], owner=request.user)
+
+                # Add optional dates
+                if row['started']:
+                    obj.started_on = datetime.datetime.strptime(row['started'], '%Y-%m-%d').date()
+                if row['ended']:
+                    obj.ended_on = datetime.datetime.strptime(row['ended'], '%Y-%m-%d').date()
+
+                # Set status after potentially setting the camera, started, and
+                # endedso things are happy with the Roll model’s automatic `save`
+                # fanciness.
+                obj.status = row['status']
+
+                obj.save()
+
+                Roll.objects.filter(id=row['id'], owner=request.user).update(
+                    code=row['code'],
+                    push_pull=row['push_pull'],
+                    location=row['location'],
+                    lens=row['lens'],
+                    notes=row['notes'],
+                    lab=row['lab'],
+                    scanner=row['scanner'],
+                    notes_on_development=row['notes_on_development'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
 
         item = {
             'noun': 'roll',
