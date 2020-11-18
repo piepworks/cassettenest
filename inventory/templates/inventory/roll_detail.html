@@ -121,11 +121,11 @@
         </tbody>
     </table>
     {% endif %}
-
-    {% if roll.status != '01_storage' %}
-    <div class="action"><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></div>
-    {% endif %}
 </div>
+
+{% if roll.status != '01_storage' %}
+<div class="action"><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></div>
+{% endif %}
 
 
 {% if roll.status == '02_loaded' %}
