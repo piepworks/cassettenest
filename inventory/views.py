@@ -2113,7 +2113,7 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
                 id=row['id'],
                 code=row['code'],
                 push_pull=row['push_pull'],
-                film=Film.objects.get(id=row['film_id']),
+                film=get_object_or_404(Film, id=row['film_id']),
                 location=row['location'],
                 lens=row['lens'],
                 notes=row['notes'],
@@ -2124,9 +2124,9 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
             # Add optional foreign keys
             if row['camera_id']:
-                obj.camera = Camera.objects.get(id=row['camera_id'], owner=request.user)
+                obj.camera = get_object_or_404(Camera, id=row['camera_id'], owner=request.user)
             if row['camera_back_id']:
-                obj.camera_back = CameraBack.objects.get(id=row['camera_back_id'], owner=request.user)
+                obj.camera_back = get_object_or_404(CameraBack, id=row['camera_back_id'], camera__owner=request.user)
             if row['project_id']:
                 obj.project = Project.objects.get(id=row['project_id'], owner=request.user)
 
@@ -2144,7 +2144,7 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
             obj.save()
 
             # Keep the original created and updated dates and times.
-            Roll.objects.filter(id=row['id']).update(
+            Roll.objects.filter(id=row['id'], owner=request.user).update(
                 created_at=row['created'],
                 updated_at=row['updated'],
             )
