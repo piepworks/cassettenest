@@ -161,12 +161,18 @@ def settings(request):
         csv_form = UploadCSVForm()
         subscription = False
         exportable = {
-            'rolls': Roll.objects.filter(owner=request.user).count(),
             'cameras': Camera.objects.filter(owner=request.user).count(),
             'camera-backs': CameraBack.objects.filter(camera__owner=request.user).count(),
+            'rolls': Roll.objects.filter(owner=request.user).count(),
             'projects': Project.objects.filter(owner=request.user).count(),
         }
         exportable_data = True if sum(exportable.values()) else False
+        imports = [
+            'Cameras',
+            'Camera-Backs',
+            'Rolls',
+            'Projects',
+        ]
 
         try:
             subscriptions = djstripe.models.Subscription.objects.filter(
@@ -204,6 +210,7 @@ def settings(request):
             'payment_method': payment_method,
             'exportable': exportable,
             'exportable_data': exportable_data,
+            'imports': imports,
             'charges': charges,
             'STRIPE_PUBLIC_KEY': djstripe.settings.STRIPE_PUBLIC_KEY,
             'js_needed': True,

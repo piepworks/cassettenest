@@ -36,32 +36,16 @@
 
     <h2>Import previously exported data</h2>
     <ul>
-        {% comment %} TODO: PUT A LOOP HERE {% endcomment %}
-        <li>
-            Rolls
-            <form method="post" action="{% url 'import-rolls' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ csv_form.csv }}
-                <input type="submit" value="Upload" />
-            </form>
-        </li>
-        <li>
-            Cameras
-            <form method="post" action="{% url 'import-cameras' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ csv_form.csv }}
-                <input type="submit" value="Upload" />
-            </form>
-        </li>
-        <li>Camera Backs</li>
-        <li>
-            Projects
-            <form method="post" action="{% url 'import-projects' %}" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ csv_form.csv }}
-                <input type="submit" value="Upload" />
-            </form>
-        </li>
+        {% for import in imports %}
+            <li>
+                {{ import }}
+                <form method="post" action="{% url 'import-'|add:import|lower %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ csv_form.csv }}
+                    <input type="submit" value="Upload" />
+                </form>
+            </li>
+        {% endfor %}
     </ul>
 
 {% if user.is_staff %}

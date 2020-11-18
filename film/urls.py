@@ -104,7 +104,7 @@ urlpatterns = [
     # Import
     path('import/rolls', views.ImportRollsView.as_view(), name='import-rolls'),
     path('import/cameras', views.ImportCamerasView.as_view(), name='import-cameras'),
-    path('import/camera-backs', views.import_camera_backs, name='import-camera_backs'),
+    path('import/camera-backs', views.import_camera_backs, name='import-camera-backs'),
     path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
     path('import/journals', views.import_journals, name='import-journals'),
 
