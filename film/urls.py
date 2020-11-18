@@ -97,14 +97,14 @@ urlpatterns = [
     # Export
     path('export/rolls', views.export_rolls, name='export-rolls'),
     path('export/cameras', views.export_cameras, name='export-cameras'),
-    path('export/camera_backs', views.export_camera_backs, name='export-camera-backs'),
+    path('export/camera-backs', views.export_camera_backs, name='export-camera-backs'),
     path('export/projects', views.export_projects, name='export-projects'),
     path('export/journals', views.export_journals, name='export-journals'),
 
     # Import
     path('import/rolls', views.ImportRollsView.as_view(), name='import-rolls'),
     path('import/cameras', views.ImportCamerasView.as_view(), name='import-cameras'),
-    path('import/camera_backs', views.import_camera_backs, name='import-camera_backs'),
+    path('import/camera-backs', views.import_camera_backs, name='import-camera_backs'),
     path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
     path('import/journals', views.import_journals, name='import-journals'),
 

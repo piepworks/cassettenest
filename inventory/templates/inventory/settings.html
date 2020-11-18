@@ -25,14 +25,14 @@
     <h2>Export your data</h2>
     <ul>
         {% for k, v in exportable.items %}
-            {% if v.count %}
-                <li><a href="{% url v.url %}">Download your {{ v.name }} data.</a></li>
+            {% if v %}
+                <li><a href="{% url 'export-'|add:k %}">Download your {{ k }} data.</a></li>
             {% endif %}
         {% endfor %}
     </ul>
 {% endif %}
 
-    <hr>
+    <hr />
 
     <h2>Import previously exported data</h2>
     <ul>
