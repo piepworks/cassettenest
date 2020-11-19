@@ -99,7 +99,7 @@ urlpatterns = [
     path('export/camera-backs', views.ExportCameraBacksView.as_view(), name='export-camera-backs'),
     path('export/rolls', views.ExportRollsView.as_view(), name='export-rolls'),
     path('export/projects', views.ExportProjectsView.as_view(), name='export-projects'),
-    path('export/journals', views.export_journals, name='export-journals'),
+    path('export/journals', views.ExportJournalsView.as_view(), name='export-journals'),
 
     # Import
     path('import/cameras', views.ImportCamerasView.as_view(), name='import-cameras'),

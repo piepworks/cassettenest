@@ -2404,37 +2404,36 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
         return self.redirect(request, count, item)
 
 
-@login_required
-def export_journals(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="journals.csv"'
-    writer = csv.writer(response)
-    journals = Journal.objects.filter(roll__owner=request.user)
+@method_decorator(login_required, name='dispatch')
+class ExportJournalsView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('journals.csv')
+        journals = Journal.objects.filter(roll__owner=request.user)
 
-    writer.writerow([
-        'id',
-        'roll_id',
-        'roll',
-        'date',
-        'notes',
-        'frame',
-        'created',
-        'updated',
-    ])
-
-    for journal in journals:
-        writer.writerow([
-            journal.id,
-            journal.roll.id,
-            journal.roll,
-            journal.date,
-            journal.notes,
-            journal.frame,
-            journal.created_at,
-            journal.updated_at,
+        export['writer'].writerow([
+            'id',
+            'roll_id',
+            'roll',
+            'date',
+            'notes',
+            'frame',
+            'created',
+            'updated',
         ])
 
-    return response
+        for journal in journals:
+            export['writer'].writerow([
+                journal.id,
+                journal.roll.id,
+                journal.roll,
+                journal.date,
+                journal.notes,
+                journal.frame,
+                journal.created_at,
+                journal.updated_at,
+            ])
+
+        return export['response']
 
 
 @method_decorator(login_required, name='dispatch')
