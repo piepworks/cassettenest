@@ -2025,78 +2025,77 @@ def camera_back_delete(request, pk, back_pk):
 
 # EXPORT / IMPORT
 # ------
-@login_required
-def export_rolls(request):
-    rolls = Roll.objects.filter(owner=request.user)
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="rolls.csv"'
-    writer = csv.writer(response)
+@method_decorator(login_required, name='dispatch')
+class ExportRollsView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('rolls.csv')
+        rolls = Roll.objects.filter(owner=request.user)
 
-    writer.writerow([
-        'id',
-        'code',
-        'status',
-        'film',
-        'film_id',
-        'push_pull',
-        'camera',
-        'camera_id',
-        'camera_back',
-        'camera_back_id',
-        'lens',
-        'project',
-        'project_id',
-        'location',
-        'notes',
-        'lab',
-        'scanner',
-        'notes_on_development',
-        'created',
-        'updated',
-        'started',
-        'ended',
-    ])
-
-    for roll in rolls:
-        try:
-            camera_id = roll.camera.id
-        except AttributeError:
-            camera_id = ''
-        try:
-            camera_back_id = roll.camera_back.id
-        except AttributeError:
-            camera_back_id = ''
-        try:
-            project_id = roll.project.id
-        except AttributeError:
-            project_id = ''
-
-        writer.writerow([
-            roll.id,
-            roll.code,
-            roll.status,
-            roll.film,
-            roll.film.id,
-            roll.push_pull,
-            roll.camera,
-            camera_id,
-            roll.camera_back,
-            camera_back_id,
-            roll.lens,
-            roll.project,
-            project_id,
-            roll.location,
-            roll.notes,
-            roll.lab,
-            roll.scanner,
-            roll.notes_on_development,
-            roll.created_at,
-            roll.updated_at,
-            roll.started_on,
-            roll.ended_on,
+        export['writer'].writerow([
+            'id',
+            'code',
+            'status',
+            'film',
+            'film_id',
+            'push_pull',
+            'camera',
+            'camera_id',
+            'camera_back',
+            'camera_back_id',
+            'lens',
+            'project',
+            'project_id',
+            'location',
+            'notes',
+            'lab',
+            'scanner',
+            'notes_on_development',
+            'created',
+            'updated',
+            'started',
+            'ended',
         ])
 
-    return response
+        for roll in rolls:
+            try:
+                camera_id = roll.camera.id
+            except AttributeError:
+                camera_id = ''
+            try:
+                camera_back_id = roll.camera_back.id
+            except AttributeError:
+                camera_back_id = ''
+            try:
+                project_id = roll.project.id
+            except AttributeError:
+                project_id = ''
+
+            export['writer'].writerow([
+                roll.id,
+                roll.code,
+                roll.status,
+                roll.film,
+                roll.film.id,
+                roll.push_pull,
+                roll.camera,
+                camera_id,
+                roll.camera_back,
+                camera_back_id,
+                roll.lens,
+                roll.project,
+                project_id,
+                roll.location,
+                roll.notes,
+                roll.lab,
+                roll.scanner,
+                roll.notes_on_development,
+                roll.created_at,
+                roll.updated_at,
+                roll.started_on,
+                roll.ended_on,
+            ])
+
+        return export['response']
 
 
 @method_decorator(login_required, name='dispatch')

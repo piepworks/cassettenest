@@ -97,7 +97,7 @@ urlpatterns = [
     # Export
     path('export/cameras', views.ExportCamerasView.as_view(), name='export-cameras'),
     path('export/camera-backs', views.export_camera_backs, name='export-camera-backs'),
-    path('export/rolls', views.export_rolls, name='export-rolls'),
+    path('export/rolls', views.ExportRollsView.as_view(), name='export-rolls'),
     path('export/projects', views.export_projects, name='export-projects'),
     path('export/journals', views.export_journals, name='export-journals'),
 
