@@ -50,7 +50,7 @@ from .utils import (
     status_keys,
     status_number,
 )
-from .mixins import (ReadCSVMixin, RedirectAfterImportMixin)
+from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
 
 @login_required
@@ -2162,37 +2162,36 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
         return self.redirect(request, count, item)
 
 
-@login_required
-def export_cameras(request):
-    cameras = Camera.objects.filter(owner=request.user)
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="cameras.csv"'
-    writer = csv.writer(response)
+@method_decorator(login_required, name='dispatch')
+class ExportCamerasView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('cameras.csv')
+        cameras = Camera.objects.filter(owner=request.user)
 
-    writer.writerow([
-        'id',
-        'format',
-        'name',
-        'notes',
-        'status',
-        'multiple_backs',
-        'created',
-        'updated',
-    ])
-
-    for camera in cameras:
-        writer.writerow([
-            camera.id,
-            camera.format,
-            camera.name,
-            camera.notes,
-            camera.status,
-            camera.multiple_backs,
-            camera.created_at,
-            camera.updated_at,
+        export['writer'].writerow([
+            'id',
+            'format',
+            'name',
+            'notes',
+            'status',
+            'multiple_backs',
+            'created',
+            'updated',
         ])
 
-    return response
+        for camera in cameras:
+            export['writer'].writerow([
+                camera.id,
+                camera.format,
+                camera.name,
+                camera.notes,
+                camera.status,
+                camera.multiple_backs,
+                camera.created_at,
+                camera.updated_at,
+            ])
+
+        return export['response']
 
 
 @method_decorator(login_required, name='dispatch')

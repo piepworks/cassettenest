@@ -3,8 +3,20 @@ import csv
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.http import HttpResponse
 from .forms import UploadCSVForm
 from .utils import pluralize
+
+
+class WriteCSVMixin(object):
+    def write_csv(self, filename):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        return {
+            'writer': csv.writer(response),
+            'response': response
+        }
 
 
 class ReadCSVMixin(object):

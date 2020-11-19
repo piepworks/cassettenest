@@ -95,16 +95,16 @@ urlpatterns = [
          views.camera_back_delete, name='camera-back-delete'),
 
     # Export
-    path('export/rolls', views.export_rolls, name='export-rolls'),
-    path('export/cameras', views.export_cameras, name='export-cameras'),
+    path('export/cameras', views.ExportCamerasView.as_view(), name='export-cameras'),
     path('export/camera-backs', views.export_camera_backs, name='export-camera-backs'),
+    path('export/rolls', views.export_rolls, name='export-rolls'),
     path('export/projects', views.export_projects, name='export-projects'),
     path('export/journals', views.export_journals, name='export-journals'),
 
     # Import
-    path('import/rolls', views.ImportRollsView.as_view(), name='import-rolls'),
     path('import/cameras', views.ImportCamerasView.as_view(), name='import-cameras'),
     path('import/camera-backs', views.ImportCameraBacksView.as_view(), name='import-camera-backs'),
+    path('import/rolls', views.ImportRollsView.as_view(), name='import-rolls'),
     path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
     path('import/journals', views.ImportJournalsView.as_view(), name='import-journals'),
 
