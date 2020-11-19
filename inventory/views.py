@@ -165,6 +165,7 @@ def settings(request):
             'camera-backs': CameraBack.objects.filter(camera__owner=request.user).count(),
             'rolls': Roll.objects.filter(owner=request.user).count(),
             'projects': Project.objects.filter(owner=request.user).count(),
+            'journals': Journal.objects.filter(roll__owner=request.user).count(),
         }
         exportable_data = True if sum(exportable.values()) else False
         imports = [
@@ -172,6 +173,7 @@ def settings(request):
             'Camera-Backs',
             'Rolls',
             'Projects',
+            'Journals',
         ]
 
         try:
@@ -2407,10 +2409,68 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
 @login_required
 def export_journals(request):
-    pass
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="journals.csv"'
+    writer = csv.writer(response)
+    journals = Journal.objects.filter(roll__owner=request.user)
+
+    writer.writerow([
+        'id',
+        'roll_id',
+        'roll',
+        'date',
+        'notes',
+        'frame',
+        'created',
+        'updated',
+    ])
+
+    for journal in journals:
+        writer.writerow([
+            journal.id,
+            journal.roll.id,
+            journal.roll,
+            journal.date,
+            journal.notes,
+            journal.frame,
+            journal.created_at,
+            journal.updated_at,
+        ])
+
+    return response
 
 
-@require_POST
-@login_required
-def import_journals(request):
-    pass
+@method_decorator(login_required, name='dispatch')
+class ImportJournalsView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            obj, created = Journal.objects.get_or_create(
+                id=row['id'],
+                roll=get_object_or_404(Roll, id=row['roll_id'], owner=request.user),
+                frame=row['frame'],
+            )
+
+            if created:
+                count += 1
+
+                Journal.objects.filter(id=row['id'], roll__owner=request.user).update(
+                    date=datetime.datetime.strptime(row['date'], '%Y-%m-%d').date(),
+                    notes=row['notes'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
+        item = {
+            'noun': 'journal',
+            'redirect_url': 'inventory',
+        }
+
+        return self.redirect(request, count, item)
