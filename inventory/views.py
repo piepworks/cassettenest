@@ -2231,39 +2231,38 @@ class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
         return self.redirect(request, count, item)
 
 
-@login_required
-def export_camera_backs(request):
-    camera_backs = CameraBack.objects.filter(camera__owner=request.user)
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="camera-backs.csv"'
-    writer = csv.writer(response)
+@method_decorator(login_required, name='dispatch')
+class ExportCameraBacksView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('camera-backs.csv')
+        camera_backs = CameraBack.objects.filter(camera__owner=request.user)
 
-    writer.writerow([
-        'id',
-        'camera',
-        'camera_id',
-        'name',
-        'notes',
-        'status',
-        'format',
-        'created',
-        'updated',
-    ])
-
-    for back in camera_backs:
-        writer.writerow([
-            back.id,
-            back.camera,
-            back.camera.id,
-            back.name,
-            back.notes,
-            back.status,
-            back.format,
-            back.created_at,
-            back.updated_at,
+        export['writer'].writerow([
+            'id',
+            'camera',
+            'camera_id',
+            'name',
+            'notes',
+            'status',
+            'format',
+            'created',
+            'updated',
         ])
 
-    return response
+        for back in camera_backs:
+            export['writer'].writerow([
+                back.id,
+                back.camera,
+                back.camera.id,
+                back.name,
+                back.notes,
+                back.status,
+                back.format,
+                back.created_at,
+                back.updated_at,
+            ])
+
+        return export['response']
 
 
 @method_decorator(login_required, name='dispatch')
