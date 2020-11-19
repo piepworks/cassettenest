@@ -2154,7 +2154,6 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
                     updated_at=row['updated'],
                 )
 
-
         item = {
             'noun': 'roll',
             'redirect_url': 'inventory',
@@ -2212,18 +2211,19 @@ class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
                 id=row['id'],
                 format=row['format'],
                 name=row['name'],
-                notes=row['notes'],
-                status=row['status'],
-                multiple_backs=row['multiple_backs'],
-            )
-            # Keep the original created and updated dates and times.
-            Camera.objects.filter(id=row['id'], owner=request.user).update(
-                created_at=row['created'],
-                updated_at=row['updated'],
             )
 
             if created:
                 count += 1
+
+                Camera.objects.filter(id=row['id'], owner=request.user).update(
+                    notes=row['notes'],
+                    status=row['status'],
+                    multiple_backs=row['multiple_backs'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
 
         item = {
             'noun': 'camera',
@@ -2283,16 +2283,16 @@ class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
                 id=row['id'],
                 camera=get_object_or_404(Camera, id=row['camera_id'], owner=request.user),
                 name=row['name'],
-                notes=row['notes'],
-                status=row['status'],
                 format=row['format'],
             )
 
             if created:
                 count += 1
 
-                # Keep the original created and updated dates and times.
                 CameraBack.objects.filter(id=row['id'], camera__owner=request.user).update(
+                    notes=row['notes'],
+                    status=row['status'],
+                    # Keep the original created and updated dates and times.
                     created_at=row['created'],
                     updated_at=row['updated'],
                 )
@@ -2375,8 +2375,6 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
                 owner=request.user,
                 id=row['id'],
                 name=row['name'],
-                notes=row['notes'],
-                status=row['status'],
             )
 
             if created:
@@ -2395,6 +2393,9 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
                     obj.save()
 
                 Project.objects.filter(id=row['id'], owner=request.user).update(
+                    notes=row['notes'],
+                    status=row['status'],
+                    # Keep the original created and updated dates and times.
                     created_at=row['created'],
                     updated_at=row['updated'],
                 )
