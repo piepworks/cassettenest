@@ -2155,7 +2155,6 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
         item = {
             'noun': 'roll',
-            'redirect_url': 'inventory',
         }
 
         return self.redirect(request, count, item)
@@ -2225,7 +2224,6 @@ class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
         item = {
             'noun': 'camera',
-            'redirect_url': 'cameras',
         }
 
         return self.redirect(request, count, item)
@@ -2296,7 +2294,6 @@ class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
         item = {
             'noun': 'camera back',
-            'redirect_url': 'cameras',
         }
 
         return self.redirect(request, count, item)
@@ -2398,7 +2395,6 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
         item = {
             'noun': 'projet',
-            'redirect_url': 'projects',
         }
 
         return self.redirect(request, count, item)
@@ -2466,7 +2462,6 @@ class ImportJournalsView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
         item = {
             'noun': 'journal',
-            'redirect_url': 'inventory',
         }
 
         return self.redirect(request, count, item)

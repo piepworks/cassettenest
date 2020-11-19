@@ -42,7 +42,10 @@ class ReadCSVMixin(object):
 class RedirectAfterImportMixin(object):
     def redirect(self, request, count, item):
         noun = item['noun']
-        url = item['redirect_url']
+        try:
+            url = item['redirect_url']
+        except KeyError:
+            url = 'settings'
 
         if count:
             messages.success(request, f'Imported {count} {pluralize(noun, count)}.')
