@@ -2122,7 +2122,11 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
                 if row['camera_id']:
                     obj.camera = get_object_or_404(Camera, id=row['camera_id'], owner=request.user)
                 if row['camera_back_id']:
-                    obj.camera_back = get_object_or_404(CameraBack, id=row['camera_back_id'], camera__owner=request.user)
+                    obj.camera_back = get_object_or_404(
+                        CameraBack,
+                        id=row['camera_back_id'],
+                        camera__owner=request.user
+                    )
                 if row['project_id']:
                     obj.project = get_object_or_404(Project, id=row['project_id'], owner=request.user)
 
