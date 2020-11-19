@@ -2302,56 +2302,55 @@ class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
         return self.redirect(request, count, item)
 
 
-@login_required
-def export_projects(request):
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="projets.csv"'
-    writer = csv.writer(response)
-    projects = Project.objects.filter(owner=request.user)
+@method_decorator(login_required, name='dispatch')
+class ExportProjectsView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('projets.csv')
+        projects = Project.objects.filter(owner=request.user)
 
-    writer.writerow([
-        'id',
-        'name',
-        'notes',
-        'status',
-        'camera_ids',
-        'camera_names',
-        'roll_ids',
-        'roll_names',
-        'created',
-        'updated',
-    ])
-
-    for project in projects:
-        rolls = Roll.objects.filter(project=project)
-        roll_ids = []
-        roll_names = []
-        for roll in rolls:
-            roll_ids.append(roll.id)
-            roll_code = f'{roll.code} / ' if roll.code else ''
-            roll_name = f'{roll_code}{roll.film.__str__()} / {roll.get_status_display()}'
-            roll_names.append(roll_name)
-        cameras = Camera.objects.filter(project=project)
-        camera_ids = []
-        camera_names = []
-        for camera in cameras:
-            camera_ids.append(camera.id)
-            camera_names.append(camera.__str__())
-
-        writer.writerow([
-            project.id,
-            project.name,
-            project.notes,
-            project.status,
-            camera_ids,
-            camera_names,
-            roll_ids,
-            roll_names,
-            project.created_at,
-            project.updated_at,
+        export['writer'].writerow([
+            'id',
+            'name',
+            'notes',
+            'status',
+            'camera_ids',
+            'cameras',
+            'roll_ids',
+            'rolls',
+            'created',
+            'updated',
         ])
 
-    return response
+        for project in projects:
+            roll_objects = Roll.objects.filter(project=project, owner=request.user)
+            roll_ids = []
+            rolls = []
+            for roll in roll_objects:
+                roll_ids.append(roll.id)
+                roll_code = f'{roll.code} / ' if roll.code else ''
+                roll_name = f'{roll_code}{roll.film.__str__()} / {roll.get_status_display()}'
+                rolls.append(roll_name)
+            camera_objects = Camera.objects.filter(project=project)
+            camera_ids = []
+            cameras = []
+            for camera in camera_objects:
+                camera_ids.append(camera.id)
+                cameras.append(camera.__str__())
+
+            export['writer'].writerow([
+                project.id,
+                project.name,
+                project.notes,
+                project.status,
+                camera_ids,
+                cameras,
+                roll_ids,
+                rolls,
+                project.created_at,
+                project.updated_at,
+            ])
+
+        return export['response']
 
 
 @method_decorator(login_required, name='dispatch')
