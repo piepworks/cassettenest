@@ -8,7 +8,7 @@ pycodestyle = "*"
 
 [packages]
 autopep8 = "==1.5.2"
-dj-stripe = "==2.3.0"
+dj-stripe = "==2.4.0"
 django-capture-tag = "==1.0"
 django-compressor = "==2.4"
 django-debug-toolbar = "~=3.1.1"
