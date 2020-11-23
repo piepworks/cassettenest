@@ -1,8 +1,49 @@
 import datetime
 from django.test import TestCase
 from model_bakery import baker
-from inventory.models import Film, Roll, Camera, CameraBack
+from django.contrib.auth.models import User
+from inventory.models import Film, Roll, Camera, CameraBack, Profile
 from inventory.utils import status_number
+
+
+class ProfileTests(TestCase):
+    def test_model_str(self):
+        username = 'testy'
+        user = baker.make(User, username=username)
+
+        self.assertEqual(str(user.profile), f'Settings for {username}')
+
+    def test_has_active_subscription(self):
+        user = baker.make(User)
+
+        self.assertFalse(user.profile.has_active_subscription)
+
+    def test_creating_profile_for_legacy_user(self):
+        # This is for users that were created before automatic profiles were in place.
+
+        # Create a user with `bulk_create` so that `post_save` doesn’t run and
+        # create a Profile.
+        User.objects.bulk_create([
+            User(id=1, username='test', password='testtest'),
+        ])
+
+        user = User.objects.get(id=1)
+
+        with self.assertRaises(User.profile.RelatedObjectDoesNotExist):
+            profile = user.profile
+
+        user.save()
+        self.assertIsInstance(user.profile, Profile)
+
+
+class FilmTests(TestCase):
+    def test_get_absolute_url(self):
+        film = baker.make(Film, slug='filmy')
+
+        self.assertEqual(
+            film.get_absolute_url(),
+            '/film/filmy/',
+        )
 
 
 class RollTests(TestCase):
