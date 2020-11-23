@@ -1,11 +1,26 @@
 import datetime
 from django.test import TestCase
 from model_bakery import baker
-from inventory.models import Roll, Camera, CameraBack
+from inventory.models import Film, Roll, Camera, CameraBack
 from inventory.utils import status_number
 
 
 class RollTests(TestCase):
+    def test_model_str(self):
+        manufacturer = 'Awesome'
+        film = 'Filmy'
+
+        roll = baker.make(
+            Roll,
+            film__manufacturer__name=manufacturer,
+            film__name=film,
+        )
+
+        self.assertEqual(
+            str(roll),
+            f'{manufacturer} {film} in 35mm added on {datetime.date.today()}'
+        )
+
     def test_loaded_rolls_get_code_and_status(self):
         roll = baker.make(Roll)
         camera = baker.make(Camera)
@@ -161,3 +176,7 @@ class RollTests(TestCase):
         roll.save()
 
         self.assertEqual(camera_back.status, 'empty')
+
+
+class ImportsExportTestCase(TestCase):
+    pass
