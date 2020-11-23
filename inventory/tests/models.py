@@ -2,7 +2,14 @@ import datetime
 from django.test import TestCase
 from model_bakery import baker
 from django.contrib.auth.models import User
-from inventory.models import Film, Roll, Camera, CameraBack, Profile
+from inventory.models import (
+    Film,
+    Roll,
+    Camera,
+    CameraBack,
+    Profile,
+    Project,
+)
 from inventory.utils import status_number
 
 
@@ -38,12 +45,10 @@ class ProfileTests(TestCase):
 
 class FilmTests(TestCase):
     def test_get_absolute_url(self):
-        film = baker.make(Film, slug='filmy')
+        slug = 'filmy'
+        film = baker.make(Film, slug=slug)
 
-        self.assertEqual(
-            film.get_absolute_url(),
-            '/film/filmy/',
-        )
+        self.assertEqual(film.get_absolute_url(), f'/film/{slug}/')
 
 
 class RollTests(TestCase):
@@ -219,5 +224,48 @@ class RollTests(TestCase):
         self.assertEqual(camera_back.status, 'empty')
 
 
-class ImportsExportTestCase(TestCase):
-    pass
+class CameraTests(TestCase):
+    def test_model_str(self):
+        name = 'Cameraface'
+        camera = baker.make(Camera, name=name)
+
+        self.assertEqual(str(camera), name)
+
+    def test_get_absolute_url(self):
+        camera = baker.make(Camera, id=1)
+
+        self.assertEqual(camera.get_absolute_url(), '/camera/1/')
+
+
+class CameraBackTests(TestCase):
+    def test_model_str(self):
+        camera_name = 'Cameraface'
+        back_name = 'A'
+        camera = baker.make(Camera, name=camera_name)
+        back = baker.make(CameraBack, camera=camera, name=back_name)
+
+        self.assertEqual(str(back), f'{camera_name}, Back “{back_name}”')
+
+
+class ProjectTests(TestCase):
+    def test_model_str(self):
+        name = 'Superduper'
+        project = baker.make(Project, name=name)
+
+        self.assertEqual(str(project), name)
+
+    def test_get_absolute_url(self):
+        project = baker.make(Project, id=1)
+
+        self.assertEqual(project.get_absolute_url(), '/project/1/')
+
+    def test_get_rolls_remaining(self):
+        project = baker.make(Project)
+        roll = baker.make(Roll, project=project)
+
+        self.assertEqual(project.get_rolls_remaining(), 1)
+
+        roll.status = status_number('shot')
+        roll.save()
+
+        self.assertEqual(project.get_rolls_remaining(), 0)
