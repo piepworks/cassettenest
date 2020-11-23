@@ -1,11 +1,11 @@
 import datetime
 from django.test import TestCase
 from model_bakery import baker
-from .models import Roll, Camera, CameraBack
-from .utils import status_number
+from inventory.models import Roll, Camera, CameraBack
+from inventory.utils import status_number
 
 
-class RollTestCase(TestCase):
+class RollTests(TestCase):
     def test_loaded_rolls_get_code_and_status(self):
         roll = baker.make(Roll)
         camera = baker.make(Camera)
