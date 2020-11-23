@@ -1,0 +1,5 @@
+#!/bin/sh
+
+$(dirname "$0")/run coverage run --omit='*/migrations/*' manage.py test
+$(dirname "$0")/run coverage report
+$(dirname "$0")/run coverage html
