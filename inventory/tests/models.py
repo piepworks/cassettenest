@@ -67,6 +67,20 @@ class RollTests(TestCase):
             f'{manufacturer} {film} in 35mm added on {datetime.datetime.utcnow().date()}'
         )
 
+        roll.camera = baker.make(Camera)
+        roll.started_on = datetime.datetime.utcnow().date()
+        roll.save()
+
+        self.assertEqual(str(roll), f'35-c41-1 / {roll.started_on.year}')
+
+    def test_effective_iso(self):
+        film = baker.make(Film, iso=400)
+        roll1 = baker.make(Roll, film=film)
+        roll2 = baker.make(Roll, film=film, push_pull='+2')
+
+        self.assertEqual(roll1.effective_iso, 400)
+        self.assertEqual(roll2.effective_iso, 1600)
+
     def test_loaded_rolls_get_code_and_status(self):
         roll = baker.make(Roll)
         camera = baker.make(Camera)
@@ -146,13 +160,16 @@ class RollTests(TestCase):
     def test_roll_change_from_loaded_to_storage(self):
         roll = baker.make(Roll)
         camera = baker.make(Camera)
+        camera_back = baker.make(CameraBack)
 
         roll.started_on = datetime.date.today()
         roll.camera = camera
+        roll.camera_back = camera_back
         # Save to create a code for the roll.
         roll.save()
 
         self.assertEqual(camera.status, 'loaded')
+        self.assertEqual(camera_back.status, 'loaded')
         self.assertIsNotNone(roll.camera)
 
         roll.status = status_number('storage')
@@ -165,6 +182,7 @@ class RollTests(TestCase):
         self.assertIsNone(roll.started_on)
         self.assertIsNone(roll.ended_on)
         self.assertEqual(camera.status, 'empty')
+        self.assertEqual(camera_back.status, 'empty')
 
     def test_roll_change_from_loaded_to_shot(self):
         roll = baker.make(Roll)
