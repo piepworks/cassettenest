@@ -52,6 +52,10 @@ class FilmTests(TestCase):
 
 
 class RollTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.today = datetime.datetime.utcnow().date()
+
     def test_model_str(self):
         manufacturer = 'Awesome'
         film = 'Filmy'
@@ -64,11 +68,11 @@ class RollTests(TestCase):
 
         self.assertEqual(
             str(roll),
-            f'{manufacturer} {film} in 35mm added on {datetime.datetime.utcnow().date()}'
+            f'{manufacturer} {film} in 35mm added on {self.today}'
         )
 
         roll.camera = baker.make(Camera)
-        roll.started_on = datetime.datetime.utcnow().date()
+        roll.started_on = self.today
         roll.save()
 
         self.assertEqual(str(roll), f'35-c41-1 / {roll.started_on.year}')
@@ -86,47 +90,46 @@ class RollTests(TestCase):
         camera = baker.make(Camera)
 
         roll.camera = camera
-        roll.started_on = datetime.datetime.utcnow().date()
+        roll.started_on = self.today
         roll.save()
         self.assertEqual(roll.code, '35-c41-1')
         self.assertEqual(roll.status, status_number('loaded'))
 
     def test_rolls_get_correct_code_sequence(self):
-        today = datetime.datetime.utcnow().date()
         roll1 = baker.make(
             Roll,
             owner__id=1,
             film__type='e6',
             camera=baker.make(Camera),
-            started_on=today
+            started_on=self.today
         )
         roll2 = baker.make(
             Roll,
             owner__id=1,
             film__type='c41',
             camera=baker.make(Camera),
-            started_on=today
+            started_on=self.today
         )
         roll3 = baker.make(
             Roll,
             owner__id=1,
             film__type='e6',
             camera=baker.make(Camera),
-            started_on=today
+            started_on=self.today
         )
         roll4 = baker.make(
             Roll,
             owner__id=1,
             film__type='c41',
             camera=baker.make(Camera),
-            started_on=today
+            started_on=self.today
         )
         roll5 = baker.make(
             Roll,
             owner__id=1,
             film__type='bw',
             camera=baker.make(Camera),
-            started_on=today
+            started_on=self.today
         )
         # A different user.
         roll6 = baker.make(
@@ -134,7 +137,7 @@ class RollTests(TestCase):
             owner__id=2,
             film__type='bw',
             camera=baker.make(Camera),
-            started_on=today
+            started_on=self.today
         )
 
         roll1.save()
@@ -156,7 +159,7 @@ class RollTests(TestCase):
         camera_back = baker.make(CameraBack)
         roll = baker.make(Roll, camera=camera, camera_back=camera_back)
 
-        roll.started_on = datetime.datetime.utcnow().date()
+        roll.started_on = self.today
         # Save to create a code for the roll.
         roll.save()
 
@@ -180,7 +183,7 @@ class RollTests(TestCase):
         camera = baker.make(Camera)
         roll = baker.make(Roll, camera=camera)
 
-        roll.started_on = datetime.datetime.utcnow().date()
+        roll.started_on = self.today
         # Save to create a code for the roll and load camera.
         roll.save()
 
@@ -199,7 +202,7 @@ class RollTests(TestCase):
 
         self.assertIsNone(roll.ended_on)
 
-        roll.started_on = datetime.datetime.utcnow().date()
+        roll.started_on = self.today
         roll.status = status_number('shot')
         # Save to set ended_on and unload camera.
         roll.save()
@@ -219,7 +222,7 @@ class RollTests(TestCase):
         roll = baker.make(
             Roll,
             camera=baker.make(Camera),
-            started_on=datetime.datetime.utcnow().date(),
+            started_on=self.today,
             camera_back=camera_back,
         )
 
