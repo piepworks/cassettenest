@@ -15,16 +15,16 @@ from inventory.utils import status_number
 
 
 class ProfileTests(TestCase):
-    def test_model_str(self):
-        username = 'testy'
-        user = baker.make(User, username=username)
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'testy'
+        cls.user = baker.make(User, username=cls.username)
 
-        self.assertEqual(str(user.profile), f'Settings for {username}')
+    def test_model_str(self):
+        self.assertEqual(str(self.user.profile), f'Settings for {self.username}')
 
     def test_has_active_subscription(self):
-        user = baker.make(User)
-
-        self.assertFalse(user.profile.has_active_subscription)
+        self.assertFalse(self.user.profile.has_active_subscription)
 
     def test_creating_profile_for_legacy_user(self):
         # This is for users that were created before automatic profiles were in place.
@@ -232,10 +232,11 @@ class RollTests(TestCase):
 
 
 class CameraTests(TestCase):
-    def setUp(self):
-        self.id = 1
-        self.name = 'Cameraface'
-        self.camera = baker.make(Camera, id=self.id, name=self.name)
+    @classmethod
+    def setUpTestData(cls):
+        cls.id = 1
+        cls.name = 'Cameraface'
+        cls.camera = baker.make(Camera, id=cls.id, name=cls.name)
 
     def test_model_str(self):
         self.assertEqual(str(self.camera), self.name)
@@ -255,10 +256,11 @@ class CameraBackTests(TestCase):
 
 
 class ProjectTests(TestCase):
-    def setUp(self):
-        self.id = 1
-        self.name = 'Superduper'
-        self.project = baker.make(Project, id=self.id, name=self.name)
+    @classmethod
+    def setUpTestData(cls):
+        cls.id = 1
+        cls.name = 'Superduper'
+        cls.project = baker.make(Project, id=cls.id, name=cls.name)
 
     def test_model_str(self):
         self.assertEqual(str(self.project), self.name)
@@ -278,9 +280,10 @@ class ProjectTests(TestCase):
 
 
 class JournalTests(TestCase):
-    def setUp(self):
-        self.today = datetime.datetime.utcnow().date()
-        self.yesterday = self.today - datetime.timedelta(days=1)
+    @classmethod
+    def setUpTestData(cls):
+        cls.today = datetime.datetime.utcnow().date()
+        cls.yesterday = cls.today - datetime.timedelta(days=1)
 
     def test_model_str(self):
         roll = baker.make(Roll, started_on=self.today, camera=baker.make(Camera))
