@@ -29,8 +29,7 @@ class ProfileTests(TestCase):
     def test_creating_profile_for_legacy_user(self):
         # This is for users that were created before automatic profiles were in place.
 
-        # Create a user with `bulk_create` so that `post_save` doesn’t run and
-        # create a Profile.
+        # Create a user with `bulk_create` so that `post_save` doesn’t run and create a Profile.
         User.objects.bulk_create([
             User(id=1, username='test', password='testtest'),
         ])
@@ -87,61 +86,55 @@ class RollTests(TestCase):
         camera = baker.make(Camera)
 
         roll.camera = camera
-        roll.started_on = datetime.date.today()
+        roll.started_on = datetime.datetime.utcnow().date()
         roll.save()
         self.assertEqual(roll.code, '35-c41-1')
         self.assertEqual(roll.status, status_number('loaded'))
 
     def test_rolls_get_correct_code_sequence(self):
-        camera1 = baker.make(Camera)
-        camera2 = baker.make(Camera)
-        camera3 = baker.make(Camera)
-        camera4 = baker.make(Camera)
-        camera5 = baker.make(Camera)
-        camera6 = baker.make(Camera)
-
+        today = datetime.datetime.utcnow().date()
         roll1 = baker.make(
             Roll,
             owner__id=1,
             film__type='e6',
-            camera=camera1,
-            started_on=datetime.date.today()
+            camera=baker.make(Camera),
+            started_on=today
         )
         roll2 = baker.make(
             Roll,
             owner__id=1,
             film__type='c41',
-            camera=camera2,
-            started_on=datetime.date.today()
+            camera=baker.make(Camera),
+            started_on=today
         )
         roll3 = baker.make(
             Roll,
             owner__id=1,
             film__type='e6',
-            camera=camera3,
-            started_on=datetime.date.today()
+            camera=baker.make(Camera),
+            started_on=today
         )
         roll4 = baker.make(
             Roll,
             owner__id=1,
             film__type='c41',
-            camera=camera4,
-            started_on=datetime.date.today()
+            camera=baker.make(Camera),
+            started_on=today
         )
         roll5 = baker.make(
             Roll,
             owner__id=1,
             film__type='bw',
-            camera=camera5,
-            started_on=datetime.date.today()
+            camera=baker.make(Camera),
+            started_on=today
         )
         # A different user.
         roll6 = baker.make(
             Roll,
             owner__id=2,
             film__type='bw',
-            camera=camera6,
-            started_on=datetime.date.today()
+            camera=baker.make(Camera),
+            started_on=today
         )
 
         roll1.save()
@@ -159,13 +152,11 @@ class RollTests(TestCase):
         self.assertEqual(roll6.code, '35-bw-1')
 
     def test_roll_change_from_loaded_to_storage(self):
-        roll = baker.make(Roll)
         camera = baker.make(Camera)
         camera_back = baker.make(CameraBack)
+        roll = baker.make(Roll, camera=camera, camera_back=camera_back)
 
-        roll.started_on = datetime.date.today()
-        roll.camera = camera
-        roll.camera_back = camera_back
+        roll.started_on = datetime.datetime.utcnow().date()
         # Save to create a code for the roll.
         roll.save()
 
@@ -186,11 +177,10 @@ class RollTests(TestCase):
         self.assertEqual(camera_back.status, 'empty')
 
     def test_roll_change_from_loaded_to_shot(self):
-        roll = baker.make(Roll)
         camera = baker.make(Camera)
+        roll = baker.make(Roll, camera=camera)
 
-        roll.started_on = datetime.date.today()
-        roll.camera = camera
+        roll.started_on = datetime.datetime.utcnow().date()
         # Save to create a code for the roll and load camera.
         roll.save()
 
@@ -204,13 +194,12 @@ class RollTests(TestCase):
         self.assertEqual(camera.status, 'empty')
 
     def test_roll_change_from_shot_to_loaded(self):
-        roll = baker.make(Roll)
         camera = baker.make(Camera)
+        roll = baker.make(Roll, camera=camera)
 
         self.assertIsNone(roll.ended_on)
 
-        roll.camera = camera
-        roll.started_on = datetime.date.today()
+        roll.started_on = datetime.datetime.utcnow().date()
         roll.status = status_number('shot')
         # Save to set ended_on and unload camera.
         roll.save()
@@ -226,14 +215,13 @@ class RollTests(TestCase):
         self.assertEqual(camera.status, 'loaded')
 
     def test_loading_and_unloading_camera_back(self):
-        roll = baker.make(Roll)
-        camera = baker.make(Camera)
         camera_back = baker.make(CameraBack)
-
-        roll.camera = camera
-        roll.camera_back = camera_back
-        roll.started_on = datetime.date.today()
-        roll.save()
+        roll = baker.make(
+            Roll,
+            camera=baker.make(Camera),
+            started_on=datetime.datetime.utcnow().date(),
+            camera_back=camera_back,
+        )
 
         self.assertEqual(camera_back.status, 'loaded')
 
