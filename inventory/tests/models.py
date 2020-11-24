@@ -9,6 +9,7 @@ from inventory.models import (
     CameraBack,
     Profile,
     Project,
+    Journal,
 )
 from inventory.utils import status_number
 
@@ -287,3 +288,22 @@ class ProjectTests(TestCase):
         roll.save()
 
         self.assertEqual(project.get_rolls_remaining(), 0)
+
+
+class JournalTests(TestCase):
+    def test_model_str(self):
+        today = datetime.datetime.utcnow().date()
+        roll = baker.make(Roll, started_on=today, camera=baker.make(Camera))
+        journal = baker.make(Journal, roll=roll, date=today)
+
+        self.assertEqual(str(journal), f'Journal entry for 35-c41-1 on {today}')
+
+    def test_starting_frame(self):
+        today = datetime.datetime.utcnow().date()
+        yesterday = today - datetime.timedelta(days=1)
+        roll = baker.make(Roll, started_on=today, camera=baker.make(Camera))
+        journal1 = baker.make(Journal, roll=roll, date=yesterday, frame=3)
+        journal2 = baker.make(Journal, roll=roll, date=today)
+
+        self.assertEqual(journal1.starting_frame, 1)
+        self.assertEqual(journal2.starting_frame, 4)
