@@ -64,7 +64,7 @@ class RollTests(TestCase):
 
         self.assertEqual(
             str(roll),
-            f'{manufacturer} {film} in 35mm added on {datetime.date.today()}'
+            f'{manufacturer} {film} in 35mm added on {datetime.datetime.utcnow().date()}'
         )
 
     def test_loaded_rolls_get_code_and_status(self):
