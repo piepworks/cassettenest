@@ -232,16 +232,16 @@ class RollTests(TestCase):
 
 
 class CameraTests(TestCase):
-    def test_model_str(self):
-        name = 'Cameraface'
-        camera = baker.make(Camera, name=name)
+    def setUp(self):
+        self.id = 1
+        self.name = 'Cameraface'
+        self.camera = baker.make(Camera, id=self.id, name=self.name)
 
-        self.assertEqual(str(camera), name)
+    def test_model_str(self):
+        self.assertEqual(str(self.camera), self.name)
 
     def test_get_absolute_url(self):
-        camera = baker.make(Camera, id=1)
-
-        self.assertEqual(camera.get_absolute_url(), '/camera/1/')
+        self.assertEqual(self.camera.get_absolute_url(), f'/camera/{self.id}/')
 
 
 class CameraBackTests(TestCase):
@@ -255,43 +255,43 @@ class CameraBackTests(TestCase):
 
 
 class ProjectTests(TestCase):
-    def test_model_str(self):
-        name = 'Superduper'
-        project = baker.make(Project, name=name)
+    def setUp(self):
+        self.id = 1
+        self.name = 'Superduper'
+        self.project = baker.make(Project, id=self.id, name=self.name)
 
-        self.assertEqual(str(project), name)
+    def test_model_str(self):
+        self.assertEqual(str(self.project), self.name)
 
     def test_get_absolute_url(self):
-        project = baker.make(Project, id=1)
-
-        self.assertEqual(project.get_absolute_url(), '/project/1/')
+        self.assertEqual(self.project.get_absolute_url(), f'/project/{self.id}/')
 
     def test_get_rolls_remaining(self):
-        project = baker.make(Project)
-        roll = baker.make(Roll, project=project)
+        roll = baker.make(Roll, project=self.project)
 
-        self.assertEqual(project.get_rolls_remaining(), 1)
+        self.assertEqual(self.project.get_rolls_remaining(), 1)
 
         roll.status = status_number('shot')
         roll.save()
 
-        self.assertEqual(project.get_rolls_remaining(), 0)
+        self.assertEqual(self.project.get_rolls_remaining(), 0)
 
 
 class JournalTests(TestCase):
-    def test_model_str(self):
-        today = datetime.datetime.utcnow().date()
-        roll = baker.make(Roll, started_on=today, camera=baker.make(Camera))
-        journal = baker.make(Journal, roll=roll, date=today)
+    def setUp(self):
+        self.today = datetime.datetime.utcnow().date()
+        self.yesterday = self.today - datetime.timedelta(days=1)
 
-        self.assertEqual(str(journal), f'Journal entry for 35-c41-1 on {today}')
+    def test_model_str(self):
+        roll = baker.make(Roll, started_on=self.today, camera=baker.make(Camera))
+        journal = baker.make(Journal, roll=roll, date=self.today)
+
+        self.assertEqual(str(journal), f'Journal entry for 35-c41-1 on {self.today}')
 
     def test_starting_frame(self):
-        today = datetime.datetime.utcnow().date()
-        yesterday = today - datetime.timedelta(days=1)
-        roll = baker.make(Roll, started_on=today, camera=baker.make(Camera))
-        journal1 = baker.make(Journal, roll=roll, date=yesterday, frame=3)
-        journal2 = baker.make(Journal, roll=roll, date=today)
+        roll = baker.make(Roll, started_on=self.yesterday, camera=baker.make(Camera))
+        journal1 = baker.make(Journal, roll=roll, date=self.yesterday, frame=3)
+        journal2 = baker.make(Journal, roll=roll, date=self.today)
 
         self.assertEqual(journal1.starting_frame, 1)
         self.assertEqual(journal2.starting_frame, 4)
