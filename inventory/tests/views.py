@@ -9,15 +9,15 @@ from django.contrib.auth.models import User
 class IndexTests(TestCase):
     def setUp(self):
         self.client = Client()
-        self.url = '/'
-        self.view = 'login'
+        self.index_url = reverse('index')
+        self.login_url = reverse('login')
         self.username = 'test'
         self.password = 'secret'
 
     def test_logged_out(self):
-        response = self.client.get(self.url)
+        response = self.client.get(self.index_url)
 
-        self.assertRedirects(response, f'{reverse(self.view)}?next={self.url}')
+        self.assertRedirects(response, f'{self.login_url}?next={self.index_url}')
 
     def test_logged_in(self):
         user = User.objects.create_user(
@@ -28,6 +28,6 @@ class IndexTests(TestCase):
             username=self.username,
             password=self.password,
         )
-        response = self.client.get(self.url)
+        response = self.client.get(self.index_url)
 
         self.assertEqual(response.status_code, 200)
