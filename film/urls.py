@@ -20,7 +20,7 @@ urlpatterns = [
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
 
     # Redirect an authenticated user from the login page.
-    path('accounts/login/', auth_views.LoginView.as_view(redirect_authenticated_user=True)),
+    path('accounts/login/', auth_views.LoginView.as_view(redirect_authenticated_user=True), name='login'),
     path('accounts/', include('django.contrib.auth.urls')),
 
     # Static pages
