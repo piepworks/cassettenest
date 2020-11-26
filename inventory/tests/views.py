@@ -1,11 +1,10 @@
 from django.test import TestCase, Client, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
+staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 
-@override_settings(
-    STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage'
-)
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class IndexTests(TestCase):
     def setUp(self):
         self.client = Client()
@@ -33,11 +32,30 @@ class IndexTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-@override_settings(
-    STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage'
-)
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class Patternstests(TestCase):
     def test_patterns_page(self):
         response = Client().get(reverse('patterns'))
+
+        self.assertEqual(response.status_code, 200)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class Settingstests(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.username = 'test'
+        self.password = 'secret'
+
+    def test_settings_page(self):
+        user = User.objects.create_user(
+            username=self.username,
+            password=self.password,
+        )
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+        response = self.client.get(reverse('settings'))
 
         self.assertEqual(response.status_code, 200)
