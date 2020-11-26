@@ -31,3 +31,13 @@ class IndexTests(TestCase):
         response = self.client.get(self.index_url)
 
         self.assertEqual(response.status_code, 200)
+
+
+@override_settings(
+    STATICFILES_STORAGE='django.contrib.staticfiles.storage.StaticFilesStorage'
+)
+class Patternstests(TestCase):
+    def test_patterns_page(self):
+        response = Client().get(reverse('patterns'))
+
+        self.assertEqual(response.status_code, 200)
