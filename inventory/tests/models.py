@@ -54,7 +54,7 @@ class FilmTests(TestCase):
 class RollTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.today = datetime.datetime.utcnow().date()
+        cls.today = datetime.date.today()
 
     def test_model_str(self):
         manufacturer = 'Awesome'
@@ -68,7 +68,7 @@ class RollTests(TestCase):
 
         self.assertEqual(
             str(roll),
-            f'{manufacturer} {film} in 35mm added on {self.today}'
+            f'{manufacturer} {film} in 35mm added on {datetime.datetime.utcnow().date()}'
         )
 
         roll.camera = baker.make(Camera)
