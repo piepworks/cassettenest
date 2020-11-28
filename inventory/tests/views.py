@@ -33,7 +33,7 @@ class IndexTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
-class Patternstests(TestCase):
+class PatternsTests(TestCase):
     def test_patterns_page(self):
         response = Client().get(reverse('patterns'))
 
@@ -41,7 +41,7 @@ class Patternstests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
-class Settingstests(TestCase):
+class SettingsTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.client = Client()
