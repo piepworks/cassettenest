@@ -42,20 +42,23 @@ class Patternstests(TestCase):
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class Settingstests(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.username = 'test'
-        self.password = 'secret'
-
-    def test_settings_page(self):
-        user = User.objects.create_user(
-            username=self.username,
-            password=self.password,
+    @classmethod
+    def setUpTestData(cls):
+        cls.client = Client()
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
         )
+
+    def setUp(self):
         self.client.login(
             username=self.username,
             password=self.password,
         )
+
+    def test_settings_page(self):
         response = self.client.get(reverse('settings'))
 
         self.assertEqual(response.status_code, 200)
