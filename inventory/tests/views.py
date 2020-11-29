@@ -75,3 +75,14 @@ class SettingsTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('Settings updated!', messages)
+
+    def test_settings_update_error(self):
+        response = self.client.post(reverse('settings'), data={
+            'first_name': 'Frank',
+            'last_name': 'Poole',
+            'email': 'frank@example.com',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Username: This field is required.', messages)
