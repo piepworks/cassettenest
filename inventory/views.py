@@ -145,7 +145,9 @@ def settings(request):
             messages.success(request, 'Settings updated!')
             return redirect(reverse('index'))
         else:
-            messages.error(request, user_form.errors)
+            for field in user_form:
+                for error in field.errors:
+                    messages.add_message(request, messages.ERROR, f'{field.name.capitalize()}: {error}')
             return redirect(reverse('settings'))
     else:
         user_form = UserForm(instance=owner)
