@@ -2,6 +2,9 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
+from inventory.models import Roll
+from model_bakery import baker
+
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 
@@ -119,3 +122,28 @@ class RegisterTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'This password is too common.', html=True)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class InventoryTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        baker.make(Roll, owner=cls.user)
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_restricted(self):
+        response = self.client.get(reverse('inventory'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Inventory', html=True)
