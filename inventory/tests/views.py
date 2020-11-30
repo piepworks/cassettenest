@@ -1,8 +1,10 @@
+import datetime
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
-from inventory.models import Roll
+from inventory.models import Roll, Camera
+from inventory.utils import status_number
 from model_bakery import baker
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
@@ -147,3 +149,59 @@ class InventoryTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Inventory', html=True)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class LogbookTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        baker.make(
+            Roll,
+            owner=cls.user,
+            status=status_number('shot'),
+            started_on=cls.today,
+            camera=baker.make(Camera),
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_main_logbook_page(self):
+        response = self.client.get(reverse('logbook'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Logbook', html=True)
+
+    def test_status_logbook_page(self):
+        response = self.client.get(reverse('logbook'), data={
+            'status': 'shot',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Ready to be developed.', html=True)
+
+    def test_storage_status_logbook_redirect(self):
+        response = self.client.get(reverse('logbook'), data={
+            'status': 'storage',
+        })
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_year_logbook_page(self):
+        response = self.client.get(reverse('logbook'), data={
+            'year': self.today.year,
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['year'], str(self.today.year))
+        self.assertEqual(len(response.context['rolls']), 1)
