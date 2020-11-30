@@ -86,3 +86,38 @@ class SettingsTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('Username: This field is required.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class RegisterTests(TestCase):
+    def test_registration_page(self):
+        response = self.client.get(reverse('register'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Create an account to continue.', html=True)
+
+    def test_registering_new_user(self):
+        username = 'testtest'
+        password = 'secret1234'
+        email = 'test@example.com'
+
+        response = self.client.post(reverse('register'), data={
+            'username': username,
+            'password1': password,
+            'password2': password,
+            'email': email,
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.wsgi_request.user.username, username)
+
+    def test_registration_form_error(self):
+        response = self.client.post(reverse('register'), data={
+            'username': 'test',
+            'password1': 'password',
+            'password2': 'password',
+            'email': 'test@example.com',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'This password is too common.', html=True)
