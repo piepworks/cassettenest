@@ -1,7 +1,8 @@
 import datetime
 from django.test import TestCase
-from model_bakery import baker
 from django.contrib.auth.models import User
+from model_bakery import baker
+from freezegun import freeze_time
 from inventory.models import (
     Film,
     Roll,
@@ -51,6 +52,7 @@ class FilmTests(TestCase):
         self.assertEqual(film.get_absolute_url(), f'/film/{slug}/')
 
 
+@freeze_time(datetime.date.today())
 class RollTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -68,7 +70,7 @@ class RollTests(TestCase):
 
         self.assertEqual(
             str(roll),
-            f'{manufacturer} {film} in 35mm added on {datetime.datetime.utcnow().date()}'
+            f'{manufacturer} {film} in 35mm added on {self.today}'
         )
 
         roll.camera = baker.make(Camera)
@@ -285,7 +287,7 @@ class ProjectTests(TestCase):
 class JournalTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.today = datetime.datetime.utcnow().date()
+        cls.today = datetime.datetime.now().date()
         cls.yesterday = cls.today - datetime.timedelta(days=1)
 
     def test_model_str(self):

@@ -23,6 +23,7 @@ psycopg2-binary = "==2.8.5"
 whitenoise = "==5.2.0"
 gunicorn = "==20.0.4"
 coverage = "*"
+freezegun = "*"
 
 [requires]
 python_version = "3.8"
