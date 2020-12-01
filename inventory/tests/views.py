@@ -1,4 +1,6 @@
 import datetime
+import io
+import csv
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -205,3 +207,33 @@ class LogbookTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['year'], str(self.today.year))
         self.assertEqual(len(response.context['rolls']), 1)
+
+
+class ExportTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_export_rolls(self):
+        baker.make(Roll, owner=self.user)
+        baker.make(Roll, owner=self.user)
+
+        response = self.client.get(reverse('export-rolls'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
