@@ -4,3 +4,5 @@ staticfiles/
 !inventory/static
 node_modules/
 .env*
+.coverage
+htmlcov/
