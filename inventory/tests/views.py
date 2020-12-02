@@ -237,3 +237,16 @@ class ExportTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(rows, 2)
+
+    def test_export_cameras(self):
+        baker.make(Camera, owner=self.user)
+        baker.make(Camera, owner=self.user)
+
+        response = self.client.get(reverse('export-cameras'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
