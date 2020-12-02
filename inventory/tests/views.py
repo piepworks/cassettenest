@@ -5,7 +5,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
-from inventory.models import Roll, Camera
+from inventory.models import Roll, Camera, CameraBack, Project
 from inventory.utils import status_number
 from model_bakery import baker
 
@@ -243,6 +243,34 @@ class ExportTests(TestCase):
         baker.make(Camera, owner=self.user)
 
         response = self.client.get(reverse('export-cameras'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
+
+    def test_export_camera_backs(self):
+        baker.make(CameraBack, camera=baker.make(Camera, owner=self.user))
+        baker.make(CameraBack, camera=baker.make(Camera, owner=self.user))
+
+        response = self.client.get(reverse('export-camera-backs'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
+
+    def test_export_projects(self):
+        project1 = baker.make(Project, owner=self.user)
+        project2 = baker.make(Project, owner=self.user)
+        baker.make(Roll, project=project1, owner=self.user)
+        project1.cameras.add(baker.make(Camera, owner=self.user))
+
+        response = self.client.get(reverse('export-projects'))
         reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
         # Disregard the header row.
         next(reader)
