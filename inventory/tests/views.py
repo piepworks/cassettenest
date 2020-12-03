@@ -5,6 +5,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
+from django.core.files.uploadedfile import SimpleUploadedFile
 from inventory.models import Roll, Camera, CameraBack, Project, Journal
 from inventory.utils import status_number
 from model_bakery import baker
@@ -291,3 +292,46 @@ class ExportTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(rows, 2)
+
+
+class ImportTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_import_rolls(self):
+        roll = baker.make(Roll, owner=self.user)
+        self.assertEqual(Roll.objects.filter(owner=self.user).count(), 1)
+
+        # First, export.
+        response1 = self.client.get(reverse('export-rolls'))
+        reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
+        next(reader)  # Disregard the header row.
+        rows = sum(1 for row in reader)
+        self.assertEqual(rows, 1)
+
+        # Next, delete.
+        roll.delete()
+        self.assertEqual(Roll.objects.filter(owner=self.user).count(), 0)
+
+        # Then import from our export.
+        response2 = self.client.post(
+            reverse('import-rolls'),
+            data={'csv': SimpleUploadedFile('rolls.csv', response1.content)},
+        )
+        messages = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Imported 1 roll.', messages)
+        self.assertEqual(Roll.objects.filter(owner=self.user).count(), 1)
