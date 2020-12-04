@@ -6,9 +6,10 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
+from freezegun import freeze_time
+from model_bakery import baker
 from inventory.models import Roll, Camera, CameraBack, Project, Journal
 from inventory.utils import status_number
-from model_bakery import baker
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
@@ -294,9 +295,11 @@ class ExportTests(TestCase):
         self.assertEqual(rows, 2)
 
 
+@freeze_time(datetime.date.today())
 class ImportTests(TestCase):
     @classmethod
     def setUpTestData(cls):
+        cls.today = datetime.date.today()
         cls.username = 'test'
         cls.password = 'secret'
         cls.user = User.objects.create_user(
@@ -321,7 +324,18 @@ class ImportTests(TestCase):
         self.assertIn('Nope.', messages)
 
     def test_import_rolls_success(self):
-        roll = baker.make(Roll, owner=self.user)
+        camera = baker.make(Camera, owner=self.user)
+        project = baker.make(Project, owner=self.user)
+        roll = baker.make(
+            Roll,
+            owner=self.user,
+            camera=camera,
+            camera_back=baker.make(CameraBack, camera=camera),
+            project=project,
+            started_on=self.today,
+            # Don’t set ended_on manually, let the model’s save method do it.
+            status=status_number('shot'),
+        )
         self.assertEqual(Roll.objects.filter(owner=self.user).count(), 1)
 
         # First, export.
