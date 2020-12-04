@@ -2304,7 +2304,7 @@ class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
 @method_decorator(login_required, name='dispatch')
 class ExportProjectsView(WriteCSVMixin, View):
     def get(self, request, *args, **kwargs):
-        export = self.write_csv('projets.csv')
+        export = self.write_csv('projects.csv')
         projects = Project.objects.filter(owner=request.user)
 
         export['writer'].writerow([
@@ -2396,7 +2396,7 @@ class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
                 )
 
         item = {
-            'noun': 'projet',
+            'noun': 'project',
         }
 
         return self.redirect(request, count, item)
