@@ -310,7 +310,17 @@ class ImportTests(TestCase):
             password=self.password,
         )
 
-    def test_import_rolls(self):
+    def test_import_rolls_failure(self):
+        response = self.client.post(
+            reverse('import-rolls'),
+            data={'csv': 'Nothing.'},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Nope.', messages)
+
+    def test_import_rolls_success(self):
         roll = baker.make(Roll, owner=self.user)
         self.assertEqual(Roll.objects.filter(owner=self.user).count(), 1)
 
