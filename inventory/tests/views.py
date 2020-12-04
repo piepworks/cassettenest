@@ -8,11 +8,13 @@ from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
+from freezegun import freeze_time
 from model_bakery import baker
 from inventory.models import Roll, Camera, CameraBack, Project, Journal
 from inventory.utils import status_number
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class IndexTests(TestCase):
@@ -295,13 +297,14 @@ class ExportTests(TestCase):
         self.assertEqual(rows, 2)
 
 
+@freeze_time(datetime.datetime.now())
 class ImportTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.today = datetime.datetime.utcnow().date()
-        cls.yesterday = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+        cls.today = datetime.datetime.now().date()
         cls.tz_yesterday = timezone.make_aware(
-            cls.yesterday, timezone=pytz.timezone('UTC')
+            datetime.datetime.now() - datetime.timedelta(days=1),
+            timezone=pytz.timezone('UTC'),
         )
         cls.username = 'test'
         cls.password = 'secret'
