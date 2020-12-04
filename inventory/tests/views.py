@@ -381,3 +381,55 @@ class ImportTests(TestCase):
         # Make sure we set `created_at` and `update_at` from the csv.
         self.assertEqual(rolls[0].created_at, self.tz_yesterday)
         self.assertEqual(rolls[0].updated_at, self.tz_yesterday)
+
+    def test_import_cameras_failure(self):
+        response = self.client.post(
+            reverse('import-cameras'),
+            data={'csv': 'Nothing.'},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Nope.', messages)
+
+    def test_import_cameras_success(self):
+        camera = baker.make(Camera, owner=self.user)
+        self.assertEqual(Camera.objects.filter(owner=self.user).count(), 1)
+
+        # Set created_at and updated_at to yesterday so we can be sure the
+        # import doesn’t change it.
+        Camera.objects.filter(owner=self.user).update(
+            created_at=self.tz_yesterday,
+            updated_at=self.tz_yesterday,
+        )
+
+        # First, export.
+        response1 = self.client.get(reverse('export-cameras'))
+        reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
+        next(reader)  # Disregard the header row.
+        rows = sum(1 for row in reader)
+        self.assertEqual(rows, 1)
+        self.assertEquals(
+            response1.get('Content-Disposition'),
+            'attachment; filename="cameras.csv"'
+        )
+
+        # Next, delete.
+        camera.delete()
+        self.assertEqual(Camera.objects.filter(owner=self.user).count(), 0)
+
+        # Then import from our export.
+        response2 = self.client.post(
+            reverse('import-cameras'),
+            data={'csv': SimpleUploadedFile('cameras.csv', response1.content)},
+        )
+        messages = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Imported 1 camera.', messages)
+        cameras = Camera.objects.filter(owner=self.user)
+        self.assertEqual(cameras.count(), 1)
+
+        # Make sure we set `created_at` and `update_at` from the csv.
+        self.assertEqual(cameras[0].created_at, self.tz_yesterday)
+        self.assertEqual(cameras[0].updated_at, self.tz_yesterday)
