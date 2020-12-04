@@ -2135,7 +2135,7 @@ class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
                     obj.ended_on = datetime.datetime.strptime(row['ended'], '%Y-%m-%d').date()
 
                 # Set status after potentially setting the camera, started, and
-                # endedso things are happy with the Roll model’s automatic `save`
+                # ended so things are happy with the Roll model’s automatic `save`
                 # fanciness.
                 obj.status = row['status']
 

@@ -1,18 +1,18 @@
 import datetime
 import io
 import csv
+import pytz
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
-from freezegun import freeze_time
+from django.utils import timezone
 from model_bakery import baker
 from inventory.models import Roll, Camera, CameraBack, Project, Journal
 from inventory.utils import status_number
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class IndexTests(TestCase):
@@ -295,11 +295,14 @@ class ExportTests(TestCase):
         self.assertEqual(rows, 2)
 
 
-@freeze_time(datetime.date.today())
 class ImportTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.today = datetime.date.today()
+        cls.today = datetime.datetime.utcnow().date()
+        cls.yesterday = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+        cls.tz_yesterday = timezone.make_aware(
+            cls.yesterday, timezone=pytz.timezone('UTC')
+        )
         cls.username = 'test'
         cls.password = 'secret'
         cls.user = User.objects.create_user(
@@ -338,6 +341,13 @@ class ImportTests(TestCase):
         )
         self.assertEqual(Roll.objects.filter(owner=self.user).count(), 1)
 
+        # Set created_at and updated_at to yesterday so we can be sure the
+        # import doesn’t change it.
+        Roll.objects.filter(owner=self.user).update(
+            created_at=self.tz_yesterday,
+            updated_at=self.tz_yesterday,
+        )
+
         # First, export.
         response1 = self.client.get(reverse('export-rolls'))
         reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
@@ -362,4 +372,15 @@ class ImportTests(TestCase):
 
         self.assertEqual(response2.status_code, 302)
         self.assertIn('Imported 1 roll.', messages)
-        self.assertEqual(Roll.objects.filter(owner=self.user).count(), 1)
+        rolls = Roll.objects.filter(owner=self.user)
+        self.assertEqual(rolls.count(), 1)
+
+        # Make sure we set `created_at` and `update_at` from the csv.
+        self.assertEqual(
+            rolls[0].created_at.strftime('%c %z'),
+            self.tz_yesterday.strftime('%c %z')
+        )
+        self.assertEqual(
+            rolls[0].updated_at.strftime('%c %z'),
+            self.tz_yesterday.strftime('%c %z')
+        )
