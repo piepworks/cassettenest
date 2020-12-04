@@ -320,6 +320,10 @@ class ImportTests(TestCase):
         next(reader)  # Disregard the header row.
         rows = sum(1 for row in reader)
         self.assertEqual(rows, 1)
+        self.assertEquals(
+            response1.get('Content-Disposition'),
+            'attachment; filename="rolls.csv"'
+        )
 
         # Next, delete.
         roll.delete()
