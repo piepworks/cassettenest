@@ -379,11 +379,5 @@ class ImportTests(TestCase):
         self.assertEqual(rolls.count(), 1)
 
         # Make sure we set `created_at` and `update_at` from the csv.
-        self.assertEqual(
-            rolls[0].created_at.strftime('%c %z'),
-            self.tz_yesterday.strftime('%c %z')
-        )
-        self.assertEqual(
-            rolls[0].updated_at.strftime('%c %z'),
-            self.tz_yesterday.strftime('%c %z')
-        )
+        self.assertEqual(rolls[0].created_at, self.tz_yesterday)
+        self.assertEqual(rolls[0].updated_at, self.tz_yesterday)
