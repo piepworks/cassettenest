@@ -20,8 +20,8 @@
     </form>
     <p><a href="{% url 'password_change' %}">Change your password</a></p>
 
-{% flag 'export-and-import' %}
-{% if exportable_data %}
+    {% flag 'export-data' %}
+    {% if exportable_data %}
     <hr />
 
     <h2>Export your data</h2>
@@ -32,8 +32,10 @@
             {% endif %}
         {% endfor %}
     </ul>
-{% endif %}
+    {% endif %}
+    {% endflag %}
 
+    {% flag 'import-data' %}
     <hr />
 
     <h2>Import previously exported data</h2>
@@ -49,7 +51,7 @@
             </li>
         {% endfor %}
     </ul>
-{% endflag %}
+    {% endflag %}
 
 {% if user.is_staff %}
     <hr />
