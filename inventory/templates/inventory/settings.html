@@ -1,4 +1,5 @@
 {% extends 'base_site.html' %}
+{% load waffle_tags %}
 
 {% block title %}Settings{% endblock %}
 {% block bodytag %}class="settings"{% endblock %}
@@ -19,6 +20,7 @@
     </form>
     <p><a href="{% url 'password_change' %}">Change your password</a></p>
 
+{% flag 'export-and-import' %}
 {% if exportable_data %}
     <hr />
 
@@ -47,6 +49,7 @@
             </li>
         {% endfor %}
     </ul>
+{% endflag %}
 
 {% if user.is_staff %}
     <hr />
