@@ -1,11 +1,17 @@
 import datetime
+import io
+import csv
+import pytz
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
-from inventory.models import Roll, Camera
-from inventory.utils import status_number
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.utils import timezone
+from freezegun import freeze_time
 from model_bakery import baker
+from inventory.models import Roll, Camera, CameraBack, Project, Journal
+from inventory.utils import status_number
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
@@ -205,3 +211,383 @@ class LogbookTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['year'], str(self.today.year))
         self.assertEqual(len(response.context['rolls']), 1)
+
+
+class ExportTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_export_rolls(self):
+        baker.make(Roll, owner=self.user)
+        baker.make(Roll, owner=self.user)
+
+        response = self.client.get(reverse('export-rolls'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
+
+    def test_export_cameras(self):
+        baker.make(Camera, owner=self.user)
+        baker.make(Camera, owner=self.user)
+
+        response = self.client.get(reverse('export-cameras'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
+
+    def test_export_camera_backs(self):
+        baker.make(CameraBack, camera=baker.make(Camera, owner=self.user))
+        baker.make(CameraBack, camera=baker.make(Camera, owner=self.user))
+
+        response = self.client.get(reverse('export-camera-backs'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
+
+    def test_export_projects(self):
+        project1 = baker.make(Project, owner=self.user)
+        project2 = baker.make(Project, owner=self.user)
+        baker.make(Roll, project=project1, owner=self.user)
+        project1.cameras.add(baker.make(Camera, owner=self.user))
+
+        response = self.client.get(reverse('export-projects'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
+
+    def test_export_journals(self):
+        baker.make(Journal, roll=baker.make(Roll, owner=self.user))
+        baker.make(Journal, roll=baker.make(Roll, owner=self.user))
+
+        response = self.client.get(reverse('export-journals'))
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
+
+
+@freeze_time(datetime.datetime.now())
+class ImportTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.today = datetime.datetime.now().date()
+        cls.tz_yesterday = timezone.make_aware(
+            datetime.datetime.now() - datetime.timedelta(days=1),
+            timezone=pytz.timezone('UTC'),
+        )
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_import_rolls_failure(self):
+        response = self.client.post(
+            reverse('import-rolls'),
+            data={'csv': 'Nothing.'},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Nope.', messages)
+
+    def test_import_rolls_success(self):
+        camera = baker.make(Camera, owner=self.user)
+        project = baker.make(Project, owner=self.user)
+        roll = baker.make(
+            Roll,
+            owner=self.user,
+            camera=camera,
+            camera_back=baker.make(CameraBack, camera=camera),
+            project=project,
+            started_on=self.today,
+            # Don’t set ended_on manually, let the model’s save method do it.
+            status=status_number('shot'),
+        )
+        self.assertEqual(Roll.objects.filter(owner=self.user).count(), 1)
+
+        # Set created_at and updated_at to yesterday so we can be sure the
+        # import doesn’t change it.
+        Roll.objects.filter(owner=self.user).update(
+            created_at=self.tz_yesterday,
+            updated_at=self.tz_yesterday,
+        )
+
+        # First, export.
+        response1 = self.client.get(reverse('export-rolls'))
+        reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
+        next(reader)  # Disregard the header row.
+        rows = sum(1 for row in reader)
+        self.assertEqual(rows, 1)
+        self.assertEquals(
+            response1.get('Content-Disposition'),
+            'attachment; filename="rolls.csv"'
+        )
+
+        # Next, delete.
+        roll.delete()
+        self.assertEqual(Roll.objects.filter(owner=self.user).count(), 0)
+
+        # Then import from our export.
+        response2 = self.client.post(
+            reverse('import-rolls'),
+            data={'csv': SimpleUploadedFile('rolls.csv', response1.content)},
+        )
+        messages = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Imported 1 roll.', messages)
+        rolls = Roll.objects.filter(owner=self.user)
+        self.assertEqual(rolls.count(), 1)
+
+        # Make sure we set `created_at` and `update_at` from the csv.
+        self.assertEqual(rolls[0].created_at, self.tz_yesterday)
+        self.assertEqual(rolls[0].updated_at, self.tz_yesterday)
+
+    def test_import_cameras_failure(self):
+        response = self.client.post(
+            reverse('import-cameras'),
+            data={'csv': 'Nothing.'},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Nope.', messages)
+
+    def test_import_cameras_success(self):
+        camera = baker.make(Camera, owner=self.user)
+        self.assertEqual(Camera.objects.filter(owner=self.user).count(), 1)
+
+        # Set created_at and updated_at to yesterday so we can be sure the
+        # import doesn’t change it.
+        Camera.objects.filter(owner=self.user).update(
+            created_at=self.tz_yesterday,
+            updated_at=self.tz_yesterday,
+        )
+
+        # First, export.
+        response1 = self.client.get(reverse('export-cameras'))
+        reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
+        next(reader)  # Disregard the header row.
+        rows = sum(1 for row in reader)
+        self.assertEqual(rows, 1)
+        self.assertEquals(
+            response1.get('Content-Disposition'),
+            'attachment; filename="cameras.csv"'
+        )
+
+        # Next, delete.
+        camera.delete()
+        self.assertEqual(Camera.objects.filter(owner=self.user).count(), 0)
+
+        # Then import from our export.
+        response2 = self.client.post(
+            reverse('import-cameras'),
+            data={'csv': SimpleUploadedFile('cameras.csv', response1.content)},
+        )
+        messages = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Imported 1 camera.', messages)
+        cameras = Camera.objects.filter(owner=self.user)
+        self.assertEqual(cameras.count(), 1)
+
+        # Make sure we set `created_at` and `update_at` from the csv.
+        self.assertEqual(cameras[0].created_at, self.tz_yesterday)
+        self.assertEqual(cameras[0].updated_at, self.tz_yesterday)
+
+    def test_import_camera_backs_failure(self):
+        response = self.client.post(
+            reverse('import-camera-backs'),
+            data={'csv': 'Nothing.'},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Nope.', messages)
+
+    def test_import_camera_backs_success(self):
+        camera_back = baker.make(CameraBack, camera=baker.make(Camera, owner=self.user))
+        self.assertEqual(CameraBack.objects.filter(camera__owner=self.user).count(), 1)
+
+        # Set created_at and updated_at to yesterday so we can be sure the
+        # import doesn’t change it.
+        CameraBack.objects.filter(camera__owner=self.user).update(
+            created_at=self.tz_yesterday,
+            updated_at=self.tz_yesterday,
+        )
+
+        # First, export.
+        response1 = self.client.get(reverse('export-camera-backs'))
+        reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
+        next(reader)  # Disregard the header row.
+        rows = sum(1 for row in reader)
+        self.assertEqual(rows, 1)
+        self.assertEquals(
+            response1.get('Content-Disposition'),
+            'attachment; filename="camera-backs.csv"'
+        )
+
+        # Next, delete.
+        camera_back.delete()
+        self.assertEqual(CameraBack.objects.filter(camera__owner=self.user).count(), 0)
+
+        # Then import from our export.
+        response2 = self.client.post(
+            reverse('import-camera-backs'),
+            data={'csv': SimpleUploadedFile('camera-backs.csv', response1.content)},
+        )
+        messages = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Imported 1 camera back.', messages)
+        camera_backs = CameraBack.objects.filter(camera__owner=self.user)
+        self.assertEqual(camera_backs.count(), 1)
+
+        # Make sure we set `created_at` and `update_at` from the csv.
+        self.assertEqual(camera_backs[0].created_at, self.tz_yesterday)
+        self.assertEqual(camera_backs[0].updated_at, self.tz_yesterday)
+
+    def test_import_projects_failure(self):
+        response = self.client.post(
+            reverse('import-projects'),
+            data={'csv': 'Nothing.'},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Nope.', messages)
+
+    def test_import_projects_success(self):
+        project = baker.make(Project, owner=self.user)
+        baker.make(Roll, project=project, owner=self.user)
+        project.cameras.add(baker.make(Camera, owner=self.user))
+        self.assertEqual(Project.objects.filter(owner=self.user).count(), 1)
+
+        # Set created_at and updated_at to yesterday so we can be sure the
+        # import doesn’t change it.
+        Project.objects.filter(owner=self.user).update(
+            created_at=self.tz_yesterday,
+            updated_at=self.tz_yesterday,
+        )
+
+        # First, export.
+        response1 = self.client.get(reverse('export-projects'))
+        reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
+        next(reader)  # Disregard the header row.
+        rows = sum(1 for row in reader)
+        self.assertEqual(rows, 1)
+        self.assertEquals(
+            response1.get('Content-Disposition'),
+            'attachment; filename="projects.csv"'
+        )
+
+        # Next, delete.
+        project.delete()
+        self.assertEqual(Project.objects.filter(owner=self.user).count(), 0)
+
+        # Then import from our export.
+        response2 = self.client.post(
+            reverse('import-projects'),
+            data={'csv': SimpleUploadedFile('projects.csv', response1.content)},
+        )
+        messages = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Imported 1 project.', messages)
+        projects = Project.objects.filter(owner=self.user)
+        self.assertEqual(projects.count(), 1)
+
+        # Make sure we set `created_at` and `update_at` from the csv.
+        self.assertEqual(projects[0].created_at, self.tz_yesterday)
+        self.assertEqual(projects[0].updated_at, self.tz_yesterday)
+
+    def test_import_journals_failure(self):
+        response = self.client.post(
+            reverse('import-journals'),
+            data={'csv': 'Nothing.'},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Nope.', messages)
+
+    def test_import_journals_success(self):
+        journal = baker.make(Journal, roll=baker.make(Roll, owner=self.user))
+        self.assertEqual(Journal.objects.filter(roll__owner=self.user).count(), 1)
+
+        # Set created_at and updated_at to yesterday so we can be sure the
+        # import doesn’t change it.
+        Journal.objects.filter(roll__owner=self.user).update(
+            created_at=self.tz_yesterday,
+            updated_at=self.tz_yesterday,
+        )
+
+        # First, export.
+        response1 = self.client.get(reverse('export-journals'))
+        reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
+        next(reader)  # Disregard the header row.
+        rows = sum(1 for row in reader)
+        self.assertEqual(rows, 1)
+        self.assertEquals(
+            response1.get('Content-Disposition'),
+            'attachment; filename="journals.csv"'
+        )
+
+        # Next, delete.
+        journal.delete()
+        self.assertEqual(Journal.objects.filter(roll__owner=self.user).count(), 0)
+
+        # Then import from our export.
+        response2 = self.client.post(
+            reverse('import-journals'),
+            data={'csv': SimpleUploadedFile('journals.csv', response1.content)},
+        )
+        messages = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Imported 1 journal.', messages)
+        journals = Journal.objects.filter(roll__owner=self.user)
+        self.assertEqual(journals.count(), 1)
+
+        # Make sure we set `created_at` and `update_at` from the csv.
+        self.assertEqual(journals[0].created_at, self.tz_yesterday)
+        self.assertEqual(journals[0].updated_at, self.tz_yesterday)

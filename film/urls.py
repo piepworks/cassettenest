@@ -94,6 +94,20 @@ urlpatterns = [
     path('camera/<int:pk>/back/<int:back_pk>/delete/',
          views.camera_back_delete, name='camera-back-delete'),
 
+    # Export
+    path('export/cameras', views.ExportCamerasView.as_view(), name='export-cameras'),
+    path('export/camera-backs', views.ExportCameraBacksView.as_view(), name='export-camera-backs'),
+    path('export/rolls', views.ExportRollsView.as_view(), name='export-rolls'),
+    path('export/projects', views.ExportProjectsView.as_view(), name='export-projects'),
+    path('export/journals', views.ExportJournalsView.as_view(), name='export-journals'),
+
+    # Import
+    path('import/cameras', views.ImportCamerasView.as_view(), name='import-cameras'),
+    path('import/camera-backs', views.ImportCameraBacksView.as_view(), name='import-camera-backs'),
+    path('import/rolls', views.ImportRollsView.as_view(), name='import-rolls'),
+    path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
+    path('import/journals', views.ImportJournalsView.as_view(), name='import-journals'),
+
     # Subscribe
     path('subscribe/',
          views.PurchaseSubscriptionView.as_view(),

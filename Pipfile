@@ -24,6 +24,7 @@ whitenoise = "==5.2.0"
 gunicorn = "==20.0.4"
 coverage = "*"
 freezegun = "*"
+django-waffle = "==2.0.0"
 
 [requires]
 python_version = "3.8"

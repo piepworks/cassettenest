@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'djstripe',
     'capture_tag',
     'debug_toolbar',
+    'waffle',
 ]
 
 MIDDLEWARE = [
@@ -77,6 +78,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'inventory.middleware.TimezoneMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'waffle.middleware.WaffleMiddleware',
 ]
 
 ROOT_URLCONF = 'film.urls'

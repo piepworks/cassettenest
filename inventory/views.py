@@ -1,6 +1,8 @@
 import datetime
+import json
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import DetailView, FormView
+from django.views.generic import View, DetailView, FormView
 from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.contrib.auth import login, authenticate
@@ -32,7 +34,8 @@ from .forms import (
     RollForm,
     FilmForm,
     UpdateCardForm,
-    UserForm
+    UserForm,
+    UploadCSVForm,
 )
 from .utils import (
     development_statuses,
@@ -41,11 +44,11 @@ from .utils import (
     iso_filter,
     iso_variables,
     pluralize,
-    render_markdown,
     status_description,
     status_keys,
-    status_number
+    status_number,
 )
+from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
 
 @login_required
@@ -153,7 +156,23 @@ def settings(request):
         user_form = UserForm(instance=owner)
         profile_form = ProfileForm(instance=owner.profile)
         stripe_form = UpdateCardForm()
+        csv_form = UploadCSVForm()
         subscription = False
+        exportable = {
+            'cameras': Camera.objects.filter(owner=request.user).count(),
+            'camera-backs': CameraBack.objects.filter(camera__owner=request.user).count(),
+            'rolls': Roll.objects.filter(owner=request.user).count(),
+            'projects': Project.objects.filter(owner=request.user).count(),
+            'journals': Journal.objects.filter(roll__owner=request.user).count(),
+        }
+        exportable_data = True if sum(exportable.values()) else False
+        imports = [
+            'Cameras',
+            'Camera-Backs',
+            'Rolls',
+            'Projects',
+            'Journals',
+        ]
 
         try:
             subscriptions = djstripe.models.Subscription.objects.filter(
@@ -186,8 +205,12 @@ def settings(request):
             'user_form': user_form,
             'profile_form': profile_form,
             'stripe_form': stripe_form,
+            'csv_form': csv_form,
             'subscription': subscription,
             'payment_method': payment_method,
+            'exportable': exportable,
+            'exportable_data': exportable_data,
+            'imports': imports,
             'charges': charges,
             'STRIPE_PUBLIC_KEY': djstripe.settings.STRIPE_PUBLIC_KEY,
             'js_needed': True,
@@ -1976,7 +1999,7 @@ def camera_delete(request, pk):
 
     messages.success(
         request,
-        'Camera %s successfully deleted.' % (name)
+        f'Camera “{name}” successfully deleted.'
     )
     return redirect(reverse('index'))
 
@@ -1996,3 +2019,451 @@ def camera_back_delete(request, pk, back_pk):
         '%s successfully deleted.' % (name)
     )
     return redirect(reverse('camera-detail', args=(camera.id,)))
+
+
+# EXPORT / IMPORT
+# ------
+@method_decorator(login_required, name='dispatch')
+class ExportRollsView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('rolls.csv')
+        rolls = Roll.objects.filter(owner=request.user)
+
+        export['writer'].writerow([
+            'id',
+            'code',
+            'status',
+            'film',
+            'film_id',
+            'push_pull',
+            'camera',
+            'camera_id',
+            'camera_back',
+            'camera_back_id',
+            'lens',
+            'project',
+            'project_id',
+            'location',
+            'notes',
+            'lab',
+            'scanner',
+            'notes_on_development',
+            'created',
+            'updated',
+            'started',
+            'ended',
+        ])
+
+        for roll in rolls:
+            try:
+                camera_id = roll.camera.id
+            except AttributeError:
+                camera_id = ''
+            try:
+                camera_back_id = roll.camera_back.id
+            except AttributeError:
+                camera_back_id = ''
+            try:
+                project_id = roll.project.id
+            except AttributeError:
+                project_id = ''
+
+            export['writer'].writerow([
+                roll.id,
+                roll.code,
+                roll.status,
+                roll.film,
+                roll.film.id,
+                roll.push_pull,
+                roll.camera,
+                camera_id,
+                roll.camera_back,
+                camera_back_id,
+                roll.lens,
+                roll.project,
+                project_id,
+                roll.location,
+                roll.notes,
+                roll.lab,
+                roll.scanner,
+                roll.notes_on_development,
+                roll.created_at,
+                roll.updated_at,
+                roll.started_on,
+                roll.ended_on,
+            ])
+
+        return export['response']
+
+
+@method_decorator(login_required, name='dispatch')
+class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            obj, created = Roll.objects.get_or_create(
+                owner=request.user,
+                id=row['id'],
+                film=get_object_or_404(Film, id=row['film_id']),
+            )
+
+            if created:
+                count += 1
+
+                # Add optional foreign keys
+                if row['camera_id']:
+                    obj.camera = get_object_or_404(Camera, id=row['camera_id'], owner=request.user)
+                if row['camera_back_id']:
+                    obj.camera_back = get_object_or_404(
+                        CameraBack,
+                        id=row['camera_back_id'],
+                        camera__owner=request.user
+                    )
+                if row['project_id']:
+                    obj.project = get_object_or_404(Project, id=row['project_id'], owner=request.user)
+
+                # Add optional dates
+                if row['started']:
+                    obj.started_on = datetime.datetime.strptime(row['started'], '%Y-%m-%d').date()
+                if row['ended']:
+                    obj.ended_on = datetime.datetime.strptime(row['ended'], '%Y-%m-%d').date()
+
+                # Set status after potentially setting the camera, started, and
+                # ended so things are happy with the Roll model’s automatic `save`
+                # fanciness.
+                obj.status = row['status']
+
+                obj.save()
+
+                Roll.objects.filter(id=row['id'], owner=request.user).update(
+                    code=row['code'],
+                    push_pull=row['push_pull'],
+                    location=row['location'],
+                    lens=row['lens'],
+                    notes=row['notes'],
+                    lab=row['lab'],
+                    scanner=row['scanner'],
+                    notes_on_development=row['notes_on_development'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
+        item = {
+            'noun': 'roll',
+        }
+
+        return self.redirect(request, count, item)
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportCamerasView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('cameras.csv')
+        cameras = Camera.objects.filter(owner=request.user)
+
+        export['writer'].writerow([
+            'id',
+            'format',
+            'name',
+            'notes',
+            'status',
+            'multiple_backs',
+            'created',
+            'updated',
+        ])
+
+        for camera in cameras:
+            export['writer'].writerow([
+                camera.id,
+                camera.format,
+                camera.name,
+                camera.notes,
+                camera.status,
+                camera.multiple_backs,
+                camera.created_at,
+                camera.updated_at,
+            ])
+
+        return export['response']
+
+
+@method_decorator(login_required, name='dispatch')
+class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            obj, created = Camera.objects.get_or_create(
+                owner=request.user,
+                id=row['id'],
+                format=row['format'],
+                name=row['name'],
+            )
+
+            if created:
+                count += 1
+
+                Camera.objects.filter(id=row['id'], owner=request.user).update(
+                    notes=row['notes'],
+                    status=row['status'],
+                    multiple_backs=row['multiple_backs'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
+        item = {
+            'noun': 'camera',
+        }
+
+        return self.redirect(request, count, item)
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportCameraBacksView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('camera-backs.csv')
+        camera_backs = CameraBack.objects.filter(camera__owner=request.user)
+
+        export['writer'].writerow([
+            'id',
+            'camera',
+            'camera_id',
+            'name',
+            'notes',
+            'status',
+            'format',
+            'created',
+            'updated',
+        ])
+
+        for back in camera_backs:
+            export['writer'].writerow([
+                back.id,
+                back.camera,
+                back.camera.id,
+                back.name,
+                back.notes,
+                back.status,
+                back.format,
+                back.created_at,
+                back.updated_at,
+            ])
+
+        return export['response']
+
+
+@method_decorator(login_required, name='dispatch')
+class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            obj, created = CameraBack.objects.get_or_create(
+                id=row['id'],
+                camera=get_object_or_404(Camera, id=row['camera_id'], owner=request.user),
+                name=row['name'],
+                format=row['format'],
+            )
+
+            if created:
+                count += 1
+
+                CameraBack.objects.filter(id=row['id'], camera__owner=request.user).update(
+                    notes=row['notes'],
+                    status=row['status'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
+        item = {
+            'noun': 'camera back',
+        }
+
+        return self.redirect(request, count, item)
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportProjectsView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('projects.csv')
+        projects = Project.objects.filter(owner=request.user)
+
+        export['writer'].writerow([
+            'id',
+            'name',
+            'notes',
+            'status',
+            'camera_ids',
+            'cameras',
+            'roll_ids',
+            'rolls',
+            'created',
+            'updated',
+        ])
+
+        for project in projects:
+            roll_objects = Roll.objects.filter(project=project, owner=request.user)
+            roll_ids = []
+            rolls = []
+            for roll in roll_objects:
+                roll_ids.append(roll.id)
+                roll_code = f'{roll.code} / ' if roll.code else ''
+                roll_name = f'{roll_code}{roll.film.__str__()} / {roll.get_status_display()}'
+                rolls.append(roll_name)
+            camera_objects = Camera.objects.filter(project=project)
+            camera_ids = []
+            cameras = []
+            for camera in camera_objects:
+                camera_ids.append(camera.id)
+                cameras.append(camera.__str__())
+
+            export['writer'].writerow([
+                project.id,
+                project.name,
+                project.notes,
+                project.status,
+                camera_ids,
+                cameras,
+                roll_ids,
+                rolls,
+                project.created_at,
+                project.updated_at,
+            ])
+
+        return export['response']
+
+
+@method_decorator(login_required, name='dispatch')
+class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            roll_ids = json.loads(row['roll_ids'])
+            camera_ids = json.loads(row['camera_ids'])
+
+            obj, created = Project.objects.get_or_create(
+                owner=request.user,
+                id=row['id'],
+                name=row['name'],
+            )
+
+            if created:
+                count += 1
+
+                if roll_ids:
+                    for id in roll_ids:
+                        roll = get_object_or_404(Roll, id=id, owner=request.user)
+                        roll.project = obj
+                        roll.save()
+
+                if camera_ids:
+                    for id in camera_ids:
+                        obj.cameras.add(get_object_or_404(Camera, id=id, owner=request.user))
+
+                    obj.save()
+
+                Project.objects.filter(id=row['id'], owner=request.user).update(
+                    notes=row['notes'],
+                    status=row['status'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
+        item = {
+            'noun': 'project',
+        }
+
+        return self.redirect(request, count, item)
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportJournalsView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('journals.csv')
+        journals = Journal.objects.filter(roll__owner=request.user)
+
+        export['writer'].writerow([
+            'id',
+            'roll_id',
+            'roll',
+            'date',
+            'notes',
+            'frame',
+            'created',
+            'updated',
+        ])
+
+        for journal in journals:
+            export['writer'].writerow([
+                journal.id,
+                journal.roll.id,
+                journal.roll,
+                journal.date,
+                journal.notes,
+                journal.frame,
+                journal.created_at,
+                journal.updated_at,
+            ])
+
+        return export['response']
+
+
+@method_decorator(login_required, name='dispatch')
+class ImportJournalsView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            obj, created = Journal.objects.get_or_create(
+                id=row['id'],
+                roll=get_object_or_404(Roll, id=row['roll_id'], owner=request.user),
+                frame=row['frame'],
+            )
+
+            if created:
+                count += 1
+
+                Journal.objects.filter(id=row['id'], roll__owner=request.user).update(
+                    date=datetime.datetime.strptime(row['date'], '%Y-%m-%d').date(),
+                    notes=row['notes'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
+        item = {
+            'noun': 'journal',
+        }
+
+        return self.redirect(request, count, item)

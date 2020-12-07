@@ -1,4 +1,5 @@
 {% extends 'base_site.html' %}
+{% load waffle_tags %}
 
 {% block title %}Settings{% endblock %}
 {% block bodytag %}class="settings"{% endblock %}
@@ -18,6 +19,37 @@
         <div class="action"><input type="submit" value="Save settings" /></div>
     </form>
     <p><a href="{% url 'password_change' %}">Change your password</a></p>
+
+{% flag 'export-and-import' %}
+{% if exportable_data %}
+    <hr />
+
+    <h2>Export your data</h2>
+    <ul>
+        {% for k, v in exportable.items %}
+            {% if v %}
+                <li><a href="{% url 'export-'|add:k %}">Download your {{ k }} data.</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endif %}
+
+    <hr />
+
+    <h2>Import previously exported data</h2>
+    <ul>
+        {% for import in imports %}
+            <li>
+                {{ import }}
+                <form method="post" action="{% url 'import-'|add:import|lower %}" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ csv_form.csv }}
+                    <input type="submit" value="Upload" />
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% endflag %}
 
 {% if user.is_staff %}
     <hr />
