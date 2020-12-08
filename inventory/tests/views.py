@@ -591,3 +591,74 @@ class ImportTests(TestCase):
         # Make sure we set `created_at` and `update_at` from the csv.
         self.assertEqual(journals[0].created_at, self.tz_yesterday)
         self.assertEqual(journals[0].updated_at, self.tz_yesterday)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class JournalTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.roll = baker.make(Roll, owner=cls.user)
+        cls.entry = baker.make(Journal, roll=cls.roll)
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_journal_edit_get(self):
+        response = self.client.get(reverse('roll-journal-edit', args=(self.roll.id, self.entry.id)))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_journal_edit_post(self):
+        today = datetime.datetime.now().date()
+        yesterday = today - datetime.timedelta(days=1)
+
+        response1 = self.client.post(
+            reverse('roll-journal-edit', args=(self.roll.id, self.entry.id)),
+            data={
+                'date': today,
+                'notes': 'What noise annoys a noisy oyster?',
+                'frame': 3,
+            }
+        )
+        messages1 = [m.message for m in get_messages(response1.wsgi_request)]
+
+        self.assertRedirects(response1, reverse('roll-journal-detail', args=(self.roll.id, self.entry.id)))
+        self.assertIn('Journal entry updated.', messages1)
+
+        # Try to save another entry with the same date as an existing entry.
+        entry2 = baker.make(Journal, roll=self.roll, date=yesterday)
+        response2 = self.client.post(
+            reverse('roll-journal-edit', args=(self.roll.id, entry2.id)),
+            data={
+                'date': today,
+                'notes': 'This entry will not work.',
+                'frame': 5,
+            }
+        )
+        messages2 = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Only one entry per date per roll.', messages2)
+
+    def test_journal_edit_post_invalid(self):
+        # Try submitting an invalid form.
+        # If I put this with the rest of the tests above,
+        # I get a `TransactionManagementError`. So here’s a new test.
+        roll = baker.make(Roll, owner=self.user)
+        entry = baker.make(Journal, roll=roll)
+        response = self.client.post(
+            reverse('roll-journal-edit', args=(roll.id, entry.id)),
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Something is not right.', messages)

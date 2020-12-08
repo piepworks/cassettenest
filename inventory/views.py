@@ -1558,16 +1558,16 @@ def roll_journal_edit(request, roll_pk, entry_pk):
             try:
                 entry.save()
                 messages.success(request, 'Journal entry updated.')
-                return redirect(reverse('roll-detail', args=(roll.id,)))
+                return redirect(reverse('roll-journal-detail', args=(roll.id, entry.id)))
             except IntegrityError:
                 messages.error(request, 'Only one entry per date per roll.')
                 return redirect(
-                    reverse('roll-journal-edit', args=(roll.id, entry.id,))
+                    reverse('roll-journal-edit', args=(roll.id, entry.id))
                 )
         else:
             messages.error(request, 'Something is not right.')
             return redirect(
-                reverse('roll-journal-edit', args=(roll.id, entry.id,))
+                reverse('roll-journal-edit', args=(roll.id, entry.id))
             )
     else:
         form = JournalForm(instance=entry)
