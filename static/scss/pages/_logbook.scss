@@ -10,6 +10,7 @@
 .year-filter {
     list-style: none;
     padding: 0;
+    margin: 2rem 0;
 
     a { text-decoration: none; }
 
@@ -23,4 +24,34 @@
 
         &.current { border-color: $bw; }
     }
+}
+
+.status-filter {
+    ol {
+        margin: 2rem 0 0;
+        padding: 0;
+        display: flex;
+        list-style: none;
+    }
+
+    li a,
+    li span {
+        display: block;
+        padding: 0.5rem 1rem;
+    }
+
+    li span,
+    .description {
+        // color: $white;
+        background: $medium;
+    }
+
+    .description {
+        font-style: italic;
+        margin: 0;
+        padding: 1rem;
+    }
+
+    // If the year filter isn’t showing.
+    & + form { margin-top: 2rem; }
 }

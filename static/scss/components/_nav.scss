@@ -28,7 +28,7 @@ $logo-size: 35px;
 
         ul {
             margin: 0;
-            font-size: 0.6rem;
+            // font-size: 0.6rem;
 
             @include breakpoint('S') { font-size: 0.9rem; }
         }
@@ -44,4 +44,26 @@ $logo-size: 35px;
             &.feedback a { color: $gold; }
         }
     }
+}
+
+.c-status-nav {
+    background: $bw;
+    margin: 0;
+    padding: 1rem 2rem 1.5rem;
+    color: $white;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+
+    a {
+        color: $white;
+
+        &:hover {
+            background: $dark;
+        }
+    }
+
+    li + li { margin-left: 1rem; }
+
+    ol { display: none; }
 }

@@ -469,7 +469,7 @@ def inventory(request):
 def logbook(request):
     owner = request.user
     status = 0
-    description = ''
+    description = 'Everything that’s not in inventory.'
     rolls = Roll.objects.filter(owner=owner).exclude(
         status=status_number('storage')
     ).order_by(

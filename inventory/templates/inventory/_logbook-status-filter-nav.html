@@ -1,0 +1,57 @@
+<div class="status-filter">
+    <ol>
+        <li>
+            {% if 'status' in request.META.QUERY_STRING %}
+                <a href="{% url 'logbook' %}">All</a>
+            {% else %}
+                <span>All</span>
+            {% endif %}
+        </li>
+        <li>
+            {% if request.META.QUERY_STRING != 'status=loaded' %}
+                <a href="{% url 'logbook' %}?status=loaded">Loaded</a>
+            {% else %}
+                <span>Loaded</span>
+            {% endif %}
+        </li>
+        <li>
+            {% if request.META.QUERY_STRING != 'status=shot' %}
+                <a href="{% url 'logbook' %}?status=shot">Shot</a>
+            {% else %}
+                <span>Shot</span>
+            {% endif %}
+        </li>
+        <li>
+            {% if request.META.QUERY_STRING != 'status=processing' %}
+                <a href="{% url 'logbook' %}?status=processing">Processing</a>
+            {% else %}
+                <span>Processing</span>
+            {% endif %}
+        </li>
+        <li>
+            {% if request.META.QUERY_STRING != 'status=processed' %}
+                <a href="{% url 'logbook' %}?status=processed">Processed</a>
+            {% else %}
+                <span>Processed</span>
+            {% endif %}
+        </li>
+        <li>
+            {% if request.META.QUERY_STRING != 'status=scanned' %}
+                <a href="{% url 'logbook' %}?status=scanned">Scanned</a>
+            {% else %}
+                <span>Scanned</span>
+            {% endif %}
+        </li>
+        <li>
+            {% if request.META.QUERY_STRING != 'status=archived' %}
+                <a href="{% url 'logbook' %}?status=archived">Archived</a>
+            {% else %}
+                <span>Archived</span>
+            {% endif %}
+        </li>
+    </ol>
+
+    {% if description %}
+    <div class="description">{{ description }}</div>
+    {% endif %}
+</div>

@@ -7,36 +7,9 @@
 <div class="raw">
 <h1>Logbook</h1>
 
-<ul class="year-filter">
-{% if year %}
-    <li><a href="{% url 'logbook' %}">All years <small>({{ all_years_count }})</small></a></li>
-{% else %}
-    <li class="current">All years <small>({{ all_years_count }})</small></li>
-{% endif %}
-{% for key, value in all_years.items %}
-    {% if key|stringformat:'s' == year %}
-    <li class="current">{{ key }} <small>({{ value }})</small></li>
-    {% else %}
-    <li><a href="?year={{ key }}">{{ key }} <small>({{ value }})</small></a></li>
-    {% endif %}
-{% endfor %}
-</ul>
-
-<form method="get" class="do-not-print">
-    <select name="status">
-        <option value="0" {% if status == '0' %}selected{% endif %}>All rolls</option>
-        <option value="loaded" {% if status == 'loaded' %}selected{% endif %}>Loaded</option>
-        <option value="shot" {% if status == 'shot' %}selected{% endif %}>Shot</option>
-        <option value="processing" {% if status == 'processing' %}selected{% endif %}>Processing</option>
-        <option value="processed" {% if status == 'processed' %}selected{% endif %}>Processed</option>
-        <option value="scanned" {% if status == 'scanned' %}selected{% endif %}>Scanned</option>
-        <option value="archived" {% if status == 'archived' %}selected{% endif %}>Archived</option>
-    </select>
-    <input type="submit" value="Filter">
-</form>
-
-{% if description %}
-<p>{{ description }}</p>
+{% include 'inventory/_logbook-status-filter-nav.html' %}
+{% if 'status' not in request.META.QUERY_STRING %}
+    {% include 'inventory/_logbook-year-filter-nav.html' %}
 {% endif %}
 
 {% if rolls %}

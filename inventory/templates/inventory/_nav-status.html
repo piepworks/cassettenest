@@ -1,0 +1,44 @@
+{% url 'inventory' as inventory_url %}
+{% url 'index' as index_url %}
+{% url 'ready' as ready_url %}
+{% url 'logbook' as logbook_url %}
+
+<ol class="c-status-nav">
+    <li>
+        {% if request.path != inventory_url %}
+            <a href="{% url 'inventory' %}">Inventory</a>
+        {% else %}
+            <span>Inventory</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if request.path != index_url %}
+            <a href="{% url 'index' %}">Dashboard</a>
+        {% else %}
+            <span>Dashboard</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if request.path != ready_url %}
+            <a href="{% url 'ready' %}">Ready to process</a>
+        {% else %}
+            <span>Ready to process</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if request.path != logbook_url %}
+            <a href="{% url 'logbook' %}">▶ Logbook</a>
+        {% else %}
+            <span>▶ Logbook</span>
+        {% endif %}
+
+        <ol>
+            <li><a href="{% url 'logbook' %}?status=loaded">Loaded</a></li>
+            <li><a href="{% url 'logbook' %}?status=shot">Shot</a></li>
+            <li><a href="{% url 'logbook' %}?status=processing">Processing</a></li>
+            <li><a href="{% url 'logbook' %}?status=processed">Processed</a></li>
+            <li><a href="{% url 'logbook' %}?status=scanned">Scanned</a></li>
+            <li><a href="{% url 'logbook' %}?status=archived">Archived</a></li>
+        </ol>
+    </li>
+</ol>
