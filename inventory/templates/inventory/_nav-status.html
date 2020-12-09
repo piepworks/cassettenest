@@ -24,9 +24,9 @@
     </li>
     <li>
         {% if request.path != ready_url %}
-            <a href="{% url 'ready' %}">Ready to process</a>
+            <a href="{% url 'ready' %}">Ready<span> to Process</span></a>
         {% else %}
-            <span>Ready to process</span>
+            <span>Ready<span> to Process</span></span>
         {% endif %}
     </li>
     {% if logbook_url in request.path or 'roll/' in request.path%}

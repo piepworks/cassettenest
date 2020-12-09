@@ -49,12 +49,26 @@ $logo-size: 35px;
 .c-status-nav {
     background: $bw;
     margin: 0;
+    padding: 0;
     color: $white;
     list-style: none;
     display: flex;
     justify-content: center;
     align-items: stretch;
     border-bottom: 0.5rem solid $dark;
+    font-size: 0.8rem;
+
+    a span,
+    span span { display: none; }
+
+    @include breakpoint('S') {
+        font-size: unset;
+
+        a span,
+        span span { display: inline; }
+
+        li + li { margin-left: 0.5rem; }
+    }
 
     a {
         color: $white;
@@ -63,20 +77,20 @@ $logo-size: 35px;
     }
 
     a,
-    span {
+    li > span {
         display: block;
-        padding: 1rem;
         margin-top: 0.5rem;
+        padding: 0.75rem 1rem;
         border-top-left-radius: 0.25rem;
         border-top-right-radius: 0.25rem;
-    }
 
-    li + li { margin-left: 0.5rem; }
+        @include breakpoint('S') { padding: 1rem; }
+    }
 
     ol { display: none; }
 
     li.current a,
-    li span {
+    li > span {
         color: $white;
         background: $dark;
     }
