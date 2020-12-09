@@ -38,6 +38,9 @@ $logo-size: 35px;
             margin-left: 0.5rem;
             margin-bottom: 0;
 
+            // Currently selected item.
+            span { color: $bw; }
+
             &:first-child { margin-left: 0; }
 
             &.admin a,

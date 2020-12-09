@@ -6,6 +6,8 @@
     {% if user.is_authenticated %}
         {% if request.path != settings_url %}
         <li><a href="{% url 'settings' %}">Settings</a></li>
+        {% else %}
+        <li><span>Settings</span></li>
         {% endif %}
         {% if user.is_superuser %}
         <li class="admin"><a href="{% url 'admin:index' %}">Admin</a></li>
