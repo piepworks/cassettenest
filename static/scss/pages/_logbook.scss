@@ -38,12 +38,13 @@
     li span {
         display: block;
         padding: 0.5rem 1rem;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
     }
 
     li span,
     .description {
-        // color: $white;
-        background: $medium;
+        background: $light;
     }
 
     .description {
