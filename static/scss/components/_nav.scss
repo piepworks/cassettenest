@@ -49,21 +49,37 @@ $logo-size: 35px;
 .c-status-nav {
     background: $bw;
     margin: 0;
-    padding: 1rem 2rem 1.5rem;
     color: $white;
     list-style: none;
     display: flex;
     justify-content: center;
+    align-items: stretch;
+    border-bottom: 0.5rem solid $dark;
 
     a {
         color: $white;
 
-        &:hover {
-            background: $dark;
-        }
+        &:hover { background: rgba(0, 0, 0, 0.2); }
     }
 
-    li + li { margin-left: 1rem; }
+    a,
+    span {
+        display: block;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+    }
+
+    li + li { margin-left: 0.5rem; }
 
     ol { display: none; }
+
+    li.current a,
+    li span {
+        color: $white;
+        background: $dark;
+    }
+
+    li.current a:hover { text-decoration: none; }
 }

@@ -4,7 +4,11 @@
 {% url 'logbook' as logbook_url %}
 
 <ol class="c-status-nav">
+    {% if inventory_url in request.path or 'rolls/' in request.path %}
+    <li class="current">
+    {% else %}
     <li>
+    {% endif %}
         {% if request.path != inventory_url %}
             <a href="{% url 'inventory' %}">Inventory</a>
         {% else %}
@@ -25,7 +29,11 @@
             <span>Ready to process</span>
         {% endif %}
     </li>
+    {% if logbook_url in request.path or 'roll/' in request.path%}
+    <li class="current">
+    {% else %}
     <li>
+    {% endif %}
         {% if request.path != logbook_url %}
             <a href="{% url 'logbook' %}">Logbook</a>
         {% else %}
