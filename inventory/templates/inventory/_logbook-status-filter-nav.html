@@ -1,49 +1,49 @@
 <div class="status-filter">
     <ol>
         <li>
-            {% if 'status' in request.META.QUERY_STRING %}
+            {% if 'status' in querystring %}
                 <a href="{% url 'logbook' %}">All</a>
             {% else %}
                 <span>All</span>
             {% endif %}
         </li>
         <li>
-            {% if request.META.QUERY_STRING != 'status=loaded' %}
+            {% if querystring != 'status=loaded' %}
                 <a href="{% url 'logbook' %}?status=loaded">Loaded</a>
             {% else %}
                 <span>Loaded</span>
             {% endif %}
         </li>
         <li>
-            {% if request.META.QUERY_STRING != 'status=shot' %}
+            {% if querystring != 'status=shot' %}
                 <a href="{% url 'logbook' %}?status=shot">Shot</a>
             {% else %}
                 <span>Shot</span>
             {% endif %}
         </li>
         <li>
-            {% if request.META.QUERY_STRING != 'status=processing' %}
+            {% if querystring != 'status=processing' %}
                 <a href="{% url 'logbook' %}?status=processing">Processing</a>
             {% else %}
                 <span>Processing</span>
             {% endif %}
         </li>
         <li>
-            {% if request.META.QUERY_STRING != 'status=processed' %}
+            {% if querystring != 'status=processed' %}
                 <a href="{% url 'logbook' %}?status=processed">Processed</a>
             {% else %}
                 <span>Processed</span>
             {% endif %}
         </li>
         <li>
-            {% if request.META.QUERY_STRING != 'status=scanned' %}
+            {% if querystring != 'status=scanned' %}
                 <a href="{% url 'logbook' %}?status=scanned">Scanned</a>
             {% else %}
                 <span>Scanned</span>
             {% endif %}
         </li>
         <li>
-            {% if request.META.QUERY_STRING != 'status=archived' %}
+            {% if querystring != 'status=archived' %}
                 <a href="{% url 'logbook' %}?status=archived">Archived</a>
             {% else %}
                 <span>Archived</span>
