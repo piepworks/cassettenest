@@ -7,20 +7,42 @@
     p { margin-top: 0; }
 }
 
-.year-filter {
+.year-filter,
+.status-filter {
+    background: $light;
     list-style: none;
     padding: 0;
+    margin: 0;
 
-    a { text-decoration: none; }
+    li { display: inline-block; }
 
-    li {
-        margin-right: 1.5rem;
-        display: inline-block;
-        padding-bottom: 0.25rem;
-        border-bottom: 0.25rem solid transparent;
+    li span,
+    a:hover { background: $medium; }
 
-        &:last-child { margin-right: 0; }
-
-        &.current { border-color: $bw; }
+    li a,
+    li span {
+        padding: 0.75rem 1rem;
+        display: block;
     }
+}
+
+.year-filter {
+    margin-bottom: 2rem;
+    background: $light;
+    border-top: 1px solid $medium;
+}
+
+.status-filter {
+    margin-top: 2rem;
+    border-bottom: 1px solid $medium;
+}
+
+.status-description {
+    background: $light;
+    font-style: italic;
+    margin: 0;
+    padding: 1rem;
+
+    // If the year filter isn’t showing.
+    & + form { margin-top: 2rem; }
 }

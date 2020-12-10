@@ -6,18 +6,21 @@
 {% include 'inventory/_onboarding.html' %}
 {% endif %}
 
-{% if projects_current %}
 <section>
-    <h2 class="c-heading c-heading--divider">Projects</h2>
-    {% for project in projects_current %}
-        {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot='count' count=project.get_rolls_remaining %}
-    {% endfor %}
+    <h2 class="c-heading c-heading--divider"><a href="{% url 'projects' %}">Projects</a></h2>
+    {% if projects_current %}
+        {% for project in projects_current %}
+            {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot='count' count=project.get_rolls_remaining %}
+        {% endfor %}
+    {% else %}
+        {% url 'project-add' as project_add_url %}
+        {% include 'inventory/_card.html' with name='No current projects. Add a new one.' location=project_add_url type='blank' %}
+    {% endif %}
 </section>
-{% endif %}
 
 {% if rolls_loaded %}
 <section>
-    <h2 class="c-heading c-heading--divider">Loaded Cameras</h2>
+    <h2 class="c-heading c-heading--divider"><a href="{% url 'cameras' %}">Loaded</a></h2>
     {% for roll in rolls_loaded %}
         {% url 'roll-detail' roll.id as roll_detail %}
         {% if roll.camera_back %}
@@ -31,7 +34,7 @@
 
 {% if cameras_empty or camera_backs_empty %}
 <section>
-    <h2 class="c-heading c-heading--divider">Ready to Load</h2>
+    <h2 class="c-heading c-heading--divider"><a href="{% url 'cameras' %}">Ready to Load</a></h2>
     {% if cameras_empty %}
     {% for camera in cameras_empty %}
         {% url 'camera-load' camera.id as camera_load %}
@@ -46,32 +49,4 @@
     {% endif %}
 </section>
 {% endif %}
-
-<section>
-    <h2 class="c-heading c-heading--divider">Inventory</h2>
-    {# Inventory #}
-    {% url 'ready' as ready_url %}
-    {% url 'inventory' as inventory_url %}
-    {% url 'projects' as projects_url %}
-    {% url 'cameras' as cameras_url %}
-    {% url 'logbook' as logbook_url %}
-
-    {% include 'inventory/_card.html' with name='Ready to process' location=ready_url slot='count' count=rolls_ready_count %}
-    {% include 'inventory/_card.html' with name='Rolls available' location=inventory_url slot='count' count=rolls_storage_count %}
-    {% include 'inventory/_card.html' with name='Projects' location=projects_url slot='count' count=projects_count %}
-    {% include 'inventory/_card.html' with name='Cameras' location=cameras_url slot='count' count=cameras_total.count %}
-    {% include 'inventory/_card.html' with name='Logbook' location=logbook_url %}
-
-    <h2 class="c-heading c-heading--divider">Add to Inventory</h2>
-    {# Add #}
-    {% url 'camera-add' as camera_add_url %}
-    {% url 'roll-add' as roll_add_url %}
-    {% url 'rolls-add' as rolls_add_url %}
-    {% url 'project-add' as project_add_url %}
-
-    {% include 'inventory/_card.html' with name='+ Add rolls to storage' location=rolls_add_url %}
-    {% include 'inventory/_card.html' with name='+ Add rolls to logbook' location=roll_add_url %}
-    {% include 'inventory/_card.html' with name='+ Add a camera' location=camera_add_url %}
-    {% include 'inventory/_card.html' with name='+ Add a project' location=project_add_url %}
-</section>
 {% endblock %}

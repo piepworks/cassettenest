@@ -116,6 +116,15 @@ bulk_status_keys = [
     key for key in valid_statuses if key not in special_keys['not_bulk']
 ]
 
+# The default bulk update option when you’re looking at a given status.
+bulk_status_next_keys = {
+    'shot': 'processing',
+    'processing': 'processed',
+    'processed': 'scanned',
+    'scanned': 'archived',
+    'archived': 'scanned',
+}
+
 
 def status_number(status):
     "Return the status number/order from its name."

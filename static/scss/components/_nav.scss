@@ -28,7 +28,6 @@ $logo-size: 35px;
 
         ul {
             margin: 0;
-            font-size: 0.6rem;
 
             @include breakpoint('S') { font-size: 0.9rem; }
         }
@@ -38,10 +37,64 @@ $logo-size: 35px;
             margin-left: 0.5rem;
             margin-bottom: 0;
 
+            // Currently selected item.
+            span { color: $bw; }
+
             &:first-child { margin-left: 0; }
 
             &.admin a,
             &.feedback a { color: $gold; }
         }
     }
+}
+
+.c-status-nav {
+    background: $bw;
+    margin: 0 0 0.5rem;
+    padding: 0;
+    color: $white;
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    font-size: 0.8rem;
+
+    a span,
+    span span { display: none; }
+
+    @include breakpoint('S') {
+        font-size: unset;
+
+        a span,
+        span span { display: inline; }
+
+        li + li { margin-left: 0.5rem; }
+    }
+
+    a {
+        color: $white;
+
+        &:hover { background: rgba(0, 0, 0, 0.2); }
+    }
+
+    a,
+    li > span {
+        display: block;
+        margin-top: 0.5rem;
+        padding: 0.75rem 1rem;
+        border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+
+        @include breakpoint('S') { padding: 1rem; }
+    }
+
+    ol { display: none; }
+
+    li.current a,
+    li > span {
+        color: $dark;
+        background: $white;
+    }
+
+    li.current a:hover { text-decoration: none; }
 }

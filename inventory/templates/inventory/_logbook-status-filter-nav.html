@@ -1,0 +1,61 @@
+{% spaceless %}
+<ol class="status-filter">
+    <li>
+        {% if 'status' in querystring %}
+            <a href="{% url 'logbook' %}">All</a>
+        {% else %}
+            <span>All</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if querystring != 'status=loaded' %}
+            <a href="{% url 'logbook' %}?status=loaded">Loaded</a>
+        {% else %}
+            <span>Loaded</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if querystring != 'status=shot' %}
+            <a href="{% url 'logbook' %}?status=shot">Shot</a>
+        {% else %}
+            <span>Shot</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if querystring != 'status=processing' %}
+            <a href="{% url 'logbook' %}?status=processing">Processing</a>
+        {% else %}
+            <span>Processing</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if querystring != 'status=processed' %}
+            <a href="{% url 'logbook' %}?status=processed">Processed</a>
+        {% else %}
+            <span>Processed</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if querystring != 'status=scanned' %}
+            <a href="{% url 'logbook' %}?status=scanned">Scanned</a>
+        {% else %}
+            <span>Scanned</span>
+        {% endif %}
+    </li>
+    <li>
+        {% if querystring != 'status=archived' %}
+            <a href="{% url 'logbook' %}?status=archived">Archived</a>
+        {% else %}
+            <span>Archived</span>
+        {% endif %}
+    </li>
+</ol>
+{% endspaceless %}
+
+{% if description %}
+<div class="status-description">{{ description }}</div>
+{% endif %}
+
+{% if 'status' not in querystring %}
+    {% include 'inventory/_logbook-year-filter-nav.html' %}
+{% endif %}

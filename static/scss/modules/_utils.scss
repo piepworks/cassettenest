@@ -51,7 +51,7 @@ $divider-width: 0.2rem;
 .raw {
     $raw-padding: 1.25rem;
     padding: $raw-padding;
-    padding-top: 0;
+    padding-top: $raw-padding/2;
 
     // Let the slightly more sophisticated Card and Heading styles break out of
     // the .raw padding.

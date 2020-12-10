@@ -26,6 +26,15 @@
         color: $light;
         font-weight: normal;
         background-color: $dark;
+
+        a {
+            color: $white;
+
+            &:hover {
+                background: none;
+                text-decoration: none;
+            }
+        }
     }
 
     .flex {

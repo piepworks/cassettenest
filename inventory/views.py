@@ -47,6 +47,7 @@ from .utils import (
     status_description,
     status_keys,
     status_number,
+    bulk_status_next_keys,
 )
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
@@ -469,7 +470,7 @@ def inventory(request):
 def logbook(request):
     owner = request.user
     status = 0
-    description = ''
+    description = 'Everything that’s not in inventory.'
     rolls = Roll.objects.filter(owner=owner).exclude(
         status=status_number('storage')
     ).order_by(
@@ -502,6 +503,10 @@ def logbook(request):
     paginator = Paginator(rolls, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    bulk_status_next = ''
+
+    if status in bulk_status_keys:
+        bulk_status_next = bulk_status_next_keys[status]
 
     context = {
         'owner': owner,
@@ -512,7 +517,8 @@ def logbook(request):
         'year': year,
         'all_years': all_years,
         'all_years_count': all_years_count,
-        'bulk_status_keys': bulk_status_keys
+        'bulk_status_keys': bulk_status_keys,
+        'bulk_status_next': bulk_status_next,
     }
 
     return render(request, 'inventory/logbook.html', context)

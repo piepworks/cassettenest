@@ -1,0 +1,16 @@
+{% spaceless %}
+<ol class="year-filter">
+    {% if year %}
+        <li><a href="{% url 'logbook' %}">All years <small>({{ all_years_count }})</small></a></li>
+    {% else %}
+        <li><span>All years <small>({{ all_years_count }})</small></span></li>
+    {% endif %}
+    {% for key, value in all_years.items %}
+        {% if key|stringformat:'s' == year %}
+            <li class="current"><span>{{ key }} <small>({{ value }})</small></span></li>
+        {% else %}
+            <li><a href="?year={{ key }}">{{ key }} <small>({{ value }})</small></a></li>
+        {% endif %}
+    {% endfor %}
+</ol>
+{% endspaceless %}
