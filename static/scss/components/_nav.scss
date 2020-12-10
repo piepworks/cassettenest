@@ -28,7 +28,6 @@ $logo-size: 35px;
 
         ul {
             margin: 0;
-            // font-size: 0.6rem;
 
             @include breakpoint('S') { font-size: 0.9rem; }
         }
@@ -51,14 +50,13 @@ $logo-size: 35px;
 
 .c-status-nav {
     background: $bw;
-    margin: 0;
+    margin: 0 0 0.5rem;
     padding: 0;
     color: $white;
     list-style: none;
     display: flex;
     justify-content: center;
     align-items: stretch;
-    border-bottom: 0.5rem solid $dark;
     font-size: 0.8rem;
 
     a span,
@@ -94,8 +92,8 @@ $logo-size: 35px;
 
     li.current a,
     li > span {
-        color: $white;
-        background: $dark;
+        color: $dark;
+        background: $white;
     }
 
     li.current a:hover { text-decoration: none; }

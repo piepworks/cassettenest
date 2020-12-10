@@ -27,7 +27,6 @@
             {% endif %}
             {% include 'inventory/_nav.html' %}
         </header>
-        {% include 'inventory/_messages.html' %}
         {% if request.path == index_url and not user.is_authenticated %}
         <div class="icon">
             <img src="{% static 'img/full-icon.svg' %}" height="200" width="200" alt="Cassette Nest Icon" />
@@ -35,6 +34,7 @@
         {% endif %}
 
         {% include 'inventory/_nav-status.html' %}
+        {% include 'inventory/_messages.html' %}
 
         <main>
             {% block content %}
