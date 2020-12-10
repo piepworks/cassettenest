@@ -11,7 +11,7 @@ from django.utils import timezone
 from freezegun import freeze_time
 from model_bakery import baker
 from inventory.models import Roll, Camera, CameraBack, Project, Journal
-from inventory.utils import status_number
+from inventory.utils import status_number, bulk_status_next_keys, status_description
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
@@ -189,12 +189,14 @@ class LogbookTests(TestCase):
         self.assertContains(response, 'Logbook', html=True)
 
     def test_status_logbook_page(self):
+        status = 'shot'
         response = self.client.get(reverse('logbook'), data={
-            'status': 'shot',
+            'status': status,
         })
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Ready to be developed.', html=True)
+        self.assertContains(response, status_description(status), html=True)
+        self.assertEqual(response.context['bulk_status_next'], bulk_status_next_keys[status])
 
     def test_storage_status_logbook_redirect(self):
         response = self.client.get(reverse('logbook'), data={
