@@ -482,6 +482,15 @@ def logbook(request):
     year = ''
     all_years = {}
     all_years_count = rolls.count()
+    status_counts = {
+        'all': rolls.count(),
+        'loaded': rolls.filter(status=status_number('loaded')).count(),
+        'shot': rolls.filter(status=status_number('shot')).count(),
+        'processing': rolls.filter(status=status_number('processing')).count(),
+        'processed': rolls.filter(status=status_number('processed')).count(),
+        'scanned': rolls.filter(status=status_number('scanned')).count(),
+        'archived': rolls.filter(status=status_number('archived')).count(),
+    }
 
     for y in rolls.dates('started_on', 'year'):
         count = rolls.filter(started_on__year=y.year).count()
@@ -519,6 +528,7 @@ def logbook(request):
         'all_years_count': all_years_count,
         'bulk_status_keys': bulk_status_keys,
         'bulk_status_next': bulk_status_next,
+        'status_counts': status_counts,
     }
 
     return render(request, 'inventory/logbook.html', context)

@@ -197,6 +197,7 @@ class LogbookTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, status_description(status), html=True)
         self.assertEqual(response.context['bulk_status_next'], bulk_status_next_keys[status])
+        self.assertEqual(response.context['status_counts']['shot'], 1)
 
     def test_storage_status_logbook_redirect(self):
         response = self.client.get(reverse('logbook'), data={

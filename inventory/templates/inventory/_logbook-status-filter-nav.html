@@ -2,51 +2,51 @@
 <ol class="status-filter">
     <li>
         {% if 'status' in querystring %}
-            <a href="{% url 'logbook' %}">All</a>
+            <a href="{% url 'logbook' %}">All <small>({{ status_counts.all }})</small></a>
         {% else %}
-            <span>All</span>
+            <span>All <small>({{ status_counts.all }})</small></span>
         {% endif %}
     </li>
     <li>
         {% if querystring != 'status=loaded' %}
-            <a href="{% url 'logbook' %}?status=loaded">Loaded</a>
+            <a href="{% url 'logbook' %}?status=loaded">Loaded <small>({{ status_counts.loaded }})</small></a>
         {% else %}
-            <span>Loaded</span>
+            <span>Loaded <small>({{ status_counts.loaded }})</small></span>
         {% endif %}
     </li>
     <li>
         {% if querystring != 'status=shot' %}
-            <a href="{% url 'logbook' %}?status=shot">Shot</a>
+            <a href="{% url 'logbook' %}?status=shot">Shot <small>({{ status_counts.shot }})</small></a>
         {% else %}
-            <span>Shot</span>
+            <span>Shot <small>({{ status_counts.shot }})</small></span>
         {% endif %}
     </li>
     <li>
         {% if querystring != 'status=processing' %}
-            <a href="{% url 'logbook' %}?status=processing">Processing</a>
+            <a href="{% url 'logbook' %}?status=processing">Processing <small>({{ status_counts.processing }})</small></a>
         {% else %}
-            <span>Processing</span>
+            <span>Processing <small>({{ status_counts.processing }})</small></span>
         {% endif %}
     </li>
     <li>
         {% if querystring != 'status=processed' %}
-            <a href="{% url 'logbook' %}?status=processed">Processed</a>
+            <a href="{% url 'logbook' %}?status=processed">Processed <small>({{ status_counts.processed }})</small></a>
         {% else %}
-            <span>Processed</span>
+            <span>Processed <small>({{ status_counts.processed }})</small></span>
         {% endif %}
     </li>
     <li>
         {% if querystring != 'status=scanned' %}
-            <a href="{% url 'logbook' %}?status=scanned">Scanned</a>
+            <a href="{% url 'logbook' %}?status=scanned">Scanned <small>({{ status_counts.scanned }})</small></a>
         {% else %}
-            <span>Scanned</span>
+            <span>Scanned <small>({{ status_counts.scanned }})</small></span>
         {% endif %}
     </li>
     <li>
         {% if querystring != 'status=archived' %}
-            <a href="{% url 'logbook' %}?status=archived">Archived</a>
+            <a href="{% url 'logbook' %}?status=archived">Archived <small>({{ status_counts.archived }})</small></a>
         {% else %}
-            <span>Archived</span>
+            <span>Archived <small>({{ status_counts.archived }})</small></span>
         {% endif %}
     </li>
 </ol>
