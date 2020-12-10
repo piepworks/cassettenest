@@ -15,7 +15,7 @@
         {% csrf_token %}
         <div class="bulk-status do-not-print">
             <p>Bulk update the status of these rolls.</p>
-            {% include 'inventory/_form-status.html' with page='logbook' current_status=status %}
+            {% include 'inventory/_form-status.html' with page='logbook' current_status=status updated_status=bulk_status_next %}
         </div>
     {% endif %}
 
