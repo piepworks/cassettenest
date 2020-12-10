@@ -43,7 +43,8 @@
         {% else %}
             <span>Logbook</span>
         {% endif %}
-
+        {% comment %}
+        <!-- This is for a dropdown that doesn’t exist and may never. -->
         <ol>
             <li><a href="{% url 'logbook' %}?status=loaded">Loaded</a></li>
             <li><a href="{% url 'logbook' %}?status=shot">Shot</a></li>
@@ -52,5 +53,6 @@
             <li><a href="{% url 'logbook' %}?status=scanned">Scanned</a></li>
             <li><a href="{% url 'logbook' %}?status=archived">Archived</a></li>
         </ol>
+        {% endcomment %}
     </li>
 </ol>
