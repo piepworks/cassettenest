@@ -4,6 +4,13 @@
 {% url 'logbook' as logbook_url %}
 
 <ol class="c-status-nav">
+    <li>
+        {% if request.path != index_url %}
+            <a href="{% url 'index' %}">Dashboard</a>
+        {% else %}
+            <span>Dashboard</span>
+        {% endif %}
+    </li>
     {% if inventory_url in request.path or 'rolls/' in request.path %}
     <li class="current">
     {% else %}
@@ -13,13 +20,6 @@
             <a href="{% url 'inventory' %}">Inventory</a>
         {% else %}
             <span>Inventory</span>
-        {% endif %}
-    </li>
-    <li>
-        {% if request.path != index_url %}
-            <a href="{% url 'index' %}">Dashboard</a>
-        {% else %}
-            <span>Dashboard</span>
         {% endif %}
     </li>
     <li>
