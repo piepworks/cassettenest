@@ -2,8 +2,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a title="First page" href="?page=1{{ pagination_querystring.status }}{{ pagination_querystring.year }}">«</a>
-            <a title="Previous page" href="?page={{ page_obj.previous_page_number }}{{ pagination_querystring.status }}{{ pagination_querystring.year }}">‹</a>
+            <a title="First page" href="?page=1{{ pagination_querystring }}">«</a>
+            <a title="Previous page" href="?page={{ page_obj.previous_page_number }}{{ pagination_querystring }}">‹</a>
         {% else %}
             <span title="No previous page" class="placeholder">«</span>
             <span title="No previous page" class="placeholder">‹</span>
@@ -14,8 +14,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a title="Next page" href="?page={{ page_obj.next_page_number }}{{ pagination_querystring.status }}{{ pagination_querystring.year }}">›</a>
-            <a title="Last page" href="?page={{ page_obj.paginator.num_pages }}{{ pagination_querystring.status }}{{ pagination_querystring.year }}">»</a>
+            <a title="Next page" href="?page={{ page_obj.next_page_number }}{{ pagination_querystring }}">›</a>
+            <a title="Last page" href="?page={{ page_obj.paginator.num_pages }}{{ pagination_querystring }}">»</a>
         {% else %}
             <span title="No next page" class="placeholder">›</span>
             <span title="No next page" class="placeholder">»</span>

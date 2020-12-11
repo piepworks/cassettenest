@@ -482,10 +482,7 @@ def logbook(request):
     year = ''
     all_years = {}
     all_years_count = rolls.count()
-    pagination_querystring = {
-        'status': '',
-        'year': '',
-    }
+    pagination_querystring = ''
     status_counts = {
         'all': rolls.count(),
         'loaded': rolls.filter(status=status_number('loaded')).count(),
@@ -502,7 +499,7 @@ def logbook(request):
 
     if request.GET.get('status') and request.GET.get('status') in status_keys:
         status = request.GET.get('status')
-        pagination_querystring['status'] = f'&status={status}'
+        pagination_querystring += f'&status={status}'
         if status == 'storage':
             return redirect(reverse('inventory'))
         else:
@@ -511,7 +508,7 @@ def logbook(request):
 
     if request.GET.get('year'):
         year = request.GET.get('year')
-        pagination_querystring['year'] = f'&year={year}'
+        pagination_querystring += f'&year={year}'
         rolls = rolls.filter(started_on__year=year)
 
     # Pagination / 20 per page
