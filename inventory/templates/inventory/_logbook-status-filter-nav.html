@@ -8,42 +8,42 @@
         {% endif %}
     </li>
     <li>
-        {% if querystring != 'status=loaded' %}
+        {% if 'status=loaded' not in querystring %}
             <a href="{% url 'logbook' %}?status=loaded">Loaded <small>({{ status_counts.loaded }})</small></a>
         {% else %}
             <span>Loaded <small>({{ status_counts.loaded }})</small></span>
         {% endif %}
     </li>
     <li>
-        {% if querystring != 'status=shot' %}
+        {% if 'status=shot' not in querystring %}
             <a href="{% url 'logbook' %}?status=shot">Shot <small>({{ status_counts.shot }})</small></a>
         {% else %}
             <span>Shot <small>({{ status_counts.shot }})</small></span>
         {% endif %}
     </li>
     <li>
-        {% if querystring != 'status=processing' %}
+        {% if 'status=processing' not in querystring %}
             <a href="{% url 'logbook' %}?status=processing">Processing <small>({{ status_counts.processing }})</small></a>
         {% else %}
             <span>Processing <small>({{ status_counts.processing }})</small></span>
         {% endif %}
     </li>
     <li>
-        {% if querystring != 'status=processed' %}
+        {% if 'status=processed' not in querystring %}
             <a href="{% url 'logbook' %}?status=processed">Processed <small>({{ status_counts.processed }})</small></a>
         {% else %}
             <span>Processed <small>({{ status_counts.processed }})</small></span>
         {% endif %}
     </li>
     <li>
-        {% if querystring != 'status=scanned' %}
+        {% if 'status=scanned' not in querystring %}
             <a href="{% url 'logbook' %}?status=scanned">Scanned <small>({{ status_counts.scanned }})</small></a>
         {% else %}
             <span>Scanned <small>({{ status_counts.scanned }})</small></span>
         {% endif %}
     </li>
     <li>
-        {% if querystring != 'status=archived' %}
+        {% if 'status=archived' not in querystring %}
             <a href="{% url 'logbook' %}?status=archived">Archived <small>({{ status_counts.archived }})</small></a>
         {% else %}
             <span>Archived <small>({{ status_counts.archived }})</small></span>
