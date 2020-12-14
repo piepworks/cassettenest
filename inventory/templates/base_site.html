@@ -33,7 +33,10 @@
         </div>
         {% endif %}
 
+        {% if user.is_authenticated %}
         {% include 'inventory/_nav-status.html' %}
+        {% endif %}
+
         {% include 'inventory/_messages.html' %}
 
         <main>
