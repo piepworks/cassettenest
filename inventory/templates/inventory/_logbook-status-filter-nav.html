@@ -60,6 +60,6 @@
     {% include 'inventory/_logbook-year-filter-nav.html' %}
 {% endif %}
 
-{% if querystring == 'status=shot' %}
+{% if querystring == 'status=shot' and rolls %}
 <p>View <a href="{% url 'ready' %}">these rolls on your “Ready to Process” page</a> to easily add lab information.</p>
 {% endif %}
