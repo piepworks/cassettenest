@@ -713,3 +713,65 @@ class ReadyTests(TestCase):
         response = self.client.get(reverse('ready'))
 
         self.assertEqual(response.context['js_needed'], True)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class RollsUpdateTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        cls.camera = baker.make(Camera, owner=cls.user)
+        baker.make(
+            Roll,
+            owner=cls.user,
+            status=status_number('processing'),
+            started_on=cls.today,
+            camera=cls.camera,
+        )
+        baker.make(
+            Roll,
+            owner=cls.user,
+            status=status_number('processing'),
+            started_on=cls.today,
+            camera=cls.camera,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_update_rolls_to_processed(self):
+        rolls = Roll.objects.filter(owner=self.user, status=status_number('processing'))
+        roll_ids = list(roll.id for roll in rolls)
+
+        response = self.client.post(reverse('rolls-update'), data={
+            'current_status': 'processing',
+            'updated_status': bulk_status_next_keys['processing'],
+            'roll': roll_ids,
+            'lab': 'Home',
+            'scanner': 'Epson V600',
+            'notes_on_development': 'I enjoy this tedium.',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('2 rolls updated from processing to processed!', messages)
+
+    def test_update_rolls_errors(self):
+        # Neither of these statuses are are `bulk_status`es.
+        response = self.client.post(reverse('rolls-update'), data={
+            'current_status': 'storage',
+            'updated_status': 'loaded',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Something is amiss.', messages)

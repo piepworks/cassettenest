@@ -738,11 +738,8 @@ def rolls_update(request):
         lab = form.cleaned_data['lab']
         scanner = form.cleaned_data['scanner']
         notes_on_development = form.cleaned_data['notes_on_development']
-    else:
-        messages.error(request, 'Something is not right.')
-        return redirect(reverse('ready'),)
 
-    if updated_status in bulk_status_keys:
+    if current_status in bulk_status_keys and updated_status in bulk_status_keys:
         # Bulk update selected rows.
         # Verify that the selected row IDs belong to request.user.
         roll_count = 0

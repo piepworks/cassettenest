@@ -122,7 +122,7 @@ class JournalForm(ModelForm):
 class ReadyForm(forms.Form):
     lab = forms.CharField(
         required=False,
-        help_text=mark_safe('Or &ldquo;Self&rdquo;, &ldquo;Home&rdquo;, etc.')
+        help_text='Or “Self”, “Home”, etc.'
     )
     scanner = forms.CharField(required=False)
     notes_on_development = forms.CharField(
