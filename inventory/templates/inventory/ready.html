@@ -8,6 +8,8 @@
 {% if rolls.all %}
 <h2>You have {{ rolls.all }} roll{{ rolls.all|pluralize }} ready to process.</h2>
 
+<p>View <a href="{% url 'logbook' %}?status=shot">these rolls in your Logbook</a>.</p>
+
 <div class="overflow-x">
     <table class="ready">
         <thead>

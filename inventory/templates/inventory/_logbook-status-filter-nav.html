@@ -59,3 +59,7 @@
 {% if 'status' not in querystring %}
     {% include 'inventory/_logbook-year-filter-nav.html' %}
 {% endif %}
+
+{% if querystring == 'status=shot' %}
+<p>View <a href="{% url 'ready' %}">these rolls on your “Ready to Process” page</a> to easily add lab information.</p>
+{% endif %}
