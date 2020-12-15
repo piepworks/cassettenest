@@ -41,6 +41,8 @@ table {
 
         .push-pull td { color: $medium-dark; }
     }
+
+    input[type=checkbox] { margin: 0 0.5rem; }
 }
 
 .select-all {

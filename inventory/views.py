@@ -533,6 +533,7 @@ def logbook(request):
         'bulk_status_next': bulk_status_next,
         'status_counts': status_counts,
         'pagination_querystring': pagination_querystring,
+        'js_needed': True,
     }
 
     return render(request, 'inventory/logbook.html', context)
@@ -660,7 +661,8 @@ def ready(request):
         'form': form,
         'rolls': ready_counts,
         'page_obj': page_obj,
-        'bulk_status_keys': bulk_status_keys
+        'bulk_status_keys': bulk_status_keys,
+        'js_needed': True,
     }
 
     return render(request, 'inventory/ready.html', context)

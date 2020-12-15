@@ -54,4 +54,12 @@ input[type=submit] {
 
         &-destructive:hover { fill: darken($destructive, 10%); }
     }
+
+    &[disabled] {
+        color: $medium-dark;
+        background: $medium;
+        border-color: transparent;
+        box-shadow: 1px 1px 5px transparent;
+        cursor: not-allowed;
+    }
 }
