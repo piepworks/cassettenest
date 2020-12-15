@@ -774,9 +774,6 @@ def rolls_update(request):
     else:
         messages.error(request, 'Something is amiss.')
 
-    if request.POST.get('redirect_to') == 'dashboard':
-        return redirect(reverse('dashboard'))
-
     return redirect(reverse('logbook') + '?status=%s' % updated_status)
 
 
