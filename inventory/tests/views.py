@@ -215,6 +215,11 @@ class LogbookTests(TestCase):
         self.assertEqual(response.context['year'], str(self.today.year))
         self.assertEqual(len(response.context['rolls']), 1)
 
+    def test_js_needed(self):
+        response = self.client.get(reverse('logbook'))
+
+        self.assertEqual(response.context['js_needed'], True)
+
 
 class ExportTests(TestCase):
     @classmethod
@@ -665,3 +670,46 @@ class JournalTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('Something is not right.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class ReadyTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_empty_ready_page(self):
+        response = self.client.get(reverse('ready'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No rolls ready to process.', html=True)
+
+    def test_ready_page_with_a_roll(self):
+        baker.make(
+            Roll,
+            owner=self.user,
+            status=status_number('shot'),
+            started_on=self.today,
+            camera=baker.make(Camera),
+        )
+        response = self.client.get(reverse('ready'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'You have 1 roll ready to process.', html=True)
+
+    def test_js_needed(self):
+        response = self.client.get(reverse('ready'))
+
+        self.assertEqual(response.context['js_needed'], True)
