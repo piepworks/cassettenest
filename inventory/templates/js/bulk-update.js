@@ -1,4 +1,3 @@
-<script>
 function updateButtonText() {
     // This is especially crude because we’re assuming only one table on the page.
     const $tbody = $('tbody');
@@ -36,4 +35,3 @@ $('tbody input[type=checkbox]').change(() => {
 
 // Update the button text on page load.
 updateButtonText();
-</script>
