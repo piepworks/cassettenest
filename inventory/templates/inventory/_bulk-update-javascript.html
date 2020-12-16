@@ -29,7 +29,7 @@ $('.select-all').change((e) => {
     updateButtonText();
 });
 
-$('tbody input[type=checkbox]').change((e) => {
+$('tbody input[type=checkbox]').change(() => {
     $('.select-all').prop('checked', false);
     updateButtonText();
 });
