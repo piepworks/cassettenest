@@ -53,7 +53,7 @@
     </ul>
     {% endflag %}
 
-{% if user.is_staff %}
+{% flag 'stripe' %}
     <hr />
 
     <h2>Manage your subscription</h2>
@@ -117,7 +117,7 @@
         {% endfor %}
         </ul>
     {% endif %}
-{% endif %}
+{% endflag %}
 </div>
 {% endblock %}
 
