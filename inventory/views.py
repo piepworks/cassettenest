@@ -270,6 +270,7 @@ class PurchaseSubscriptionView(FormView):
         ctx['payment_method'] = payment_method
         ctx['owner'] = self.request.user
         ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
+        ctx['prices'] = djstripe.models.Price.objects.filter(active=True)
         ctx['js_needed'] = True
 
         return ctx

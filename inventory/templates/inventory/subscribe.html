@@ -7,23 +7,37 @@
 <div class="raw">
     <h1>Subscribe</h1>
 
-    {% if owner.profile.has_active_subscription %}
-        <p>You’re already subscribed!</p>
-        <p>View <a href="{% url 'settings' %}">your settings</a> to make changes.</p>
-    {% endif %}
+    <div class="js-required">
+        {% if owner.profile.has_active_subscription %}
+            <p>You’re already subscribed!</p>
+            <p>View <a href="{% url 'settings' %}">your settings</a> to make changes.</p>
+        {% endif %}
 
-    {% if not owner.profile.has_active_subscription %}
-        <form method="post" id="payment-form">
-            {% csrf_token %}
-            <div class="form-row">
-            {{ form }}
-            </div>
-
-            {% include 'inventory/_stripe-card-field.html' %}
-
-            <button>Submit payment</button>
-        </form>
-    {% endif %}
+        {% if not owner.profile.has_active_subscription %}
+            <form method="post" id="payment-form">
+                {% csrf_token %}
+                <div class="c-field c-field--radio">
+                    <fieldset>
+                        <legend>Plan</legend>
+                        <div>
+                            {% for price in prices reversed %}
+                                <label for="id_{{ price.id }}">
+                                    <input id="id_{{ price.id }}" type="radio" name="plan" value="{{ price.djstripe_id }}" required />
+                                    {{ price.human_readable_price }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </fieldset>
+                </div>
+                {{ form.stripe_source }}
+                {% include 'inventory/_stripe-card-field.html' %}
+                <button>Submit payment</button>
+            </form>
+        {% endif %}
+    </div><!-- js-required -->
+    <div class="no-js">
+        <p>Sorry, this is one page that actually requires JavaScript to work.</p>
+    </div>
 </div>
 {% endblock %}
 

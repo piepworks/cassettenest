@@ -193,7 +193,10 @@ class PatternsForm(forms.Form):
 
 
 class PurchaseSubscriptionForm(forms.Form):
-    plan = forms.ModelChoiceField(queryset=djstripe.models.Plan.objects.filter(active=True))
+    plan = forms.ModelChoiceField(
+        queryset=djstripe.models.Price.objects.filter(active=True),
+        widget=forms.RadioSelect(),
+    )
     stripe_source = forms.CharField(
         max_length="255", widget=forms.HiddenInput(), required=False
     )
