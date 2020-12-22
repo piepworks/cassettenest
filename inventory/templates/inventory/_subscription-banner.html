@@ -1,5 +1,10 @@
+{% url 'subscribe' as subscribe_url %}
 {% if not user.profile.has_active_subscription %}
     <div class="c-subscription-banner">
-        Paid plans are now available. Help support this project and <a href="{% url 'subscribe' %}">subscribe</a>!
+        {% if request.path == subscribe_url %}
+            Yessssssssss…
+        {% else %}
+            Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}">subscribe</a>!
+        {% endif %}
     </div>
 {% endif %}
