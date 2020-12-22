@@ -342,7 +342,7 @@ def subscription_update_card(request):
         stripe_source = form.cleaned_data['stripe_source']
         customer.add_card(stripe_source)
 
-        messages.error(request, 'Card updated!')
+        messages.success(request, 'Card updated!')
     else:
         messages.error(request, 'Something is not right.')
 
