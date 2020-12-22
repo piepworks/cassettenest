@@ -54,7 +54,7 @@
     function stripeSourceHandler(source) {
         // Insert the source ID into the form so it gets submitted to the server
         var form = document.getElementById('payment-form');
-        var hiddenInput = form.elements["stripe_source"];
+        var hiddenInput = form.elements['stripe_source'];
         hiddenInput.setAttribute('value', source.id);
         // Submit the form
         form.submit();

@@ -281,9 +281,7 @@ class PurchaseSubscriptionView(FormView):
 
         # Create the Stripe Customer, by default subscriber Model is User,
         # this can be overridden with settings.DJSTRIPE_SUBSCRIBER_MODEL
-        customer, created = djstripe.models.Customer.get_or_create(
-            subscriber=user
-        )
+        customer, created = djstripe.models.Customer.get_or_create(subscriber=user)
 
         # Add the source as the customer's default card
         customer.add_card(stripe_source)
@@ -293,7 +291,7 @@ class PurchaseSubscriptionView(FormView):
         stripe_subscription = stripe.Subscription.create(
             customer=customer.id,
             items=[{'plan': plan.id}],
-            billing='charge_automatically',
+            collection_method='charge_automatically',
             # tax_percent=15,
             api_key=djstripe.settings.STRIPE_SECRET_KEY,
         )
