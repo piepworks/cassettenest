@@ -56,7 +56,7 @@
 {% flag 'stripe' %}
     <hr />
 
-    <h2>Manage your subscription</h2>
+    <h2 id="subscription">Manage your subscription</h2>
 
     {% if subscription and user.profile.has_active_subscription %}
         <p>You’re subscribed to the <b>{{ subscription.plan }}</b> plan.</p>

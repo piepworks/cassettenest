@@ -1,0 +1,12 @@
+.c-subscription-banner {
+    background: $bs-blue;
+    color: $bs-blue-bg;
+    text-align: center;
+    padding: 0.75rem;
+
+    a {
+        color: $bs-blue-bg;
+
+        &:hover { background: darken($bs-blue, 10%); }
+    }
+}
