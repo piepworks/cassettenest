@@ -220,6 +220,13 @@ def settings(request):
         return render(request, 'inventory/settings.html', context)
 
 
+@login_required
+def subscription(request):
+    context = {}
+
+    return render(request, 'inventory/subscription.html', context)
+
+
 @method_decorator(login_required, name='dispatch')
 class PurchaseSubscriptionView(FormView):
     '''

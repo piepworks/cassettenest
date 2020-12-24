@@ -108,7 +108,10 @@ urlpatterns = [
     path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
     path('import/journals', views.ImportJournalsView.as_view(), name='import-journals'),
 
-    # Subscribe
+    # Subscription
+    path('subscription', views.subscription, name='subscription'),
+
+    # Subscribe (dj-stripe)
     path('subscribe/',
          views.PurchaseSubscriptionView.as_view(),
          name='subscribe'),
