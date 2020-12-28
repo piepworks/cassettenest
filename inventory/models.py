@@ -18,6 +18,8 @@ class Profile(models.Model):
         choices=settings.TIME_ZONES,
         default=settings.TIME_ZONE
     )
+    stripe_customer_id = models.CharField(max_length=255, blank=True)
+    stripe_subscription_id = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return 'Settings for %s' % self.user
