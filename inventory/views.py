@@ -231,6 +231,8 @@ def subscription(request):
     context = {
         'js_needed': True,
         'stripe_public_key': stripe_public_key,
+        'price_monthly': dj_settings.STRIPE_PRICE_ID_MONTHLY,
+        'price_annual': dj_settings.STRIPE_PRICE_ID_ANNUAL,
     }
 
     return render(request, 'inventory/subscription.html', context)

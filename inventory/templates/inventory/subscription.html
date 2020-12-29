@@ -5,6 +5,13 @@
 {% block content %}
 <div class="raw">
     <h1>Manage Your Subscription</h1>
+
+    <h2>Choose your plan</h2>
+
+    <ol>
+        <li><button id="btn-monthly" data-price="{{ price_monthly }}">$2 / month</button></li>
+        <li><button id="btn-yearly" data-price="{{ price_annual }}">$20 / year</button></li>
+    </ol>
 </div>
 {% endblock %}
 
