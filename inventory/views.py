@@ -16,6 +16,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings as dj_settings
 import stripe
 import djstripe.models
 import requests
@@ -222,7 +223,15 @@ def settings(request):
 
 @login_required
 def subscription(request):
-    context = {}
+    if dj_settings.STRIPE_LIVE_MODE:
+        stripe_public_key = dj_settings.STRIPE_LIVE_PUBLIC_KEY
+    else:
+        stripe_public_key = dj_settings.STRIPE_TEST_PUBLIC_KEY
+
+    context = {
+        'js_needed': True,
+        'stripe_public_key': stripe_public_key,
+    }
 
     return render(request, 'inventory/subscription.html', context)
 
