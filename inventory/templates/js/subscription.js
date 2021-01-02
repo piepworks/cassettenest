@@ -1,4 +1,3 @@
-// eslint-disable-next-line no-undef
 const stripe = Stripe('{{ stripe_public_key }}');
 
 $('.subscribe').click((e) => {
