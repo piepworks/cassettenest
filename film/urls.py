@@ -113,6 +113,7 @@ urlpatterns = [
     path('subscription/success', views.subscription_success, name='subscription-success'),
     path('subscription/cancel', views.subscription_cancel, name='subscription-cancel'),
     path('create-checkout-session/<price>', views.create_checkout_session, name='checkout-session'),
+    path('stripe-webhook', views.stripe_webhook, name='stripe-webhook'),
 
     # Subscribe (dj-stripe)
     path('subscribe/',

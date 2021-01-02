@@ -7,11 +7,13 @@ from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.contrib.auth import login, authenticate
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_text
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
@@ -278,6 +280,44 @@ def subscription_cancel(request):
     context = {}
 
     return render(request, 'inventory/subscription-cancel.html', context)
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
+    endpoint_secret = dj_settings.STRIPE_ENDPOINT_SECRET
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    # Handle the checkout.session.completed event.
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+
+        # Fetch all the required data from session.
+        client_reference_id = session.get('client_reference_id')
+        stripe_customer_id = session.get('customer')
+        stripe_subscription_id = session.get('subscription')
+
+        # Get the user and add their Stripe info.
+        user = User.objects.get(id=client_reference_id)
+        user.profile.stripe_customer_id = stripe_customer_id
+        user.profile.stripe_subscription_id = stripe_subscription_id
+        user.save()
+        print(user.username + ' just subscribed!')
+
+    return HttpResponse(status=200)
 
 
 @method_decorator(login_required, name='dispatch')
