@@ -1,8 +1,19 @@
 // eslint-disable-next-line no-undef
 const stripe = Stripe('{{ stripe_public_key }}');
 
-console.log('stripe', stripe);
+$('.subscribe').click((e) => {
+    const price = $(e.target).data('price');
+    const checkoutSessionURL = `{% url 'checkout-session' price='temp' %}`.replace('temp', price);
 
-$('button').click((e) => {
-    console.log(`price id: ${$(e.target).data('price')}`);
+    // Get checkout session ID.
+    fetch(checkoutSessionURL)
+        .then((result) => { return result.json(); })
+        .then((data) => {
+            console.log('data', data);
+            // Redirect to Stripe Checkout.
+            return stripe.redirectToCheckout({sessionId: data.sessionId});
+        })
+        .then((res) => {
+            console.log('res', res);
+        });
 });

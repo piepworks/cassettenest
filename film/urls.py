@@ -110,6 +110,7 @@ urlpatterns = [
 
     # Subscription
     path('subscription', views.subscription, name='subscription'),
+    path('create-checkout-session/<price>', views.create_checkout_session, name='checkout-session'),
 
     # Subscribe (dj-stripe)
     path('subscribe/',

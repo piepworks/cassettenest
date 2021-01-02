@@ -17,6 +17,7 @@ from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
+from django.http.response import JsonResponse
 import stripe
 import djstripe.models
 import requests
@@ -231,11 +232,47 @@ def subscription(request):
     context = {
         'js_needed': True,
         'stripe_public_key': stripe_public_key,
-        'price_monthly': dj_settings.STRIPE_PRICE_ID_MONTHLY,
-        'price_annual': dj_settings.STRIPE_PRICE_ID_ANNUAL,
+        'host': request.get_host(),
     }
 
     return render(request, 'inventory/subscription.html', context)
+
+
+@login_required
+def create_checkout_session(request, price):
+    if request.method == 'GET':
+        if price == 'annual':
+            stripe_price = dj_settings.STRIPE_PRICE_ID_ANNUAL
+        else:
+            stripe_price = dj_settings.STRIPE_PRICE_ID_MONTHLY
+
+        if dj_settings.STRIPE_LIVE_MODE:
+            stripe.api_key = dj_settings.STRIPE_LIVE_SECRET_KEY
+        else:
+            stripe.api_key = dj_settings.STRIPE_TEST_SECRET_KEY
+
+        if dj_settings.DEBUG:
+            domain_url = 'http://localhost:8001/'
+        else:
+            domain_url = 'https://app.cassettenest.com/'
+
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                client_reference_id=request.user.id,
+                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + 'cancel/',
+                payment_method_types=['card'],
+                mode='subscription',
+                line_items=[
+                    {
+                        'price': stripe_price,
+                        'quantity': 1,
+                    }
+                ]
+            )
+            return JsonResponse({'sessionId': checkout_session['id']})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
 
 
 @method_decorator(login_required, name='dispatch')
