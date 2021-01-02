@@ -252,7 +252,7 @@ def create_checkout_session(request, price):
             stripe.api_key = dj_settings.STRIPE_TEST_SECRET_KEY
 
         if dj_settings.DEBUG:
-            domain_url = 'http://localhost:8001/'
+            domain_url = f'http://{request.get_host()}/'
         else:
             domain_url = 'https://app.cassettenest.com/'
 
