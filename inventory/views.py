@@ -259,6 +259,7 @@ def create_checkout_session(request, price):
         try:
             checkout_session = stripe.checkout.Session.create(
                 client_reference_id=request.user.id,
+                customer_email=request.user.email,
                 success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url + 'cancel/',
                 payment_method_types=['card'],
