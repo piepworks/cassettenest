@@ -50,6 +50,9 @@ from .utils import (
     status_keys,
     status_number,
     bulk_status_next_keys,
+    stripe_public_key,
+    stripe_secret_key,
+    stripe_price_id,
 )
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
@@ -224,14 +227,9 @@ def settings(request):
 
 @login_required
 def subscription(request):
-    if dj_settings.STRIPE_LIVE_MODE:
-        stripe_public_key = dj_settings.STRIPE_LIVE_PUBLIC_KEY
-    else:
-        stripe_public_key = dj_settings.STRIPE_TEST_PUBLIC_KEY
-
     context = {
         'js_needed': True,
-        'stripe_public_key': stripe_public_key,
+        'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
         'host': request.get_host(),
     }
 
@@ -241,15 +239,7 @@ def subscription(request):
 @login_required
 def create_checkout_session(request, price):
     if request.method == 'GET':
-        if price == 'annual':
-            stripe_price = dj_settings.STRIPE_PRICE_ID_ANNUAL
-        else:
-            stripe_price = dj_settings.STRIPE_PRICE_ID_MONTHLY
-
-        if dj_settings.STRIPE_LIVE_MODE:
-            stripe.api_key = dj_settings.STRIPE_LIVE_SECRET_KEY
-        else:
-            stripe.api_key = dj_settings.STRIPE_TEST_SECRET_KEY
+        stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
 
         if dj_settings.DEBUG:
             domain_url = f'http://{request.get_host()}'
@@ -266,7 +256,7 @@ def create_checkout_session(request, price):
                 mode='subscription',
                 line_items=[
                     {
-                        'price': stripe_price,
+                        'price': stripe_price_id(price),
                         'quantity': 1,
                     }
                 ]

@@ -151,3 +151,26 @@ def render_markdown(file):
         file
     )
     return markdown2.markdown_path(file_path)
+
+
+def stripe_price_id(price):
+    price_id = {
+        'annual': settings.STRIPE_PRICE_ID_ANNUAL,
+        'monthly': settings.STRIPE_PRICE_ID_MONTHLY,
+    }
+
+    return price_id[price]
+
+
+def stripe_public_key(live_mode):
+    if live_mode:
+        return settings.STRIPE_LIVE_PUBLIC_KEY
+    else:
+        return settings.STRIPE_TEST_PUBLIC_KEY
+
+
+def stripe_secret_key(live_mode):
+    if live_mode:
+        return settings.STRIPE_LIVE_SECRET_KEY
+    else:
+        return settings.STRIPE_TEST_SECRET_KEY
