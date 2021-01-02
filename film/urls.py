@@ -110,6 +110,8 @@ urlpatterns = [
 
     # Subscription
     path('subscription', views.subscription, name='subscription'),
+    path('subscription/success', views.subscription_success, name='subscription-success'),
+    path('subscription/cancel', views.subscription_cancel, name='subscription-cancel'),
     path('create-checkout-session/<price>', views.create_checkout_session, name='checkout-session'),
 
     # Subscribe (dj-stripe)
@@ -123,7 +125,7 @@ urlpatterns = [
          views.subscription_update_card,
          name='subscription-update-card'),
     path('subscribe/cancel/<id>',
-         views.subscription_cancel, name='subscription-cancel'),
+         views.subscription_cancel_v1, name='subscription-cancel'),
 
     # Sample page that you can’t see without a subscription.
     path('restricted/', views.restricted, name='restricted'),

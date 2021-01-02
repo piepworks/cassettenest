@@ -252,16 +252,16 @@ def create_checkout_session(request, price):
             stripe.api_key = dj_settings.STRIPE_TEST_SECRET_KEY
 
         if dj_settings.DEBUG:
-            domain_url = f'http://{request.get_host()}/'
+            domain_url = f'http://{request.get_host()}'
         else:
-            domain_url = 'https://app.cassettenest.com/'
+            domain_url = 'https://app.cassettenest.com'
 
         try:
             checkout_session = stripe.checkout.Session.create(
                 client_reference_id=request.user.id,
                 customer_email=request.user.email,
-                success_url=domain_url + 'success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url + 'cancel/',
+                success_url=domain_url + reverse('subscription-success') + '?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url + reverse('subscription-cancel'),
                 payment_method_types=['card'],
                 mode='subscription',
                 line_items=[
@@ -274,6 +274,20 @@ def create_checkout_session(request, price):
             return JsonResponse({'sessionId': checkout_session['id']})
         except Exception as e:
             return JsonResponse({'error': str(e)})
+
+
+@login_required
+def subscription_success(request):
+    context = {}
+
+    return render(request, 'inventory/subscription-success.html', context)
+
+
+@login_required
+def subscription_cancel(request):
+    context = {}
+
+    return render(request, 'inventory/subscription-cancel.html', context)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -408,7 +422,7 @@ def subscription_update_card(request):
 
 @require_POST
 @login_required
-def subscription_cancel(request, id):
+def subscription_cancel_v1(request, id):
     owner = request.user
 
     try:
