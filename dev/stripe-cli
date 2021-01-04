@@ -1,0 +1,3 @@
+#!/bin/sh
+
+stripe listen --forward-to http://localhost:8001/stripe-webhook
