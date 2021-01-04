@@ -162,6 +162,15 @@ def stripe_price_id(price):
     return price_id[price]
 
 
+def stripe_price_name(price_id):
+    price_name = {
+        settings.STRIPE_PRICE_ID_ANNUAL: 'annual',
+        settings.STRIPE_PRICE_ID_MONTHLY: 'monthly',
+    }
+
+    return price_name[price_id]
+
+
 def stripe_public_key(live_mode):
     if live_mode:
         return settings.STRIPE_LIVE_PUBLIC_KEY

@@ -116,6 +116,8 @@ class UserAdmin(BaseUserAdmin):
         'cameras',
         'journals',
         'projects',
+        'has_active_subscription',
+        'subscription',
         'timezone',
         'last_login',
         'date_joined',
@@ -135,6 +137,12 @@ class UserAdmin(BaseUserAdmin):
     def timezone(self, obj):
         return obj.profile.timezone
 
+    def has_active_subscription(self, obj):
+        return obj.profile.has_active_subscription
+
+    def subscription(self, obj):
+        return obj.profile.subscription
+
     def rolls(self, obj):
         return obj.roll_count
 
@@ -147,6 +155,7 @@ class UserAdmin(BaseUserAdmin):
     def projects(self, obj):
         return obj.project_count
 
+    has_active_subscription.boolean = True
     rolls.admin_order_field = 'roll_count'
     cameras.admin_order_field = 'camera_count'
     journals.admin_order_field = 'journal_count'

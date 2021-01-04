@@ -7,7 +7,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
 from djstripe.utils import subscriber_has_active_subscription
-from .utils import status_number
+import stripe
+from .utils import status_number, stripe_secret_key, stripe_price_name
 
 
 class Profile(models.Model):
@@ -26,8 +27,19 @@ class Profile(models.Model):
 
     @cached_property
     def has_active_subscription(self):
-        '''Checks if a user has an active subscription.'''
-        return subscriber_has_active_subscription(self.user)
+        if self.stripe_subscription_id:
+            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
+            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+            return subscription.status == 'active'
+        else:
+            return False
+
+    @cached_property
+    def subscription(self):
+        if self.stripe_subscription_id:
+            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
+            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+            return stripe_price_name(subscription.plan.id)
 
 
 @receiver(post_save, sender=User)

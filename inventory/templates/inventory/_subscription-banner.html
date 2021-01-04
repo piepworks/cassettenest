@@ -1,4 +1,4 @@
-{% url 'subscribe' as subscribe_url %}
+{% url 'subscription' as subscribe_url %}
 {% if not user.profile.has_active_subscription %}
     <div class="c-subscription-banner">
         {% if request.path == subscribe_url %}
