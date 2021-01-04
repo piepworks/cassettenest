@@ -2,6 +2,7 @@ import datetime
 import io
 import csv
 import pytz
+import json
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -775,3 +776,59 @@ class RollsUpdateTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('Something is amiss.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class SubscriptionTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.roll = baker.make(Roll, owner=cls.user)
+        cls.entry = baker.make(Journal, roll=cls.roll)
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_subscription_page(self):
+        response = self.client.get(reverse('subscription'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_create_checkout_session_error(self):
+        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('error', response.json())
+
+    def test_create_checkout_session_success(self):
+        self.user.email = 'test@example.com'
+        self.user.save()
+        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('sessionId', response.json())
+
+    @override_settings(DEBUG=True)
+    def test_create_checkout_session_debug_mode(self):
+        # This is just to get 100% coverage of the create_checkout_session view.
+        self.user.email = 'test@example.com'
+        self.user.save()
+        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_subscription_success_page(self):
+        response = self.client.get(reverse('subscription-success'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_subscription_cancel_page(self):
+        response = self.client.get(reverse('subscription-cancel'))
+        self.assertEqual(response.status_code, 200)
