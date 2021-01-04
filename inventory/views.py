@@ -232,7 +232,6 @@ def subscription(request):
     context = {
         'js_needed': True,
         'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
-        'host': request.get_host(),
     }
 
     return render(request, 'inventory/subscription.html', context)
