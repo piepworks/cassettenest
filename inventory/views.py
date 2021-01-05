@@ -281,6 +281,23 @@ def subscription_cancel(request):
     return render(request, 'inventory/subscription-cancel.html', context)
 
 
+@require_POST
+@login_required
+def stripe_portal(request):
+    data = json.loads(request.body)
+
+    if dj_settings.DEBUG:
+        domain_url = f'http://{request.get_host()}'
+    else:
+        domain_url = 'https://app.cassettenest.com'
+
+    session = stripe.billing_portal.Session.create(
+        customer=request.user.profile.stripe_customer_id,
+        return_url=domain_url + reverse('subscription')
+    )
+    return JsonResponse({'url': session.url})
+
+
 @csrf_exempt
 def stripe_webhook(request):
     stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
