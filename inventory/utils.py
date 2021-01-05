@@ -183,3 +183,10 @@ def stripe_secret_key(live_mode):
         return settings.STRIPE_LIVE_SECRET_KEY
     else:
         return settings.STRIPE_TEST_SECRET_KEY
+
+
+def get_host(request):
+    if settings.DEBUG:
+        return f'http://{request.get_host()}'
+    else:
+        return 'https://app.cassettenest.com'

@@ -55,6 +55,7 @@ from .utils import (
     stripe_public_key,
     stripe_secret_key,
     stripe_price_id,
+    get_host,
 )
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
@@ -241,18 +242,14 @@ def subscription(request):
 def create_checkout_session(request, price):
     if request.method == 'GET':
         stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
-
-        if dj_settings.DEBUG:
-            domain_url = f'http://{request.get_host()}'
-        else:
-            domain_url = 'https://app.cassettenest.com'
+        host = get_host(request)
 
         try:
             checkout_session = stripe.checkout.Session.create(
                 client_reference_id=request.user.id,
                 customer_email=request.user.email,
-                success_url=domain_url + reverse('subscription-success') + '?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url + reverse('subscription-cancel'),
+                success_url=host + reverse('subscription-success') + '?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=host + reverse('subscription-cancel'),
                 payment_method_types=['card'],
                 mode='subscription',
                 line_items=[
@@ -285,15 +282,11 @@ def subscription_cancel(request):
 @login_required
 def stripe_portal(request):
     data = json.loads(request.body)
-
-    if dj_settings.DEBUG:
-        domain_url = f'http://{request.get_host()}'
-    else:
-        domain_url = 'https://app.cassettenest.com'
+    host = get_host(request)
 
     session = stripe.billing_portal.Session.create(
         customer=request.user.profile.stripe_customer_id,
-        return_url=domain_url + reverse('subscription')
+        return_url=host + reverse('subscription')
     )
     return JsonResponse({'url': session.url})
 
