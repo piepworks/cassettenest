@@ -790,8 +790,6 @@ class SubscriptionTests(TestCase):
             password=cls.password,
             id=1,
         )
-        cls.roll = baker.make(Roll, owner=cls.user)
-        cls.entry = baker.make(Journal, roll=cls.roll)
 
     def setUp(self):
         self.client.login(
@@ -818,12 +816,12 @@ class SubscriptionTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('sessionId', response.json())
 
-    @override_settings(DEBUG=True)
     def test_create_checkout_session_debug_mode(self):
         # This is just to get 100% coverage of the create_checkout_session view.
         self.user.email = 'test@example.com'
         self.user.save()
-        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
+        with override_settings(DEBUG=True):
+            response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
 
         self.assertEqual(response.status_code, 200)
 
@@ -835,21 +833,22 @@ class SubscriptionTests(TestCase):
         response = self.client.get(reverse('subscription-cancel'))
         self.assertEqual(response.status_code, 200)
 
-    @mock.patch('inventory.views.stripe.Webhook.construct_event', return_value={
-        "data": {
-            "object": {
-                "client_reference_id": "1",
-                "customer": "cus_abcd",
-                "subscription": "sub_abcd"
-            }
-        },
-        "type": "checkout.session.completed"
-    })
-    def test_webhook(self, mock_stripe_output):
-        response = self.client.post(
-            reverse('stripe-webhook'),
-            data={},
-            HTTP_STRIPE_SIGNATURE='t=1234,v1=1234,v0=1234',
-        )
+    def test_webhook(self):
+        fake_return_value = {
+            "data": {
+                "object": {
+                    "client_reference_id": "1",
+                    "customer": "cus_abcd",
+                    "subscription": "sub_abcd"
+                }
+            },
+            "type": "checkout.session.completed"
+        }
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(
+                reverse('stripe-webhook'),
+                data={},
+                HTTP_STRIPE_SIGNATURE='',
+            )
 
         self.assertEqual(response.status_code, 200)
