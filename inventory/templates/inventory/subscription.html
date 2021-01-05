@@ -7,12 +7,17 @@
     <h1>Manage Your Subscription</h1>
 
     <div class="js-required">
-        <h2>Choose your plan</h2>
+        {% if not user.profile.has_active_subscription %}
+        <h2>You’re not subscribed yet. Choose your plan!</h2>
 
         <ol>
             <li><button class="subscribe" id="btn-monthly" data-price="monthly">$2 / month</button></li>
             <li><button class="subscribe" id="btn-yearly" data-price="annual">$20 / year</button></li>
         </ol>
+        {% else %}
+        <p>You’re currently subscribed to the <b>{{ user.profile.subscription }}</b> plan.</p>
+        <p><button class="manage-subscription">View settings or make changes.</button></p>
+        {% endif %}
     </div>
     <div class="no-js">
         <p>Sorry, this is one page that actually requires JavaScript to work.</p>

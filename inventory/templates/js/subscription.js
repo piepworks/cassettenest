@@ -1,6 +1,6 @@
 const stripe = Stripe('{{ stripe_public_key }}');
 
-$('.subscribe').click((e) => {
+$('.subscribe').click(e => {
     const price = $(e.target).data('price');
     const checkoutSessionURL = `{% url 'checkout-session' price='temp' %}`.replace('temp', price);
 
@@ -15,4 +15,8 @@ $('.subscribe').click((e) => {
         .then((res) => {
             console.log('res', res);
         });
+});
+
+$('.manage-subscription').click(e => {
+    console.log('e', e);
 });
