@@ -31,7 +31,7 @@ $('.manage-subscription').click(() => {
     fetch(request, {
         method: 'POST',
         mode: 'same-origin',
-        body: JSON.stringify({ customerId: '{{ user.profile.stripe_customer_id }}'}),
+        body: JSON.stringify({}),
     })
         .then((response) => response.json())
         .then((data) => {
