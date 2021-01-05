@@ -3,6 +3,7 @@ import io
 import csv
 import pytz
 import json
+from unittest import mock
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -787,6 +788,7 @@ class SubscriptionTests(TestCase):
         cls.user = User.objects.create_user(
             username=cls.username,
             password=cls.password,
+            id=1,
         )
         cls.roll = baker.make(Roll, owner=cls.user)
         cls.entry = baker.make(Journal, roll=cls.roll)
@@ -831,4 +833,23 @@ class SubscriptionTests(TestCase):
 
     def test_subscription_cancel_page(self):
         response = self.client.get(reverse('subscription-cancel'))
+        self.assertEqual(response.status_code, 200)
+
+    @mock.patch('inventory.views.stripe.Webhook.construct_event', return_value={
+        "data": {
+            "object": {
+                "client_reference_id": "1",
+                "customer": "cus_abcd",
+                "subscription": "sub_abcd"
+            }
+        },
+        "type": "checkout.session.completed"
+    })
+    def test_webhook(self, mock_stripe_output):
+        response = self.client.post(
+            reverse('stripe-webhook'),
+            data={},
+            HTTP_STRIPE_SIGNATURE='t=1234,v1=1234,v0=1234',
+        )
+
         self.assertEqual(response.status_code, 200)
