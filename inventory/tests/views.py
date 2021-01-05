@@ -845,10 +845,17 @@ class SubscriptionTests(TestCase):
             "type": "checkout.session.completed"
         }
         with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(
-                reverse('stripe-webhook'),
-                data={},
-                HTTP_STRIPE_SIGNATURE='',
-            )
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
 
         self.assertEqual(response.status_code, 200)
+
+    def test_webhook_signature_failure(self):
+        response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_webhook_payload_failure(self):
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', side_effect=ValueError):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 400)
