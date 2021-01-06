@@ -288,7 +288,7 @@ def stripe_portal(request):
         customer=request.user.profile.stripe_customer_id,
         return_url=host + reverse('subscription')
     )
-    return JsonResponse({'url': session.url})
+    return JsonResponse({'url': session['url']})
 
 
 @csrf_exempt

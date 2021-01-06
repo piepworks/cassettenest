@@ -859,3 +859,14 @@ class SubscriptionTests(TestCase):
             response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
 
         self.assertEqual(response.status_code, 400)
+
+    def test_stripe_portal(self):
+        fake_return_value = {'url': 'http://example.com'}
+        with mock.patch('inventory.views.stripe.billing_portal.Session.create', return_value=fake_return_value):
+            response = self.client.post(
+                reverse('stripe-portal'),
+                {},
+                content_type='application/json',
+            )
+
+        self.assertEqual(response.status_code, 200)
