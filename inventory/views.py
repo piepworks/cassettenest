@@ -249,7 +249,7 @@ def create_checkout_session(request, price):
                 client_reference_id=request.user.id,
                 customer_email=request.user.email,
                 success_url=host + reverse('subscription-success') + '?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=host + reverse('subscription-cancel'),
+                cancel_url=host + reverse('subscription'),
                 payment_method_types=['card'],
                 mode='subscription',
                 line_items=[
@@ -269,13 +269,6 @@ def subscription_success(request):
     context = {}
 
     return render(request, 'inventory/subscription-success.html', context)
-
-
-@login_required
-def subscription_cancel(request):
-    context = {}
-
-    return render(request, 'inventory/subscription-cancel.html', context)
 
 
 @require_POST

@@ -829,10 +829,6 @@ class SubscriptionTests(TestCase):
         response = self.client.get(reverse('subscription-success'))
         self.assertEqual(response.status_code, 200)
 
-    def test_subscription_cancel_page(self):
-        response = self.client.get(reverse('subscription-cancel'))
-        self.assertEqual(response.status_code, 200)
-
     def test_webhook(self):
         fake_return_value = {
             'data': {
