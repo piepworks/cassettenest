@@ -317,6 +317,7 @@ def stripe_webhook(request):
         user.profile.stripe_customer_id = stripe_customer_id
         user.profile.stripe_subscription_id = stripe_subscription_id
         user.save()
+
         # Send Trey an email about this.
         send_mail(
             subject='New Cassette Nest subscription!',

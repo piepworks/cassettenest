@@ -841,7 +841,10 @@ class SubscriptionTests(TestCase):
             'type': 'checkout.session.completed'
         }
 
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value={'plan': {'id': 'price_abcd'}}):
+        mock_subscription = mock.Mock()
+        mock_subscription.plan.id = 'price_abcd'
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
             with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
                 with override_settings(STRIPE_PRICE_ID_MONTHLY='price_abcd'):
                     response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')

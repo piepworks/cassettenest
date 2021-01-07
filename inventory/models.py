@@ -46,7 +46,7 @@ class Profile(models.Model):
         if self.stripe_subscription_id:
             stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
             subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-            return stripe_price_name(subscription['plan']['id'])
+            return stripe_price_name(subscription.plan.id)
 
 
 @receiver(post_save, sender=User)
