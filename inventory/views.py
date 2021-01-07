@@ -317,7 +317,13 @@ def stripe_webhook(request):
         user.profile.stripe_customer_id = stripe_customer_id
         user.profile.stripe_subscription_id = stripe_subscription_id
         user.save()
-        print(user.username + ' just subscribed!')
+        # Send Trey an email about this.
+        send_mail(
+            subject='New Cassette Nest subscription!',
+            message=f'{user.username} / {user.email} just subscribed to the {user.profile.subscription} plan!',
+            from_email='trey@cassettenest.com',
+            recipient_list=['boss@treylabs.com']
+        )
 
     return HttpResponse(status=200)
 
