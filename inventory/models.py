@@ -26,13 +26,18 @@ class Profile(models.Model):
         return 'Settings for %s' % self.user
 
     @cached_property
+    def subscription_status(self):
+        if self.stripe_subscription_id:
+            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
+            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+            return subscription.status
+
+    @cached_property
     def has_active_subscription(self):
         if self.user.is_staff:
             return True
         elif self.stripe_subscription_id:
-            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
-            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-            return subscription.status == 'active'
+            return self.subscription_status == 'active'
         else:
             return False
 

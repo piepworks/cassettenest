@@ -118,6 +118,7 @@ class UserAdmin(BaseUserAdmin):
         'projects',
         'has_active_subscription',
         'subscription',
+        'subscription_status',
         'timezone',
         'last_login',
         'date_joined',
@@ -142,6 +143,9 @@ class UserAdmin(BaseUserAdmin):
 
     def subscription(self, obj):
         return obj.profile.subscription
+
+    def subscription_status(self, obj):
+        return obj.profile.subscription_status
 
     def rolls(self, obj):
         return obj.roll_count
