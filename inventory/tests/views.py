@@ -12,7 +12,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 from freezegun import freeze_time
 from model_bakery import baker
-from inventory.models import Roll, Camera, CameraBack, Project, Journal
+from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
@@ -861,6 +861,28 @@ class SubscriptionTests(TestCase):
             response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
 
         self.assertEqual(response.status_code, 400)
+
+    def test_webhook_subscription_canceled(self):
+        customer_id = 'cus_abcd'
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_customer_id = customer_id
+        profile.save()
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'customer.subscription.updated'
+        }
+
+        mock_subscription = mock.Mock()
+        mock_subscription.canceled_at = True
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+                response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
 
     def test_stripe_portal(self):
         with mock.patch(
