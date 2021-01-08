@@ -303,6 +303,9 @@ def stripe_webhook(request):
         # Invalid signature
         return HttpResponse(status=400)
 
+    # Uncomment the following line to see all the events we’re receiving:
+    # print(f'event[type]: {event["type"]} / {event["data"]["object"]["customer"]}')
+
     # Handle the checkout.session.completed event.
     if event['type'] == 'checkout.session.completed':
         session = event['data']['object']
@@ -322,6 +325,18 @@ def stripe_webhook(request):
         send_mail(
             subject='New Cassette Nest subscription!',
             message=f'{user.username} / {user.email} just subscribed to the {user.profile.subscription} plan!',
+            from_email='trey@cassettenest.com',
+            recipient_list=['boss@treylabs.com']
+        )
+
+    elif event['type'] == 'customer.subscription.updated':
+        customer = event['data']['object']['customer']
+        user = User.objects.get(profile__stripe_customer_id=customer)
+
+        # Send Trey an email about this.
+        send_mail(
+            subject='Cassette Nest subscription update!',
+            message=f'{user.username} / {user.email} just updated their {user.profile.subscription} subscription!',
             from_email='trey@cassettenest.com',
             recipient_list=['boss@treylabs.com']
         )
