@@ -1,6 +1,10 @@
 {% url 'subscription' as subscribe_url %}
-{% if not user.profile.has_active_subscription and request.path != subscribe_url%}
+{% if not user.profile.subscription_status and request.path != subscribe_url%}
     <div class="c-subscription-banner">
         Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}">subscribe</a>!
+    </div>
+{% elif not user.is_staff and user.profile.subscription_status and user.profile.subscription_status != 'active' %}
+    <div class="c-subscription-banner">
+        Looks like there’s a problem with your subscription. <a href="{{ subscribe_url }}">Please check your settings.</a>
     </div>
 {% endif %}
