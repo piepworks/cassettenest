@@ -329,6 +329,20 @@ def stripe_webhook(request):
             recipient_list=['boss@treylabs.com']
         )
 
+    elif event['type'] == 'customer.subscription.updated':
+        customer = event['data']['object']['customer']
+        user = User.objects.get(profile__stripe_customer_id=customer)
+        subscription = stripe.Subscription.retrieve(user.profile.stripe_subscription_id)
+
+        if subscription.canceled_at:
+            # Send Trey an email about this.
+            send_mail(
+                subject='Cassette Nest subscription cancellation. :(',
+                message=f'{user.username} / {user.email} just cancelled their {user.profile.subscription} subscription.',
+                from_email='trey@cassettenest.com',
+                recipient_list=['boss@treylabs.com']
+            )
+
     elif event['type'] == 'invoice.payment_failed' or event['type'] == 'payment_intent.payment_failed':
         customer = event['data']['object']['customer']
 
