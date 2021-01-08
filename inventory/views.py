@@ -329,18 +329,6 @@ def stripe_webhook(request):
             recipient_list=['boss@treylabs.com']
         )
 
-    elif event['type'] == 'customer.subscription.updated':
-        customer = event['data']['object']['customer']
-        user = User.objects.get(profile__stripe_customer_id=customer)
-
-        # Send Trey an email about this.
-        send_mail(
-            subject='Cassette Nest subscription update!',
-            message=f'{user.username} / {user.email} just updated their {user.profile.subscription} subscription!',
-            from_email='trey@cassettenest.com',
-            recipient_list=['boss@treylabs.com']
-        )
-
     return HttpResponse(status=200)
 
 
