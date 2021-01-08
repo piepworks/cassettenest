@@ -306,10 +306,10 @@ def stripe_webhook(request):
     # Uncomment the following line to see all the events we’re receiving:
     # print(f'event[type]: {event["type"]} / {event["data"]["object"]["customer"]}')
 
-    # Handle the checkout.session.completed event.
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
+    event_type = event['type']
+    session = event['data']['object']
 
+    if event_type == 'checkout.session.completed':
         # Fetch all the required data from session.
         client_reference_id = session.get('client_reference_id')
         stripe_customer_id = session.get('customer')
@@ -329,9 +329,9 @@ def stripe_webhook(request):
             recipient_list=['boss@treylabs.com']
         )
 
-    elif event['type'] == 'customer.subscription.updated':
-        customer = event['data']['object']['customer']
-        user = User.objects.get(profile__stripe_customer_id=customer)
+    elif event_type == 'customer.subscription.updated':
+        stripe_customer_id = session.get('customer')
+        user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
         subscription = stripe.Subscription.retrieve(user.profile.stripe_subscription_id)
 
         if subscription.canceled_at:
@@ -343,11 +343,11 @@ def stripe_webhook(request):
                 recipient_list=['boss@treylabs.com']
             )
 
-    elif event['type'] == 'invoice.payment_failed' or event['type'] == 'payment_intent.payment_failed':
-        customer = event['data']['object']['customer']
+    elif event_type == 'invoice.payment_failed' or event_type == 'payment_intent.payment_failed':
+        stripe_customer_id = session.get('customer')
 
         try:
-            user = User.objects.get(profile__stripe_customer_id=customer)
+            user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
             message = f'{user.username} / {user.email} had a failed payment on their subscription.'
         except User.DoesNotExist:
             message = f'User with the Stripe ID {customer} had a failed payment'
