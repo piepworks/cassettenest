@@ -884,6 +884,39 @@ class SubscriptionTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    def test_webhook_payment_failed(self):
+        customer_id = 'cus_abcd'
+        self.user.email = 'test@example.com'
+        self.user.save()
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_customer_id = customer_id
+        profile.save()
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'invoice.payment_failed'
+        }
+
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_payment_failed_without_user(self):
+        fake_return_value = {
+            'data': {
+                'object': {'customer': 'cus_abcd'}
+            },
+            'type': 'invoice.payment_failed'
+        }
+
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
     def test_stripe_portal(self):
         with mock.patch(
             'inventory.views.stripe.billing_portal.Session.create',

@@ -350,7 +350,7 @@ def stripe_webhook(request):
             user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
             message = f'{user.username} / {user.email} had a failed payment on their subscription.'
         except User.DoesNotExist:
-            message = f'User with the Stripe ID {customer} had a failed payment'
+            message = f'User with the Stripe ID {stripe_customer_id} had a failed payment'
 
         # Send Trey an email about this.
         send_mail(
