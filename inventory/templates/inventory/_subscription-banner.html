@@ -3,8 +3,16 @@
     <div class="c-subscription-banner">
         Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}">subscribe</a>!
     </div>
+{% elif user.profile.subscription_status == 'canceled' %}
+    <div class="c-subscription-banner">
+        Your subscription has been cancelled. <a href="{{ subscribe_url }}">Update your settings to resubscribe</a>.
+    </div>
 {% elif not user.is_staff and user.profile.subscription_status and user.profile.subscription_status != 'active' %}
     <div class="c-subscription-banner">
         Looks like there’s a problem with your subscription. <a href="{{ subscribe_url }}">Please check your settings.</a>
+    </div>
+{% elif user.profile.subscription_will_cancel %}
+    <div class="c-subscription-banner">
+        Your subscription is scheduled to be canceled. <a href="{{ subscribe_url }}">Update your settings</a> if you change your mind.
     </div>
 {% endif %}

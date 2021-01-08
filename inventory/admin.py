@@ -117,6 +117,7 @@ class UserAdmin(BaseUserAdmin):
         'journals',
         'projects',
         'has_active_subscription',
+        'subscription_will_cancel',
         'subscription',
         'subscription_status',
         'timezone',
@@ -150,6 +151,10 @@ class UserAdmin(BaseUserAdmin):
     def subscription_status(self, obj):
         return obj.profile.subscription_status
     subscription_status.short_description = 'Status'
+
+    def subscription_will_cancel(self, obj):
+        return obj.profile.subscription_will_cancel
+    subscription_will_cancel.short_description = 'Will Cancel'
 
     def rolls(self, obj):
         return obj.roll_count

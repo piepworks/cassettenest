@@ -48,6 +48,14 @@ class Profile(models.Model):
             subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
             return stripe_price_name(subscription.plan.id)
 
+    @cached_property
+    def subscription_will_cancel(self):
+        if self.stripe_subscription_id:
+            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
+            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+            if subscription.canceled_at:
+                return True
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
