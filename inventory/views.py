@@ -329,6 +329,23 @@ def stripe_webhook(request):
             recipient_list=['boss@treylabs.com']
         )
 
+    elif event['type'] == 'invoice.payment_failed' or event['type'] == 'payment_intent.payment_failed':
+        customer = event['data']['object']['customer']
+
+        try:
+            user = User.objects.get(profile__stripe_customer_id=customer)
+            message = f'{user.username} / {user.email} had a failed payment on their subscription.'
+        except User.DoesNotExist:
+            message = f'User with the Stripe ID {customer} had a failed payment'
+
+        # Send Trey an email about this.
+        send_mail(
+            subject='Cassette Nest subscription payment failure. :(',
+            message=message,
+            from_email='trey@cassettenest.com',
+            recipient_list=['boss@treylabs.com']
+        )
+
     return HttpResponse(status=200)
 
 
