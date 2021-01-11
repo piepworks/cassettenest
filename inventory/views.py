@@ -55,6 +55,7 @@ from .utils import (
     stripe_public_key,
     stripe_secret_key,
     stripe_price_id,
+    stripe_price_name,
     get_host,
 )
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
@@ -276,6 +277,7 @@ def subscription_success(request):
 def stripe_portal(request):
     data = json.loads(request.body)
     host = get_host(request)
+    stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
 
     session = stripe.billing_portal.Session.create(
         customer=request.user.profile.stripe_customer_id,
@@ -321,7 +323,6 @@ def stripe_webhook(request):
         user.profile.stripe_subscription_id = stripe_subscription_id
         user.save()
 
-        # Send Trey an email about this.
         send_mail(
             subject='New Cassette Nest subscription!',
             message=f'{user.username} / {user.email} just subscribed to the {user.profile.subscription} plan!',
@@ -332,29 +333,53 @@ def stripe_webhook(request):
     elif event_type == 'customer.subscription.updated':
         stripe_customer_id = session.get('customer')
         user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
+        user.save()
         subscription = stripe.Subscription.retrieve(user.profile.stripe_subscription_id)
 
         if subscription.canceled_at:
-            # Send Trey an email about this.
             send_mail(
                 subject='Cassette Nest subscription cancellation. :(',
                 message=f'{user.username} / {user.email} just cancelled their {user.profile.subscription} subscription.',
                 from_email='trey@cassettenest.com',
                 recipient_list=['boss@treylabs.com']
             )
+        else:
+            send_mail(
+                subject='Cassette Nest subscription updated!',
+                message=f'{user.username} / {user.email} just updated their {user.profile.subscription} subscription.',
+                from_email='trey@cassettenest.com',
+                recipient_list=['boss@treylabs.com']
+            )
 
-    elif event_type == 'invoice.payment_failed' or event_type == 'payment_intent.payment_failed':
+    elif event_type in ['invoice.payment_failed', 'payment_intent.payment_failed']:
         stripe_customer_id = session.get('customer')
 
         try:
             user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
+            user.save()
             message = f'{user.username} / {user.email} had a failed payment on their subscription.'
         except User.DoesNotExist:
             message = f'User with the Stripe ID {stripe_customer_id} had a failed payment'
 
-        # Send Trey an email about this.
         send_mail(
             subject='Cassette Nest subscription payment failure. :(',
+            message=message,
+            from_email='trey@cassettenest.com',
+            recipient_list=['boss@treylabs.com']
+        )
+
+    elif event_type == 'customer.subscription.deleted':
+        stripe_customer_id = session.get('customer')
+
+        try:
+            user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
+            user.save()
+            message = f'Subscription for {user.username} / {user.email} is totally canceled.'
+        except User.DoesNotExist:
+            message = f'Subscription for the user with the Stripe ID {stripe_customer_id} is totally canceled.'
+
+        send_mail(
+            subject='Cassette Nest subscription totally canceled. :(',
             message=message,
             from_email='trey@cassettenest.com',
             recipient_list=['boss@treylabs.com']
@@ -536,7 +561,6 @@ def register(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
 
-            # Send Trey an email about this.
             email = form.cleaned_data.get('email')
             send_mail(
                 subject='New Cassette Nest user!',

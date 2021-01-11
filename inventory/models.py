@@ -12,6 +12,19 @@ from .utils import status_number, stripe_secret_key, stripe_price_name
 
 
 class Profile(models.Model):
+    SUBSCRIPTION_STATUS_CHOICES = (
+        ('none', 'Never had a subscription'),
+        ('pending', 'Pending update'),
+        ('active', 'Subscribed'),
+        ('error', 'Payment error'),
+        ('canceling', 'Scheduled to cancel'),
+        ('canceled', 'Canceled'),
+    )
+    SUBSCRIPTION_CHOICES = {
+        ('none', 'None'),
+        ('monthly', 'Monthly'),
+        ('annual', 'Annual'),
+    }
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     timezone = models.CharField(
         max_length=40,
@@ -21,40 +34,28 @@ class Profile(models.Model):
     )
     stripe_customer_id = models.CharField(max_length=255, blank=True)
     stripe_subscription_id = models.CharField(max_length=255, blank=True)
+    subscription_status = models.CharField(
+        max_length=20,
+        choices=SUBSCRIPTION_STATUS_CHOICES,
+        default='none',
+    )
+    subscription = models.CharField(
+        max_length=20,
+        choices=SUBSCRIPTION_CHOICES,
+        default='none',
+    )
 
     def __str__(self):
         return 'Settings for %s' % self.user
 
     @cached_property
-    def subscription_status(self):
-        if self.stripe_subscription_id:
-            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
-            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-            return subscription.status
-
-    @cached_property
     def has_active_subscription(self):
         if self.user.is_staff:
             return True
-        elif self.stripe_subscription_id:
-            return self.subscription_status == 'active'
+        elif self.stripe_subscription_id and self.subscription_status not in ['none', 'canceled']:
+            return True
         else:
             return False
-
-    @cached_property
-    def subscription(self):
-        if self.stripe_subscription_id:
-            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
-            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-            return stripe_price_name(subscription.plan.id)
-
-    @cached_property
-    def subscription_will_cancel(self):
-        if self.stripe_subscription_id:
-            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
-            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-            if subscription.canceled_at:
-                return True
 
 
 @receiver(post_save, sender=User)
@@ -71,6 +72,25 @@ def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
     except Profile.DoesNotExist:
         Profile.objects.create(user=instance)
+        instance.profile.save()
+
+    # Update Stripe status whenver saving the user.
+    if instance.profile.stripe_subscription_id:
+        stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
+        subscription = stripe.Subscription.retrieve(instance.profile.stripe_subscription_id)
+
+        instance.profile.subscription = stripe_price_name(subscription.plan.id)
+
+        if subscription.status == 'active':
+            if subscription.canceled_at:
+                instance.profile.subscription_status = 'canceling'
+            else:
+                instance.profile.subscription_status = subscription.status
+        elif subscription.status == 'canceled':
+            instance.profile.subscription_status = subscription.status
+        else:
+            instance.profile.subscription_status = 'error'
+
         instance.profile.save()
 
 

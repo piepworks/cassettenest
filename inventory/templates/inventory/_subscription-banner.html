@@ -1,6 +1,6 @@
 {% url 'subscription' as subscribe_url %}
 {% if not user.is_staff %}
-    {% if not user.profile.subscription_status and request.path != subscribe_url%}
+    {% if user.profile.subscription_status == 'none' and request.path != subscribe_url%}
         <div class="c-subscription-banner">
             Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}">subscribe</a>!
         </div>
@@ -8,13 +8,17 @@
         <div class="c-subscription-banner">
             Your subscription has been cancelled. <a href="{{ subscribe_url }}">Update your settings to resubscribe</a>.
         </div>
-    {% elif user.profile.subscription_status and user.profile.subscription_status != 'active' %}
+    {% elif user.profile.subscription_status == 'error' %}
         <div class="c-subscription-banner">
             Looks like there’s a problem with your subscription. <a href="{{ subscribe_url }}">Please check your settings.</a>
         </div>
-    {% elif user.profile.subscription_will_cancel %}
+    {% elif user.profile.subscription_status == 'canceling' %}
         <div class="c-subscription-banner">
             Your subscription is scheduled to be canceled. <a href="{{ subscribe_url }}">Update your settings</a> if you change your mind.
+        </div>
+    {% elif user.profile.subscription_status == 'pending' %}
+        <div class="c-subscription-banner">
+            Your subscription is being updated…
         </div>
     {% endif %}
 {% endif %}

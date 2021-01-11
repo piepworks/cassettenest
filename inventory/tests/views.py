@@ -862,6 +862,28 @@ class SubscriptionTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
 
+    def test_webhook_subscription_updated(self):
+        customer_id = 'cus_abcd'
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_customer_id = customer_id
+        profile.save()
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'customer.subscription.updated'
+        }
+
+        mock_subscription = mock.Mock()
+        mock_subscription.canceled_at = None
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+                response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
     def test_webhook_subscription_canceled(self):
         customer_id = 'cus_abcd'
         profile = Profile.objects.get(user=self.user)
@@ -881,6 +903,39 @@ class SubscriptionTests(TestCase):
         with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
             with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
                 response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_deleted(self):
+        customer_id = 'cus_abcd'
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_customer_id = customer_id
+        profile.save()
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'customer.subscription.deleted'
+        }
+
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_deleted_without_user(self):
+        customer_id = 'cus_abcd'
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'customer.subscription.deleted'
+        }
+
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
 
         self.assertEqual(response.status_code, 200)
 

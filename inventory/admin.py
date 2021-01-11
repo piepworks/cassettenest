@@ -153,7 +153,8 @@ class UserAdmin(BaseUserAdmin):
     subscription_status.short_description = 'Status'
 
     def subscription_will_cancel(self, obj):
-        return obj.profile.subscription_will_cancel
+        if obj.profile.subscription_status == 'canceling':
+            return True
     subscription_will_cancel.short_description = 'Will Cancel'
 
     def rolls(self, obj):
