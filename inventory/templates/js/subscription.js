@@ -7,13 +7,9 @@ $('.subscribe').click(e => {
 
     // Get checkout session ID.
     fetch(checkoutSessionURL)
-        .then((result) => { return result.json(); })
-        .then((data) => {
-            console.log('data', data);
-            // Redirect to Stripe Checkout.
-            return stripe.redirectToCheckout({sessionId: data.sessionId});
-        })
-        .then((res) => {
+        .then(result => result.json())
+        .then(data => stripe.redirectToCheckout({sessionId: data.sessionId}))
+        .then(res => {
             console.log('res', res);
         });
 });
@@ -33,11 +29,11 @@ $('.manage-subscription').click(() => {
         mode: 'same-origin',
         body: JSON.stringify({}),
     })
-        .then((response) => response.json())
-        .then((data) => {
+        .then(response => response.json())
+        .then(data => {
             window.location.href = data.url;
         })
-        .catch((error) => {
+        .catch(error => {
             console.error('Error:', error);
         });
 });
