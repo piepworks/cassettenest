@@ -6,11 +6,24 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
-from djstripe.utils import subscriber_has_active_subscription
-from .utils import status_number
+import stripe
+from .utils import status_number, stripe_secret_key, stripe_price_name
 
 
 class Profile(models.Model):
+    SUBSCRIPTION_STATUS_CHOICES = (
+        ('none', 'Never had a subscription'),
+        ('pending', 'Pending update'),
+        ('active', 'Subscribed'),
+        ('error', 'Payment error'),
+        ('canceling', 'Scheduled to cancel'),
+        ('canceled', 'Canceled'),
+    )
+    SUBSCRIPTION_CHOICES = {
+        ('none', 'None'),
+        ('monthly', 'Monthly'),
+        ('annual', 'Annual'),
+    }
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     timezone = models.CharField(
         max_length=40,
@@ -18,14 +31,30 @@ class Profile(models.Model):
         choices=settings.TIME_ZONES,
         default=settings.TIME_ZONE
     )
+    stripe_customer_id = models.CharField(max_length=255, blank=True)
+    stripe_subscription_id = models.CharField(max_length=255, blank=True)
+    subscription_status = models.CharField(
+        max_length=20,
+        choices=SUBSCRIPTION_STATUS_CHOICES,
+        default='none',
+    )
+    subscription = models.CharField(
+        max_length=20,
+        choices=SUBSCRIPTION_CHOICES,
+        default='none',
+    )
 
     def __str__(self):
         return 'Settings for %s' % self.user
 
     @cached_property
     def has_active_subscription(self):
-        '''Checks if a user has an active subscription.'''
-        return subscriber_has_active_subscription(self.user)
+        if self.user.is_staff:
+            return True
+        elif self.stripe_subscription_id and self.subscription_status not in ['none', 'canceled']:
+            return True
+        else:
+            return False
 
 
 @receiver(post_save, sender=User)
@@ -42,6 +71,25 @@ def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
     except Profile.DoesNotExist:
         Profile.objects.create(user=instance)
+        instance.profile.save()
+
+    # Update Stripe status whenver saving the user.
+    if instance.profile.stripe_subscription_id:
+        stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
+        subscription = stripe.Subscription.retrieve(instance.profile.stripe_subscription_id)
+
+        instance.profile.subscription = stripe_price_name(subscription.plan.id)
+
+        if subscription.status == 'active':
+            if subscription.canceled_at:
+                instance.profile.subscription_status = 'canceling'
+            else:
+                instance.profile.subscription_status = subscription.status
+        elif subscription.status == 'canceled':
+            instance.profile.subscription_status = subscription.status
+        else:
+            instance.profile.subscription_status = 'error'
+
         instance.profile.save()
 
 

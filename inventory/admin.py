@@ -116,6 +116,10 @@ class UserAdmin(BaseUserAdmin):
         'cameras',
         'journals',
         'projects',
+        'has_active_subscription',
+        'subscription_will_cancel',
+        'subscription',
+        'subscription_status',
         'timezone',
         'last_login',
         'date_joined',
@@ -134,6 +138,24 @@ class UserAdmin(BaseUserAdmin):
 
     def timezone(self, obj):
         return obj.profile.timezone
+
+    def has_active_subscription(self, obj):
+        return obj.profile.has_active_subscription
+    has_active_subscription.short_description = 'Active'
+    has_active_subscription.boolean = True
+
+    def subscription(self, obj):
+        return obj.profile.subscription
+    subscription.short_description = 'Plan'
+
+    def subscription_status(self, obj):
+        return obj.profile.subscription_status
+    subscription_status.short_description = 'Status'
+
+    def subscription_will_cancel(self, obj):
+        if obj.profile.subscription_status == 'canceling':
+            return True
+    subscription_will_cancel.short_description = 'Will Cancel'
 
     def rolls(self, obj):
         return obj.roll_count

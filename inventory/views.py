@@ -7,19 +7,21 @@ from django.db.models import Count, Q
 from django.db import IntegrityError
 from django.contrib.auth import login, authenticate
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_text
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
+from django.conf import settings as dj_settings
+from django.http.response import JsonResponse
 import stripe
-import djstripe.models
 import requests
-from djstripe.decorators import subscription_payment_required
 from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll
 from .forms import (
     CameraForm,
@@ -28,12 +30,10 @@ from .forms import (
     PatternsForm,
     ProfileForm,
     ProjectForm,
-    PurchaseSubscriptionForm,
     ReadyForm,
     RegisterForm,
     RollForm,
     FilmForm,
-    UpdateCardForm,
     UserForm,
     UploadCSVForm,
 )
@@ -48,6 +48,11 @@ from .utils import (
     status_keys,
     status_number,
     bulk_status_next_keys,
+    stripe_public_key,
+    stripe_secret_key,
+    stripe_price_id,
+    stripe_price_name,
+    get_host,
 )
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
@@ -156,7 +161,6 @@ def settings(request):
     else:
         user_form = UserForm(instance=owner)
         profile_form = ProfileForm(instance=owner.profile)
-        stripe_form = UpdateCardForm()
         csv_form = UploadCSVForm()
         subscription = False
         exportable = {
@@ -175,209 +179,167 @@ def settings(request):
             'Journals',
         ]
 
-        try:
-            subscriptions = djstripe.models.Subscription.objects.filter(
-                customer__subscriber=owner
-            )
-            if subscriptions:
-                subscription = subscriptions[0]
-        except djstripe.models.Subscription.DoesNotExist:
-            pass
-
-        try:
-            subscriber = djstripe.models.Customer.objects.get(subscriber=owner)
-            try:
-                payment_method = djstripe.models.Source.objects.get(
-                    id=subscriber.default_source.id
-                ).source_data
-            except AttributeError:
-                payment_method = False
-        except djstripe.models.Customer.DoesNotExist:
-            payment_method = False
-
-        try:
-            charges = djstripe.models.Charge.objects.filter(
-                customer__subscriber=owner
-            ).order_by('-created')[:5]
-        except djstripe.models.Charge.DoesNotExist:
-            charges = False
-
         context = {
             'user_form': user_form,
             'profile_form': profile_form,
-            'stripe_form': stripe_form,
             'csv_form': csv_form,
-            'subscription': subscription,
-            'payment_method': payment_method,
             'exportable': exportable,
             'exportable_data': exportable_data,
             'imports': imports,
-            'charges': charges,
-            'STRIPE_PUBLIC_KEY': djstripe.settings.STRIPE_PUBLIC_KEY,
             'js_needed': True,
+            'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
         }
 
         return render(request, 'inventory/settings.html', context)
 
 
-@method_decorator(login_required, name='dispatch')
-class PurchaseSubscriptionView(FormView):
-    '''
-    Example view to demonstrate how to use dj-stripe to:
-    * create a Customer
-    * add a card to the Customer
-    * create a Subscription using that card
-    '''
-    template_name = 'inventory/subscribe.html'
-    form_class = PurchaseSubscriptionForm
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-
-        if djstripe.models.Plan.objects.count() == 0:
-            raise Exception(
-                'No Product Plans in the dj-stripe database - create some in '
-                'your stripe account and then '
-                'run `./manage.py djstripe_sync_plans_from_stripe` '
-                '(or use the dj-stripe webhooks)'
-            )
-
-        subscription = False
+@login_required
+def create_checkout_session(request, price):
+    if request.method == 'GET':
+        stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
+        host = get_host(request)
 
         try:
-            subscriptions = djstripe.models.Subscription.objects.filter(
-                customer__subscriber=self.request.user
+            checkout_session = stripe.checkout.Session.create(
+                client_reference_id=request.user.id,
+                customer_email=request.user.email,
+                success_url=host + reverse('subscription-success') + '?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=host + reverse('settings') + '#subscription',
+                payment_method_types=['card'],
+                mode='subscription',
+                line_items=[
+                    {
+                        'price': stripe_price_id(price),
+                        'quantity': 1,
+                    }
+                ]
             )
-            if subscriptions:
-                subscription = subscriptions[0]
-        except djstripe.models.Subscription.DoesNotExist:
-            pass
-
-        try:
-            subscriber = djstripe.models.Customer.objects.get(
-                subscriber=self.request.user
-            )
-            try:
-                payment_method = djstripe.models.Source.objects.get(
-                    id=subscriber.default_source.id
-                ).source_data
-            except AttributeError:
-                payment_method = False
-        except djstripe.models.Customer.DoesNotExist:
-            payment_method = False
-
-        ctx['subscription'] = subscription
-        ctx['payment_method'] = payment_method
-        ctx['owner'] = self.request.user
-        ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
-        ctx['prices'] = djstripe.models.Price.objects.filter(active=True)
-        ctx['js_needed'] = True
-
-        return ctx
-
-    def form_valid(self, form):
-        stripe_source = form.cleaned_data['stripe_source']
-        plan = form.cleaned_data['plan']
-        user = self.request.user
-
-        # Create the Stripe Customer, by default subscriber Model is User,
-        # this can be overridden with settings.DJSTRIPE_SUBSCRIBER_MODEL
-        customer, created = djstripe.models.Customer.get_or_create(subscriber=user)
-
-        # Add the source as the customer's default card
-        customer.add_card(stripe_source)
-
-        # Using the Stripe API, create a subscription for this customer,
-        # using the customer's default payment source
-        stripe_subscription = stripe.Subscription.create(
-            customer=customer.id,
-            items=[{'plan': plan.id}],
-            collection_method='charge_automatically',
-            # tax_percent=15,
-            api_key=djstripe.settings.STRIPE_SECRET_KEY,
-        )
-
-        # Sync the Stripe API return data to the database,
-        # this way we don't need to wait for a webhook-triggered sync
-        subscription = djstripe.models.Subscription.sync_from_stripe_data(
-            stripe_subscription
-        )
-
-        self.request.subscription = subscription
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse(
-            'subscription-success',
-            kwargs={'id': self.request.subscription.id},
-        )
-
-
-@method_decorator(login_required, name='dispatch')
-class PurchaseSubscriptionSuccessView(DetailView):
-    template_name = 'inventory/subscribe_success.html'
-
-    queryset = djstripe.models.Subscription.objects.all()
-    slug_field = 'id'
-    slug_url_kwarg = 'id'
-    context_object_name = 'subscription'
-
-
-@require_POST
-@login_required
-def subscription_update_card(request):
-    form = UpdateCardForm(request.POST)
-
-    if form.is_valid():
-        customer = djstripe.models.Customer.objects.get(
-            subscriber=request.user
-        )
-
-        # Delete all existing payment sources
-        sources = djstripe.models.Source.objects.filter(customer=customer)
-        for source in sources:
-            source.detach()
-
-        # Set a new default payment source
-        stripe_source = form.cleaned_data['stripe_source']
-        customer.add_card(stripe_source)
-
-        messages.success(request, 'Card updated!')
-    else:
-        messages.error(request, 'Something is not right.')
-
-    return redirect(reverse('settings'),)
-
-
-@require_POST
-@login_required
-def subscription_cancel(request, id):
-    owner = request.user
-
-    try:
-        subscription = djstripe.models.Subscription.objects.get(
-            customer__subscriber=owner,
-            id=id
-        )
-        subscription.cancel(at_period_end=True)
-    except djstripe.models.Subscription.DoesNotExist:
-        # TODO: Display an error
-        pass
-
-    return redirect('settings')
+            return JsonResponse({'sessionId': checkout_session['id']})
+        except Exception as e:
+            return JsonResponse({'error': str(e)})
 
 
 @login_required
-@subscription_payment_required
-def restricted(request):
-    '''
-    An example page that you must have a subscription to view.
-    '''
-
+def subscription_success(request):
     context = {}
 
-    return render(request, 'inventory/restricted.html', context)
+    return render(request, 'inventory/subscription-success.html', context)
+
+
+@require_POST
+@login_required
+def stripe_portal(request):
+    data = json.loads(request.body)
+    host = get_host(request)
+    stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
+
+    session = stripe.billing_portal.Session.create(
+        customer=request.user.profile.stripe_customer_id,
+        return_url=host + reverse('settings') + '#subscription'
+    )
+    return JsonResponse({'url': session['url']})
+
+
+@csrf_exempt
+def stripe_webhook(request):
+    stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
+    endpoint_secret = dj_settings.STRIPE_ENDPOINT_SECRET
+    payload = request.body
+    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
+    event = None
+
+    try:
+        event = stripe.Webhook.construct_event(
+            payload, sig_header, endpoint_secret
+        )
+    except ValueError as e:
+        # Invalid payload
+        return HttpResponse(status=400)
+    except stripe.error.SignatureVerificationError as e:
+        # Invalid signature
+        return HttpResponse(status=400)
+
+    # Uncomment the following line to see all the events we’re receiving:
+    # print(f'event[type]: {event["type"]} / {event["data"]["object"]["customer"]}')
+
+    event_type = event['type']
+    session = event['data']['object']
+
+    if event_type == 'checkout.session.completed':
+        # Fetch all the required data from session.
+        client_reference_id = session.get('client_reference_id')
+        stripe_customer_id = session.get('customer')
+        stripe_subscription_id = session.get('subscription')
+
+        # Get the user and add their Stripe info.
+        user = User.objects.get(id=client_reference_id)
+        user.profile.stripe_customer_id = stripe_customer_id
+        user.profile.stripe_subscription_id = stripe_subscription_id
+        user.save()
+
+        send_mail(
+            subject='New Cassette Nest subscription!',
+            message=f'{user.username} / {user.email} just subscribed to the {user.profile.subscription} plan!',
+            from_email='trey@cassettenest.com',
+            recipient_list=['boss@treylabs.com']
+        )
+
+    elif event_type == 'customer.subscription.updated':
+        stripe_customer_id = session.get('customer')
+        user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
+        user.save()
+        subscription = stripe.Subscription.retrieve(user.profile.stripe_subscription_id)
+
+        if subscription.canceled_at:
+            send_mail(
+                subject='Cassette Nest subscription cancellation. :(',
+                message=f'{user.username} / {user.email} just cancelled their {user.profile.subscription} subscription.',
+                from_email='trey@cassettenest.com',
+                recipient_list=['boss@treylabs.com']
+            )
+        else:
+            send_mail(
+                subject='Cassette Nest subscription updated!',
+                message=f'{user.username} / {user.email} just updated their {user.profile.subscription} subscription.',
+                from_email='trey@cassettenest.com',
+                recipient_list=['boss@treylabs.com']
+            )
+
+    elif event_type in ['invoice.payment_failed', 'payment_intent.payment_failed']:
+        stripe_customer_id = session.get('customer')
+
+        try:
+            user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
+            user.save()
+            message = f'{user.username} / {user.email} had a failed payment on their subscription.'
+        except User.DoesNotExist:
+            message = f'User with the Stripe ID {stripe_customer_id} had a failed payment'
+
+        send_mail(
+            subject='Cassette Nest subscription payment failure. :(',
+            message=message,
+            from_email='trey@cassettenest.com',
+            recipient_list=['boss@treylabs.com']
+        )
+
+    elif event_type == 'customer.subscription.deleted':
+        stripe_customer_id = session.get('customer')
+
+        try:
+            user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
+            user.save()
+            message = f'Subscription for {user.username} / {user.email} is totally canceled.'
+        except User.DoesNotExist:
+            message = f'Subscription for the user with the Stripe ID {stripe_customer_id} is totally canceled.'
+
+        send_mail(
+            subject='Cassette Nest subscription totally canceled. :(',
+            message=message,
+            from_email='trey@cassettenest.com',
+            recipient_list=['boss@treylabs.com']
+        )
+
+    return HttpResponse(status=200)
 
 
 def register(request):
@@ -393,7 +355,6 @@ def register(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
 
-            # Send Trey an email about this.
             email = form.cleaned_data.get('email')
             send_mail(
                 subject='New Cassette Nest user!',

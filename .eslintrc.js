@@ -5,15 +5,18 @@ module.exports = {
         browser: true,
         jquery: true,
     },
+    globals: {
+        Stripe: 'readonly',
+    },
     extends: 'eslint:recommended',
     parserOptions: {
         sourceType: 'module',
-        ecmaVersion: 2018
+        ecmaVersion: 2018,
     },
     rules: {
         indent: ['error', 4],
         'linebreak-style': ['error', 'unix'],
         quotes: ['error', 'single', { 'allowTemplateLiterals': true }],
-        semi: ['error', 'always']
+        semi: ['error', 'always'],
     }
 };

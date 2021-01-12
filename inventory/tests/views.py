@@ -2,6 +2,7 @@ import datetime
 import io
 import csv
 import pytz
+from unittest import mock
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -10,7 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 from freezegun import freeze_time
 from model_bakery import baker
-from inventory.models import Roll, Camera, CameraBack, Project, Journal
+from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
@@ -775,3 +776,205 @@ class RollsUpdateTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('Something is amiss.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class SubscriptionTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+            id=1,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_create_checkout_session_error(self):
+        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('error', response.json())
+
+    def test_create_checkout_session_success(self):
+        self.user.email = 'test@example.com'
+        self.user.save()
+        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('sessionId', response.json())
+
+    def test_create_checkout_session_debug_mode(self):
+        # This is just to get 100% coverage of the create_checkout_session view.
+        self.user.email = 'test@example.com'
+        self.user.save()
+        with override_settings(DEBUG=True):
+            response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_subscription_success_page(self):
+        response = self.client.get(reverse('subscription-success'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook(self):
+        fake_return_value = {
+            'data': {
+                'object': {
+                    'client_reference_id': '1',
+                    'customer': 'cus_abcd',
+                    'subscription': 'sub_abcd',
+                }
+            },
+            'type': 'checkout.session.completed'
+        }
+        fake_price_id = 'price_abcd'
+        mock_subscription = mock.Mock()
+        mock_subscription.plan.id = fake_price_id
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+                with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
+                    response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_signature_failure(self):
+        response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_webhook_payload_failure(self):
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', side_effect=ValueError):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 400)
+
+    def test_webhook_subscription_updated(self):
+        customer_id = 'cus_abcd'
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_customer_id = customer_id
+        profile.save()
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'customer.subscription.updated'
+        }
+
+        mock_subscription = mock.Mock()
+        mock_subscription.canceled_at = None
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+                response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_canceled(self):
+        customer_id = 'cus_abcd'
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_customer_id = customer_id
+        profile.save()
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'customer.subscription.updated'
+        }
+
+        mock_subscription = mock.Mock()
+        mock_subscription.canceled_at = True
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+                response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_deleted(self):
+        customer_id = 'cus_abcd'
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_customer_id = customer_id
+        profile.save()
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'customer.subscription.deleted'
+        }
+
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_deleted_without_user(self):
+        customer_id = 'cus_abcd'
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'customer.subscription.deleted'
+        }
+
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_payment_failed(self):
+        customer_id = 'cus_abcd'
+        self.user.email = 'test@example.com'
+        self.user.save()
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_customer_id = customer_id
+        profile.save()
+
+        fake_return_value = {
+            'data': {
+                'object': {'customer': customer_id}
+            },
+            'type': 'invoice.payment_failed'
+        }
+
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_payment_failed_without_user(self):
+        fake_return_value = {
+            'data': {
+                'object': {'customer': 'cus_abcd'}
+            },
+            'type': 'invoice.payment_failed'
+        }
+
+        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
+            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_stripe_portal(self):
+        with mock.patch(
+            'inventory.views.stripe.billing_portal.Session.create',
+            return_value={'url': 'http://example.com'}
+        ):
+            response = self.client.post(
+                reverse('stripe-portal'),
+                {},
+                content_type='application/json',
+            )
+
+        self.assertEqual(response.status_code, 200)

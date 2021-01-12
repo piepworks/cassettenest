@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-import djstripe.models
 from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile
 
 
@@ -189,22 +188,6 @@ class PatternsForm(forms.Form):
     checkbox = forms.BooleanField(
         help_text=help_text,
         required=False
-    )
-
-
-class PurchaseSubscriptionForm(forms.Form):
-    plan = forms.ModelChoiceField(
-        queryset=djstripe.models.Price.objects.filter(active=True),
-        widget=forms.RadioSelect(),
-    )
-    stripe_source = forms.CharField(
-        max_length="255", widget=forms.HiddenInput(), required=False
-    )
-
-
-class UpdateCardForm(forms.Form):
-    stripe_source = forms.CharField(
-        max_length="255", widget=forms.HiddenInput(), required=False
     )
 
 
