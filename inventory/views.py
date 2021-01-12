@@ -194,16 +194,6 @@ def settings(request):
 
 
 @login_required
-def subscription(request):
-    context = {
-        'js_needed': True,
-        'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
-    }
-
-    return render(request, 'inventory/subscription.html', context)
-
-
-@login_required
 def create_checkout_session(request, price):
     if request.method == 'GET':
         stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)

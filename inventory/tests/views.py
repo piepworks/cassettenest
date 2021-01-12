@@ -2,7 +2,6 @@ import datetime
 import io
 import csv
 import pytz
-import json
 from unittest import mock
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -796,11 +795,6 @@ class SubscriptionTests(TestCase):
             username=self.username,
             password=self.password,
         )
-
-    def test_subscription_page(self):
-        response = self.client.get(reverse('subscription'))
-
-        self.assertEqual(response.status_code, 200)
 
     def test_create_checkout_session_error(self):
         response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
