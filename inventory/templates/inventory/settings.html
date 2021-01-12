@@ -58,65 +58,8 @@
 
     <h2 id="subscription">Manage your subscription</h2>
 
-    {% if subscription and user.profile.has_active_subscription %}
-        <p>You’re subscribed to the <b>{{ subscription.plan }}</b> plan.</p>
-        {% if subscription.cancel_at_period_end %}
-            <p><i>You requested that your subscription be canceled.</i></p>
-            <p>Your subscription is scheduled to end on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
-        {% else %}
-            <p>It will renew on <b>{{ subscription.current_period_end|date:'l, F j, Y' }}</b>.</p>
-            <form method="post" onsubmit="return confirm('Are you sure?')" action="{% url 'subscription-cancel' subscription.id %}">
-                {% csrf_token %}
-                <button>Cancel subscription</button>
-            </form>
+    <p>[Put stuff here.]</p>
 
-            <hr />
-
-            <h3>Current payment method</h3>
-            <ul>
-                <li>{{ payment_method.brand }}</li>
-                <li>Last four digits: <b>{{ payment_method.last4 }}</b></li>
-                <li>Expiring: <b>{{ payment_method.exp_month }}/{{ payment_method.exp_year }}</b></li>
-            </ul>
-
-            <form method="post" action="{% url 'subscription-update-card' %}" id="payment-form">
-                {% csrf_token %}
-                {{ stripe_form }}
-                {% include 'inventory/_stripe-card-field.html' %}
-                <button>Update card</button>
-            </form>
-        {% endif %}
-    {% else %}
-        {% if user.profile.has_active_subscription %}
-            <p>You’re good to go. You have a special account and you don’t need to subscribe!</p>
-        {% else %}
-            <p>You don’t have a subscription yet. <a href="{% url 'subscribe' %}">Please subscribe now!</a></p>
-        {% endif %}
-    {% endif %}
-
-    {% if charges %}
-        <hr />
-
-        <h3>Recent payment history</h3>
-        <ul>
-        {% for charge in charges %}
-            <li>
-                <b>{{ charge.amount }} {{ charge.currency|upper }}</b> on
-                {% if charge.receipt_url %}
-                    <a href="{{ charge.receipt_url }}">{{ charge.created|date:'F j, Y' }}</a>
-                {% else %}
-                    {{ charge.created|date:'F j, Y' }}
-                {% endif %}
-                {% if charge.status == 'succeeded' %}
-                    {# thumbs up #}
-                    &#128077;
-                {% else %}
-                    ({{ charge.status }})
-                {% endif %}
-            </li>
-        {% endfor %}
-        </ul>
-    {% endif %}
 {% endflag %}
 </div>
 {% endblock %}

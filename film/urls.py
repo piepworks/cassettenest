@@ -114,25 +114,6 @@ urlpatterns = [
     path('create-checkout-session/<price>', views.create_checkout_session, name='checkout-session'),
     path('stripe-webhook', views.stripe_webhook, name='stripe-webhook'),
     path('stripe-portal', views.stripe_portal, name='stripe-portal'),
-
-    # Subscribe (dj-stripe)
-    path('subscribe/',
-         views.PurchaseSubscriptionView.as_view(),
-         name='subscribe'),
-    path('subscription-success/<id>',
-         views.PurchaseSubscriptionSuccessView.as_view(),
-         name='subscription-success'),
-    path('subscribe/update_card',
-         views.subscription_update_card,
-         name='subscription-update-card'),
-    path('subscribe/cancel/<id>',
-         views.subscription_cancel_v1, name='subscription-cancel'),
-
-    # Sample page that you can’t see without a subscription.
-    path('restricted/', views.restricted, name='restricted'),
-
-    # Stripe Webhooks
-    path('stripe/', include('djstripe.urls', namespace='djstripe')),
 ]
 
 if settings.DEBUG:

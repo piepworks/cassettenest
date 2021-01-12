@@ -21,9 +21,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
 from django.http.response import JsonResponse
 import stripe
-import djstripe.models
 import requests
-from djstripe.decorators import subscription_payment_required
 from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll
 from .forms import (
     CameraForm,
@@ -32,12 +30,10 @@ from .forms import (
     PatternsForm,
     ProfileForm,
     ProjectForm,
-    PurchaseSubscriptionForm,
     ReadyForm,
     RegisterForm,
     RollForm,
     FilmForm,
-    UpdateCardForm,
     UserForm,
     UploadCSVForm,
 )
@@ -165,7 +161,6 @@ def settings(request):
     else:
         user_form = UserForm(instance=owner)
         profile_form = ProfileForm(instance=owner.profile)
-        stripe_form = UpdateCardForm()
         csv_form = UploadCSVForm()
         subscription = False
         exportable = {
@@ -184,45 +179,13 @@ def settings(request):
             'Journals',
         ]
 
-        try:
-            subscriptions = djstripe.models.Subscription.objects.filter(
-                customer__subscriber=owner
-            )
-            if subscriptions:
-                subscription = subscriptions[0]
-        except djstripe.models.Subscription.DoesNotExist:
-            pass
-
-        try:
-            subscriber = djstripe.models.Customer.objects.get(subscriber=owner)
-            try:
-                payment_method = djstripe.models.Source.objects.get(
-                    id=subscriber.default_source.id
-                ).source_data
-            except AttributeError:
-                payment_method = False
-        except djstripe.models.Customer.DoesNotExist:
-            payment_method = False
-
-        try:
-            charges = djstripe.models.Charge.objects.filter(
-                customer__subscriber=owner
-            ).order_by('-created')[:5]
-        except djstripe.models.Charge.DoesNotExist:
-            charges = False
-
         context = {
             'user_form': user_form,
             'profile_form': profile_form,
-            'stripe_form': stripe_form,
             'csv_form': csv_form,
-            'subscription': subscription,
-            'payment_method': payment_method,
             'exportable': exportable,
             'exportable_data': exportable_data,
             'imports': imports,
-            'charges': charges,
-            'STRIPE_PUBLIC_KEY': djstripe.settings.STRIPE_PUBLIC_KEY,
             'js_needed': True,
         }
 
@@ -386,166 +349,6 @@ def stripe_webhook(request):
         )
 
     return HttpResponse(status=200)
-
-
-@method_decorator(login_required, name='dispatch')
-class PurchaseSubscriptionView(FormView):
-    '''
-    Example view to demonstrate how to use dj-stripe to:
-    * create a Customer
-    * add a card to the Customer
-    * create a Subscription using that card
-    '''
-    template_name = 'inventory/subscribe.html'
-    form_class = PurchaseSubscriptionForm
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-
-        if djstripe.models.Plan.objects.count() == 0:
-            raise Exception(
-                'No Product Plans in the dj-stripe database - create some in '
-                'your stripe account and then '
-                'run `./manage.py djstripe_sync_plans_from_stripe` '
-                '(or use the dj-stripe webhooks)'
-            )
-
-        subscription = False
-
-        try:
-            subscriptions = djstripe.models.Subscription.objects.filter(
-                customer__subscriber=self.request.user
-            )
-            if subscriptions:
-                subscription = subscriptions[0]
-        except djstripe.models.Subscription.DoesNotExist:
-            pass
-
-        try:
-            subscriber = djstripe.models.Customer.objects.get(
-                subscriber=self.request.user
-            )
-            try:
-                payment_method = djstripe.models.Source.objects.get(
-                    id=subscriber.default_source.id
-                ).source_data
-            except AttributeError:
-                payment_method = False
-        except djstripe.models.Customer.DoesNotExist:
-            payment_method = False
-
-        ctx['subscription'] = subscription
-        ctx['payment_method'] = payment_method
-        ctx['owner'] = self.request.user
-        ctx['STRIPE_PUBLIC_KEY'] = djstripe.settings.STRIPE_PUBLIC_KEY
-        ctx['prices'] = djstripe.models.Price.objects.filter(active=True)
-        ctx['js_needed'] = True
-
-        return ctx
-
-    def form_valid(self, form):
-        stripe_source = form.cleaned_data['stripe_source']
-        plan = form.cleaned_data['plan']
-        user = self.request.user
-
-        # Create the Stripe Customer, by default subscriber Model is User,
-        # this can be overridden with settings.DJSTRIPE_SUBSCRIBER_MODEL
-        customer, created = djstripe.models.Customer.get_or_create(subscriber=user)
-
-        # Add the source as the customer's default card
-        customer.add_card(stripe_source)
-
-        # Using the Stripe API, create a subscription for this customer,
-        # using the customer's default payment source
-        stripe_subscription = stripe.Subscription.create(
-            customer=customer.id,
-            items=[{'plan': plan.id}],
-            collection_method='charge_automatically',
-            # tax_percent=15,
-            api_key=djstripe.settings.STRIPE_SECRET_KEY,
-        )
-
-        # Sync the Stripe API return data to the database,
-        # this way we don't need to wait for a webhook-triggered sync
-        subscription = djstripe.models.Subscription.sync_from_stripe_data(
-            stripe_subscription
-        )
-
-        self.request.subscription = subscription
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse(
-            'subscription-success',
-            kwargs={'id': self.request.subscription.id},
-        )
-
-
-@method_decorator(login_required, name='dispatch')
-class PurchaseSubscriptionSuccessView(DetailView):
-    template_name = 'inventory/subscribe_success.html'
-
-    queryset = djstripe.models.Subscription.objects.all()
-    slug_field = 'id'
-    slug_url_kwarg = 'id'
-    context_object_name = 'subscription'
-
-
-@require_POST
-@login_required
-def subscription_update_card(request):
-    form = UpdateCardForm(request.POST)
-
-    if form.is_valid():
-        customer = djstripe.models.Customer.objects.get(
-            subscriber=request.user
-        )
-
-        # Delete all existing payment sources
-        sources = djstripe.models.Source.objects.filter(customer=customer)
-        for source in sources:
-            source.detach()
-
-        # Set a new default payment source
-        stripe_source = form.cleaned_data['stripe_source']
-        customer.add_card(stripe_source)
-
-        messages.success(request, 'Card updated!')
-    else:
-        messages.error(request, 'Something is not right.')
-
-    return redirect(reverse('settings'),)
-
-
-@require_POST
-@login_required
-def subscription_cancel_v1(request, id):
-    owner = request.user
-
-    try:
-        subscription = djstripe.models.Subscription.objects.get(
-            customer__subscriber=owner,
-            id=id
-        )
-        subscription.cancel(at_period_end=True)
-    except djstripe.models.Subscription.DoesNotExist:
-        # TODO: Display an error
-        pass
-
-    return redirect('settings')
-
-
-@login_required
-@subscription_payment_required
-def restricted(request):
-    '''
-    An example page that you must have a subscription to view.
-    '''
-
-    context = {}
-
-    return render(request, 'inventory/restricted.html', context)
 
 
 def register(request):
