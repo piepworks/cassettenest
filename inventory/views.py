@@ -279,7 +279,7 @@ def stripe_webhook(request):
 
         send_mail(
             subject='New Cassette Nest subscription!',
-            message=f'{user.username} / {user.email} just subscribed to the {user.profile.subscription} plan!',
+            message=f'{user.username} / {user.email} subscribed to the {user.profile.subscription} plan!',
             from_email='trey@cassettenest.com',
             recipient_list=['boss@treylabs.com']
         )
@@ -293,14 +293,14 @@ def stripe_webhook(request):
         if subscription.canceled_at:
             send_mail(
                 subject='Cassette Nest subscription cancellation. :(',
-                message=f'{user.username} / {user.email} just cancelled their {user.profile.subscription} subscription.',
+                message=f'{user.username} / {user.email} cancelled their {user.profile.subscription} subscription.',
                 from_email='trey@cassettenest.com',
                 recipient_list=['boss@treylabs.com']
             )
         else:
             send_mail(
                 subject='Cassette Nest subscription updated!',
-                message=f'{user.username} / {user.email} just updated their {user.profile.subscription} subscription.',
+                message=f'{user.username} / {user.email} updated their {user.profile.subscription} subscription.',
                 from_email='trey@cassettenest.com',
                 recipient_list=['boss@treylabs.com']
             )
@@ -358,7 +358,7 @@ def register(request):
             email = form.cleaned_data.get('email')
             send_mail(
                 subject='New Cassette Nest user!',
-                message=f'{username} / {email} just signed up!',
+                message=f'{username} / {email} signed up!',
                 from_email='trey@cassettenest.com',
                 recipient_list=['boss@treylabs.com']
             )
