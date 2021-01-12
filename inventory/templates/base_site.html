@@ -17,6 +17,9 @@
     {% if js_needed %}
     <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
     {% endif %}
+    {% if not user.is_authenticated %}
+    <script async defer data-domain="app.cassettenest.com" src="https://plausible.io/js/plausible.js"></script>
+    {% endif %}
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 <body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
