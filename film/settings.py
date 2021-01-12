@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'compressor',
     'markdown_deux',
-    'djstripe',
     'capture_tag',
     'debug_toolbar',
     'waffle',
@@ -192,12 +191,6 @@ STRIPE_LIVE_MODE = int(os.environ.get('STRIPE_LIVE_MODE', default=0))
 STRIPE_PRICE_ID_MONTHLY = os.environ.get('STRIPE_PRICE_ID_MONTHLY')
 STRIPE_PRICE_ID_ANNUAL = os.environ.get('STRIPE_PRICE_ID_ANNUAL')
 STRIPE_ENDPOINT_SECRET = os.environ.get('STRIPE_ENDPOINT_SECRET')
-
-# dj-stripe only
-DJSTRIPE_WEBHOOK_SECRET = os.environ.get('DJSTRIPE_WEBHOOK_SECRET')
-DJSTRIPE_SUBSCRIPTION_REDIRECT = 'subscribe'
-DJSTRIPE_FOREIGN_KEY_TO_FIELD = 'djstripe_id'
-DJSTRIPE_USE_NATIVE_JSONFIELD = False
 
 # Django Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1']

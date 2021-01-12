@@ -63,29 +63,3 @@ legend {
 input[type=number] { width: 5em; }
 
 select:focus { outline: 5px solid $gold; }
-
-// Stripe
-// ------
-.StripeElement {
-    @include input-style;
-    max-width: 50ch;
-
-    &--focus { @include input-focus-style; }
-
-    &--invalid { border-color: $destructive; }
-
-    &--focus#{&}--invalid { box-shadow: 0 0 1px 4px $destructive; }
-
-    // TODO: Figure out how this should look and keep the color in _colors.scss
-    &--webkit-autofill { background-color: #fefde5 !important; }
-}
-
-#payment-form {
-    .form-row {
-        margin-bottom: 1rem;
-
-        div + div { margin-top: 1rem; }
-    }
-}
-
-#card-errors { color: darken($destructive, 10%); }

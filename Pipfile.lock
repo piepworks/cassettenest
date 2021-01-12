@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d913c411e7c4081d0cb06fe7b87d0c974951268f98a38624a553d37c8f372bcf"
+            "sha256": "0b71498aba412158f48b2a39893403dea9fdc187eee199a1c5f07dd07f018297"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -101,21 +101,13 @@
             "index": "pypi",
             "version": "==5.3.1"
         },
-        "dj-stripe": {
-            "hashes": [
-                "sha256:39381937a0c7ea8c6b78992e3ced80f4d94919c7c2d61c19c36eee9aca8887d9",
-                "sha256:4da77d6a6e387941bc70377c9cbbab6f3739ae92602d93275ea5a2814f7901a4"
-            ],
-            "index": "pypi",
-            "version": "==2.4.1"
-        },
         "django": {
             "hashes": [
-                "sha256:5c866205f15e7a7123f1eec6ab939d22d5bde1416635cab259684af66d8e48a2",
-                "sha256:edb10b5c45e7e9c0fb1dc00b76ec7449aca258a39ffd613dbd078c51d19c9f03"
+                "sha256:2d78425ba74c7a1a74b196058b261b9733a8570782f4e2828974777ccca7edf7",
+                "sha256:efa2ab96b33b20c2182db93147a0c3cd7769d418926f9e9f140a60dca7c64ca9"
             ],
             "index": "pypi",
-            "version": "==3.1.4"
+            "version": "==3.1.5"
         },
         "django-appconf": {
             "hashes": [
@@ -194,14 +186,6 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==2.10"
-        },
-        "jsonfield": {
-            "hashes": [
-                "sha256:7e4e84597de21eeaeeaaa7cc5da08c61c48a9b64d0c446b2d71255d01812887a",
-                "sha256:df857811587f252b97bafba42e02805e70a398a7a47870bc6358a0308dd689ed"
-            ],
-            "markers": "python_version >= '3.6'",
-            "version": "==3.1.0"
         },
         "libsass": {
             "hashes": [
@@ -357,7 +341,7 @@
                 "sha256:19188f96923873c92ccb987120ec4acaa12f0461fa9ce5d3d0772bc965a39e08",
                 "sha256:d8ff90d979214d7b4f8ce956e80f4028fc6860e4431f731ea4a8c08f23f99473"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4.0'",
+            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4' and python_version < '4'",
             "version": "==1.26.2"
         },
         "whitenoise": {
