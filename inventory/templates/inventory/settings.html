@@ -8,6 +8,12 @@
 <div class="raw">
     <h1>Settings</h1>
 
+    {% flag 'stripe' %}
+    <h2 id="subscription">Manage your subscription</h2>
+    {% include 'inventory/_settings-subscription.html' %}
+    <hr />
+    {% endflag %}
+
     <form method="post">
         {% csrf_token %}
         {% for field in user_form %}
@@ -52,20 +58,13 @@
         {% endfor %}
     </ul>
     {% endflag %}
-
-{% flag 'stripe' %}
-    <hr />
-
-    <h2 id="subscription">Manage your subscription</h2>
-
-    <p>[Put stuff here.]</p>
-
-{% endflag %}
 </div>
 {% endblock %}
 
 {% block page_js %}
-{% if subscription %}
-    {% include 'inventory/_stripe-javascript.html' %}
-{% endif %}
+{% flag 'stripe' %}
+<script>
+    {% include 'js/subscription.js' %}
+</script>
+{% endflag %}
 {% endblock %}

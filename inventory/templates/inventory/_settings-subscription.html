@@ -1,0 +1,23 @@
+{% if user.is_staff %}
+    <div>
+        <p>You’re good to go. You have a special account and you don’t need to subscribe! ❤️</p>
+    </div>
+{% else %}
+    <div class="js-required">
+        {% csrf_token %}
+        {% if not user.profile.has_active_subscription %}
+        <h3>You’re not currently subscribed. Choose a plan:</h3>
+
+        <ol>
+            <li><button class="subscribe" id="btn-monthly" data-price="monthly">$2 / month</button></li>
+            <li><button class="subscribe" id="btn-yearly" data-price="annual">$20 / year</button></li>
+        </ol>
+        {% else %}
+        <p>You’re currently subscribed to the <b>{{ user.profile.subscription }}</b> plan.</p>
+        <p><button class="manage-subscription">View and manage your subscription details.</button></p>
+        {% endif %}
+    </div>
+    <div class="no-js">
+        <p>Sorry, subscription management requires JavaScript to work. :(</p>
+    </div>
+{% endif %}

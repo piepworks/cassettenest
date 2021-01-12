@@ -109,7 +109,6 @@ urlpatterns = [
     path('import/journals', views.ImportJournalsView.as_view(), name='import-journals'),
 
     # Subscription
-    path('subscription', views.subscription, name='subscription'),
     path('subscription/success', views.subscription_success, name='subscription-success'),
     path('create-checkout-session/<price>', views.create_checkout_session, name='checkout-session'),
     path('stripe-webhook', views.stripe_webhook, name='stripe-webhook'),

@@ -187,6 +187,7 @@ def settings(request):
             'exportable_data': exportable_data,
             'imports': imports,
             'js_needed': True,
+            'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
         }
 
         return render(request, 'inventory/settings.html', context)
@@ -213,7 +214,7 @@ def create_checkout_session(request, price):
                 client_reference_id=request.user.id,
                 customer_email=request.user.email,
                 success_url=host + reverse('subscription-success') + '?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=host + reverse('subscription'),
+                cancel_url=host + reverse('settings') + '#subscription',
                 payment_method_types=['card'],
                 mode='subscription',
                 line_items=[
@@ -244,7 +245,7 @@ def stripe_portal(request):
 
     session = stripe.billing_portal.Session.create(
         customer=request.user.profile.stripe_customer_id,
-        return_url=host + reverse('subscription')
+        return_url=host + reverse('settings') + '#subscription'
     )
     return JsonResponse({'url': session['url']})
 
