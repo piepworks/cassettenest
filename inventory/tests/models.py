@@ -76,6 +76,44 @@ class ProfileTests(TestCase):
         user.save()
         self.assertIsInstance(user.profile, Profile)
 
+    def test_profile_subscription_canceling(self):
+        user = User.objects.create(
+            username='canceling_subscriber',
+            password=self.password,
+        )
+        user.profile.stripe_subscription_id = 'sub_abcd'
+
+        fake_price_id = 'price_abcd'
+        mock_subscription = mock.Mock()
+        mock_subscription.plan.id = fake_price_id
+        mock_subscription.status = 'active'
+        mock_subscription.canceled_at = True
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
+                user.save()
+
+        self.assertEqual(user.profile.subscription_status, 'canceling')
+
+    def test_profile_subscription_canceled(self):
+        user = User.objects.create(
+            username='canceled_subscriber',
+            password=self.password,
+        )
+        user.profile.stripe_subscription_id = 'sub_abcd'
+
+        fake_price_id = 'price_abcd'
+        mock_subscription = mock.Mock()
+        mock_subscription.plan.id = fake_price_id
+        mock_subscription.status = 'canceled'
+        mock_subscription.canceled_at = True
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
+                user.save()
+
+        self.assertEqual(user.profile.subscription_status, 'canceled')
+
 
 class FilmTests(TestCase):
     def test_get_absolute_url(self):
