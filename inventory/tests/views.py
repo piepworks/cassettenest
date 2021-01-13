@@ -11,6 +11,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 from freezegun import freeze_time
 from model_bakery import baker
+from waffle.testutils import override_flag
 from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 
@@ -978,3 +979,77 @@ class SubscriptionTests(TestCase):
             )
 
         self.assertEqual(response.status_code, 200)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_flag('stripe', active=True)
+class SubscriptionBannerTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_subscription_banner_not_subscribed(self):
+        self.user.profile.subscription_status = 'none'
+        self.user.profile.save()
+
+        response = self.client.get(reverse('index'))
+
+        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
+        self.assertContains(response, 'Paid plans are now available.')
+
+    def test_subscription_banner_canceled(self):
+        self.user.profile.subscription_status = 'canceled'
+        self.user.profile.save()
+
+        response = self.client.get(reverse('index'))
+
+        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
+        self.assertContains(response, 'Your subscription has been cancelled.')
+
+    def test_subscription_banner_error(self):
+        self.user.profile.subscription_status = 'error'
+        self.user.profile.save()
+
+        response = self.client.get(reverse('index'))
+
+        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
+        self.assertContains(response, 'Looks like there’s a problem with your subscription.')
+
+    def test_subscription_banner_canceling(self):
+        self.user.profile.subscription_status = 'canceling'
+        self.user.profile.save()
+
+        response = self.client.get(reverse('index'))
+
+        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
+        self.assertContains(response, 'Your subscription is scheduled to be canceled.')
+
+    def test_subscription_banner_pending(self):
+        self.user.profile.subscription_status = 'pending'
+        self.user.profile.save()
+
+        response = self.client.get(reverse('index'))
+
+        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
+        self.assertContains(response, 'Your subscription is being updated…')
+
+    def test_subscription_banner_no_flag(self):
+        self.user.profile.subscription_status = 'none'
+        self.user.profile.save()
+
+        with override_flag('stripe', active=False):
+            response = self.client.get(reverse('index'))
+
+        self.assertTemplateNotUsed(response, 'inventory/_subscription-banner.html')
+        self.assertNotContains(response, 'Paid plans are now available.')
