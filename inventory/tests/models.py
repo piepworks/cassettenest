@@ -1,6 +1,7 @@
 import datetime
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
+from unittest import mock
 from model_bakery import baker
 from freezegun import freeze_time
 from inventory.models import (
@@ -18,13 +19,45 @@ from inventory.utils import status_number
 class ProfileTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.username = 'testy'
-        cls.user = baker.make(User, username=cls.username)
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create(
+            username=cls.username,
+            password=cls.password,
+        )
 
     def test_model_str(self):
         self.assertEqual(str(self.user.profile), f'Settings for {self.username}')
 
-    def test_has_active_subscription(self):
+    def test_has_active_subscription_staff(self):
+        user = User.objects.create(
+            username='staff',
+            password=self.password,
+            is_staff=True,
+        )
+
+        self.assertTrue(user.profile.has_active_subscription)
+
+    def test_has_active_subscription_true(self):
+        user = User.objects.create(
+            username='subscriber',
+            password=self.password,
+        )
+        user.profile.stripe_subscription_id = 'sub_abcd'
+
+        fake_price_id = 'price_abcd'
+        mock_subscription = mock.Mock()
+        mock_subscription.plan.id = fake_price_id
+        mock_subscription.status = 'active'
+        mock_subscription.canceled_at = None
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
+                user.save()
+
+        self.assertTrue(user.profile.has_active_subscription)
+
+    def test_has_active_subscription_false(self):
         self.assertFalse(self.user.profile.has_active_subscription)
 
     def test_creating_profile_for_legacy_user(self):
@@ -32,7 +65,7 @@ class ProfileTests(TestCase):
 
         # Create a user with `bulk_create` so that `post_save` doesn’t run and create a Profile.
         User.objects.bulk_create([
-            User(id=1, username='test', password='testtest'),
+            User(id=1, username='legacy_user', password=self.password),
         ])
 
         user = User.objects.get(id=1)
