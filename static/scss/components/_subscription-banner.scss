@@ -1,12 +1,36 @@
 .c-subscription-banner {
-    background: $bs-blue;
-    color: $bs-blue-bg;
+    background: $bs-blue-bg;
+    color: $bs-blue;
     text-align: center;
     padding: 0.75rem;
 
     a {
-        color: $bs-blue-bg;
+        color: $bs-blue;
 
-        &:hover { background: darken($bs-blue, 10%); }
+        &:hover { background: darken($bs-blue-bg, 10%); }
+    }
+
+    &--warning,
+    &--canceling {
+        color: $bs-yellow;
+        background: $bs-yellow-bg;
+
+        a {
+            color: $bs-yellow;
+
+            &:hover { background: darken($bs-yellow-bg, 10%); }
+        }
+    }
+
+    &--error,
+    &--canceled {
+        color: $bs-red;
+        background: $bs-red-bg;
+
+        a {
+            color: $bs-red;
+
+            &:hover { background: darken($bs-red-bg, 10%); }
+        }
     }
 }
