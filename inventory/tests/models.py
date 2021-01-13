@@ -355,7 +355,7 @@ class ProjectTests(TestCase):
         self.assertEqual(self.project.get_rolls_remaining(), 0)
 
 
-class JournalTests(TestCase):
+class JournalModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.today = datetime.datetime.now().date()
