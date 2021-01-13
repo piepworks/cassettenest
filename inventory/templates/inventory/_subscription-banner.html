@@ -1,24 +1,16 @@
 {% url 'settings' as subscribe_url %}
-{% if not user.is_staff %}
-    {% if user.profile.subscription_status == 'none' and request.path != subscribe_url%}
-        <div class="c-subscription-banner">
-            Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}#subscription">subscribe</a>!
-        </div>
+{% if not user.is_staff and user.profile.subscription_status != 'active' %}
+    <div class="c-subscription-banner">
+    {% if user.profile.subscription_status == 'none' %}
+        Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}#subscription">subscribe</a>!
     {% elif user.profile.subscription_status == 'canceled' %}
-        <div class="c-subscription-banner">
-            Your subscription has been cancelled. <a href="{{ subscribe_url }}#subscription">Update your settings to resubscribe</a>.
-        </div>
+        Your subscription has been cancelled. <a href="{{ subscribe_url }}#subscription">Update your settings to resubscribe</a>.
     {% elif user.profile.subscription_status == 'error' %}
-        <div class="c-subscription-banner">
-            Looks like there’s a problem with your subscription. <a href="{{ subscribe_url }}#subscription">Please check your settings.</a>
-        </div>
+        Looks like there’s a problem with your subscription. <a href="{{ subscribe_url }}#subscription">Please check your settings.</a>
     {% elif user.profile.subscription_status == 'canceling' %}
-        <div class="c-subscription-banner">
-            Your subscription is scheduled to be canceled. <a href="{{ subscribe_url }}#subscription">Update your settings</a> if you change your mind.
-        </div>
+        Your subscription is scheduled to be canceled. <a href="{{ subscribe_url }}#subscription">Update your settings</a> if you change your mind.
     {% elif user.profile.subscription_status == 'pending' %}
-        <div class="c-subscription-banner">
-            Your subscription is being updated…
-        </div>
+        Your subscription is being updated…
     {% endif %}
+    </div>
 {% endif %}
