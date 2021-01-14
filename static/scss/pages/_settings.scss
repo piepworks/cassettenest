@@ -1,0 +1,30 @@
+$lighter-text: rgba(0, 0, 0, 0.6);
+
+.subscription-settings {
+    margin: 2rem 0;
+    background: $light;
+    padding: 0.5rem 2rem 0;
+    border-radius: 0.5rem;
+}
+
+.subscription-plans {
+    margin: 2rem -0.5rem;
+
+    button { margin: 0.5rem; }
+}
+
+.subscription-note {
+    margin: 2rem -2rem 0;
+    padding: 1rem 2rem;
+    color: $lighter-text;
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+    font-size: 0.9rem;
+
+    a {
+        color: $lighter-text;
+
+        &:hover { background: $medium; }
+    }
+}

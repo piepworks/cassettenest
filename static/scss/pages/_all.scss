@@ -7,4 +7,5 @@ body {
     &.patterns { @import 'patterns'; }
     &.landing { @import 'landing'; }
     &.error { @import 'error'; }
+    &.settings { @import 'settings'; }
 }
