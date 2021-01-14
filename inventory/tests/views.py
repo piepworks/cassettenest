@@ -821,8 +821,23 @@ class SubscriptionTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_subscription_success_page(self):
-        response = self.client.get(reverse('subscription-success'))
-        self.assertEqual(response.status_code, 200)
+        fake_price_id = 'price_abcd'
+        mock_subscription = mock.Mock()
+        mock_subscription.plan.id = fake_price_id
+        mock_session = mock.Mock()
+        mock_session.subscription = 'sub_abcd'
+
+        with mock.patch('inventory.views.stripe.checkout.Session.retrieve', return_value=mock_session):
+            with mock.patch('stripe.Subscription.retrieve', return_value=mock_subscription):
+                with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
+                    response = self.client.get(reverse('subscription-success') + '?session_id=1234', follow=True)
+
+        self.assertContains(response, 'Yay, you’re subscribed to the monthly plan!')
+
+    def test_subscription_success_page_invalid_session(self):
+        response = self.client.get(reverse('subscription-success') + '?session_id=1234', follow=True)
+
+        self.assertContains(response, 'Yay, you’re subscribed!')
 
     def test_webhook(self):
         fake_return_value = {

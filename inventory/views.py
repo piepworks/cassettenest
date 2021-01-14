@@ -221,9 +221,21 @@ def create_checkout_session(request, price):
 
 @login_required
 def subscription_success(request):
-    context = {}
+    stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
 
-    return render(request, 'inventory/subscription-success.html', context)
+    try:
+        session = stripe.checkout.Session.retrieve(request.GET.get('session_id'))
+        subscription = stripe_price_name(stripe.Subscription.retrieve(session.subscription).plan.id)
+        subscription_message = f' to the {subscription} plan'
+    except stripe.error.InvalidRequestError:
+        subscription_message = ''
+
+    messages.success(
+        request,
+        f'Yay, you’re subscribed{subscription_message}! It may take a moment to show up in your settings.'
+    )
+
+    return redirect('settings')
 
 
 @require_POST
@@ -235,7 +247,7 @@ def stripe_portal(request):
 
     session = stripe.billing_portal.Session.create(
         customer=request.user.profile.stripe_customer_id,
-        return_url=host + reverse('settings') + '#subscription'
+        return_url=host + reverse('settings')
     )
     return JsonResponse({'url': session['url']})
 
