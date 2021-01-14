@@ -1,33 +1,26 @@
-{% if user.is_staff %}
-    <div>
+<div id="subscription" class="subscription-settings">
+    <h2>Manage your subscription</h2>
+    {% if user.is_staff %}
         <p>You’re good to go. You have a special account and you don’t need to subscribe! ❤️</p>
-    </div>
-{% else %}
-    <div class="js-required">
-        <div id="subscription" class="subscription-settings">
-            <h2>Manage your subscription</h2>
-            {% csrf_token %}
-
+        <p class="subscription-note">Thank you for your help in creating Cassette Nest!</p>
+    {% else %}
+        <div class="js-required">
             {% if not user.profile.has_active_subscription %}
-            <h3>You’re not currently subscribed. Please choose a plan.</h3>
-
-            <div class="subscription-plans">
-                <button class="subscribe" id="btn-monthly" data-price="monthly">$2 per month</button>
-                <button class="subscribe" id="btn-yearly" data-price="annual">$20 per year</button>
-            </div>
+                <h3>You’re not currently subscribed. Please choose a plan.</h3>
+                <div class="subscription-plans">
+                    <button class="subscribe" id="btn-monthly" data-price="monthly">$2 per month</button>
+                    <button class="subscribe" id="btn-yearly" data-price="annual">$20 per year</button>
+                </div>
             {% else %}
-
-            <p>You’re currently subscribed to the <b>{{ user.profile.subscription }}</b> plan.</p>
-
-            <div class="subscription-plans">
-                <button class="manage-subscription">View and manage your subscription details.</button>
-            </div>
+                <p>You’re currently subscribed to the <b>{{ user.profile.subscription }}</b> plan.</p>
+                <div class="subscription-plans">
+                    <button class="manage-subscription">View and manage your subscription details.</button>
+                </div>
             {% endif %}
-
-            <p class="subscription-note">Easy and secure billing management with <a href="https://stripe.com">Stripe</a>. Cancel any time.</p>
         </div>
-    </div>
-    <div class="no-js">
-        <p>Sorry, subscription management requires JavaScript to work. :(</p>
-    </div>
-{% endif %}
+        <div class="no-js">
+            <p>Sorry, subscription management requires JavaScript to work. :(</p>
+        </div>
+        <p class="subscription-note">Easy and secure billing management with <a href="https://stripe.com">Stripe</a>. Cancel any time.</p>
+    {% endif %}
+</div>
