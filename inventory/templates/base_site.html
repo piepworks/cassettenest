@@ -61,22 +61,5 @@
     <script src="{% static 'js/main.js' %}"></script>
     {% block page_js %}{% endblock %}
     {% endif %}
-
-    {% if not user.is_authenticated %}
-    <script type="text/javascript">
-        var _gauges = _gauges || [];
-        (function() {
-            var t   = document.createElement('script');
-            t.type  = 'text/javascript';
-            t.async = true;
-            t.id    = 'gauges-tracker';
-            t.setAttribute('data-site-id', '5d8bc35e5884652b460b9720');
-            t.setAttribute('data-track-path', 'https://track.gaug.es/track.gif');
-            t.src = 'https://d2fuc4clr7gvcn.cloudfront.net/track.js';
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(t, s);
-        })();
-    </script>
-    {% endif %}
 </body>
 </html>
