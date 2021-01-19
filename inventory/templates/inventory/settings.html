@@ -28,7 +28,7 @@
     {% if exportable_data %}
     <hr />
 
-    <h2>Export your data</h2>
+    <h2 id="export">Export your data</h2>
     <ul>
         {% for k, v in exportable.items %}
             {% if v %}
@@ -42,7 +42,7 @@
     {% flag 'import-data' %}
     <hr />
 
-    <h2>Import previously exported data</h2>
+    <h2 id="import">Import previously exported data</h2>
     <ul>
         {% for import in imports %}
             <li>
