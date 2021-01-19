@@ -8,4 +8,5 @@ body {
     &.landing { @import 'landing'; }
     &.error { @import 'error'; }
     &.settings { @import 'settings'; }
+    &.register { @import 'register'; }
 }
