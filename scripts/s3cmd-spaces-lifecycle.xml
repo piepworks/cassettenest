@@ -1,0 +1,27 @@
+<!--
+https://developers.digitalocean.com/documentation/spaces/#create-bucket-lifecycle
+https://s3tools.org/usage
+
+Keep this file in the root of your Droplet.
+Set this up with:
+
+`s3cmd setlifecycle THIS_FILE s3://BUCKET`
+-->
+<LifecycleConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <Rule>
+        <ID>Delete older daily backups</ID>
+        <Prefix>backups-daily/</Prefix>
+        <Status>Enabled</Status>
+        <Expiration>
+            <Days>30</Days>
+        </Expiration>
+    </Rule>
+    <Rule>
+        <ID>Delete older code push backups</ID>
+        <Prefix>backups-code-push/</Prefix>
+        <Status>Enabled</Status>
+        <Expiration>
+            <Days>30</Days>
+        </Expiration>
+    </Rule>
+</LifecycleConfiguration>
