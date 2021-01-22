@@ -8,7 +8,9 @@ GIT_WORK_TREE=/home/trey/apps/cassettenest git checkout -f
 
 # Set variables
 now=$(date +"%F_%H-%M-%s")
-backup_file="$HOME/backups/cassettenest_$now.sql.gz"
+backup_path="${HOME}/backups"
+backup_file="cassettenest_${now}.dump"
+file_w_path="${backup_path}/${backup_file}"
 
 # BACKUP THE DATABASE AND UPDATE THINGS
 # -------------------------------------
@@ -19,7 +21,7 @@ docker-compose exec -T web pipenv install --system
 # Run a database migration if it's needed.
 docker-compose exec -T web python manage.py migrate --noinput
 # Actually backup the database.
-docker-compose exec -T db pg_dump -U cassette_nest cassette_nest | gzip > $backup_file
+docker-compose exec -T db pg_dump --format=custom -U cassette_nest cassette_nest > $file_w_path
 # Process static files (including Sass).
 mkdir -p staticfiles
 docker-compose exec -T web python manage.py collectstatic --noinput
@@ -27,9 +29,9 @@ docker-compose exec -T web python manage.py compress --force
 # -------------------------------------
 
 # Send backup file to DigitalOcean Space.
-s3cmd put $backup_file s3://cassettenest/backups-code-push/ -e
+s3cmd put $file_w_path s3://cassettenest/backups-code-push/${backup_file}.enc -e
 # Delete the backup file from the server when we’re done.
-rm $backup_file
+rm $file_w_path
 
 # Make sure daily backup script is executable.
 chmod +x scripts/daily-backup.sh

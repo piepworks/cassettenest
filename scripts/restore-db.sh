@@ -5,8 +5,8 @@
 # It should be decrypted automatically.
 # https://www.digitalocean.com/docs/spaces/resources/s3cmd-usage/#encrypt-files
 # Something like:
-# s3cmd get s3://[space]/[folder]/backup.sql.gz
+# s3cmd get s3://cassettenest/[folder]/backup.dump.enc backup.dump
 
 # Unzip and restore the database.
 # Something like:
-# gunzip -c backup.sql.gz | psql -U [username] [dbname]
+# docker-compose exec -T db pg_restore -d [dbname] --clean --create backup.dump
