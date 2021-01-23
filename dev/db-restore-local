@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Restore the local database after verifying the production database backup.
+
+# Set variables
+temp_folder="${HOME}/Code/cassettenest/temp"
+now=$(date +"%F")
+latest_backup="cassettenest_${now}"
+
+# Reload local database.
+docker-compose exec -T db pg_restore -d cassette_nest --clean --create ${temp_folder}/local.dump
+
+# Delete the production backup we verified from the local machine.
+rm ${temp_folder}/${latest_backup}.dump

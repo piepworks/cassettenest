@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Set variables
-now=$(date +"%F_%H-%M-%s")
+now=$(date +"%F")
 backup_path="${HOME}/backups"
 backup_file="cassettenest_${now}.dump"
 file_w_path="${backup_path}/${backup_file}"

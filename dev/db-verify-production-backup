@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Load the latest production database backup locally.
+
+# Set variables
+temp_folder="${HOME}/Code/cassettenest/temp"
+now=$(date +"%F")
+latest_backup="cassettenest_${now}"
+
+# Backup local database
+docker-compose exec -T db pg_dump --format=custom -U cassette_nest cassette_nest > ${temp_folder}/local.dump
+
+# TODO: Install s3cmd on my Mac with the same settings as production?
+s3cmd get s3://cassettenest/backups-daily/${latest_backup}.dump.enc ${temp_folder}/${latest_backup}.dump
+docker-compose exec -T db pg_restore -d cassette_nest --clean --create ${temp_folder}/${latest_backup}.dump
