@@ -3,7 +3,7 @@
 # Load the latest production database backup locally.
 
 # Set variables
-temp_folder="${HOME}/Code/cassettenest/temp"
+temp_folder="${HOME}/Code/cassettenest/backups"
 now=$(date +"%F")
 latest_backup="cassettenest_${now}"
 

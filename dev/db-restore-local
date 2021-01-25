@@ -3,7 +3,7 @@
 # Restore the local database after verifying the production database backup.
 
 # Set variables
-temp_folder="${HOME}/Code/cassettenest/temp"
+temp_folder="${HOME}/Code/cassettenest/backups"
 now=$(date +"%F")
 latest_backup="cassettenest_${now}"
 
