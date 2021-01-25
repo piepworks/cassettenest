@@ -7,7 +7,7 @@ backup_file="cassettenest_${now}.dump"
 file_w_path="${backup_path}/${backup_file}"
 
 # Delete any older backups.
-rm ${backup_path}/*.dump
+rm ${backup_path}/*.dump 2> /dev/null
 
 # Backup the database.
 cd $HOME/apps/cassettenest
