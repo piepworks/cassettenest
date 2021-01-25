@@ -7,6 +7,8 @@
         <div class="js-required">
             {% if not user.profile.has_active_subscription %}
                 <h3>You’re not currently subscribed. Please choose a plan.</h3>
+                <p class="policies">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
+
                 <div class="subscription-plans">
                     <button class="subscribe" id="btn-monthly" data-price="monthly">$2 per month</button>
                     <button class="subscribe" id="btn-yearly" data-price="annual">$20 per year</button>
