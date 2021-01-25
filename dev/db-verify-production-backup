@@ -7,6 +7,9 @@ temp_folder="${HOME}/Code/cassettenest/temp"
 now=$(date +"%F")
 latest_backup="cassettenest_${now}"
 
+# Create the temp folder if necessary.
+mkdir -p temp_folder
+
 # Delete existing local backup if it exists.
 rm ${temp_folder}/local.dump 2> /dev/null
 
