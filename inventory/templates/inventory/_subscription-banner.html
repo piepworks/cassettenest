@@ -1,5 +1,5 @@
 {% url 'settings' as subscribe_url %}
-{% if not user.is_staff and user.profile.subscription_status != 'active' %}
+{% if not user.profile.has_active_subscription %}
     <div class="c-subscription-banner c-subscription-banner--{{ user.profile.subscription_status }}">
     {% if user.profile.subscription_status == 'none' %}
         Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}#subscription">subscribe</a>!

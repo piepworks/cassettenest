@@ -43,13 +43,17 @@ class Profile(models.Model):
         choices=SUBSCRIPTION_CHOICES,
         default='none',
     )
+    friend = models.BooleanField(
+        default=False,
+        help_text='This account doesn’t need a subscription.',
+    )
 
     def __str__(self):
         return 'Settings for %s' % self.user
 
     @cached_property
     def has_active_subscription(self):
-        if self.user.is_staff:
+        if self.user.is_staff or self.friend:
             return True
         elif self.stripe_subscription_id and self.subscription_status not in ['none', 'canceled']:
             return True

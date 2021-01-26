@@ -1,7 +1,7 @@
 <div id="subscription" class="subscription-settings">
     <h2>Manage your subscription</h2>
-    {% if user.is_staff %}
-        <p>You’re good to go. You have a special account and you don’t need to subscribe! ❤️</p>
+    {% if user.is_staff or user.profile.friend %}
+        <p>You’re a friend of Trey Labs and you don’t need to subscribe! 🖤</p>
         <p class="subscription-note">Thank you for your help in creating Cassette Nest!</p>
     {% else %}
         <div class="js-required">
