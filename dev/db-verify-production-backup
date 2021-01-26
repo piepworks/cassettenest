@@ -8,10 +8,7 @@ now=$(date +"%F")
 latest_backup="cassettenest_${now}"
 
 # Create the temp folder if necessary.
-mkdir -p temp_folder
-
-# Delete existing local backup if it exists.
-rm ${temp_folder}/local.dump 2> /dev/null
+mkdir -p $temp_folder
 
 # Backup local database
 docker-compose exec -T db pg_dump --format=custom -U cassette_nest cassette_nest > ${temp_folder}/local.dump
