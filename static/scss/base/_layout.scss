@@ -20,5 +20,13 @@ body { background: $dark; }
         margin-top: 4rem;
         padding: 1.25rem;
         padding-bottom: 3rem;
+
+        .policies {
+            list-style: none;
+            padding: 0;
+            display: flex;
+
+            li + li { margin-left: 0.5rem; }
+        }
     }
 }
