@@ -19,11 +19,11 @@ class Profile(models.Model):
         ('canceling', 'Scheduled to cancel'),
         ('canceled', 'Canceled'),
     )
-    SUBSCRIPTION_CHOICES = {
+    SUBSCRIPTION_CHOICES = (
         ('none', 'None'),
         ('monthly', 'Monthly'),
         ('annual', 'Annual'),
-    }
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     timezone = models.CharField(
         max_length=40,
