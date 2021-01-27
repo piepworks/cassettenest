@@ -4,16 +4,16 @@ A way for analog photographers to track their film use from box to binder.
 
 [cassettenest.com](http://cassettenest.com)
 
-Copyright &copy; 2016-2020 Trey Labs LLC. All rights reserved.
+Copyright &copy; 2016-2021 Trey Labs LLC. All rights reserved.
 
 ## Local Setup
 
 1. Create a new a `.env` file based on [the example](example-local.env).
     - Adjust as needed, but you shouldn't need to do anything.
-2. `docker-compose up -d --build`
-3. `docker-compose exec web python manage.py migrate`
+2. `dev/build`
+3. `dev/run python manage.py migrate`
 4. Import a database dump if you want.
-    - If not, run `docker-compose exec web python manage.py createsuperuser`.
+    - If not, run `dev/run python manage.py createsuperuser`.
 
 ## Development
 
@@ -21,7 +21,10 @@ Copyright &copy; 2016-2020 Trey Labs LLC. All rights reserved.
     1. `nvm use`
     2. `npm i`.
 - Running Python tests
-    1. `docker-compose exec web python manage.py test`
+    - `dev/test`
+        - Just run tests.
+    - `dev/coverage`
+        - Run tests and generate a coverage report.
 
 ---
 
@@ -41,3 +44,11 @@ Then you can just run…
 ```shell
 dev/browsersync
 ```
+
+…or just…
+
+```shell
+dev/start
+```
+
+… to start the server as well as Browsersync.
