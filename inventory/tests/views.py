@@ -98,6 +98,15 @@ class SettingsTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('Username: This field is required.', messages)
 
+    @override_flag('stripe', active=True)
+    def test_friend_mode(self):
+        profile = Profile.objects.get(user=self.user)
+        profile.friend = True
+        profile.save()
+
+        response = self.client.get(reverse('settings'))
+        self.assertContains(response, 'You’re a friend of Trey Labs')
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RegisterTests(TestCase):

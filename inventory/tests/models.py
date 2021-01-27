@@ -38,6 +38,17 @@ class ProfileTests(TestCase):
 
         self.assertTrue(user.profile.has_active_subscription)
 
+    def test_has_active_subscription_friend(self):
+        user = User.objects.create(
+            username='friend',
+            password=self.password,
+        )
+        profile = Profile.objects.get(user=user)
+        profile.friend = True
+        profile.save()
+
+        self.assertTrue(profile.has_active_subscription)
+
     def test_has_active_subscription_true(self):
         user = User.objects.create(
             username='subscriber',
