@@ -125,6 +125,33 @@ class ProfileTests(TestCase):
 
         self.assertEqual(user.profile.subscription_status, 'canceled')
 
+    def test_trial_days_remaining(self):
+        user = User.objects.create(
+            username='trial_subscriber',
+            password=self.password,
+        )
+        user.profile.stripe_subscription_id = 'sub_abcd'
+
+        fake_price_id = 'price_abcd'
+        trial_end = datetime.datetime.now() + datetime.timedelta(days=14)
+        mock_subscription = mock.Mock()
+        mock_subscription.plan.id = fake_price_id
+        mock_subscription.status = 'trialing'
+        mock_subscription.trial_end = trial_end.timestamp()
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
+                user.save()
+                self.assertEqual(user.profile.trial_days_remaining, 14)
+
+    def test_trial_days_remaining_none(self):
+        user = User.objects.create(
+            username='trial_subscriber',
+            password=self.password,
+        )
+        user.profile.subscription_status = 'active'
+        self.assertIsNone(user.profile.trial_days_remaining)
+
 
 class FilmTests(TestCase):
     def test_get_absolute_url(self):

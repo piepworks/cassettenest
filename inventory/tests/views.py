@@ -107,6 +107,31 @@ class SettingsTests(TestCase):
         response = self.client.get(reverse('settings'))
         self.assertContains(response, 'You’re a friend of Trey Labs')
 
+    @override_flag('stripe', active=True)
+    @override_settings(SUBSCRIPTION_TRIAL=1)
+    @override_settings(SUBSCRIPTION_TRIAL_DURATION=14)
+    def test_trial_mode(self):
+        response = self.client.get(reverse('settings'))
+        self.assertContains(response, 'Try it free for <strong>14 days!</strong>')
+
+    @override_flag('stripe', active=True)
+    @override_settings(SUBSCRIPTION_TRIAL=1)
+    def test_trial_days_remaining(self):
+        profile = Profile.objects.get(user=self.user)
+        profile.stripe_subscription_id = 'cus_abcd'
+        profile.subscription_status = 'trialing'
+        profile.save()
+
+        fake_price_id = 'price_abcd'
+        trial_end = datetime.datetime.now() + datetime.timedelta(days=14)
+        mock_subscription = mock.Mock()
+        mock_subscription.trial_end = trial_end.timestamp()
+
+        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
+            with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
+                response = self.client.get(reverse('settings'))
+                self.assertContains(response, 'Your free trial will end in <strong>14 days</strong>.')
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RegisterTests(TestCase):
@@ -812,6 +837,7 @@ class SubscriptionTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn('error', response.json())
 
+    @override_settings(SUBSCRIPTION_TRIAL=0)
     def test_create_checkout_session_success(self):
         self.user.email = 'test@example.com'
         self.user.save()
