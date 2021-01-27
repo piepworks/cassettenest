@@ -178,6 +178,10 @@ def settings(request):
             'Projects',
             'Journals',
         ]
+        trial = {
+            'enabled': dj_settings.SUBSCRIPTION_TRIAL,
+            'duration': dj_settings.SUBSCRIPTION_TRIAL_DURATION,
+        }
 
         context = {
             'user_form': user_form,
@@ -187,6 +191,7 @@ def settings(request):
             'exportable_data': exportable_data,
             'imports': imports,
             'js_needed': True,
+            'trial': trial,
             'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
         }
 
@@ -198,6 +203,11 @@ def create_checkout_session(request, price):
     if request.method == 'GET':
         stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
         host = get_host(request)
+
+        if dj_settings.SUBSCRIPTION_TRIAL:
+            trial_period_days = int(dj_settings.SUBSCRIPTION_TRIAL_DURATION)
+        else:
+            trial_period_days = None
 
         try:
             checkout_session = stripe.checkout.Session.create(
@@ -212,7 +222,10 @@ def create_checkout_session(request, price):
                         'price': stripe_price_id(price),
                         'quantity': 1,
                     }
-                ]
+                ],
+                subscription_data={
+                    'trial_period_days': trial_period_days
+                },
             )
             return JsonResponse({'sessionId': checkout_session['id']})
         except Exception as e:

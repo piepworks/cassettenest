@@ -14,6 +14,7 @@ class Profile(models.Model):
     SUBSCRIPTION_STATUS_CHOICES = (
         ('none', 'Never had a subscription'),
         ('pending', 'Pending update'),
+        ('trialing', 'Trial period'),
         ('active', 'Subscribed'),
         ('error', 'Payment error'),
         ('canceling', 'Scheduled to cancel'),
@@ -60,6 +61,19 @@ class Profile(models.Model):
         else:
             return False
 
+    @property
+    def trial_days_remaining(self):
+        if self.subscription_status == 'trialing':
+            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
+            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+            trial_end = datetime.datetime.fromtimestamp(subscription.trial_end).date()
+            today = datetime.date.today()
+            days_remaining = trial_end - today
+
+            return days_remaining.days
+        else:
+            return None
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -89,7 +103,7 @@ def save_user_profile(sender, instance, **kwargs):
                 instance.profile.subscription_status = 'canceling'
             else:
                 instance.profile.subscription_status = subscription.status
-        elif subscription.status == 'canceled':
+        elif subscription.status == 'canceled' or subscription.status == 'trialing':
             instance.profile.subscription_status = subscription.status
         else:
             instance.profile.subscription_status = 'error'

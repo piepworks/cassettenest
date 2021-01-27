@@ -7,6 +7,11 @@
         <div class="js-required">
             {% if not user.profile.has_active_subscription %}
                 <h3>You’re not currently subscribed. Please choose a plan.</h3>
+
+                {% if trial.enabled %}
+                    <p>Try it free for <strong>{{ trial.duration }} days!</strong></p>
+                {% endif %}
+
                 <p class="policies">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
 
                 <div class="subscription-plans">
@@ -15,6 +20,11 @@
                 </div>
             {% else %}
                 <p>You’re currently subscribed to the <b>{{ user.profile.subscription }}</b> plan.</p>
+
+                {% if user.profile.subscription_status == 'trialing' %}
+                    <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
+                {% endif %}
+
                 <div class="subscription-plans">
                     <button class="manage-subscription">View and manage your subscription details.</button>
                 </div>
