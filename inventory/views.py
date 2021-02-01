@@ -390,6 +390,9 @@ def register(request):
 
             return redirect('index')
     else:
+        if request.user.is_authenticated:
+            return redirect(reverse('index'))
+
         form = RegisterForm()
 
     return render(request, 'registration/register.html', {'form': form})
