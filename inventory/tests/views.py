@@ -19,6 +19,28 @@ staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class HeaderTests(TestCase):
+    def test_logged_out_icon_url(self):
+        response = self.client.get(reverse('login'))
+
+        self.assertContains(response, '<a href="https://cassettenest.com">')
+
+    def test_logged_in_icon_url(self):
+        user = User.objects.create_user(
+            username='username',
+            password='password',
+        )
+        self.client.login(
+            username='username',
+            password='password',
+        )
+        index_url = reverse('index')
+        response = self.client.get(reverse('index'))
+
+        self.assertContains(response, f'<a href="{index_url}">')
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class IndexTests(TestCase):
     def setUp(self):
         self.index_url = reverse('index')
