@@ -56,7 +56,7 @@ $divider-width: 0.2rem;
     // Let the slightly more sophisticated Card and Heading styles break out of
     // the .raw padding.
     .c-heading--divider,
-    .c-card {
+    section.cards {
         margin-left: -$raw-padding;
         margin-right: -$raw-padding;
     }

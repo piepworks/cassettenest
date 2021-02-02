@@ -19,10 +19,9 @@
     }
 
     &--divider {
-        margin: 0;
-        margin-bottom: 1px;
+        margin: 0 -1px;
         font-size: 1rem;
-        padding: 0.8rem 1.25rem;
+        padding: 0.8rem 2rem;
         color: $light;
         font-weight: normal;
         background-color: $dark;

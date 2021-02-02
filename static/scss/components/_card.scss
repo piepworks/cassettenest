@@ -1,77 +1,80 @@
 .c-card {
-    margin-bottom: 1px;
     display: flex;
 
     a {
         display: flex;
         justify-content: space-between;
-        align-items: stretch;
-
-        &:hover { background: none; }
+        text-decoration: none;
+        color: map-get($govuk-colours, black);
 
         &,
-        > header,
-        > header h1 { flex-grow: 1; }
+        .c-card__name { flex-grow: 1; }
 
-        > header {
+        .c-card__name {
             display: flex;
             align-items: center;
+            padding: 0 2rem;
+            margin: 0.8rem 0;
+            font-size: 1.2rem;
+        }
+    }
 
-            h1 {
-                padding: 0 1.25rem;
-                font-size: 1.2rem;
-                font-weight: normal;
-            }
+    // Less spacing for card name if there’s a form.
+    form + a .c-card__name { padding: 0 0.5rem; }
+
+    // Default close button styles (film cards override this).
+    button.icon-destructive {
+        svg { fill: rgba(0, 0, 0, 0.25); }
+
+        &:hover svg { fill: darken($destructive, 10%); }
+
+        &:focus svg {
+            fill: $medium-dark;
+            outline: 5px solid $gold;
         }
     }
 
     &--default,
     &--blank {
-        @include gradient($light);
+        background: lighten($light, 5%);
 
-        a {
-            color: #000;
-            text-decoration: none;
+        &:focus,
+        &:hover,
+        a:focus,
+        a:hover {
+            background: $light;
 
-            > header h1 {
-                font-weight: normal;
-                color: #000;
-            }
+            .c-card__name { color: #000; }
         }
     }
 
     &--blank a {
-        > header h1 {
+        .c-card__name {
             font-style: italic;
             color: $medium-dark;
         }
 
-        &:hover > header h1 { color: #000; }
+        &:hover .c-card__name { color: #000; }
     }
 
     &--film {
-        @include gradient(blue);
-        color: white;
+        color: map-get($govuk-colours, black);
 
-        &__e6 { @include gradient($e6); }
+        &__e6 { @include film-card-colors('purple'); }
 
-        &__c41 { @include gradient($c41); }
+        &__c41 { @include film-card-colors('blue'); }
 
-        &__bw { @include gradient($bw); }
-
-        a {
-            color: white;
-            text-decoration: none;
-
-            > header h1 { color: white; }
-        }
+        &__bw { @include film-card-colors('grey'); }
     }
 
     &__count {
-        background: rgba(0, 0, 0, 0.25);
+        background: rgba(0, 0, 0, 0.1);
         display: flex;
         min-width: 3rem;
+        box-shadow: inset 0.3rem 0 0 0 rgba(0, 0, 0, 0.05);
 
         span { margin: auto; }
     }
+
+    & + & { border-top: 1px solid $light-border; }
 }

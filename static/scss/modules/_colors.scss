@@ -22,3 +22,49 @@ $bs-red: #a94442;
 $bs-red-bg: #f2dede;
 $bs-yellow: #8a6d3b;
 $bs-yellow-bg: #fcf8e3;
+
+// https://design-system.service.gov.uk/styles/colour/
+// https://design-system.service.gov.uk/components/tag/#additional-colours
+$govuk-colours: (
+    black: #0b0c0c,
+    grey-dark: #383f43,
+    grey-light: #eeefef,
+    blue-dark: #144e81,
+    blue-light: #d2e2f1,
+    purple-light: #dbd5e9,
+    purple-dark: #3d2375,
+);
+
+$light-border: darken($light, 20%);
+
+@mixin slot-colors($color) {
+    background: map-get($govuk-colours, #{$color}-light);
+
+    &,
+    a { color: map-get($govuk-colours, #{$color}-dark); }
+
+    &:focus,
+    &:hover,
+    a:focus &,
+    a:hover & {
+        color: map-get($govuk-colours, #{$color}-light);
+        background: map-get($govuk-colours, #{$color}-dark);
+    }
+}
+
+@mixin film-card-colors($color) {
+    color: map-get($govuk-colours, #{$color}-dark);
+    background: map-get($govuk-colours, #{$color}-light);
+
+    &:focus,
+    &:hover,
+    &:focus a,
+    &:hover a,
+    a:hover,
+    a:focus {
+        color: map-get($govuk-colours, #{$color}-light);
+        background: map-get($govuk-colours, #{$color}-dark);
+
+        button.icon-destructive svg { fill: map-get($govuk-colours, #{$color}-light); }
+    }
+}

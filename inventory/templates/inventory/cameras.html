@@ -12,9 +12,12 @@
     {% regroup cameras by get_status_display as status_list %}
     {% for status in status_list reversed %}
         <h2 class="c-heading c-heading--divider">{{ status.grouper }}</h2>
-        {% for camera in status.list %}
-            {% include 'inventory/_card.html' with name=camera.name location=camera.get_absolute_url %}
-        {% endfor %}
+
+        <section class="cards">
+            {% for camera in status.list %}
+                {% include 'inventory/_card.html' with name=camera.name location=camera.get_absolute_url %}
+            {% endfor %}
+        </section>
     {% endfor %}
 </section>
 

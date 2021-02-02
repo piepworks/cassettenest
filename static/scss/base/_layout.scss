@@ -16,6 +16,14 @@ body { background: $dark; }
         @include breakpoint('L') { margin-top: 2rem; }
     }
 
+    > main > section {
+        border: 1px solid $light-border;
+
+        &:not(:last-of-type) { border-bottom: 0; }
+    }
+
+    section.cards { border: 1px solid $light-border; }
+
     > footer {
         margin-top: 4rem;
         padding: 1.25rem;
