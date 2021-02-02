@@ -68,6 +68,38 @@ class IndexTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class ReminderCardTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_bw_card(self):
+        roll = baker.make(
+            Roll,
+            owner=self.user,
+            film__type='bw',
+            camera=baker.make(Camera),
+        )
+        roll.started_on = self.today
+        roll.save()
+
+        response = self.client.get(reverse('index'))
+        self.assertContains(response, '<li class="type">BW</li>')
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class PatternsTests(TestCase):
     def test_patterns_page(self):
         response = self.client.get(reverse('patterns'))
