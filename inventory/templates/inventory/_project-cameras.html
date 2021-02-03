@@ -13,20 +13,32 @@
         <section class="cards">
             {% for roll in loaded_roll_list %}
                 {% url 'roll-detail' roll.id as roll_detail %}
-                {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
+                {% if roll.camera_back %}
+                    {% include 'inventory/_card.html' with name=roll.camera_back location=roll_detail slot='reminder' roll=roll %}
+                {% else %}
+                    {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
+                {% endif %}
             {% endfor %}
         </section>
     </section>
     {% endif %}
 
-    {% if cameras_empty %}
+    {% if cameras_empty or camera_backs_empty %}
     <section>
         <h3 class="c-heading c-heading--divider">Ready to Load</h3>
         <section class="cards">
+            {% if cameras_empty %}
             {% for camera in cameras_empty %}
                 {% url 'camera-load' camera.id as camera_load %}
                 {% include 'inventory/_card.html' with name=camera.name location=camera_load slot='reminder' querystring='project' %}
             {% endfor %}
+            {% endif %}
+            {% if camera_backs_empty %}
+            {% for back in camera_backs_empty %}
+                {% url 'camera-load' back.camera.id back.id as camera_back_load %}
+                {% include 'inventory/_card.html' with name=back location=camera_back_load slot='reminder' querystring='project' %}
+            {% endfor %}
+            {% endif %}
         </section>
     </section>
     {% endif %}
@@ -37,7 +49,11 @@
         <section class="cards">
             {% for roll in rolls_loaded_outside_project %}
                 {% url 'roll-detail' roll.id as roll_detail %}
-                {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
+                {% if roll.camera_back %}
+                    {% include 'inventory/_card.html' with name=roll.camera_back location=roll_detail slot='reminder' roll=roll %}
+                {% else %}
+                    {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
+                {% endif %}
             {% endfor %}
         </section>
     </section>

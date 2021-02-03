@@ -895,7 +895,15 @@ def project_detail(request, pk):
     ).exclude(
         status='unavailable'
     )
-    cameras_empty = project.cameras.filter(status='empty')
+    cameras_empty = project.cameras.filter(status='empty').exclude(multiple_backs=True)
+
+    camera_backs_empty = []
+    for camera in project.cameras.all():
+        if camera.multiple_backs:
+            for back in camera.camera_backs.all():
+                if back.status == ('empty'):
+                    camera_backs_empty.append(back)
+
     loaded_roll_list = Roll.objects.filter(
         owner=owner,
         project=project,
@@ -905,10 +913,7 @@ def project_detail(request, pk):
     rolls_loaded_outside_project = []
     for camera in project.cameras.all():
         for roll in camera.roll_set.all():
-            if (
-                roll.status == status_number('loaded')
-                and roll.project != project
-            ):
+            if roll.status == status_number('loaded') and roll.project != project:
                 rolls_loaded_outside_project.append(roll)
 
     # Unused rolls already in this project
@@ -969,6 +974,7 @@ def project_detail(request, pk):
         'project': project,
         'cameras': cameras,
         'cameras_empty': cameras_empty,
+        'camera_backs_empty': camera_backs_empty,
         'rolls_loaded_outside_project': rolls_loaded_outside_project,
         'total_film_count': total_film_count,
         'film_counts': film_counts,
