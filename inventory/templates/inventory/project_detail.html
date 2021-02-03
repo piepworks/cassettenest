@@ -22,7 +22,7 @@
 {% if film_counts %}
     {% include 'inventory/_unused-rolls.html' %}
 {% elif project.status != 'archived' %}
-    <p>No unused rolls in this project.</p>
+    <h2>Film remaining: 0 rolls</h2>
 {% endif %}
 
 {% if roll_logbook %}
