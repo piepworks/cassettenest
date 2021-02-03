@@ -58,8 +58,6 @@
     }
 
     &--film {
-        color: map-get($govuk-colours, black);
-
         &__e6 { @include film-card-colors('purple'); }
 
         &__c41 { @include film-card-colors('blue'); }

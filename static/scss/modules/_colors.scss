@@ -53,8 +53,9 @@ $light-border: darken($light, 20%);
 }
 
 @mixin film-card-colors($color) {
-    color: map-get($govuk-colours, #{$color}-dark);
     background: map-get($govuk-colours, #{$color}-light);
+
+    a { color: map-get($govuk-colours, #{$color}-dark); }
 
     &:focus,
     &:hover,
