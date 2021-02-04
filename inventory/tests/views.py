@@ -1296,3 +1296,15 @@ class ProjectTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('Project deleted and 2 rolls now available for other projects.', messages)
+
+    def test_project_detail(self):
+        project = baker.make(Project, owner=self.user)
+        camera1 = baker.make(Camera, owner=self.user, multiple_backs=True)
+        camera2 = baker.make(Camera, owner=self.user)
+        baker.make(Roll, status=status_number('loaded'), camera=camera2, owner=self.user)
+        project.cameras.add(camera1)
+        project.cameras.add(camera2)
+        baker.make(CameraBack, camera=camera1)
+
+        response = self.client.get(reverse('project-detail', args=(project.id,)))
+        self.assertEqual(response.status_code, 200)
