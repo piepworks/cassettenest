@@ -1157,3 +1157,124 @@ class SubscriptionBannerTests(TestCase):
 
         self.assertTemplateNotUsed(response, 'inventory/_subscription-banner.html')
         self.assertNotContains(response, 'Paid plans are now available.')
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class ProjectTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_empty_projects_page(self):
+        response = self.client.get(reverse('projects'))
+        project_add_url = reverse('project-add')
+        self.assertContains(response, f'<a href="{project_add_url}">Add a project</a>', html=True)
+        self.assertIsNotNone(response.context['projects'])
+
+    def test_projects_page(self):
+        baker.make(Project, owner=self.user)
+        response = self.client.get(reverse('projects'))
+        self.assertIsNotNone(response.context['projects'])
+
+    def test_project_add_get(self):
+        response = self.client.get(reverse('project-add'))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_project_add_post(self):
+        response = self.client.post(reverse('project-add'), data={
+            'name': 'A Project',
+            'status': 'current',
+            'notes': 'A bunch of words.',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Project added!', messages)
+
+    def test_project_add_post_error_duplicate(self):
+        self.client.post(reverse('project-add'), data={
+            'name': 'A Project',
+            'status': 'current',
+        })
+        response = self.client.post(reverse('project-add'), data={
+            'name': 'A Project',
+            'status': 'current',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('You’ve already got a project with that name.', messages)
+
+    def test_project_add_post_error_not_valid(self):
+        response = self.client.post(reverse('project-add'), data={})
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Whoops! That didn’t work. Try again.', messages)
+
+    def test_project_edit_get(self):
+        self.client.post(reverse('project-add'), data={
+            'name': 'A Project',
+            'status': 'current',
+        })
+        project = Project.objects.get(owner=self.user, name='A Project')
+        response = self.client.get(reverse('project-edit', args=(project.id,)))
+        self.assertEqual(response.status_code, 200)
+
+    def test_project_edit_post(self):
+        self.client.post(reverse('project-add'), data={
+            'name': 'A Project',
+            'status': 'current',
+        })
+        project = Project.objects.get(owner=self.user, name='A Project')
+        response = self.client.post(reverse('project-edit', args=(project.id,)), data={
+            'name': 'A New Name',
+            'status': 'current',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Project updated!', messages)
+
+    def test_project_edit_post_archived_with_rolls(self):
+        self.client.post(reverse('project-add'), data={
+            'name': 'A Project',
+            'status': 'current',
+        })
+        project = Project.objects.get(owner=self.user, name='A Project')
+        baker.make(Roll, owner=self.user, project=project)
+        response = self.client.post(reverse('project-edit', args=(project.id,)), data={
+            'name': 'A New Name',
+            'status': 'archived',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Project archived and 1 roll now available for other projects.', messages)
+
+    def test_project_edit_post_archived_without_rolls(self):
+        self.client.post(reverse('project-add'), data={
+            'name': 'A Project',
+            'status': 'current',
+        })
+        project = Project.objects.get(owner=self.user, name='A Project')
+        response = self.client.post(reverse('project-edit', args=(project.id,)), data={
+            'name': 'A New Name',
+            'status': 'archived',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Project archived!', messages)
