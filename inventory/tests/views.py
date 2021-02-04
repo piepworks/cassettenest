@@ -12,7 +12,7 @@ from django.utils import timezone
 from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
-from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile
+from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
@@ -1308,3 +1308,28 @@ class ProjectTests(TestCase):
 
         response = self.client.get(reverse('project-detail', args=(project.id,)))
         self.assertEqual(response.status_code, 200)
+
+    def test_project_rolls_add(self):
+        project = baker.make(Project, owner=self.user)
+        film = baker.make(Film)
+        baker.make(Roll, film=film, owner=self.user)
+        response = self.client.post(reverse('project-rolls-add', args=(project.id,)), data={
+            'quantity': 1,
+            'film': film.id
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'1 roll of {film} added!', messages)
+
+    def test_project_rolls_add_error(self):
+        project = baker.make(Project, owner=self.user)
+        film = baker.make(Film)
+        response = self.client.post(reverse('project-rolls-add', args=(project.id,)), data={
+            'quantity': 1,
+            'film': film.id
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'You don’t have that many rolls of {film} available.', messages)

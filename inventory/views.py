@@ -978,43 +978,32 @@ def project_detail(request, pk):
     return render(request, 'inventory/project_detail.html', context)
 
 
+@require_POST
 @login_required
 def project_rolls_add(request, pk):
-    owner = request.user
-    project = get_object_or_404(Project, id=pk, owner=owner)
+    project = get_object_or_404(Project, id=pk, owner=request.user)
     film = get_object_or_404(Film, id=request.POST.get('film', ''))
+    quantity = int(request.POST.get('quantity', ''))
+    available_quantity = Roll.objects.filter(
+        owner=request.user,
+        film=film,
+        project=None,
+        status=status_number('storage'),
+    ).count()
 
-    if request.method == 'POST':
-        quantity = int(request.POST.get('quantity', ''))
-        available_quantity = Roll.objects.filter(
-            owner=owner,
+    if quantity <= available_quantity:
+        rolls_queryset = Roll.objects.filter(
+            owner=request.user,
             film=film,
             project=None,
             status=status_number('storage'),
-        ).count()
+        ).order_by('-created_at')[:quantity]
+        Roll.objects.filter(id__in=rolls_queryset).update(project=project)
 
-        if quantity <= available_quantity:
-            rolls_queryset = Roll.objects.filter(
-                owner=owner,
-                film=film,
-                project=None,
-                status=status_number('storage'),
-            ).order_by('-created_at')[:quantity]
-            Roll.objects.filter(id__in=rolls_queryset).update(project=project)
-
-            messages.success(
-                request,
-                '%s %s of %s added!' % (
-                    quantity,
-                    pluralize('roll', quantity),
-                    film
-                )
-            )
-        else:
-            messages.error(
-                request,
-                'You don’t have that many rolls available.'
-            )
+        plural = pluralize('roll', quantity)
+        messages.success(request, f'{quantity} {plural} of {film} added!')
+    else:
+        messages.error(request, f'You don’t have that many rolls of {film} available.')
 
     return redirect(reverse('project-detail', args=(project.id,)))
 
