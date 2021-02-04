@@ -106,7 +106,7 @@ class FilmForm(ModelForm):
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'status', 'notes', 'owner']
+        fields = ['name', 'status', 'notes']
 
 
 class JournalForm(ModelForm):

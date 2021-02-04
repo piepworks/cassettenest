@@ -8,12 +8,9 @@
 
 <form method="post">
     {% csrf_token %}
-    <input type="hidden" name="owner" value="{{ owner.id }}">
-
     {% include 'inventory/_form-field.html' with field=form.name %}
     {% include 'inventory/_form-field.html' with field=form.status %}
     {% include 'inventory/_form-field.html' with field=form.notes %}
-
     <div class="action"><input type="submit" value="Save project" /></div>
 </form>
 </div>

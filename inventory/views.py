@@ -780,29 +780,27 @@ def projects(request):
 
 @login_required
 def project_add(request):
-    owner = request.user
-
     if request.method == 'POST':
         form = ProjectForm(request.POST)
 
         if form.is_valid():
-            name = form.cleaned_data['name']
-            notes = form.cleaned_data['notes']
-            project = Project.objects.create(
-                owner=owner,
-                name=name,
-                notes=notes,
-            )
+            project = form.save(commit=False)
+            project.owner = request.user
+
+            try:
+                project.save()
+            except IntegrityError:
+                messages.error(request, 'You’ve already got a project with that name.')
+                return redirect(reverse('project-add'))
 
             messages.success(request, 'Project added!')
             return redirect(reverse('project-detail', args=(project.id,)))
         else:
-            messages.error(request, 'You already have that project.')
-            return redirect(reverse('project-add'),)
+            messages.error(request, 'Whoops! That didn’t work. Try again.')
+            return redirect(reverse('project-add'))
     else:
         form = ProjectForm()
         context = {
-            'owner': owner,
             'form': form,
             'action': 'Add',
         }
@@ -812,20 +810,17 @@ def project_add(request):
 
 @login_required
 def project_edit(request, pk):
-    owner = request.user
-    project = get_object_or_404(Project, id=pk, owner=owner)
+    project = get_object_or_404(Project, id=pk, owner=request.user)
 
     if request.method == 'POST':
         form = ProjectForm(request.POST, instance=project)
 
         if form.is_valid():
-            project.name = form.cleaned_data['name']
-            project.notes = form.cleaned_data['notes']
-            project.save()
+            project = form.save()
 
             if project.status == 'archived':
                 rolls = Roll.objects.filter(
-                    owner=owner,
+                    owner=request.user,
                     project=project,
                     status=status_number('storage')
                 )
@@ -834,13 +829,10 @@ def project_edit(request, pk):
                 if rolls:
                     rolls.update(project=None)
 
+                    plural = pluralize('roll', roll_count)
                     messages.success(
                         request,
-                        '''
-                        Project archived and %s %s now available for other
-                        projects.
-                        '''
-                        % (roll_count, pluralize('roll', roll_count))
+                        f'Project archived and {roll_count} {plural} now available for other projects.'
                     )
                 else:
                     # No unused rolls
@@ -853,7 +845,6 @@ def project_edit(request, pk):
     else:
         form = ProjectForm(instance=project)
         context = {
-            'owner': owner,
             'form': form,
             'project': project,
             'action': 'Edit',
