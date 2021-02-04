@@ -1278,3 +1278,21 @@ class ProjectTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('Project archived!', messages)
+
+    def test_project_delete(self):
+        project = baker.make(Project, owner=self.user)
+        response = self.client.post(reverse('project-delete', args=(project.id,)))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Project deleted.', messages)
+
+    def test_project_delete_with_rolls(self):
+        project = baker.make(Project, owner=self.user)
+        baker.make(Roll, owner=self.user, project=project)
+        baker.make(Roll, owner=self.user, project=project)
+        response = self.client.post(reverse('project-delete', args=(project.id,)))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Project deleted and 2 rolls now available for other projects.', messages)

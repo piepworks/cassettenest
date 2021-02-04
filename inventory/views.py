@@ -854,25 +854,21 @@ def project_edit(request, pk):
         return render(request, 'inventory/project_add_edit.html', context)
 
 
+@require_POST
 @login_required
 def project_delete(request, pk):
-    owner = request.user
-    project = get_object_or_404(Project, id=pk, owner=owner)
-    rolls = Roll.objects.filter(owner=owner, project=project)
+    project = get_object_or_404(Project, id=pk, owner=request.user)
+    rolls = Roll.objects.filter(owner=request.user, project=project)
     roll_count = rolls.count()
+    rolls.update(project=None)
+    project.delete()
 
-    if request.method == 'POST':
-        rolls.update(project=None)
-        project.delete()
-
-        messages.success(
-            request,
-            'Project deleted and %s %s now available for other projects.' %
-            (roll_count, pluralize('roll', roll_count))
-        )
-        return redirect(reverse('projects'))
+    plural = pluralize('roll', roll_count)
+    if roll_count:
+        messages.success(request, f'Project deleted and {roll_count} {plural} now available for other projects.')
     else:
-        return redirect(reverse('project-detail', args=(project.id,)))
+        messages.success(request, 'Project deleted.')
+    return redirect(reverse('projects'))
 
 
 @login_required
