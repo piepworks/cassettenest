@@ -1189,7 +1189,6 @@ class ProjectTests(TestCase):
 
     def test_project_add_get(self):
         response = self.client.get(reverse('project-add'))
-
         self.assertEqual(response.status_code, 200)
 
     def test_project_add_post(self):
@@ -1394,7 +1393,7 @@ class ProjectTests(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
 
         self.assertEqual(response.status_code, 302)
-        self.assertIn(f'Something is amiss.', messages)
+        self.assertIn('Something is amiss.', messages)
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -1446,4 +1445,5 @@ class CameraTests(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
 
         self.assertEqual(response.status_code, 302)
-        self.assertIn(f'Something is amiss. Please try again.', messages)
+        self.assertIn('Something is amiss. Please try again.', messages)
+
