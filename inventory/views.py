@@ -1875,34 +1875,30 @@ def camera_back_add(request, pk):
 
 @login_required
 def camera_edit(request, pk):
-    owner = request.user
-    camera = get_object_or_404(Camera, id=pk, owner=owner)
+    camera = get_object_or_404(Camera, id=pk, owner=request.user)
 
     if request.method == 'POST':
         form = CameraForm(request.POST, instance=camera)
 
         if form.is_valid():
-            name = form.cleaned_data['name']
-            format = form.cleaned_data['format']
-            notes = form.cleaned_data['notes']
             unavailable = form.cleaned_data['unavailable']
+            camera = form.save(commit=False)
             if unavailable and camera.status != 'loaded':
                 camera.status = 'unavailable'
             elif camera.status != 'loaded':
                 camera.status = 'empty'
-            camera.name = name
-            camera.format = format
-            camera.notes = notes
             camera.save()
 
             messages.success(request, 'Camera updated!')
+            return redirect(reverse('camera-detail', args=(camera.id,)))
+        else:
+            messages.error(request, 'Something is amiss. Please try again.')
             return redirect(reverse('camera-detail', args=(camera.id,)))
     else:
         form = CameraForm(instance=camera)
         form.fields['unavailable'].initial = camera.status == 'unavailable'
 
         context = {
-            'owner': owner,
             'form': form,
             'camera': camera,
             'js_needed': True,

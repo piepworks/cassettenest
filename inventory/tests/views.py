@@ -1447,3 +1447,43 @@ class CameraTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('Something is amiss. Please try again.', messages)
 
+    def test_camera_edit_get(self):
+        camera = baker.make(Camera, owner=self.user)
+        response = self.client.get(reverse('camera-edit', args=(camera.id,)))
+        self.assertEqual(response.status_code, 200)
+
+    def test_camera_edit_post(self):
+        camera = baker.make(Camera, owner=self.user)
+        response = self.client.post(reverse('camera-edit', args=(camera.id,)), data={
+            'name': 'A new name',
+            'format': '135',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, expected_url=reverse('camera-detail', args=(camera.id,)))
+        self.assertIn('Camera updated!', messages)
+
+    def test_camera_edit_post_unavailable(self):
+        # Get that 100% test coverage for the view.
+        camera = baker.make(Camera, owner=self.user)
+        response = self.client.post(reverse('camera-edit', args=(camera.id,)), data={
+            'name': 'A new name',
+            'format': '135',
+            'unavailable': True,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, expected_url=reverse('camera-detail', args=(camera.id,)))
+        self.assertIn('Camera updated!', messages)
+
+    def test_camera_edit_post_error(self):
+        camera = baker.make(Camera, owner=self.user)
+        # Not including required fields.
+        response = self.client.post(reverse('camera-edit', args=(camera.id,)), data={})
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, expected_url=reverse('camera-detail', args=(camera.id,)))
+        self.assertIn('Something is amiss. Please try again.', messages)
