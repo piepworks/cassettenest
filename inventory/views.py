@@ -1008,31 +1008,25 @@ def project_rolls_add(request, pk):
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
+@require_POST
 @login_required
 def project_rolls_remove(request, pk):
-    owner = request.user
+    project = get_object_or_404(Project, id=pk, owner=request.user)
+    film = get_object_or_404(Film, id=request.POST.get('film', ''))
+    rolls = Roll.objects.filter(
+        owner=request.user,
+        film=film,
+        project=project,
+        status=status_number('storage'),
+    )
+    roll_count = rolls.count()
+    rolls.update(project=None)
 
-    if request.method == 'POST':
-        project = get_object_or_404(Project, id=pk, owner=owner)
-        film = get_object_or_404(Film, id=request.POST.get('film', ''))
-
-        rolls = Roll.objects.filter(
-            owner=owner,
-            film=film,
-            project=project,
-            status=status_number('storage'),
-        )
-        roll_count = rolls.count()
-        rolls.update(project=None)
-
-        messages.success(
-            request,
-            'Removed %s %s of %s from this project!' % (
-                roll_count,
-                pluralize('roll', roll_count),
-                film
-            )
-        )
+    if roll_count:
+        plural = pluralize('roll', roll_count)
+        messages.success(request, f'Removed {roll_count} {plural} of {film} from this project!')
+    else:
+        messages.error(request, f'You don’t have any rolls of {film} to remove.')
 
     return redirect(reverse('project-detail', args=(project.id,)))
 

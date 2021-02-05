@@ -1333,3 +1333,28 @@ class ProjectTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn(f'You don’t have that many rolls of {film} available.', messages)
+
+    def test_project_rolls_remove(self):
+        project = baker.make(Project, owner=self.user)
+        film = baker.make(Film)
+        baker.make(Roll, film=film, owner=self.user, project=project)
+
+        response = self.client.post(reverse('project-rolls-remove', args=(project.id,)), data={
+            'film': film.id
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'Removed 1 roll of {film} from this project!', messages)
+
+    def test_project_rolls_remove_error(self):
+        project = baker.make(Project, owner=self.user)
+        film = baker.make(Film)
+
+        response = self.client.post(reverse('project-rolls-remove', args=(project.id,)), data={
+            'film': film.id
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'You don’t have any rolls of {film} to remove.', messages)
