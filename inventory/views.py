@@ -1037,29 +1037,22 @@ def project_camera_update(request, pk):
     '''
     Add or remove a camera from a project.
     '''
-    owner = request.user
     actions = ('add', 'remove',)
-    project = get_object_or_404(Project, id=pk, owner=owner)
+    project = get_object_or_404(Project, id=pk, owner=request.user)
     camera = get_object_or_404(
         Camera,
         id=request.POST.get('camera', ''),
-        owner=owner
+        owner=request.user
     )
     action = request.POST.get('action', '')
 
     if action in actions:
         if action == 'add':
             project.cameras.add(camera)
-            messages.success(
-                request,
-                '%s added to this project!' % camera.name
-            )
+            messages.success(request, f'{camera} added to this project!')
         if action == 'remove':
             project.cameras.remove(camera)
-            messages.success(
-                request,
-                '%s removed from this project!' % camera.name
-            )
+            messages.success(request, f'{camera} removed from this project!')
     else:
         messages.error(request, 'Something is amiss.')
 

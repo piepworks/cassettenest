@@ -1358,3 +1358,40 @@ class ProjectTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn(f'You don’t have any rolls of {film} to remove.', messages)
+
+    def test_project_camera_update_add(self):
+        project = baker.make(Project, owner=self.user)
+        camera = baker.make(Camera, owner=self.user)
+        response = self.client.post(reverse('project-camera-update', args=(project.id,)), data={
+            'camera': camera.id,
+            'action': 'add',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'{camera} added to this project!', messages)
+
+    def test_project_camera_update_remove(self):
+        project = baker.make(Project, owner=self.user)
+        camera = baker.make(Camera, owner=self.user)
+        project.cameras.add(camera)
+        response = self.client.post(reverse('project-camera-update', args=(project.id,)), data={
+            'camera': camera.id,
+            'action': 'remove',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'{camera} removed from this project!', messages)
+
+    def test_project_camera_update_error(self):
+        project = baker.make(Project, owner=self.user)
+        camera = baker.make(Camera, owner=self.user)
+        response = self.client.post(reverse('project-camera-update', args=(project.id,)), data={
+            'camera': camera.id,
+            'action': 'not-an-action',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'Something is amiss.', messages)
