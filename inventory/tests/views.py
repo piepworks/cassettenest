@@ -1397,7 +1397,7 @@ class ProjectTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
-class CameraTests(TestCase):
+class CameraViewTests(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.username = 'test'
