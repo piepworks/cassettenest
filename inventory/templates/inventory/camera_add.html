@@ -8,9 +8,9 @@
 
 <form method="post">
     {% csrf_token %}
-    <input type="hidden" name="owner" value="{{ owner.id }}" />
     {% include 'inventory/_form-field.html' with field=form.name %}
     {% include 'inventory/_form-field.html' with field=form.format %}
+    {% include 'inventory/_form-field.html' with field=form.multiple_backs %}
     {% include 'inventory/_form-field.html' with field=form.notes %}
     {% include 'inventory/_form-field.html' with field=form.unavailable %}
 

@@ -1798,23 +1798,15 @@ def camera_or_back_detail(request, pk, back_pk=None):
 
 @login_required
 def camera_add(request):
-    owner = request.user
-
     if request.method == 'POST':
         form = CameraForm(request.POST)
 
         if form.is_valid():
-            name = form.cleaned_data['name']
-            format = form.cleaned_data['format']
-            notes = form.cleaned_data['notes']
             unavailable = form.cleaned_data['unavailable']
-            camera = Camera.objects.create(
-                owner=owner,
-                name=name,
-                format=format,
-                notes=notes,
-                status='unavailable' if unavailable else 'empty'
-            )
+            camera = form.save(commit=False)
+            camera.status = 'unavailable' if unavailable else 'empty'
+            camera.owner = request.user
+            camera.save()
 
             messages.success(request, 'Camera added!')
 
@@ -1825,12 +1817,11 @@ def camera_add(request):
         else:
             # TODO: Output the actual error from the form instead of this
             # hardcoded one.
-            messages.error(request, 'You already have that camera.')
+            messages.error(request, 'Something is amiss. Please try again.')
             return redirect(reverse('camera-add'),)
     else:
         form = CameraForm()
         context = {
-            'owner': owner,
             'form': form,
         }
 

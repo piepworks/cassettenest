@@ -1395,3 +1395,55 @@ class ProjectTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn(f'Something is amiss.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class CameraTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_camera_add_get(self):
+        response = self.client.get(reverse('camera-add'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_camera_add_post(self):
+        response = self.client.post(reverse('camera-add'), data={
+            'name': 'A 35mm Camera',
+            'format': '135',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'Camera added!', messages)
+
+    def test_camera_add_post_add_another(self):
+        response = self.client.post(reverse('camera-add'), data={
+            'name': 'A 35mm Camera',
+            'format': '135',
+            'another': True,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, expected_url=reverse('camera-add'))
+        self.assertIn(f'Camera added!', messages)
+
+    def test_camera_add_post_error(self):
+        # Not including required fields.
+        response = self.client.post(reverse('camera-add'), data={})
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'Something is amiss. Please try again.', messages)

@@ -38,7 +38,6 @@ class CameraForm(ModelForm):
             'name',
             'format',
             'notes',
-            'owner',
             'multiple_backs',
             'unavailable'
         ]
