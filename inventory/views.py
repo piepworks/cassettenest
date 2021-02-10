@@ -306,7 +306,7 @@ def stripe_webhook(request):
             subject='New Cassette Nest subscription!',
             message=f'{user.username} / {user.email} subscribed to the {user.profile.subscription} plan!',
             from_email='trey@cassettenest.com',
-            recipient_list=['boss@treylabs.com']
+            recipient_list=['trey@treypiepmeier.com']
         )
 
     elif event_type == 'customer.subscription.updated':
@@ -320,14 +320,14 @@ def stripe_webhook(request):
                 subject='Cassette Nest subscription cancellation. :(',
                 message=f'{user.username} / {user.email} cancelled their {user.profile.subscription} subscription.',
                 from_email='trey@cassettenest.com',
-                recipient_list=['boss@treylabs.com']
+                recipient_list=['trey@treypiepmeier.com']
             )
         else:
             send_mail(
                 subject='Cassette Nest subscription updated!',
                 message=f'{user.username} / {user.email} updated their {user.profile.subscription} subscription.',
                 from_email='trey@cassettenest.com',
-                recipient_list=['boss@treylabs.com']
+                recipient_list=['trey@treypiepmeier.com']
             )
 
     elif event_type in ['invoice.payment_failed', 'payment_intent.payment_failed']:
@@ -344,7 +344,7 @@ def stripe_webhook(request):
             subject='Cassette Nest subscription payment failure. :(',
             message=message,
             from_email='trey@cassettenest.com',
-            recipient_list=['boss@treylabs.com']
+            recipient_list=['trey@treypiepmeier.com']
         )
 
     elif event_type == 'customer.subscription.deleted':
@@ -361,7 +361,7 @@ def stripe_webhook(request):
             subject='Cassette Nest subscription totally canceled. :(',
             message=message,
             from_email='trey@cassettenest.com',
-            recipient_list=['boss@treylabs.com']
+            recipient_list=['trey@treypiepmeier.com']
         )
 
     return HttpResponse(status=200)
@@ -385,7 +385,7 @@ def register(request):
                 subject='New Cassette Nest user!',
                 message=f'{username} / {email} signed up!',
                 from_email='trey@cassettenest.com',
-                recipient_list=['boss@treylabs.com']
+                recipient_list=['trey@treypiepmeier.com']
             )
 
             return redirect('index')
@@ -1319,7 +1319,7 @@ def film_add(request):
                     {message_addendum}
                 ''',
                 from_email='trey@cassettenest.com',
-                recipient_list=['boss@treylabs.com']
+                recipient_list=['trey@treypiepmeier.com']
             )
 
             if form.cleaned_data['destination'] != 'add-storage':
