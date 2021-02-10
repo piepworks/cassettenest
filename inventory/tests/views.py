@@ -1122,6 +1122,7 @@ class SubscriptionBannerTests(TestCase):
         self.assertContains(response, 'Your subscription has been cancelled.')
 
     def test_subscription_banner_error(self):
+        self.user.profile.stripe_subscription_id = 'cus_abcd'
         self.user.profile.subscription_status = 'error'
         self.user.profile.save()
 
@@ -1131,6 +1132,7 @@ class SubscriptionBannerTests(TestCase):
         self.assertContains(response, 'Looks like there’s a problem with your subscription.')
 
     def test_subscription_banner_canceling(self):
+        self.user.profile.stripe_subscription_id = 'cus_abcd'
         self.user.profile.subscription_status = 'canceling'
         self.user.profile.save()
 
@@ -1140,6 +1142,7 @@ class SubscriptionBannerTests(TestCase):
         self.assertContains(response, 'Your subscription is scheduled to be canceled.')
 
     def test_subscription_banner_pending(self):
+        self.user.profile.stripe_subscription_id = 'cus_abcd'
         self.user.profile.subscription_status = 'pending'
         self.user.profile.save()
 

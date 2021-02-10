@@ -5,7 +5,11 @@
         Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}#subscription">subscribe</a>!
     {% elif user.profile.subscription_status == 'canceled' %}
         Your subscription has been cancelled. <a href="{{ subscribe_url }}#subscription">Update your settings to resubscribe</a>.
-    {% elif user.profile.subscription_status == 'error' %}
+    {% endif %}
+    </div>
+{% elif user.profile.subscription_status != 'none' and user.profile.subscription_status != 'canceled' %}
+    <div class="c-subscription-banner c-subscription-banner--{{ user.profile.subscription_status }}">
+    {% if user.profile.subscription_status == 'error' %}
         Looks like there’s a problem with your subscription. <a href="{{ subscribe_url }}#subscription">Please check your settings.</a>
     {% elif user.profile.subscription_status == 'canceling' %}
         Your subscription is scheduled to be canceled. <a href="{{ subscribe_url }}#subscription">Update your settings</a> if you change your mind.
