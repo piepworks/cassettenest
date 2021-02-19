@@ -1,6 +1,7 @@
 import os
 import markdown2
 from django.conf import settings
+from django.core.mail import send_mail
 
 
 def iso_variables(request):
@@ -190,3 +191,12 @@ def get_host(request):
         return f'http://{request.get_host()}'
     else:
         return 'https://app.cassettenest.com'
+
+
+def send_email_to_trey(subject, message):
+    send_mail(
+        subject=subject,
+        message=message,
+        from_email='trey@cassettenest.com',
+        recipient_list=['boss@treylabs.com']
+    )

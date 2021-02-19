@@ -16,7 +16,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.core.mail import send_mail
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
 from django.http.response import JsonResponse
@@ -53,6 +52,7 @@ from .utils import (
     stripe_price_id,
     stripe_price_name,
     get_host,
+    send_email_to_trey,
 )
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
@@ -302,11 +302,9 @@ def stripe_webhook(request):
         user.profile.stripe_subscription_id = stripe_subscription_id
         user.save()
 
-        send_mail(
+        send_email_to_trey(
             subject='New Cassette Nest subscription!',
             message=f'{user.username} / {user.email} subscribed to the {user.profile.subscription} plan!',
-            from_email='trey@cassettenest.com',
-            recipient_list=['trey@treypiepmeier.com']
         )
 
     elif event_type == 'customer.subscription.updated':
@@ -316,18 +314,14 @@ def stripe_webhook(request):
         subscription = stripe.Subscription.retrieve(user.profile.stripe_subscription_id)
 
         if subscription.canceled_at:
-            send_mail(
+            send_email_to_trey(
                 subject='Cassette Nest subscription cancellation. :(',
                 message=f'{user.username} / {user.email} cancelled their {user.profile.subscription} subscription.',
-                from_email='trey@cassettenest.com',
-                recipient_list=['trey@treypiepmeier.com']
             )
         else:
-            send_mail(
+            send_email_to_trey(
                 subject='Cassette Nest subscription updated!',
                 message=f'{user.username} / {user.email} updated their {user.profile.subscription} subscription.',
-                from_email='trey@cassettenest.com',
-                recipient_list=['trey@treypiepmeier.com']
             )
 
     elif event_type in ['invoice.payment_failed', 'payment_intent.payment_failed']:
@@ -340,11 +334,9 @@ def stripe_webhook(request):
         except User.DoesNotExist:
             message = f'User with the Stripe ID {stripe_customer_id} had a failed payment'
 
-        send_mail(
+        send_email_to_trey(
             subject='Cassette Nest subscription payment failure. :(',
             message=message,
-            from_email='trey@cassettenest.com',
-            recipient_list=['trey@treypiepmeier.com']
         )
 
     elif event_type == 'customer.subscription.deleted':
@@ -357,11 +349,9 @@ def stripe_webhook(request):
         except User.DoesNotExist:
             message = f'Subscription for the user with the Stripe ID {stripe_customer_id} is totally canceled.'
 
-        send_mail(
+        send_email_to_trey(
             subject='Cassette Nest subscription totally canceled. :(',
             message=message,
-            from_email='trey@cassettenest.com',
-            recipient_list=['trey@treypiepmeier.com']
         )
 
     return HttpResponse(status=200)
@@ -381,11 +371,9 @@ def register(request):
             login(request, user)
 
             email = form.cleaned_data.get('email')
-            send_mail(
+            send_email_to_trey(
                 subject='New Cassette Nest user!',
                 message=f'{username} / {email} signed up!',
-                from_email='trey@cassettenest.com',
-                recipient_list=['trey@treypiepmeier.com']
             )
 
             return redirect('index')
@@ -1312,14 +1300,12 @@ def film_add(request):
                 '''
             else:
                 message_addendum = ''
-            send_mail(
+            send_email_to_trey(
                 subject='New film added!',
                 message=f'''{request.user} added “{film}.”\n
                     https://{current_site}{reverse('admin:inventory_film_change', args=(film.id,))}\n
                     {message_addendum}
                 ''',
-                from_email='trey@cassettenest.com',
-                recipient_list=['trey@treypiepmeier.com']
             )
 
             if form.cleaned_data['destination'] != 'add-storage':
