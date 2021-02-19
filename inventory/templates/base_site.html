@@ -39,7 +39,7 @@
 
         {% if user.is_authenticated %}
             {% flag 'stripe' %}
-                {% include 'inventory/_subscription-banner.html' %}
+                {% include 'inventory/_subscription-banner-wrapper.html' %}
             {% endflag %}
 
             {% include 'inventory/_nav-status.html' %}

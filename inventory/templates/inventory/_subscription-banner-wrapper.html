@@ -1,0 +1,21 @@
+{% url 'settings' as subscribe_url %}
+{% load capture_tags %}
+{% if not user.profile.has_active_subscription %}
+    {% if user.profile.subscription_status == 'none' %}
+        {% capture as message silent %}Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}#subscription">subscribe</a>!{% endcapture %}
+    {% elif user.profile.subscription_status == 'canceled' %}
+        {% capture as message silent %}Your subscription has been cancelled. <a href="{{ subscribe_url }}#subscription">Update your settings to resubscribe</a>.{% endcapture %}
+    {% endif %}
+{% elif user.profile.subscription_status != 'none' and user.profile.subscription_status != 'canceled' %}
+    {% if user.profile.subscription_status == 'error' %}
+        {% capture as message silent %}Looks like there’s a problem with your subscription. <a href="{{ subscribe_url }}#subscription">Please check your settings.</a>{% endcapture %}
+    {% elif user.profile.subscription_status == 'canceling' %}
+        {% capture as message silent %}Your subscription is scheduled to be canceled. <a href="{{ subscribe_url }}#subscription">Update your settings</a> if you change your mind.{% endcapture %}
+    {% elif user.profile.subscription_status == 'pending' %}
+        {% capture as message silent %}Your subscription is being updated…{% endcapture %}
+    {% endif %}
+{% endif %}
+
+{% if message %}
+    {% include 'inventory/_subscription-banner.html' with status=user.profile.subscription_status message=message %}
+{% endif %}
