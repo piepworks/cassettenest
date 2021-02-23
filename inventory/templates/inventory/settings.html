@@ -62,6 +62,12 @@
 {% block page_js %}
 {% flag 'stripe' %}
 <script>
+    {% if paddle_live_mode == 0 %}
+    Paddle.Environment.set('sandbox');
+    {% endif %}
+
+    Paddle.Setup({ vendor: {{ paddle_vendor_id }} });
+
     {% include 'js/subscription.js' %}
 </script>
 {% endflag %}

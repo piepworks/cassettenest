@@ -7,6 +7,7 @@ module.exports = {
     },
     globals: {
         Stripe: 'readonly',
+        Paddle: 'readonly',
     },
     extends: 'eslint:recommended',
     parserOptions: {

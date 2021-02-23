@@ -192,6 +192,10 @@ def settings(request):
             'imports': imports,
             'js_needed': True,
             'trial': trial,
+            'paddle_live_mode': dj_settings.PADDLE_LIVE_MODE,
+            'paddle_vendor_id': dj_settings.PADDLE_VENDOR_ID,
+            'paddle_standard_monthly': dj_settings.PADDLE_STANDARD_MONTHLY,
+            'paddle_standard_annual': dj_settings.PADDLE_STANDARD_ANNUAL,
             'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
         }
 
