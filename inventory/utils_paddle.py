@@ -20,6 +20,7 @@ except ImportError:  # pragma: no cover
     from Crypto.Signature import pkcs1_15 as PKCS1_v1_5
 
 from django.conf import settings
+from ipaddress import ip_address, ip_network
 
 
 def is_valid_webhook(payload):
@@ -52,3 +53,28 @@ def is_valid_webhook(payload):
     signature = base64.b64decode(signature)
 
     return verifier.verify(digest, signature)
+
+
+def is_valid_ip_address(forwarded_for):
+    # https://developer.paddle.com/webhook-reference/webhooks-security
+
+    client_ip_address = ip_address(forwarded_for)
+
+    if settings.PADDLE_LIVE_MODE == 0:
+        allow_list = [
+            '34.194.127.46',
+            '54.234.237.108',
+            '3.208.120.145',
+        ]
+    else:
+        allow_list = [
+            '34.232.58.13',
+            '34.195.105.136',
+            '34.237.3.244',
+        ]
+
+    for valid_ip in allow_list:
+        if client_ip_address in ip_network(valid_ip):
+            return True
+    else:
+        return False

@@ -1,6 +1,6 @@
 import datetime
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, DetailView, FormView
 from django.db.models import Count, Q
@@ -54,7 +54,7 @@ from .utils import (
     get_host,
     send_email_to_trey,
 )
-from .utils_paddle import is_valid_webhook
+from .utils_paddle import is_valid_webhook, is_valid_ip_address
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
 
@@ -362,6 +362,7 @@ def stripe_webhook(request):
     return HttpResponse(status=200)
 
 
+@require_POST
 @csrf_exempt
 def paddle_webhooks(request):
     supported_webhooks = (
@@ -372,6 +373,11 @@ def paddle_webhooks(request):
         'subscription_payment_failed',
         'subscription_payment_refunded',
     )
+
+    forwarded_for = u'{}'.format(request.META.get('HTTP_X_FORWARDED_FOR'))
+
+    if not is_valid_ip_address(forwarded_for):
+        return HttpResponseForbidden('Permission denied.')
 
     payload = request.POST.dict()
 
