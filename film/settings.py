@@ -200,6 +200,7 @@ PADDLE_LIVE_MODE = int(os.environ.get('PADDLE_LIVE_MODE', default=0))
 PADDLE_VENDOR_ID = os.environ.get('PADDLE_VENDOR_ID')
 PADDLE_STANDARD_MONTHLY = os.environ.get('PADDLE_STANDARD_MONTHLY')
 PADDLE_STANDARD_ANNUAL = os.environ.get('PADDLE_STANDARD_ANNUAL')
+PADDLE_PUBLIC_KEY = os.environ.get('PADDLE_PUBLIC_KEY')
 
 # Django Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1']

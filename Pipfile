@@ -24,6 +24,8 @@ coverage = "*"
 freezegun = "*"
 django-waffle = "==2.0.0"
 stripe = "==2.55.1"
+phpserialize = "==1.3"
+pycryptodome = "==3.10.1"
 
 [requires]
 python_version = "3.8"

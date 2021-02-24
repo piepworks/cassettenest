@@ -54,6 +54,7 @@ from .utils import (
     get_host,
     send_email_to_trey,
 )
+from .utils_paddle import is_valid_webhook
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
 
@@ -357,6 +358,36 @@ def stripe_webhook(request):
             subject='Cassette Nest subscription totally canceled. :(',
             message=message,
         )
+
+    return HttpResponse(status=200)
+
+
+@csrf_exempt
+def paddle_webhooks(request):
+    supported_webhooks = (
+        'subscription_created',
+        'subscription_updated',
+        'subscription_cancelled',
+        'subscription_payment_succeeded',
+        'subscription_payment_failed',
+        'subscription_payment_refunded',
+    )
+
+    payload = request.POST.dict()
+
+    if not is_valid_webhook(payload):
+        # Invalid payload
+        return HttpResponse(status=400)
+
+    alert_name = payload.get('alert_name')
+
+    if not alert_name:
+        # Gotta have `alert_name`.
+        return HttpResponse(status=400)
+
+    if alert_name in supported_webhooks:
+        # Do stuff.
+        print(f'Congrats, we got {alert_name} to deal with!')
 
     return HttpResponse(status=200)
 

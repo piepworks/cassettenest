@@ -96,6 +96,9 @@ urlpatterns = [
     path('create-checkout-session/<price>', views.create_checkout_session, name='checkout-session'),
     path('stripe-webhook', views.stripe_webhook, name='stripe-webhook'),
     path('stripe-portal', views.stripe_portal, name='stripe-portal'),
+
+    # Paddle
+    path('paddle-webhooks', views.paddle_webhooks, name='paddle-webhooks'),
 ]
 
 if settings.DEBUG:
