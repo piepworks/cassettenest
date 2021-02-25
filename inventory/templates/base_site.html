@@ -11,9 +11,12 @@
     <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/main.scss' %}" />
     {% endcompress %}
     {% include '_meta-tags.html' %}
-    {% flag 'stripe' %}
-    <script src="https://js.stripe.com/v3/"></script>
+    {% flag 'paddle' %}
     <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+    {% else %}
+        {% flag 'stripe' %}
+        <script src="https://js.stripe.com/v3/"></script>
+        {% endflag %}
     {% endflag %}
     {% if js_needed %}
     <script src="{% static 'js/vendor/jquery.min.js' %}"></script>

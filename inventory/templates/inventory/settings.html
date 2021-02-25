@@ -9,7 +9,11 @@
     <h1>Settings</h1>
 
     {% flag 'stripe' %}
-    {% include 'inventory/_settings-subscription.html' %}
+        {% include 'inventory/_settings-subscription.html' %}
+        {% else %}
+            {% flag 'paddle' %}
+                {% include 'inventory/_settings-subscription.html' %}
+            {% endflag %}
     {% endflag %}
 
     <form method="post">
@@ -60,15 +64,17 @@
 {% endblock %}
 
 {% block page_js %}
-{% flag 'stripe' %}
 <script>
-    {% if paddle_live_mode == 0 %}
-    Paddle.Environment.set('sandbox');
-    {% endif %}
-
-    Paddle.Setup({ vendor: {{ paddle_vendor_id }} });
-
-    {% include 'js/subscription.js' %}
+    {% flag 'paddle' %}
+        {% if paddle_live_mode == 0 %}
+        Paddle.Environment.set('sandbox');
+        {% endif %}
+        Paddle.Setup({ vendor: {{ paddle_vendor_id }} });
+        {% include 'js/paddle-subscription.js' %}
+    {% else %}
+        {% flag 'stripe' %}
+            {% include 'js/stripe-subscription.js' %}
+        {% endflag %}
+    {% endflag %}
 </script>
-{% endflag %}
 {% endblock %}

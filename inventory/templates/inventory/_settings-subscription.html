@@ -1,3 +1,4 @@
+{% load waffle_tags %}
 <div id="subscription" class="subscription-settings">
     <h2>Manage your subscription</h2>
     {% if user.is_staff or user.profile.friend %}
@@ -14,15 +15,20 @@
 
                 <p class="policies">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
 
+                {% flag 'paddle' %}
                 <div class="subscription-plans">
                     <a href="#!" class="button paddle" data-product="{{ paddle_standard_monthly }}" data-email="{{ user.email }}"><span class="paddle-gross" data-product="{{ paddle_standard_monthly }}">$2</span> per month</a>
                     <a href="#!" class="button paddle" data-product="{{ paddle_standard_annual }}" data-email="{{ user.email }}"><span class="paddle-gross" data-product="{{ paddle_standard_annual }}">$20</span> per year</a>
                 </div>
+                {% else %}
+                    {% flag 'stripe' %}
+                    <div class="subscription-plans">
+                        <button class="subscribe" id="btn-monthly" data-price="monthly">$2 per month</button>
+                        <button class="subscribe" id="btn-yearly" data-price="annual">$20 per year</button>
+                    </div>
+                    {% endflag %}
+                {% endflag %}
 
-                <div class="subscription-plans">
-                    <button class="subscribe" id="btn-monthly" data-price="monthly">$2 per month</button>
-                    <button class="subscribe" id="btn-yearly" data-price="annual">$20 per year</button>
-                </div>
             {% else %}
                 <p>You’re currently subscribed to the <b>{{ user.profile.subscription }}</b> plan.</p>
 
@@ -38,6 +44,13 @@
         <div class="no-js">
             <p>Sorry, subscription management requires JavaScript to work. :(</p>
         </div>
-        <p class="subscription-note">Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
+        {% flag 'paddle' %}
+            <p class="subscription-note">Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
+        {% else %}
+            {% flag 'stripe' %}
+                <p class="subscription-note">Easy and secure billing management with <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>. Cancel any time.</p>
+            {% endflag %}
+        {% endflag %}
+
     {% endif %}
 </div>
