@@ -256,6 +256,23 @@ def subscription_success(request):
     return redirect('settings')
 
 
+@login_required
+def subscription_created(request):
+    # For Paddle
+    subscription_message = ''
+
+    if request.GET.get('plan'):
+        subscription = request.GET.get('plan')
+        subscription_message = f' to the {subscription} plan'
+
+    messages.success(
+        request,
+        f'Yay, you’re subscribed{subscription_message}! It may take a moment to show up in your settings.'
+    )
+
+    return redirect('settings')
+
+
 @require_POST
 @login_required
 def stripe_portal(request):
@@ -394,6 +411,8 @@ def paddle_webhooks(request):
     if alert_name in supported_webhooks:
         # Do stuff.
         print(f'Congrats, we got {alert_name} to deal with!')
+        user = get_object_or_404(User, id=payload.get('passthrough'))
+        print(f'user: {user}')
 
     return HttpResponse(status=200)
 
