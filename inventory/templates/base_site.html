@@ -13,10 +13,6 @@
     {% include '_meta-tags.html' %}
     {% flag 'paddle' %}
     <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
-    {% else %}
-        {% flag 'stripe' %}
-        <script src="https://js.stripe.com/v3/"></script>
-        {% endflag %}
     {% endflag %}
     {% if js_needed %}
     <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
@@ -42,7 +38,7 @@
         </header>
 
         {% if user.is_authenticated %}
-            {% flag 'stripe' %}
+            {% flag 'paddle' %}
                 {% include 'inventory/_subscription-banner-wrapper.html' %}
             {% endflag %}
 
