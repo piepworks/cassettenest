@@ -30,7 +30,10 @@
                 {% endif %}
 
                 <div class="subscription-plans">
-                    <button class="manage-subscription">View and manage your subscription details.</button>
+                    <ul>
+                        <li><a href="{{ user.profile.paddle_update_url }}">Update your payment method.</a></li>
+                        <li><a href="{{ user.profile.paddle_cancel_url }}">Cancel your subscription.</a></li>
+                    </ul>
                 </div>
             {% endif %}
         </div>
