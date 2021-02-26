@@ -92,31 +92,33 @@ def is_valid_ip_address(forwarded_for):
 
 
 def paddle_plan_name(plan_id):
-    price_name = {
+    plan_name = {
         settings.PADDLE_STANDARD_ANNUAL: 'Standard Annual',
         settings.PADDLE_STANDARD_MONTHLY: 'Standard Monthly',
     }
 
-    return price_name[price_id]
+    return plan_name[str(plan_id)]
 
 
 def update_subscription(alert_name, user, payload):
     user.profile.paddle_user_id = payload.get('user_id')
     user.profile.paddle_subscription_id = payload.get('subscription_id')
     user.profile.paddle_subscription_plan_id = payload.get('subscription_plan_id')
-    user.profile.paddle_update_url = payload.get('update_url')
-    user.profile.paddle_cancel_url = payload.get('cancel_url')
+    if payload.get('update_url'):
+        user.profile.paddle_update_url = payload.get('update_url')
+    if payload.get('cancel_url'):
+        user.profile.paddle_cancel_url = payload.get('cancel_url')
     user.profile.subscription_status = payload.get('status')
 
     user_display = f'{user.username} / {user.email}'
-    plan_name = paddle_plan_name[user.profile.paddle_subscription_plan_id]
+    plan_name = paddle_plan_name(user.profile.paddle_subscription_plan_id)
 
     if alert_name == 'subscription_created':
         subject = 'New Cassette Nest subscription!'
-        message = f'{user_display} subscribed to the {user.profile.subscription} plan!'
+        message = f'{user_display} subscribed to the {plan_name} plan!'
 
     elif alert_name == 'subscription_updated':
-        old_plan = paddle_plan_name[payload.get('old_subscription_plan_id')]
+        old_plan = paddle_plan_name(payload.get('old_subscription_plan_id'))
 
         subject = f'Cassette Nest subscription updated'
 

@@ -188,7 +188,7 @@ def settings(request):
         }
 
         if request.user.profile.paddle_subscription_plan_id:
-            plan_name = paddle_plan_name[request.user.profile.paddle_subscription_plan_id]
+            plan_name = paddle_plan_name(request.user.profile.paddle_subscription_plan_id)
         else:
             plan_name = ''
 
@@ -221,9 +221,11 @@ def subscription_created(request):
     subscription_message = ''
 
     if request.GET.get('plan'):
-        plan = paddle_plan_name[request.GET.get('plan')]
-        # TODO: error check here
-        subscription_message = f' to the {plan} plan'
+        try:
+            plan = paddle_plan_name(request.GET.get('plan'))
+            subscription_message = f' to the {plan} plan'
+        except KeyError:
+            pass
 
     messages.success(
         request,
