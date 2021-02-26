@@ -8,12 +8,8 @@
 <div class="raw">
     <h1>Settings</h1>
 
-    {% flag 'stripe' %}
+    {% flag 'paddle' %}
         {% include 'inventory/_settings-subscription.html' %}
-        {% else %}
-            {% flag 'paddle' %}
-                {% include 'inventory/_settings-subscription.html' %}
-            {% endflag %}
     {% endflag %}
 
     <form method="post">
@@ -66,15 +62,11 @@
 {% block page_js %}
 <script>
     {% flag 'paddle' %}
-        {% if paddle_live_mode == 0 %}
+        {% if paddle.live_mode == 0 %}
         Paddle.Environment.set('sandbox');
         {% endif %}
-        Paddle.Setup({ vendor: {{ paddle_vendor_id }} });
+        Paddle.Setup({ vendor: {{ paddle.vendor_id }} });
         {% include 'js/paddle-subscription.js' %}
-    {% else %}
-        {% flag 'stripe' %}
-            {% include 'js/stripe-subscription.js' %}
-        {% endflag %}
     {% endflag %}
 </script>
 {% endblock %}

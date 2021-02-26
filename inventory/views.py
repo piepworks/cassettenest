@@ -56,7 +56,6 @@ from .utils import (
 )
 from .utils_paddle import (
     supported_webhooks,
-    status_lookup,
     is_valid_webhook,
     is_valid_ip_address,
     paddle_plan_name,
@@ -145,14 +144,12 @@ def patterns(request):
 
 @login_required
 def settings(request):
-    owner = request.user
-
     if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=owner)
-        profile_form = ProfileForm(request.POST, instance=owner)
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user)
 
         if user_form.is_valid() and profile_form.is_valid():
-            user = owner
+            user = request.user
             user.first_name = user_form.cleaned_data['first_name']
             user.last_name = user_form.cleaned_data['last_name']
             user.email = user_form.cleaned_data['email']
@@ -167,10 +164,9 @@ def settings(request):
                     messages.add_message(request, messages.ERROR, f'{field.name.capitalize()}: {error}')
             return redirect(reverse('settings'))
     else:
-        user_form = UserForm(instance=owner)
-        profile_form = ProfileForm(instance=owner.profile)
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
         csv_form = UploadCSVForm()
-        subscription = False
         exportable = {
             'cameras': Camera.objects.filter(owner=request.user).count(),
             'camera-backs': CameraBack.objects.filter(camera__owner=request.user).count(),
@@ -191,6 +187,19 @@ def settings(request):
             'duration': dj_settings.SUBSCRIPTION_TRIAL_DURATION,
         }
 
+        if request.user.profile.paddle_subscription_plan_id:
+            plan_name = paddle_plan_name[request.user.profile.paddle_subscription_plan_id]
+        else:
+            plan_name = ''
+
+        paddle = {
+            'live_mode': dj_settings.PADDLE_LIVE_MODE,
+            'vendor_id': dj_settings.PADDLE_VENDOR_ID,
+            'standard_monthly': dj_settings.PADDLE_STANDARD_MONTHLY,
+            'standard_annual': dj_settings.PADDLE_STANDARD_ANNUAL,
+            'plan_name': plan_name,
+        }
+
         context = {
             'user_form': user_form,
             'profile_form': profile_form,
@@ -200,11 +209,7 @@ def settings(request):
             'imports': imports,
             'js_needed': True,
             'trial': trial,
-            'paddle_live_mode': dj_settings.PADDLE_LIVE_MODE,
-            'paddle_vendor_id': dj_settings.PADDLE_VENDOR_ID,
-            'paddle_standard_monthly': dj_settings.PADDLE_STANDARD_MONTHLY,
-            'paddle_standard_annual': dj_settings.PADDLE_STANDARD_ANNUAL,
-            'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
+            'paddle': paddle,
         }
 
         return render(request, 'inventory/settings.html', context)
@@ -238,14 +243,12 @@ def paddle_webhooks(request):
     payload = request.POST.dict()
 
     if not is_valid_webhook(payload):
-        # Invalid payload
         return HttpResponse(status=400)
 
     alert_name = payload.get('alert_name')
     cn_user_id = payload.get('passthrough')
 
     if not alert_name or not cn_user_id:
-        # Gotta have `alert_name`.
         return HttpResponse(status=400)
 
     if alert_name in supported_webhooks:
