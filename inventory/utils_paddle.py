@@ -33,15 +33,6 @@ supported_webhooks = (
     'subscription_payment_refunded',
 )
 
-# Translate Paddle statuses to what we use in the Profile model.
-status_lookup = {
-    'active': 'active',
-    'trailing': 'trailing',
-    'past_due': 'error',
-    'paused': 'error',
-    'deleted': 'canceled',
-}
-
 
 def is_valid_webhook(payload):
     # Convert key from PEM to DER - Strip the first and last lines and newlines, and decode
@@ -115,11 +106,10 @@ def update_subscription(alert_name, user, payload):
     user.profile.paddle_subscription_plan_id = payload.get('subscription_plan_id')
     user.profile.paddle_update_url = payload.get('update_url')
     user.profile.paddle_cancel_url = payload.get('cancel_url')
-    user.profile.subscription = paddle_plan_name(payload.get('subscription_plan_id'))
-    user.profile.subscription_status = status_lookup[payload.get('status')]
-    user.save()
+    user.profile.subscription_status = payload.get('status')
 
     user_display = f'{user.username} / {user.email}'
+    plan_name = paddle_plan_name[user.profile.paddle_subscription_plan_id]
 
     if alert_name == 'subscription_created':
         subject = 'New Cassette Nest subscription!'
@@ -127,30 +117,34 @@ def update_subscription(alert_name, user, payload):
 
     elif alert_name == 'subscription_updated':
         old_plan = paddle_plan_name[payload.get('old_subscription_plan_id')]
-        new_plan = user.profile.subscription
 
         subject = f'Cassette Nest subscription updated'
 
-        if old_plan != new_plan:
-            message = f'{user_display} updated their subscription from {old_plan} to {new_plan}.'
+        if old_plan != plan_name:
+            message = f'{user_display} updated their subscription from {old_plan} to {plan_name}.'
         else:
-            message = f'{user_display} updated something on their {new_plan} subscription.'
+            message = f'{user_display} updated something on their {plan_name} subscription.'
 
     elif alert_name == 'subscription_canceled':
+        # Probably need to massage this into the right format for the DateField…
+        user.profile.paddle_cancellation_date = payload.get('cancellation_effective_date')
+
         subject = 'Cassette Nest subscription cancellation. :('
-        message = f'{user_display} cancelled their {user.profile.subscription} subscription.'
+        message = f'{user_display} cancelled their {plan_name} subscription.'
 
     elif alert_name == 'subscription_payment_succeeded':
         subject = 'Cassette Nest payment succeeded!'
-        message = f'{user_display} successfully paid for their {user.profile.subscription} subscription.'
+        message = f'{user_display} successfully paid for their {plan_name} subscription.'
 
     elif alert_name == 'subscription_payment_failed':
         subject = 'Cassette Nest payment failure'
-        message = f'{user_display} is having trouble with their {user.profile.subscription} subscription.'
+        message = f'{user_display} is having trouble with their {plan_name} subscription.'
 
     elif alert_name == 'subscription_payment_refunded':
         subject = 'Cassette Nest payment refund'
-        message = f'{user_display} got a refund for their {user.profile.subscription} subscription.'
+        message = f'{user_display} got a refund for their {plan_name} subscription.'
+
+    user.save()
 
     send_email_to_trey(
         subject=subject,
