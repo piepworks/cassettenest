@@ -17,20 +17,13 @@
 
                 {% flag 'paddle' %}
                 <div class="subscription-plans">
-                    <button class="paddle" data-product="{{ paddle_standard_monthly }}" data-name="Standard Monthly"><span class="paddle-gross" data-product="{{ paddle_standard_monthly }}">$2</span> per month</button>
-                    <button class="paddle" data-product="{{ paddle_standard_annual }}" data-name="Standard Annual"><span class="paddle-gross" data-product="{{ paddle_standard_annual }}">$20</span> per year</button>
+                    <button class="paddle" data-product="{{ paddle.standard_monthly }}"><span class="paddle-gross" data-product="{{ paddle.standard_monthly }}">$2</span> per month</button>
+                    <button class="paddle" data-product="{{ paddle.standard_annual }}"><span class="paddle-gross" data-product="{{ paddle.standard_annual }}">$20</span> per year</button>
                 </div>
-                {% else %}
-                    {% flag 'stripe' %}
-                    <div class="subscription-plans">
-                        <button class="subscribe" id="btn-monthly" data-price="monthly">$2 per month</button>
-                        <button class="subscribe" id="btn-yearly" data-price="annual">$20 per year</button>
-                    </div>
-                    {% endflag %}
                 {% endflag %}
 
             {% else %}
-                <p>You’re currently subscribed to the <b>{{ user.profile.subscription }}</b> plan.</p>
+                <p>You’re currently subscribed to the <b>{{ paddle.plan_name }}</b> plan.</p>
 
                 {% if user.profile.subscription_status == 'trialing' %}
                     <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
@@ -46,11 +39,6 @@
         </div>
         {% flag 'paddle' %}
             <p class="subscription-note">Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
-        {% else %}
-            {% flag 'stripe' %}
-                <p class="subscription-note">Easy and secure billing management with <a href="https://stripe.com" target="_blank" rel="noopener">Stripe</a>. Cancel any time.</p>
-            {% endflag %}
         {% endflag %}
-
     {% endif %}
 </div>

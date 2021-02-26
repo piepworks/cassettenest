@@ -221,8 +221,9 @@ def subscription_created(request):
     subscription_message = ''
 
     if request.GET.get('plan'):
-        subscription = request.GET.get('plan')
-        subscription_message = f' to the {subscription} plan'
+        plan = paddle_plan_name[request.GET.get('plan')]
+        # TODO: error check here
+        subscription_message = f' to the {plan} plan'
 
     messages.success(
         request,

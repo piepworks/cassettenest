@@ -102,8 +102,8 @@ def is_valid_ip_address(forwarded_for):
 
 def paddle_plan_name(plan_id):
     price_name = {
-        settings.PADDLE_STANDARD_ANNUAL: 'annual',
-        settings.PADDLE_STANDARD_MONTHLY: 'monthly',
+        settings.PADDLE_STANDARD_ANNUAL: 'Standard Annual',
+        settings.PADDLE_STANDARD_MONTHLY: 'Standard Monthly',
     }
 
     return price_name[price_id]
