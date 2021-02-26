@@ -54,7 +54,14 @@ from .utils import (
     get_host,
     send_email_to_trey,
 )
-from .utils_paddle import is_valid_webhook, is_valid_ip_address
+from .utils_paddle import (
+    supported_webhooks,
+    status_lookup,
+    is_valid_webhook,
+    is_valid_ip_address,
+    paddle_plan_name,
+    update_subscription,
+)
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
 
@@ -382,15 +389,6 @@ def stripe_webhook(request):
 @require_POST
 @csrf_exempt
 def paddle_webhooks(request):
-    supported_webhooks = (
-        'subscription_created',
-        'subscription_updated',
-        'subscription_cancelled',
-        'subscription_payment_succeeded',
-        'subscription_payment_failed',
-        'subscription_payment_refunded',
-    )
-
     forwarded_for = u'{}'.format(request.META.get('HTTP_X_FORWARDED_FOR'))
 
     if not is_valid_ip_address(forwarded_for):
@@ -403,16 +401,15 @@ def paddle_webhooks(request):
         return HttpResponse(status=400)
 
     alert_name = payload.get('alert_name')
+    cn_user_id = payload.get('passthrough')
 
-    if not alert_name:
+    if not alert_name or not cn_user_id:
         # Gotta have `alert_name`.
         return HttpResponse(status=400)
 
     if alert_name in supported_webhooks:
-        # Do stuff.
-        print(f'Congrats, we got {alert_name} to deal with!')
-        user = get_object_or_404(User, id=payload.get('passthrough'))
-        print(f'user: {user}')
+        user = get_object_or_404(User, id=cn_user_id)
+        update_subscription(alert_name, user, payload)
 
     return HttpResponse(status=200)
 

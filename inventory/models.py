@@ -49,6 +49,15 @@ class Profile(models.Model):
         help_text='This account doesn’t need a subscription.',
     )
 
+    # https: // developer.paddle.com/webhook-reference/subscription-alerts/subscription-created
+    # https: // developer.paddle.com/webhook-reference/subscription-alerts/subscription-updated
+
+    # paddle_user_id = models.IntegerField(null=True, blank=True)
+    # paddle_subscription_id = models.IntegerField(null=True, blank=True, help_text='Unique for every user.')
+    # paddle_subscription_plan_id = models.IntegerField(null=True, blank=True, help_text='Which of our defined plans.')
+    # paddle_cancel_url = models.URLField(max_length=200, blank=True, verbose_name='Self-service cancel URL')
+    # paddle_update_url = models.URLField(max_length=200, blank=True, verbose_name='Self-service update URL')
+
     def __str__(self):
         return 'Settings for %s' % self.user
 

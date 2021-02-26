@@ -22,6 +22,26 @@ except ImportError:  # pragma: no cover
 from django.conf import settings
 from ipaddress import ip_address, ip_network
 
+from .utils import send_email_to_trey
+
+supported_webhooks = (
+    'subscription_created',
+    'subscription_updated',
+    'subscription_cancelled',
+    'subscription_payment_succeeded',
+    'subscription_payment_failed',
+    'subscription_payment_refunded',
+)
+
+# Translate Paddle statuses to what we use in the Profile model.
+status_lookup = {
+    'active': 'active',
+    'trailing': 'trailing',
+    'past_due': 'error',
+    'paused': 'error',
+    'deleted': 'canceled',
+}
+
 
 def is_valid_webhook(payload):
     # Convert key from PEM to DER - Strip the first and last lines and newlines, and decode
@@ -78,3 +98,61 @@ def is_valid_ip_address(forwarded_for):
             return True
     else:
         return False
+
+
+def paddle_plan_name(plan_id):
+    price_name = {
+        settings.PADDLE_STANDARD_ANNUAL: 'annual',
+        settings.PADDLE_STANDARD_MONTHLY: 'monthly',
+    }
+
+    return price_name[price_id]
+
+
+def update_subscription(alert_name, user, payload):
+    user.profile.paddle_user_id = payload.get('user_id')
+    user.profile.paddle_subscription_id = payload.get('subscription_id')
+    user.profile.paddle_subscription_plan_id = payload.get('subscription_plan_id')
+    user.profile.paddle_update_url = payload.get('update_url')
+    user.profile.paddle_cancel_url = payload.get('cancel_url')
+    user.profile.subscription = paddle_plan_name(payload.get('subscription_plan_id'))
+    user.profile.subscription_status = status_lookup[payload.get('status')]
+    user.save()
+
+    user_display = f'{user.username} / {user.email}'
+
+    if alert_name == 'subscription_created':
+        subject = 'New Cassette Nest subscription!'
+        message = f'{user_display} subscribed to the {user.profile.subscription} plan!'
+
+    elif alert_name == 'subscription_updated':
+        old_plan = paddle_plan_name[payload.get('old_subscription_plan_id')]
+        new_plan = user.profile.subscription
+
+        subject = f'Cassette Nest subscription updated'
+
+        if old_plan != new_plan:
+            message = f'{user_display} updated their subscription from {old_plan} to {new_plan}.'
+        else:
+            message = f'{user_display} updated something on their {new_plan} subscription.'
+
+    elif alert_name == 'subscription_canceled':
+        subject = 'Cassette Nest subscription cancellation. :('
+        message = f'{user_display} cancelled their {user.profile.subscription} subscription.'
+
+    elif alert_name == 'subscription_payment_succeeded':
+        subject = 'Cassette Nest payment succeeded!'
+        message = f'{user_display} successfully paid for their {user.profile.subscription} subscription.'
+
+    elif alert_name == 'subscription_payment_failed':
+        subject = 'Cassette Nest payment failure'
+        message = f'{user_display} is having trouble with their {user.profile.subscription} subscription.'
+
+    elif alert_name == 'subscription_payment_refunded':
+        subject = 'Cassette Nest payment refund'
+        message = f'{user_display} got a refund for their {user.profile.subscription} subscription.'
+
+    send_email_to_trey(
+        subject=subject,
+        message=message,
+    )
