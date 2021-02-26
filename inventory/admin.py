@@ -117,7 +117,6 @@ class UserAdmin(BaseUserAdmin):
         'journals',
         'projects',
         'has_active_subscription',
-        'subscription',
         'subscription_status',
         'timezone',
         'last_login',
@@ -142,10 +141,6 @@ class UserAdmin(BaseUserAdmin):
         return obj.profile.has_active_subscription
     has_active_subscription.short_description = 'Active'
     has_active_subscription.boolean = True
-
-    def subscription(self, obj):
-        return obj.profile.subscription
-    subscription.short_description = 'Plan'
 
     def subscription_status(self, obj):
         return obj.profile.subscription_status
