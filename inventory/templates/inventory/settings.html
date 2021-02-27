@@ -65,8 +65,37 @@
         {% if paddle.live_mode == 0 %}
         Paddle.Environment.set('sandbox');
         {% endif %}
+
         Paddle.Setup({ vendor: {{ paddle.vendor_id }} });
-        {% include 'js/paddle-subscription.js' %}
+
+        function openCheckout(product) {
+            Paddle.Checkout.open({
+                product: product,
+                email: '{{ user.email }}',
+                passthrough: '{{ user.id }}',
+                success: `${window.location.protocol}//${window.location.host}{% url 'subscription-created' %}?plan=${product}`,
+            });
+        }
+
+        $('.paddle-subscribe').click(e => {
+            openCheckout($(e.target).data('product'));
+        });
+
+        {% if user.profile.paddle_update_url %}
+        $('.paddle-update').click(() => {
+            Paddle.Checkout.open({
+                override: '{{ user.profile.paddle_update_url|safe }}',
+            });
+        });
+        {% endif %}
+
+        {% if user.profile.paddle_cancel_url %}
+        $('.paddle-cancel').click(() => {
+            Paddle.Checkout.open({
+                override: '{{ user.profile.paddle_cancel_url|safe }}',
+            });
+        });
+        {% endif %}
     {% endflag %}
 </script>
 {% endblock %}

@@ -29,10 +29,14 @@
                     <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
                 {% endif %}
 
-                <div class="subscription-plans">
-                    <button class="paddle-update">Update your payment method.</button>
-                    <button class="secondary paddle-cancel">Cancel your subscription.</button>
-                </div>
+                {% if user.profile.paddle_cancellation_date %}
+                    <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ user.profile.paddle_cancellation_date }}</b>.</p>
+                {% else %}
+                    <div class="subscription-plans">
+                        <button class="paddle-update">Update your payment method.</button>
+                        <button class="secondary paddle-cancel">Cancel your subscription.</button>
+                    </div>
+                {% endif %}
             {% endif %}
         </div>
         <div class="no-js">
