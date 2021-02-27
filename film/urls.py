@@ -93,6 +93,7 @@ urlpatterns = [
 
     # Paddle
     path('paddle-webhooks', views.paddle_webhooks, name='paddle-webhooks'),
+    path('subscription-update', views.subscription_update, name='subscription-update'),
     path('subscription-created', views.subscription_created, name='subscription-created'),
 ]
 

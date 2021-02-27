@@ -56,6 +56,7 @@ from .utils import (
 )
 from .utils_paddle import (
     supported_webhooks,
+    is_valid_plan,
     is_valid_webhook,
     is_valid_ip_address,
     paddle_plan_name,
@@ -259,6 +260,25 @@ def paddle_webhooks(request):
         update_subscription(alert_name, user, payload)
 
     return HttpResponse(status=200)
+
+
+@require_POST
+@login_required
+def subscription_update(request):
+    # https://developer.paddle.com/api-reference/intro/api-authentication
+    # https://developer.paddle.com/api-reference/subscription-api/users/updateuser
+    plan = request.POST.get('plan')
+
+    if is_valid_plan(plan):
+        r = requests.post(
+            # …
+        )
+
+        messages.success(request, f'Plan updated to {paddle_plan_name(plan)}.')
+    else:
+        messages.error(request, f'There was a problem changing plans. Please try again.')
+
+    return redirect('settings')
 
 
 def register(request):

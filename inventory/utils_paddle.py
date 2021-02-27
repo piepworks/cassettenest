@@ -33,6 +33,19 @@ supported_webhooks = (
     'subscription_payment_refunded',
 )
 
+valid_plans = {
+    settings.PADDLE_STANDARD_ANNUAL: 'Standard Annual',
+    settings.PADDLE_STANDARD_MONTHLY: 'Standard Monthly',
+}
+
+
+def paddle_plan_name(plan_id):
+    return valid_plans[str(plan_id)]
+
+
+def is_valid_plan(plan_id):
+    return str(plan_id) in valid_plans
+
 
 def is_valid_webhook(payload):
     # Convert key from PEM to DER - Strip the first and last lines and newlines, and decode
@@ -89,15 +102,6 @@ def is_valid_ip_address(forwarded_for):
             return True
     else:
         return False
-
-
-def paddle_plan_name(plan_id):
-    plan_name = {
-        settings.PADDLE_STANDARD_ANNUAL: 'Standard Annual',
-        settings.PADDLE_STANDARD_MONTHLY: 'Standard Monthly',
-    }
-
-    return plan_name[str(plan_id)]
 
 
 def update_subscription(alert_name, user, payload):
