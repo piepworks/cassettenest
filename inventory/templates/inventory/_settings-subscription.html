@@ -17,8 +17,8 @@
 
                 {% flag 'paddle' %}
                 <div class="subscription-plans">
-                    <button class="paddle" data-product="{{ paddle.standard_monthly }}"><span class="paddle-gross" data-product="{{ paddle.standard_monthly }}">$2</span> per month</button>
-                    <button class="paddle" data-product="{{ paddle.standard_annual }}"><span class="paddle-gross" data-product="{{ paddle.standard_annual }}">$20</span> per year</button>
+                    <button class="paddle-subscribe" data-product="{{ paddle.standard_monthly }}"><span class="paddle-gross" data-product="{{ paddle.standard_monthly }}">$2</span> per month</button>
+                    <button class="paddle-subscribe" data-product="{{ paddle.standard_annual }}"><span class="paddle-gross" data-product="{{ paddle.standard_annual }}">$20</span> per year</button>
                 </div>
                 {% endflag %}
 
@@ -30,10 +30,8 @@
                 {% endif %}
 
                 <div class="subscription-plans">
-                    <ul>
-                        <li><a href="{{ user.profile.paddle_update_url }}">Update your payment method.</a></li>
-                        <li><a href="{{ user.profile.paddle_cancel_url }}">Cancel your subscription.</a></li>
-                    </ul>
+                    <button class="paddle-update">Update your payment method.</button>
+                    <button class="secondary paddle-cancel">Cancel your subscription.</button>
                 </div>
             {% endif %}
         </div>

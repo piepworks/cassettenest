@@ -7,6 +7,18 @@ function openCheckout(product) {
     });
 }
 
-$('.paddle').click(e => {
+$('.paddle-subscribe').click(e => {
     openCheckout($(e.target).data('product'));
+});
+
+$('.paddle-update').click(() => {
+    Paddle.Checkout.open({
+        override: '{{ user.profile.paddle_update_url|safe }}',
+    });
+});
+
+$('.paddle-cancel').click(() => {
+    Paddle.Checkout.open({
+        override: '{{ user.profile.paddle_cancel_url|safe }}',
+    });
 });

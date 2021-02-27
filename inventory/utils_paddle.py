@@ -128,7 +128,6 @@ def update_subscription(alert_name, user, payload):
             message = f'{user_display} updated something on their {plan_name} subscription.'
 
     elif alert_name == 'subscription_cancelled':
-        # Probably need to massage this into the right format for the DateField…
         user.profile.paddle_cancellation_date = payload.get('cancellation_effective_date')
 
         subject = 'Cassette Nest subscription cancellation. :('
