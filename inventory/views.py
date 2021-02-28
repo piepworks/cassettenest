@@ -196,8 +196,8 @@ def settings(request):
         paddle = {
             'live_mode': dj_settings.PADDLE_LIVE_MODE,
             'vendor_id': dj_settings.PADDLE_VENDOR_ID,
-            'standard_monthly': dj_settings.PADDLE_STANDARD_MONTHLY,
-            'standard_annual': dj_settings.PADDLE_STANDARD_ANNUAL,
+            'standard_monthly': int(dj_settings.PADDLE_STANDARD_MONTHLY),
+            'standard_annual': int(dj_settings.PADDLE_STANDARD_ANNUAL),
             'plan_name': plan_name,
         }
 
@@ -268,13 +268,26 @@ def subscription_update(request):
     # https://developer.paddle.com/api-reference/intro/api-authentication
     # https://developer.paddle.com/api-reference/subscription-api/users/updateuser
     plan = request.POST.get('plan')
+    sandbox = ''
+    if dj_settings.PADDLE_LIVE_MODE == 0:
+        sandbox = 'sandbox-'
 
     if is_valid_plan(plan):
         r = requests.post(
-            # …
+            f'https://{sandbox}vendors.paddle.com/api/2.0/subscription/users/update',
+            data={
+                'vendor_id': dj_settings.PADDLE_VENDOR_ID,
+                'vendor_auth_code': dj_settings.PADDLE_VENDOR_AUTH_CODE,
+                'subscription_id': request.user.profile.paddle_subscription_id,
+                'plan_id': plan,
+            }
         )
 
-        messages.success(request, f'Plan updated to {paddle_plan_name(plan)}.')
+        if r.json()['success'] is True:
+            messages.success(request, f'Plan updated to {paddle_plan_name(plan)}.')
+        else:
+            error = r.json()['error']['message']
+            messages.error(request, f'There was a problem changing plans. “{error}” Please try again.')
     else:
         messages.error(request, f'There was a problem changing plans. Please try again.')
 

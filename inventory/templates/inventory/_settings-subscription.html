@@ -33,6 +33,27 @@
                     <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ user.profile.paddle_cancellation_date }}</b>.</p>
                 {% else %}
                     <div class="subscription-plans">
+                        <h3>Update your plan</h3>
+                        <div>
+                            <h4>Monthly</h4>
+
+                            <form action="{% url 'subscription-update' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="plan" value="{{ paddle.standard_monthly }}" />
+                                <button{% if user.profile.paddle_subscription_plan_id == paddle.standard_monthly %} disabled{% endif %}>Choose</button>
+                            </form>
+                        </div>
+                        <div>
+                            <h4>Annual</h4>
+                            <form action="{% url 'subscription-update' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="plan" value="{{ paddle.standard_annual }}" />
+                                <button{% if user.profile.paddle_subscription_plan_id == paddle.standard_annual %} disabled{% endif %}>Choose</button>
+                            </form>
+                        </div>
+
+                        <hr />
+
                         <button class="paddle-update">Update your payment method.</button>
                         <button class="secondary paddle-cancel">Cancel your subscription.</button>
                     </div>
