@@ -98,11 +98,20 @@
         {% endif %}
 
         const $changePlanButton = $('#change-plan button').attr('disabled', true);
+        const $changePlanMessages = $('[id^=change-plan-message-to').hide();
+
         $('input[name=plan]').change(e => {
-            if('{{ user.profile.paddle_subscription_plan_id }}' !== $(e.target).attr('value')) {
+            const value = $(e.target).attr('value');
+            const interval = (value === '{{ paddle.standard_annual_id }}') ? 'annual' : 'monthly';
+            $changePlanMessages.hide();
+
+            $(`#change-plan-message-to-${interval}`).show();
+
+            if('{{ user.profile.paddle_subscription_plan_id }}' !== value) {
                 $changePlanButton.attr('disabled', false);
             } else {
                 $changePlanButton.attr('disabled', true);
+                $changePlanMessages.hide();
             }
         });
     {% endflag %}

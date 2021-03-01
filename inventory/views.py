@@ -286,7 +286,7 @@ def subscription_update(request):
         )
 
         if r.json()['success'] is True:
-            messages.success(request, f'Plan updated to {paddle_plan_name(plan)}.')
+            messages.success(request, f'Your plan is now set to {paddle_plan_name(plan)}. Thank you!')
         else:
             error = r.json()['error']['message']
             messages.error(request, f'There was a problem changing plans. “{error}” Please try again.')
