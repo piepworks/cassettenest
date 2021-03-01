@@ -96,6 +96,15 @@
             });
         });
         {% endif %}
+
+        const $changePlanButton = $('#change-plan button').attr('disabled', true);
+        $('input[name=plan]').change(e => {
+            if('{{ user.profile.paddle_subscription_plan_id }}' !== $(e.target).attr('value')) {
+                $changePlanButton.attr('disabled', false);
+            } else {
+                $changePlanButton.attr('disabled', true);
+            }
+        });
     {% endflag %}
 </script>
 {% endblock %}

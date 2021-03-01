@@ -196,8 +196,10 @@ def settings(request):
         paddle = {
             'live_mode': dj_settings.PADDLE_LIVE_MODE,
             'vendor_id': dj_settings.PADDLE_VENDOR_ID,
-            'standard_monthly': int(dj_settings.PADDLE_STANDARD_MONTHLY),
-            'standard_annual': int(dj_settings.PADDLE_STANDARD_ANNUAL),
+            'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
+            'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
+            'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
+            'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
             'plan_name': plan_name,
         }
 

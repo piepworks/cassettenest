@@ -17,8 +17,8 @@
 
                 {% flag 'paddle' %}
                 <div class="subscription-plans">
-                    <button class="paddle-subscribe" data-product="{{ paddle.standard_monthly }}"><span class="paddle-gross" data-product="{{ paddle.standard_monthly }}">$2</span> per month</button>
-                    <button class="paddle-subscribe" data-product="{{ paddle.standard_annual }}"><span class="paddle-gross" data-product="{{ paddle.standard_annual }}">$20</span> per year</button>
+                    <button class="paddle-subscribe" data-product="{{ paddle.standard_monthly_id }}"><span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span> per month</button>
+                    <button class="paddle-subscribe" data-product="{{ paddle.standard_annual_id }}"><span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span> per year</button>
                 </div>
                 {% endflag %}
 
@@ -33,29 +33,34 @@
                     <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ user.profile.paddle_cancellation_date }}</b>.</p>
                 {% else %}
                     <div class="subscription-plans">
-                        <h3>Update your plan</h3>
-                        <div>
-                            <h4>Monthly</h4>
-
-                            <form action="{% url 'subscription-update' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="plan" value="{{ paddle.standard_monthly }}" />
-                                <button{% if user.profile.paddle_subscription_plan_id == paddle.standard_monthly %} disabled{% endif %}>Choose</button>
-                            </form>
-                        </div>
-                        <div>
-                            <h4>Annual</h4>
-                            <form action="{% url 'subscription-update' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="plan" value="{{ paddle.standard_annual }}" />
-                                <button{% if user.profile.paddle_subscription_plan_id == paddle.standard_annual %} disabled{% endif %}>Choose</button>
-                            </form>
-                        </div>
-
-                        <hr />
-
                         <button class="paddle-update">Update your payment method.</button>
                         <button class="secondary paddle-cancel">Cancel your subscription.</button>
+
+                        <div>
+                            <form onsubmit="return confirm('Are you sure?');" id="change-plan" action="{% url 'subscription-update' %}" method="post">
+                                {% csrf_token %}
+                                <div class="c-field c-field--radio">
+                                    <fieldset>
+                                        <legend>Change your plan</legend>
+                                        <div>
+                                            <label>
+                                                <input type="radio" name="plan" value="{{ paddle.standard_monthly_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_monthly_id %} checked{% endif %}>
+                                                {{ paddle.standard_monthly_name }}
+                                                &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span>&nbsp;per month)</small>
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <label>
+                                                <input type="radio" name="plan" value="{{ paddle.standard_annual_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_annual_id %} checked{% endif %}>
+                                                {{ paddle.standard_annual_name }}
+                                                &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span>&nbsp;per year)</small>
+                                            </label>
+                                        </div>
+                                        <button>Change plan</button>
+                                    </fieldset>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 {% endif %}
             {% endif %}
