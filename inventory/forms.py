@@ -188,6 +188,15 @@ class PatternsForm(forms.Form):
         help_text=help_text,
         required=False
     )
+    radio = forms.ChoiceField(
+        help_text=help_text,
+        choices=[
+            ('1', 'Radio 1'),
+            ('2', 'Radio 2'),
+            ('3', 'Radio 3')
+        ],
+        widget=forms.RadioSelect,
+    )
 
 
 class UploadCSVForm(forms.Form):
