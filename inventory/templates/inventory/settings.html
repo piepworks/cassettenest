@@ -93,6 +93,7 @@
         $('.paddle-cancel').click(() => {
             Paddle.Checkout.open({
                 override: '{{ user.profile.paddle_cancel_url|safe }}',
+                success: `${window.location.protocol}//${window.location.host}{% url 'settings' %}`,
             });
         });
         {% endif %}

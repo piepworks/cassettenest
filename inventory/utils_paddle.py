@@ -113,6 +113,7 @@ def update_subscription(alert_name, user, payload):
     if payload.get('cancel_url'):
         user.profile.paddle_cancel_url = payload.get('cancel_url')
     user.profile.subscription_status = payload.get('status')
+    user.profile.paddle_cancellation_date = None
 
     user_display = f'{user.username} / {user.email}'
     plan_name = paddle_plan_name(user.profile.paddle_subscription_plan_id)

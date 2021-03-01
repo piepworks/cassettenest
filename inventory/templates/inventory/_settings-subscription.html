@@ -1,4 +1,3 @@
-{% load waffle_tags %}
 <div id="subscription" class="subscription-settings">
     <h2>Manage your subscription</h2>
     {% if user.is_staff or user.profile.friend %}
@@ -15,13 +14,7 @@
 
                 <p class="policies">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
 
-                {% flag 'paddle' %}
-                <div class="subscription-plans">
-                    <button class="paddle-subscribe" data-product="{{ paddle.standard_monthly_id }}"><span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span> per month</button>
-                    <button class="paddle-subscribe" data-product="{{ paddle.standard_annual_id }}"><span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span> per year</button>
-                </div>
-                {% endflag %}
-
+                {% include 'inventory/_settings-subscription-plans.html' %}
             {% else %}
                 <p>You’re currently subscribed to the <b>{{ paddle.plan_name }}</b> plan.</p>
 
@@ -29,53 +22,22 @@
                     <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
                 {% endif %}
 
-                {% if user.profile.paddle_cancellation_date %}
+                {% if user.profile.subscription_status == 'deleted' and user.profile.paddle_cancellation_date %}
                     <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ user.profile.paddle_cancellation_date }}</b>.</p>
+
+                    <hr />
+
+                    <h3>Restore your subscription</h3>
+
+                    {% include 'inventory/_settings-subscription-plans.html' %}
                 {% else %}
-                    <div class="subscription-plans">
-                        <button class="paddle-update">Update your payment method.</button>
-                        <button class="secondary paddle-cancel">Cancel your subscription.</button>
-
-                        <hr />
-
-                        <div>
-                            <form onsubmit="return confirm('Are you sure?');" id="change-plan" action="{% url 'subscription-update' %}" method="post">
-                                {% csrf_token %}
-                                <div class="c-field c-field--radio">
-                                    <fieldset>
-                                        <legend>Change your plan</legend>
-                                        <div>
-                                            <label>
-                                                <input type="radio" name="plan" value="{{ paddle.standard_monthly_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_monthly_id %} checked{% endif %}>
-                                                {{ paddle.standard_monthly_name }}
-                                                &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span>&nbsp;per month)</small>
-                                            </label>
-                                        </div>
-                                        <div>
-                                            <label>
-                                                <input type="radio" name="plan" value="{{ paddle.standard_annual_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_annual_id %} checked{% endif %}>
-                                                {{ paddle.standard_annual_name }}
-                                                &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span>&nbsp;per year)</small>
-                                            </label>
-                                        </div>
-                                        <div class="help">
-                                            <p id="change-plan-message-to-annual">If you change from <b>{{ paddle.standard_monthly_name }}</b> to <b>{{ paddle.standard_annual_name }}</b>, you will be charged immedately and your new billing day will be every year on this date. Any remaining pro-rated balance will be used towards this first payment.</p>
-                                            <p id="change-plan-message-to-monthly">If you change from <b>{{ paddle.standard_annual_name }}</b> to <b>{{ paddle.standard_monthly_name }}</b>, your remaining pro-rated balance will be used until it runs out, at which point you will be charged monthly on this day each month.</p>
-                                        </div>
-                                        <button>Change plan</button>
-                                    </fieldset>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                    {% include 'inventory/_settings-subscription-update.html' %}
                 {% endif %}
             {% endif %}
         </div>
         <div class="no-js">
             <p>Sorry, subscription management requires JavaScript to work. :(</p>
         </div>
-        {% flag 'paddle' %}
-            <p class="subscription-note">Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
-        {% endflag %}
+        <p class="subscription-note">Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
     {% endif %}
 </div>
