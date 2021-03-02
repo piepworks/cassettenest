@@ -38,8 +38,8 @@
     const $changePlanButton = $('#change-plan button').attr('disabled', true);
     const $changePlanMessages = $('[id^=change-plan-message-to').hide();
 
-    $('input[name=plan]').change(e => {
-        const value = $(e.target).attr('value');
+    function updatePlanDisplay(selector) {
+        const value = $(selector).attr('value');
         const interval = (value === '{{ paddle.standard_annual_id }}') ? 'annual' : 'monthly';
         $changePlanMessages.hide();
 
@@ -51,5 +51,9 @@
             $changePlanButton.attr('disabled', true);
             $changePlanMessages.hide();
         }
-    });
+    }
+
+    $('input[name=plan]').change(e => updatePlanDisplay(e.target));
+
+    updatePlanDisplay('input[name=plan]:checked');
 </script>
