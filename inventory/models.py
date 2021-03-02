@@ -31,10 +31,7 @@ class Profile(models.Model):
         choices=SUBSCRIPTION_STATUS_CHOICES,
         default='none',
     )
-    friend = models.BooleanField(
-        default=False,
-        help_text='This account doesn’t need a subscription.',
-    )
+    friend = models.BooleanField(default=False, help_text='This account doesn’t need a subscription.')
     paddle_user_id = models.IntegerField(null=True, blank=True)
     paddle_subscription_id = models.IntegerField(null=True, blank=True, help_text='Unique for each user.')
     paddle_subscription_plan_id = models.IntegerField(null=True, blank=True, help_text='Which of our defined plans.')
