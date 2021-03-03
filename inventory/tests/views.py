@@ -912,7 +912,7 @@ class SubscriptionTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
-@override_flag('stripe', active=True)
+@override_flag('paddle', active=True)
 class SubscriptionBannerTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -938,8 +938,8 @@ class SubscriptionBannerTests(TestCase):
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Paid plans are now available.')
 
-    def test_subscription_banner_canceled(self):
-        self.user.profile.subscription_status = 'canceled'
+    def test_subscription_banner_cancelled(self):
+        self.user.profile.subscription_status = 'deleted'
         self.user.profile.save()
 
         response = self.client.get(reverse('index'))
@@ -947,9 +947,8 @@ class SubscriptionBannerTests(TestCase):
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription has been cancelled.')
 
-    def test_subscription_banner_error(self):
-        self.user.profile.stripe_subscription_id = 'cus_abcd'
-        self.user.profile.subscription_status = 'error'
+    def test_subscription_banner_past_due(self):
+        self.user.profile.subscription_status = 'past_due'
         self.user.profile.save()
 
         response = self.client.get(reverse('index'))
@@ -957,9 +956,10 @@ class SubscriptionBannerTests(TestCase):
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Looks like there’s a problem with your subscription.')
 
-    def test_subscription_banner_canceling(self):
+    def test_subscription_banner_cancelling(self):
         self.user.profile.stripe_subscription_id = 'cus_abcd'
-        self.user.profile.subscription_status = 'canceling'
+        self.user.profile.subscription_status = 'deleted'
+        self.user.profile.paddle_cancellation_date = datetime.date.today() + datetime.timedelta(days=1)
         self.user.profile.save()
 
         response = self.client.get(reverse('index'))
@@ -967,21 +967,11 @@ class SubscriptionBannerTests(TestCase):
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription is scheduled to be canceled.')
 
-    def test_subscription_banner_pending(self):
-        self.user.profile.stripe_subscription_id = 'cus_abcd'
-        self.user.profile.subscription_status = 'pending'
-        self.user.profile.save()
-
-        response = self.client.get(reverse('index'))
-
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
-        self.assertContains(response, 'Your subscription is being updated…')
-
     def test_subscription_banner_no_flag(self):
         self.user.profile.subscription_status = 'none'
         self.user.profile.save()
 
-        with override_flag('stripe', active=False):
+        with override_flag('paddle', active=False):
             response = self.client.get(reverse('index'))
 
         self.assertTemplateNotUsed(response, 'inventory/_subscription-banner.html')
