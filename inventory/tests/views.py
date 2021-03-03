@@ -889,7 +889,7 @@ class SubscriptionTests(TestCase):
         self.assertContains(response, f'Yay, you’re subscribed!')
 
     def test_webhook_subscription_created(self):
-        fake_return_value = {
+        fake_post_value = {
             'alert_name': 'subscription_created',
             'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
             'status': 'active',
@@ -898,7 +898,7 @@ class SubscriptionTests(TestCase):
 
         with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
             with mock.patch('inventory.views.is_valid_webhook', return_value=True):
-                response = self.client.post(reverse('paddle-webhooks'), data=fake_return_value)
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_post_value)
 
         self.assertEqual(response.status_code, 200)
 
