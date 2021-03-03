@@ -6,7 +6,6 @@ module.exports = {
         jquery: true,
     },
     globals: {
-        Stripe: 'readonly',
         Paddle: 'readonly',
     },
     extends: 'eslint:recommended',

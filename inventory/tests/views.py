@@ -1003,7 +1003,6 @@ class SubscriptionBannerTests(TestCase):
         self.assertContains(response, 'Looks like there’s a problem with your subscription.')
 
     def test_subscription_banner_cancelling(self):
-        self.user.profile.stripe_subscription_id = 'cus_abcd'
         self.user.profile.subscription_status = 'deleted'
         self.user.profile.paddle_cancellation_date = datetime.date.today() + datetime.timedelta(days=1)
         self.user.profile.save()
