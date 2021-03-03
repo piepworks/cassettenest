@@ -9,11 +9,13 @@ from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
+from django.conf import settings
 from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
 from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film
 from inventory.utils import status_number, bulk_status_next_keys, status_description
+from inventory.utils_paddle import paddle_plan_name
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
@@ -160,31 +162,6 @@ class SettingsTests(TestCase):
 
         response = self.client.get(reverse('settings'))
         self.assertContains(response, 'You’re a friend of Trey Labs')
-
-    @override_flag('stripe', active=True)
-    @override_settings(SUBSCRIPTION_TRIAL=1)
-    @override_settings(SUBSCRIPTION_TRIAL_DURATION=14)
-    def test_trial_mode(self):
-        response = self.client.get(reverse('settings'))
-        self.assertContains(response, 'Try it free for <strong>14 days!</strong>')
-
-    @override_flag('stripe', active=True)
-    @override_settings(SUBSCRIPTION_TRIAL=1)
-    def test_trial_days_remaining(self):
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_subscription_id = 'cus_abcd'
-        profile.subscription_status = 'trialing'
-        profile.save()
-
-        fake_price_id = 'price_abcd'
-        trial_end = datetime.datetime.now() + datetime.timedelta(days=14)
-        mock_subscription = mock.Mock()
-        mock_subscription.trial_end = trial_end.timestamp()
-
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
-            with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
-                response = self.client.get(reverse('settings'))
-                self.assertContains(response, 'Your free trial will end in <strong>14 days</strong>.')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -885,75 +862,44 @@ class SubscriptionTests(TestCase):
             password=self.password,
         )
 
-    def test_create_checkout_session_error(self):
-        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('error', response.json())
-
-    @override_settings(SUBSCRIPTION_TRIAL=0)
-    def test_create_checkout_session_success(self):
-        self.user.email = 'test@example.com'
-        self.user.save()
-        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('sessionId', response.json())
-
-    def test_create_checkout_session_debug_mode(self):
-        # This is just to get 100% coverage of the create_checkout_session view.
-        self.user.email = 'test@example.com'
-        self.user.save()
-        with override_settings(DEBUG=True):
-            response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
-
-        self.assertEqual(response.status_code, 200)
-
     def test_subscription_success_page(self):
-        fake_price_id = 'price_abcd'
-        mock_subscription = mock.Mock()
-        mock_subscription.plan.id = fake_price_id
-        mock_session = mock.Mock()
-        mock_session.subscription = 'sub_abcd'
+        plan = settings.PADDLE_STANDARD_MONTHLY
 
-        with mock.patch('inventory.views.stripe.checkout.Session.retrieve', return_value=mock_session):
-            with mock.patch('stripe.Subscription.retrieve', return_value=mock_subscription):
-                with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
-                    response = self.client.get(reverse('subscription-success') + '?session_id=1234', follow=True)
+        response = self.client.get(reverse('subscription-created') + f'?plan={plan}', follow=True)
 
-        self.assertContains(response, 'Yay, you’re subscribed to the monthly plan!')
+        self.assertContains(response, f'Yay, you’re subscribed to the {paddle_plan_name(plan)} plan!')
 
-    def test_subscription_success_page_invalid_session(self):
-        response = self.client.get(reverse('subscription-success') + '?session_id=1234', follow=True)
+    def test_subscription_success_page_with_incorrect_plan_id(self):
+        plan = '12345'
 
-        self.assertContains(response, 'Yay, you’re subscribed!')
+        response = self.client.get(reverse('subscription-created') + f'?plan={plan}', follow=True)
 
-    def test_webhook(self):
+        self.assertContains(response, f'Yay, you’re subscribed!')
+
+    def test_webhook_subscription_created(self):
         fake_return_value = {
-            'data': {
-                'object': {
-                    'client_reference_id': '1',
-                    'customer': 'cus_abcd',
-                    'subscription': 'sub_abcd',
-                }
-            },
-            'type': 'checkout.session.completed'
+            'alert_name': 'subscription_created',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'status': 'active',
+            'passthrough': '1',
         }
-        fake_price_id = 'price_abcd'
-        mock_subscription = mock.Mock()
-        mock_subscription.plan.id = fake_price_id
 
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
-            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-                with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
-                    response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_return_value)
 
         self.assertEqual(response.status_code, 200)
 
-    def test_webhook_signature_failure(self):
+    def test_webhook_invalid_ip_address(self):
+        pass
+
+    def test_webhook_invalid_webhook(self):
         response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
 
         self.assertEqual(response.status_code, 400)
+
+    def test_webhook_without_alert_name(self):
+        pass
 
     def test_webhook_payload_failure(self):
         with mock.patch('inventory.views.stripe.Webhook.construct_event', side_effect=ValueError):
@@ -976,28 +922,6 @@ class SubscriptionTests(TestCase):
 
         mock_subscription = mock.Mock()
         mock_subscription.canceled_at = None
-
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
-            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-                response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_canceled(self):
-        customer_id = 'cus_abcd'
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_customer_id = customer_id
-        profile.save()
-
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'customer.subscription.updated'
-        }
-
-        mock_subscription = mock.Mock()
-        mock_subscription.canceled_at = True
 
         with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
             with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
@@ -1068,19 +992,6 @@ class SubscriptionTests(TestCase):
 
         with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
             response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_stripe_portal(self):
-        with mock.patch(
-            'inventory.views.stripe.billing_portal.Session.create',
-            return_value={'url': 'http://example.com'}
-        ):
-            response = self.client.post(
-                reverse('stripe-portal'),
-                {},
-                content_type='application/json',
-            )
 
         self.assertEqual(response.status_code, 200)
 
