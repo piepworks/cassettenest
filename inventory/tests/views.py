@@ -154,7 +154,7 @@ class SettingsTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('Username: This field is required.', messages)
 
-    @override_flag('stripe', active=True)
+    @override_flag('paddle', active=True)
     def test_friend_mode(self):
         profile = Profile.objects.get(user=self.user)
         profile.friend = True
