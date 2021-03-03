@@ -922,6 +922,16 @@ class SubscriptionTests(TestCase):
 
         self.assertEqual(response.status_code, 400)
 
+    def test_subscription_update_success(self):
+        plan = settings.PADDLE_STANDARD_MONTHLY
+        fake_return_value = mock.Mock()
+        fake_return_value.json = mock.Mock(return_value={'success': True})
+
+        with mock.patch('inventory.views.requests.post', return_value=fake_return_value):
+            response = self.client.post(reverse('subscription-update'), data={'plan': plan}, follow=True)
+
+        self.assertContains(response, f'Your plan is now set to {paddle_plan_name(plan)}.')
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 @override_flag('paddle', active=True)
