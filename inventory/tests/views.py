@@ -891,109 +891,24 @@ class SubscriptionTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_webhook_invalid_ip_address(self):
-        pass
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=False):
+            response = self.client.post(reverse('paddle-webhooks'))
+
+        self.assertEqual(response.status_code, 403)
 
     def test_webhook_invalid_webhook(self):
-        response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=False):
+                response = self.client.post(reverse('paddle-webhooks'))
 
         self.assertEqual(response.status_code, 400)
 
     def test_webhook_without_alert_name(self):
-        pass
-
-    def test_webhook_payload_failure(self):
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', side_effect=ValueError):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data={})
 
         self.assertEqual(response.status_code, 400)
-
-    def test_webhook_subscription_updated(self):
-        customer_id = 'cus_abcd'
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_customer_id = customer_id
-        profile.save()
-
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'customer.subscription.updated'
-        }
-
-        mock_subscription = mock.Mock()
-        mock_subscription.canceled_at = None
-
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
-            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-                response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_deleted(self):
-        customer_id = 'cus_abcd'
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_customer_id = customer_id
-        profile.save()
-
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'customer.subscription.deleted'
-        }
-
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_deleted_without_user(self):
-        customer_id = 'cus_abcd'
-
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'customer.subscription.deleted'
-        }
-
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_payment_failed(self):
-        customer_id = 'cus_abcd'
-        self.user.email = 'test@example.com'
-        self.user.save()
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_customer_id = customer_id
-        profile.save()
-
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'invoice.payment_failed'
-        }
-
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_payment_failed_without_user(self):
-        fake_return_value = {
-            'data': {
-                'object': {'customer': 'cus_abcd'}
-            },
-            'type': 'invoice.payment_failed'
-        }
-
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
