@@ -932,6 +932,30 @@ class SubscriptionTests(TestCase):
 
         self.assertContains(response, f'Your plan is now set to {paddle_plan_name(plan)}.')
 
+    def test_subscription_update_with_error(self):
+        plan = settings.PADDLE_STANDARD_MONTHLY
+        error_message = 'You ain’t did it.'
+        fake_return_value = mock.Mock()
+        fake_return_value.json = mock.Mock(return_value={
+            'success': False,
+            'error': {'message': error_message},
+        })
+
+        with mock.patch('inventory.views.requests.post', return_value=fake_return_value):
+            response = self.client.post(reverse('subscription-update'), data={'plan': plan}, follow=True)
+
+        self.assertContains(response, f'There was a problem changing plans. “{error_message}” Please try again.')
+
+    def test_subscription_update_with_invalid_plan(self):
+        plan = '12345'
+        fake_return_value = mock.Mock()
+        fake_return_value.json = mock.Mock(return_value={'success': True})
+
+        with mock.patch('inventory.views.requests.post', return_value=fake_return_value):
+            response = self.client.post(reverse('subscription-update'), data={'plan': plan}, follow=True)
+
+        self.assertContains(response, f'There was a problem changing plans. Please try again.')
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 @override_flag('paddle', active=True)
