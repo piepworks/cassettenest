@@ -578,57 +578,6 @@ def ready(request):
     return render(request, 'inventory/ready.html', context)
 
 
-@login_required
-def dashboard(request):
-    owner = request.user
-    rolls = Roll.objects.filter(owner=owner)
-    rolls_storage = rolls.filter(status=status_number('storage')).count()
-    rolls_loaded = rolls.filter(status=status_number('loaded')).count()
-    rolls_ready = rolls.filter(status=status_number('shot')).count()
-    rolls_processing = rolls.filter(status=status_number('processing')).count()
-    rolls_processed = rolls.filter(status=status_number('processed')).count()
-    rolls_scanned = rolls.filter(status=status_number('scanned')).count()
-    rolls_archived = rolls.filter(status=status_number('archived')).count()
-
-    if request.method == 'POST':
-        current_status = request.POST.get('current_status', '')
-        updated_status = request.POST.get('updated_status', '')
-
-        if (current_status in bulk_status_keys
-                and updated_status in bulk_status_keys):
-            rolls_to_update = rolls.filter(
-                status=status_number(current_status)
-            )
-            roll_count = rolls_to_update.count()
-            rolls_to_update.update(
-                status=status_number(updated_status)
-            )
-            messages.success(
-                request,
-                '%s %s updated from %s to %s!' % (
-                    roll_count,
-                    pluralize('roll', roll_count),
-                    current_status,
-                    updated_status
-                )
-            )
-
-        return redirect(reverse('dashboard'))
-
-    context = {
-        'rolls': rolls,
-        'rolls_storage': rolls_storage,
-        'rolls_loaded': rolls_loaded,
-        'rolls_ready': rolls_ready,
-        'rolls_processing': rolls_processing,
-        'rolls_processed': rolls_processed,
-        'rolls_scanned': rolls_scanned,
-        'rolls_archived': rolls_archived,
-    }
-
-    return render(request, 'inventory/dashboard.html', context)
-
-
 @require_POST
 @login_required
 def rolls_update(request):

@@ -210,6 +210,23 @@ class RegisterTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'This password is too common.', html=True)
 
+    def test_registration_page_redirect(self):
+        username = 'testtest'
+        password = 'secret1234'
+
+        User.objects.create_user(
+            username=username,
+            password=password,
+        )
+
+        self.client.login(
+            username=username,
+            password=password,
+        )
+
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 302)
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class InventoryTests(TestCase):

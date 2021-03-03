@@ -30,7 +30,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
-    path('dashboard/', views.dashboard, name='dashboard'),
     path('settings/', views.settings, name='settings'),
 
     # Rolls
