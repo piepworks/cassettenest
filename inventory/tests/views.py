@@ -155,6 +155,18 @@ class SettingsTests(TestCase):
         self.assertIn('Username: This field is required.', messages)
 
     @override_flag('paddle', active=True)
+    def test_plan_display(self):
+        plan = settings.PADDLE_STANDARD_MONTHLY
+        profile = Profile.objects.get(user=self.user)
+        profile.paddle_subscription_plan_id = plan
+        profile.subscription_status = 'active'
+        profile.save()
+
+        response = self.client.get(reverse('settings'))
+
+        self.assertContains(response, f'You’re currently subscribed to the <b>{paddle_plan_name(plan)}</b> plan.')
+
+    @override_flag('paddle', active=True)
     def test_friend_mode(self):
         profile = Profile.objects.get(user=self.user)
         profile.friend = True
