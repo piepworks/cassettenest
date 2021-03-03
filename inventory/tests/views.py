@@ -889,16 +889,112 @@ class SubscriptionTests(TestCase):
         self.assertContains(response, f'Yay, you’re subscribed!')
 
     def test_webhook_subscription_created(self):
-        fake_post_value = {
+        fake_webhook_value = {
             'alert_name': 'subscription_created',
             'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'status': 'active',
+            'passthrough': '1',
+            'cancel_url': 'https://example.com',
+            'update_url': 'https://example.com',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_update_plan(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_updated',
+            'old_subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'subscription_plan_id': settings.PADDLE_STANDARD_ANNUAL,
+            'status': 'active',
+            'passthrough': '1',
+            'cancel_url': 'https://example.com',
+            'update_url': 'https://example.com',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_update_misc(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_updated',
+            'old_subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'status': 'active',
+            'passthrough': '1',
+            'cancel_url': 'https://example.com',
+            'update_url': 'https://example.com',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_cancelled(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_cancelled',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'cancellation_effective_date': datetime.date.today(),
+            'status': 'deleted',
+            'passthrough': '1',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_payment_succeeded(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_payment_succeeded',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'cancellation_effective_date': datetime.date.today(),
             'status': 'active',
             'passthrough': '1',
         }
 
         with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
             with mock.patch('inventory.views.is_valid_webhook', return_value=True):
-                response = self.client.post(reverse('paddle-webhooks'), data=fake_post_value)
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_payment_failed(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_payment_failed',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'cancellation_effective_date': datetime.date.today(),
+            'status': 'active',
+            'passthrough': '1',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_payment_refunded(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_payment_refunded',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'cancellation_effective_date': datetime.date.today(),
+            'status': 'active',
+            'passthrough': '1',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
 
         self.assertEqual(response.status_code, 200)
 
