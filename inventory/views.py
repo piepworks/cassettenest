@@ -227,7 +227,7 @@ def subscription_created(request):
 
     messages.success(
         request,
-        f'Yay, you’re subscribed{subscription_message}! It may take a moment to show up in your settings.'
+        f'You’re subscribed{subscription_message}! It may take a moment to show up in your settings.'
     )
 
     return redirect('settings')
@@ -281,7 +281,10 @@ def subscription_update(request):
         )
 
         if r.json()['success'] is True:
-            messages.success(request, f'Your plan is now set to {paddle_plan_name(plan)}. Thank you!')
+            messages.success(
+                request,
+                f'Your plan is now set to {paddle_plan_name(plan)}. It may take a moment to show up in your settings.'
+            )
         else:
             error = r.json()['error']['message']
             messages.error(request, f'There was a problem changing plans. “{error}” Please try again.')

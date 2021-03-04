@@ -896,14 +896,14 @@ class SubscriptionTests(TestCase):
 
         response = self.client.get(reverse('subscription-created') + f'?plan={plan}', follow=True)
 
-        self.assertContains(response, f'Yay, you’re subscribed to the {paddle_plan_name(plan)} plan!')
+        self.assertContains(response, f'You’re subscribed to the {paddle_plan_name(plan)} plan!')
 
     def test_subscription_success_page_with_incorrect_plan_id(self):
         plan = '12345'
 
         response = self.client.get(reverse('subscription-created') + f'?plan={plan}', follow=True)
 
-        self.assertContains(response, f'Yay, you’re subscribed!')
+        self.assertContains(response, f'You’re subscribed!')
 
     def test_webhook_subscription_created(self):
         fake_webhook_value = {
