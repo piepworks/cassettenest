@@ -37,4 +37,4 @@ rm $file_w_path
 chmod +x scripts/daily-backup.sh
 
 # Update and run.
-docker-compose down && docker-compose up -d --build
+docker-compose down && PADDLE_PUBLIC_KEY=$(cat paddle_public_key.txt) docker-compose up -d --build
