@@ -20,17 +20,8 @@ class Profile(models.Model):
         ('deleted', 'Canceled'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    timezone = models.CharField(
-        max_length=40,
-        blank=True,
-        choices=settings.TIME_ZONES,
-        default=settings.TIME_ZONE
-    )
-    subscription_status = models.CharField(
-        max_length=20,
-        choices=SUBSCRIPTION_STATUS_CHOICES,
-        default='none',
-    )
+    timezone = models.CharField(max_length=40, blank=True, choices=settings.TIME_ZONES, default=settings.TIME_ZONE)
+    subscription_status = models.CharField(max_length=20, choices=SUBSCRIPTION_STATUS_CHOICES, default='none')
     friend = models.BooleanField(default=False, help_text='This account doesn’t need a subscription.')
     paddle_user_id = models.IntegerField(null=True, blank=True)
     paddle_subscription_id = models.IntegerField(null=True, blank=True, help_text='Unique for each user.')

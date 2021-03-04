@@ -4,33 +4,31 @@
 
     <hr />
 
-    <div>
-        <form onsubmit="return confirm('Are you sure?');" id="change-plan" action="{% url 'subscription-update' %}" method="post">
-            {% csrf_token %}
-            <div class="c-field c-field--radio">
-                <fieldset>
-                    <legend>Change your plan</legend>
-                    <div>
-                        <label>
-                            <input type="radio" name="plan" value="{{ paddle.standard_monthly_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_monthly_id %} checked{% endif %}>
-                            {{ paddle.standard_monthly_name }}
-                            &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span>&nbsp;per month)</small>
-                        </label>
-                    </div>
-                    <div>
-                        <label>
-                            <input type="radio" name="plan" value="{{ paddle.standard_annual_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_annual_id %} checked{% endif %}>
-                            {{ paddle.standard_annual_name }}
-                            &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span>&nbsp;per year)</small>
-                        </label>
-                    </div>
-                    <div class="help">
-                        <p id="change-plan-message-to-annual">If you change from <b>{{ paddle.standard_monthly_name }}</b> to <b>{{ paddle.standard_annual_name }}</b>, you will be charged immedately and your subscription will renew every year on this date. Any remaining pro-rated balance will be used towards this first payment.</p>
-                        <p id="change-plan-message-to-monthly">If you change from <b>{{ paddle.standard_annual_name }}</b> to <b>{{ paddle.standard_monthly_name }}</b>, your remaining pro-rated balance will be used until it runs out, at which point you will be charged monthly on this day each month.</p>
-                    </div>
-                    <button>Change plan</button>
-                </fieldset>
-            </div>
-        </form>
-    </div>
+    <form onsubmit="return confirm('Are you sure?');" id="change-plan" action="{% url 'subscription-update' %}" method="post">
+        {% csrf_token %}
+        <div class="c-field c-field--radio">
+            <fieldset>
+                <legend>Change your plan</legend>
+                <div>
+                    <label>
+                        <input type="radio" name="plan" value="{{ paddle.standard_monthly_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_monthly_id %} checked{% endif %}>
+                        {{ paddle.standard_monthly_name }}
+                        &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span>&nbsp;per month)</small>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="plan" value="{{ paddle.standard_annual_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_annual_id %} checked{% endif %}>
+                        {{ paddle.standard_annual_name }}
+                        &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span>&nbsp;per year)</small>
+                    </label>
+                </div>
+                <div class="help">
+                    <p id="change-plan-message-to-annual">If you change from <b>{{ paddle.standard_monthly_name }}</b> to <b>{{ paddle.standard_annual_name }}</b>, you will be charged immedately and your subscription will renew every year on this date. Any remaining pro-rated balance will be used towards this first payment.</p>
+                    <p id="change-plan-message-to-monthly">If you change from <b>{{ paddle.standard_annual_name }}</b> to <b>{{ paddle.standard_monthly_name }}</b>, your remaining pro-rated balance will be used until it runs out, at which point your subscription will renew on this day each month.</p>
+                </div>
+                <button>Change plan</button>
+            </fieldset>
+        </div>
+    </form>
 </div>

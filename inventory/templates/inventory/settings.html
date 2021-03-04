@@ -9,7 +9,7 @@
     <h1>Settings</h1>
 
     {% flag 'paddle' %}
-        {% include 'inventory/_settings-subscription.html' %}
+    {% include 'inventory/_settings-subscription.html' %}
     {% endflag %}
 
     <form method="post">
@@ -60,7 +60,8 @@
 {% endblock %}
 
 {% block page_js %}
-    {% flag 'paddle' %}
-        {% include 'inventory/_settings-subscription-js.html' %}
-    {% endflag %}
+{% flag 'paddle' %}
+    <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+    {% include 'inventory/_settings-subscription-js.html' %}
+{% endflag %}
 {% endblock %}
