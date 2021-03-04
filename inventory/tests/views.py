@@ -9,11 +9,13 @@ from django.contrib.auth.models import User
 from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
+from django.conf import settings
 from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
 from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film
 from inventory.utils import status_number, bulk_status_next_keys, status_description
+from inventory.utils_paddle import paddle_plan_name
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 
@@ -152,7 +154,19 @@ class SettingsTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('Username: This field is required.', messages)
 
-    @override_flag('stripe', active=True)
+    @override_flag('paddle', active=True)
+    def test_plan_display(self):
+        plan = settings.PADDLE_STANDARD_MONTHLY
+        profile = Profile.objects.get(user=self.user)
+        profile.paddle_subscription_plan_id = plan
+        profile.subscription_status = 'active'
+        profile.save()
+
+        response = self.client.get(reverse('settings'))
+
+        self.assertContains(response, f'You’re currently subscribed to the <b>{paddle_plan_name(plan)}</b> plan.')
+
+    @override_flag('paddle', active=True)
     def test_friend_mode(self):
         profile = Profile.objects.get(user=self.user)
         profile.friend = True
@@ -160,31 +174,6 @@ class SettingsTests(TestCase):
 
         response = self.client.get(reverse('settings'))
         self.assertContains(response, 'You’re a friend of Trey Labs')
-
-    @override_flag('stripe', active=True)
-    @override_settings(SUBSCRIPTION_TRIAL=1)
-    @override_settings(SUBSCRIPTION_TRIAL_DURATION=14)
-    def test_trial_mode(self):
-        response = self.client.get(reverse('settings'))
-        self.assertContains(response, 'Try it free for <strong>14 days!</strong>')
-
-    @override_flag('stripe', active=True)
-    @override_settings(SUBSCRIPTION_TRIAL=1)
-    def test_trial_days_remaining(self):
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_subscription_id = 'cus_abcd'
-        profile.subscription_status = 'trialing'
-        profile.save()
-
-        fake_price_id = 'price_abcd'
-        trial_end = datetime.datetime.now() + datetime.timedelta(days=14)
-        mock_subscription = mock.Mock()
-        mock_subscription.trial_end = trial_end.timestamp()
-
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
-            with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
-                response = self.client.get(reverse('settings'))
-                self.assertContains(response, 'Your free trial will end in <strong>14 days</strong>.')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -220,6 +209,23 @@ class RegisterTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'This password is too common.', html=True)
+
+    def test_registration_page_redirect(self):
+        username = 'testtest'
+        password = 'secret1234'
+
+        User.objects.create_user(
+            username=username,
+            password=password,
+        )
+
+        self.client.login(
+            username=username,
+            password=password,
+        )
+
+        response = self.client.get(reverse('register'))
+        self.assertEqual(response.status_code, 302)
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -885,208 +891,187 @@ class SubscriptionTests(TestCase):
             password=self.password,
         )
 
-    def test_create_checkout_session_error(self):
-        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('error', response.json())
-
-    @override_settings(SUBSCRIPTION_TRIAL=0)
-    def test_create_checkout_session_success(self):
-        self.user.email = 'test@example.com'
-        self.user.save()
-        response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn('sessionId', response.json())
-
-    def test_create_checkout_session_debug_mode(self):
-        # This is just to get 100% coverage of the create_checkout_session view.
-        self.user.email = 'test@example.com'
-        self.user.save()
-        with override_settings(DEBUG=True):
-            response = self.client.get(reverse('checkout-session', kwargs={'price': 'monthly'}))
-
-        self.assertEqual(response.status_code, 200)
-
     def test_subscription_success_page(self):
-        fake_price_id = 'price_abcd'
-        mock_subscription = mock.Mock()
-        mock_subscription.plan.id = fake_price_id
-        mock_session = mock.Mock()
-        mock_session.subscription = 'sub_abcd'
+        plan = settings.PADDLE_STANDARD_MONTHLY
 
-        with mock.patch('inventory.views.stripe.checkout.Session.retrieve', return_value=mock_session):
-            with mock.patch('stripe.Subscription.retrieve', return_value=mock_subscription):
-                with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
-                    response = self.client.get(reverse('subscription-success') + '?session_id=1234', follow=True)
+        response = self.client.get(reverse('subscription-created') + f'?plan={plan}', follow=True)
 
-        self.assertContains(response, 'Yay, you’re subscribed to the monthly plan!')
+        self.assertContains(response, f'You’re subscribed to the {paddle_plan_name(plan)} plan!')
 
-    def test_subscription_success_page_invalid_session(self):
-        response = self.client.get(reverse('subscription-success') + '?session_id=1234', follow=True)
+    def test_subscription_success_page_with_incorrect_plan_id(self):
+        plan = '12345'
 
-        self.assertContains(response, 'Yay, you’re subscribed!')
+        response = self.client.get(reverse('subscription-created') + f'?plan={plan}', follow=True)
 
-    def test_webhook(self):
-        fake_return_value = {
-            'data': {
-                'object': {
-                    'client_reference_id': '1',
-                    'customer': 'cus_abcd',
-                    'subscription': 'sub_abcd',
-                }
-            },
-            'type': 'checkout.session.completed'
+        self.assertContains(response, f'You’re subscribed!')
+
+    def test_webhook_subscription_created(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_created',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'status': 'active',
+            'passthrough': '1',
+            'cancel_url': 'https://example.com',
+            'update_url': 'https://example.com',
         }
-        fake_price_id = 'price_abcd'
-        mock_subscription = mock.Mock()
-        mock_subscription.plan.id = fake_price_id
 
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
-            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-                with override_settings(STRIPE_PRICE_ID_MONTHLY=fake_price_id):
-                    response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
 
         self.assertEqual(response.status_code, 200)
 
-    def test_webhook_signature_failure(self):
-        response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+    def test_webhook_subscription_update_plan(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_updated',
+            'old_subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'subscription_plan_id': settings.PADDLE_STANDARD_ANNUAL,
+            'status': 'active',
+            'passthrough': '1',
+            'cancel_url': 'https://example.com',
+            'update_url': 'https://example.com',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_update_misc(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_updated',
+            'old_subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'status': 'active',
+            'passthrough': '1',
+            'cancel_url': 'https://example.com',
+            'update_url': 'https://example.com',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_cancelled(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_cancelled',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'cancellation_effective_date': datetime.date.today(),
+            'status': 'deleted',
+            'passthrough': '1',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_payment_succeeded(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_payment_succeeded',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'cancellation_effective_date': datetime.date.today(),
+            'status': 'active',
+            'passthrough': '1',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_payment_failed(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_payment_failed',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'cancellation_effective_date': datetime.date.today(),
+            'status': 'active',
+            'passthrough': '1',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_subscription_payment_refunded(self):
+        fake_webhook_value = {
+            'alert_name': 'subscription_payment_refunded',
+            'subscription_plan_id': settings.PADDLE_STANDARD_MONTHLY,
+            'cancellation_effective_date': datetime.date.today(),
+            'status': 'active',
+            'passthrough': '1',
+        }
+
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data=fake_webhook_value)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_webhook_invalid_ip_address(self):
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=False):
+            response = self.client.post(reverse('paddle-webhooks'))
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_webhook_invalid_webhook(self):
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=False):
+                response = self.client.post(reverse('paddle-webhooks'))
 
         self.assertEqual(response.status_code, 400)
 
-    def test_webhook_payload_failure(self):
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', side_effect=ValueError):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+    def test_webhook_without_alert_name(self):
+        with mock.patch('inventory.views.is_valid_ip_address', return_value=True):
+            with mock.patch('inventory.views.is_valid_webhook', return_value=True):
+                response = self.client.post(reverse('paddle-webhooks'), data={})
 
         self.assertEqual(response.status_code, 400)
 
-    def test_webhook_subscription_updated(self):
-        customer_id = 'cus_abcd'
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_customer_id = customer_id
-        profile.save()
+    def test_subscription_update_success(self):
+        plan = settings.PADDLE_STANDARD_MONTHLY
+        fake_return_value = mock.Mock()
+        fake_return_value.json = mock.Mock(return_value={'success': True})
 
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'customer.subscription.updated'
-        }
+        with mock.patch('inventory.views.requests.post', return_value=fake_return_value):
+            response = self.client.post(reverse('subscription-update'), data={'plan': plan}, follow=True)
 
-        mock_subscription = mock.Mock()
-        mock_subscription.canceled_at = None
+        self.assertContains(response, f'Your plan is now set to {paddle_plan_name(plan)}.')
 
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
-            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-                response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
+    def test_subscription_update_with_error(self):
+        plan = settings.PADDLE_STANDARD_MONTHLY
+        error_message = 'You ain’t did it.'
+        fake_return_value = mock.Mock()
+        fake_return_value.json = mock.Mock(return_value={
+            'success': False,
+            'error': {'message': error_message},
+        })
 
-        self.assertEqual(response.status_code, 200)
+        with mock.patch('inventory.views.requests.post', return_value=fake_return_value):
+            response = self.client.post(reverse('subscription-update'), data={'plan': plan}, follow=True)
 
-    def test_webhook_subscription_canceled(self):
-        customer_id = 'cus_abcd'
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_customer_id = customer_id
-        profile.save()
+        self.assertContains(response, f'There was a problem changing plans. “{error_message}” Please try again.')
 
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'customer.subscription.updated'
-        }
+    def test_subscription_update_with_invalid_plan(self):
+        plan = '12345'
+        fake_return_value = mock.Mock()
+        fake_return_value.json = mock.Mock(return_value={'success': True})
 
-        mock_subscription = mock.Mock()
-        mock_subscription.canceled_at = True
+        with mock.patch('inventory.views.requests.post', return_value=fake_return_value):
+            response = self.client.post(reverse('subscription-update'), data={'plan': plan}, follow=True)
 
-        with mock.patch('inventory.models.stripe.Subscription.retrieve', return_value=mock_subscription):
-            with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-                response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_deleted(self):
-        customer_id = 'cus_abcd'
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_customer_id = customer_id
-        profile.save()
-
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'customer.subscription.deleted'
-        }
-
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_deleted_without_user(self):
-        customer_id = 'cus_abcd'
-
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'customer.subscription.deleted'
-        }
-
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_payment_failed(self):
-        customer_id = 'cus_abcd'
-        self.user.email = 'test@example.com'
-        self.user.save()
-        profile = Profile.objects.get(user=self.user)
-        profile.stripe_customer_id = customer_id
-        profile.save()
-
-        fake_return_value = {
-            'data': {
-                'object': {'customer': customer_id}
-            },
-            'type': 'invoice.payment_failed'
-        }
-
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_payment_failed_without_user(self):
-        fake_return_value = {
-            'data': {
-                'object': {'customer': 'cus_abcd'}
-            },
-            'type': 'invoice.payment_failed'
-        }
-
-        with mock.patch('inventory.views.stripe.Webhook.construct_event', return_value=fake_return_value):
-            response = self.client.post(reverse('stripe-webhook'), HTTP_STRIPE_SIGNATURE='')
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_stripe_portal(self):
-        with mock.patch(
-            'inventory.views.stripe.billing_portal.Session.create',
-            return_value={'url': 'http://example.com'}
-        ):
-            response = self.client.post(
-                reverse('stripe-portal'),
-                {},
-                content_type='application/json',
-            )
-
-        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, f'There was a problem changing plans. Please try again.')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
-@override_flag('stripe', active=True)
+@override_flag('paddle', active=True)
 class SubscriptionBannerTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1112,8 +1097,8 @@ class SubscriptionBannerTests(TestCase):
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Paid plans are now available.')
 
-    def test_subscription_banner_canceled(self):
-        self.user.profile.subscription_status = 'canceled'
+    def test_subscription_banner_cancelled(self):
+        self.user.profile.subscription_status = 'deleted'
         self.user.profile.save()
 
         response = self.client.get(reverse('index'))
@@ -1121,9 +1106,8 @@ class SubscriptionBannerTests(TestCase):
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription has been cancelled.')
 
-    def test_subscription_banner_error(self):
-        self.user.profile.stripe_subscription_id = 'cus_abcd'
-        self.user.profile.subscription_status = 'error'
+    def test_subscription_banner_past_due(self):
+        self.user.profile.subscription_status = 'past_due'
         self.user.profile.save()
 
         response = self.client.get(reverse('index'))
@@ -1131,9 +1115,9 @@ class SubscriptionBannerTests(TestCase):
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Looks like there’s a problem with your subscription.')
 
-    def test_subscription_banner_canceling(self):
-        self.user.profile.stripe_subscription_id = 'cus_abcd'
-        self.user.profile.subscription_status = 'canceling'
+    def test_subscription_banner_cancelling(self):
+        self.user.profile.subscription_status = 'deleted'
+        self.user.profile.paddle_cancellation_date = datetime.date.today() + datetime.timedelta(days=1)
         self.user.profile.save()
 
         response = self.client.get(reverse('index'))
@@ -1141,21 +1125,11 @@ class SubscriptionBannerTests(TestCase):
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription is scheduled to be canceled.')
 
-    def test_subscription_banner_pending(self):
-        self.user.profile.stripe_subscription_id = 'cus_abcd'
-        self.user.profile.subscription_status = 'pending'
-        self.user.profile.save()
-
-        response = self.client.get(reverse('index'))
-
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
-        self.assertContains(response, 'Your subscription is being updated…')
-
     def test_subscription_banner_no_flag(self):
         self.user.profile.subscription_status = 'none'
         self.user.profile.save()
 
-        with override_flag('stripe', active=False):
+        with override_flag('paddle', active=False):
             response = self.client.get(reverse('index'))
 
         self.assertTemplateNotUsed(response, 'inventory/_subscription-banner.html')

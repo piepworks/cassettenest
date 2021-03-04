@@ -12,6 +12,7 @@ from .models import (
     Project,
     Roll,
 )
+from .utils_paddle import paddle_plan_name
 
 
 class ManufacturerAdmin(admin.ModelAdmin):
@@ -106,6 +107,14 @@ class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = 'profile'
+    readonly_fields = ('plan_name',)
+
+    def plan_name(self, instance):
+        if instance.paddle_subscription_plan_id:
+            return f'{paddle_plan_name(instance.paddle_subscription_plan_id)} = {instance.paddle_subscription_plan_id}'
+
+    plan_name.short_description = 'Paddle plan name'
+    plan_name.empty_value_display = 'None'
 
 
 class UserAdmin(BaseUserAdmin):
@@ -117,7 +126,6 @@ class UserAdmin(BaseUserAdmin):
         'journals',
         'projects',
         'has_active_subscription',
-        'subscription',
         'subscription_status',
         'timezone',
         'last_login',
@@ -142,10 +150,6 @@ class UserAdmin(BaseUserAdmin):
         return obj.profile.has_active_subscription
     has_active_subscription.short_description = 'Active'
     has_active_subscription.boolean = True
-
-    def subscription(self, obj):
-        return obj.profile.subscription
-    subscription.short_description = 'Plan'
 
     def subscription_status(self, obj):
         return obj.profile.subscription_status

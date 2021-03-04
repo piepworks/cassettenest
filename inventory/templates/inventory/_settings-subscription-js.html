@@ -1,0 +1,59 @@
+<script>
+    {% if paddle.live_mode == 0 %}
+    Paddle.Environment.set('sandbox');
+    {% endif %}
+
+    Paddle.Setup({ vendor: {{ paddle.vendor_id }} });
+
+    function openCheckout(product) {
+        Paddle.Checkout.open({
+            product: product,
+            email: '{{ user.email }}',
+            passthrough: '{{ user.id }}',
+            success: `${window.location.protocol}//${window.location.host}{% url 'subscription-created' %}?plan=${product}`,
+        });
+    }
+
+    $('.paddle-subscribe').click(e => {
+        openCheckout($(e.target).data('product'));
+    });
+
+    {% if user.profile.paddle_update_url %}
+    $('.paddle-update').click(() => {
+        Paddle.Checkout.open({
+            override: '{{ user.profile.paddle_update_url|safe }}',
+        });
+    });
+    {% endif %}
+
+    {% if user.profile.paddle_cancel_url %}
+    $('.paddle-cancel').click(() => {
+        Paddle.Checkout.open({
+            override: '{{ user.profile.paddle_cancel_url|safe }}',
+            success: `${window.location.protocol}//${window.location.host}{% url 'settings' %}`,
+        });
+    });
+    {% endif %}
+
+    const $changePlanButton = $('#change-plan button').attr('disabled', true);
+    const $changePlanMessages = $('[id^=change-plan-message-to').hide();
+
+    function updatePlanDisplay(selector) {
+        const value = $(selector).attr('value');
+        const interval = (value === '{{ paddle.standard_annual_id }}') ? 'annual' : 'monthly';
+        $changePlanMessages.hide();
+
+        $(`#change-plan-message-to-${interval}`).show();
+
+        if('{{ user.profile.paddle_subscription_plan_id }}' !== value) {
+            $changePlanButton.attr('disabled', false);
+        } else {
+            $changePlanButton.attr('disabled', true);
+            $changePlanMessages.hide();
+        }
+    }
+
+    $('input[name=plan]').change(e => updatePlanDisplay(e.target));
+
+    updatePlanDisplay('input[name=plan]:checked');
+</script>

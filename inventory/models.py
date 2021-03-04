@@ -6,47 +6,30 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
-import stripe
-from .utils import status_number, stripe_secret_key, stripe_price_name
+from .utils import status_number
 
 
 class Profile(models.Model):
     SUBSCRIPTION_STATUS_CHOICES = (
         ('none', 'Never had a subscription'),
-        ('pending', 'Pending update'),
-        ('trialing', 'Trial period'),
+        # https://developer.paddle.com/reference/platform-parameters/event-statuses
         ('active', 'Subscribed'),
-        ('error', 'Payment error'),
-        ('canceling', 'Scheduled to cancel'),
-        ('canceled', 'Canceled'),
-    )
-    SUBSCRIPTION_CHOICES = (
-        ('none', 'None'),
-        ('monthly', 'Monthly'),
-        ('annual', 'Annual'),
+        ('trialing', 'Trial period'),
+        ('past_due', 'Past-Due'),
+        ('paused', 'Paused'),
+        ('deleted', 'Canceled'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    timezone = models.CharField(
-        max_length=40,
-        blank=True,
-        choices=settings.TIME_ZONES,
-        default=settings.TIME_ZONE
-    )
-    stripe_customer_id = models.CharField(max_length=255, blank=True)
-    stripe_subscription_id = models.CharField(max_length=255, blank=True)
-    subscription_status = models.CharField(
-        max_length=20,
-        choices=SUBSCRIPTION_STATUS_CHOICES,
-        default='none',
-    )
-    subscription = models.CharField(
-        max_length=20,
-        choices=SUBSCRIPTION_CHOICES,
-        default='none',
-    )
-    friend = models.BooleanField(
-        default=False,
-        help_text='This account doesn’t need a subscription.',
+    timezone = models.CharField(max_length=40, blank=True, choices=settings.TIME_ZONES, default=settings.TIME_ZONE)
+    subscription_status = models.CharField(max_length=20, choices=SUBSCRIPTION_STATUS_CHOICES, default='none')
+    friend = models.BooleanField(default=False, help_text='This account doesn’t need a subscription.')
+    paddle_user_id = models.IntegerField(null=True, blank=True)
+    paddle_subscription_id = models.IntegerField(null=True, blank=True, help_text='Unique for each user.')
+    paddle_subscription_plan_id = models.IntegerField(null=True, blank=True, help_text='Which of our defined plans.')
+    paddle_cancel_url = models.URLField(max_length=200, blank=True, help_text='Self-service cancel URL')
+    paddle_update_url = models.URLField(max_length=200, blank=True, help_text='Self-service update URL')
+    paddle_cancellation_date = models.DateField(
+        null=True, blank=True, help_text='When a canceled subscription becomes inactive.'
     )
 
     def __str__(self):
@@ -56,23 +39,12 @@ class Profile(models.Model):
     def has_active_subscription(self):
         if self.user.is_staff or self.friend:
             return True
-        elif self.stripe_subscription_id and self.subscription_status not in ['none', 'canceled']:
+        elif self.subscription_status not in ['none', 'paused', 'deleted']:
+            return True
+        elif self.subscription_status == 'deleted' and self.paddle_cancellation_date > datetime.date.today():
             return True
         else:
             return False
-
-    @property
-    def trial_days_remaining(self):
-        if self.subscription_status == 'trialing':
-            stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
-            subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-            trial_end = datetime.datetime.fromtimestamp(subscription.trial_end).date()
-            today = datetime.date.today()
-            days_remaining = trial_end - today
-
-            return days_remaining.days
-        else:
-            return None
 
 
 @receiver(post_save, sender=User)
@@ -89,25 +61,6 @@ def save_user_profile(sender, instance, **kwargs):
         instance.profile.save()
     except Profile.DoesNotExist:
         Profile.objects.create(user=instance)
-        instance.profile.save()
-
-    # Update Stripe status whenver saving the user.
-    if instance.profile.stripe_subscription_id:
-        stripe.api_key = stripe_secret_key(settings.STRIPE_LIVE_MODE)
-        subscription = stripe.Subscription.retrieve(instance.profile.stripe_subscription_id)
-
-        instance.profile.subscription = stripe_price_name(subscription.plan.id)
-
-        if subscription.status == 'active':
-            if subscription.canceled_at:
-                instance.profile.subscription_status = 'canceling'
-            else:
-                instance.profile.subscription_status = subscription.status
-        elif subscription.status == 'canceled' or subscription.status == 'trialing':
-            instance.profile.subscription_status = subscription.status
-        else:
-            instance.profile.subscription_status = 'error'
-
         instance.profile.save()
 
 

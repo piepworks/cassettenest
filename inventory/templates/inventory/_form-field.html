@@ -10,6 +10,21 @@
             {{ field }}
             {{ field.label }}
         </label>
+    {% elif field.field.widget.input_type == 'radio' %}
+        <fieldset>
+            <legend>{{ field.label }}</legend>
+            {% if field.help_text %}
+            <div><small class="c-field__help">{{ field.help_text }}</small></div>
+            {% endif %}
+            {% for key, value in field.field.choices %}
+                <div>
+                    <label for="id_{{ key }}">
+                        <input id="id_{{ key }}" type="radio" name="{{ field.name }}" value="{{ key }}" />
+                        {{ value }}
+                    </label>
+                </div>
+            {% endfor %}
+        </fieldset>
     {% else %}
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
         {% if field.help_text and field.label != 'Username' %}

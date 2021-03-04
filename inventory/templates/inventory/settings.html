@@ -8,7 +8,7 @@
 <div class="raw">
     <h1>Settings</h1>
 
-    {% flag 'stripe' %}
+    {% flag 'paddle' %}
     {% include 'inventory/_settings-subscription.html' %}
     {% endflag %}
 
@@ -60,9 +60,8 @@
 {% endblock %}
 
 {% block page_js %}
-{% flag 'stripe' %}
-<script>
-    {% include 'js/subscription.js' %}
-</script>
+{% flag 'paddle' %}
+    <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+    {% include 'inventory/_settings-subscription-js.html' %}
 {% endflag %}
 {% endblock %}

@@ -5,12 +5,26 @@ $lighter-text: rgba(0, 0, 0, 0.6);
     background: $light;
     padding: 0.5rem 2rem 0;
     border-radius: 0.5rem;
+
+    .c-field--checkbox,
+    .c-field--radio {
+        padding: 0;
+
+        label {
+            background: $medium;
+
+            &:hover { border-color: $medium-dark; }
+        }
+    }
+
+    hr { border-color: $medium; }
 }
 
 .subscription-plans {
     margin: 2rem -0.5rem;
 
-    button { margin: 0.5rem; }
+    button,
+    .help { margin: 0.5rem; }
 }
 
 .subscription-note {

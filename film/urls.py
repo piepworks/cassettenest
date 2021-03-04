@@ -30,7 +30,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
-    path('dashboard/', views.dashboard, name='dashboard'),
     path('settings/', views.settings, name='settings'),
 
     # Rolls
@@ -91,11 +90,10 @@ urlpatterns = [
     path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
     path('import/journals', views.ImportJournalsView.as_view(), name='import-journals'),
 
-    # Subscription
-    path('subscription/success', views.subscription_success, name='subscription-success'),
-    path('create-checkout-session/<price>', views.create_checkout_session, name='checkout-session'),
-    path('stripe-webhook', views.stripe_webhook, name='stripe-webhook'),
-    path('stripe-portal', views.stripe_portal, name='stripe-portal'),
+    # Paddle
+    path('paddle-webhooks', views.paddle_webhooks, name='paddle-webhooks'),
+    path('subscription-update', views.subscription_update, name='subscription-update'),
+    path('subscription-created', views.subscription_created, name='subscription-created'),
 ]
 
 if settings.DEBUG:

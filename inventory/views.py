@@ -1,6 +1,6 @@
 import datetime
 import json
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, DetailView, FormView
 from django.db.models import Count, Q
@@ -19,7 +19,6 @@ from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
 from django.http.response import JsonResponse
-import stripe
 import requests
 from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll
 from .forms import (
@@ -47,12 +46,16 @@ from .utils import (
     status_keys,
     status_number,
     bulk_status_next_keys,
-    stripe_public_key,
-    stripe_secret_key,
-    stripe_price_id,
-    stripe_price_name,
     get_host,
     send_email_to_trey,
+)
+from .utils_paddle import (
+    supported_webhooks,
+    is_valid_plan,
+    is_valid_webhook,
+    is_valid_ip_address,
+    paddle_plan_name,
+    update_subscription,
 )
 from .mixins import ReadCSVMixin, WriteCSVMixin, RedirectAfterImportMixin
 
@@ -137,14 +140,12 @@ def patterns(request):
 
 @login_required
 def settings(request):
-    owner = request.user
-
     if request.method == 'POST':
-        user_form = UserForm(request.POST, instance=owner)
-        profile_form = ProfileForm(request.POST, instance=owner)
+        user_form = UserForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(request.POST, instance=request.user)
 
         if user_form.is_valid() and profile_form.is_valid():
-            user = owner
+            user = request.user
             user.first_name = user_form.cleaned_data['first_name']
             user.last_name = user_form.cleaned_data['last_name']
             user.email = user_form.cleaned_data['email']
@@ -159,10 +160,9 @@ def settings(request):
                     messages.add_message(request, messages.ERROR, f'{field.name.capitalize()}: {error}')
             return redirect(reverse('settings'))
     else:
-        user_form = UserForm(instance=owner)
-        profile_form = ProfileForm(instance=owner.profile)
+        user_form = UserForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
         csv_form = UploadCSVForm()
-        subscription = False
         exportable = {
             'cameras': Camera.objects.filter(owner=request.user).count(),
             'camera-backs': CameraBack.objects.filter(camera__owner=request.user).count(),
@@ -183,6 +183,21 @@ def settings(request):
             'duration': dj_settings.SUBSCRIPTION_TRIAL_DURATION,
         }
 
+        if request.user.profile.paddle_subscription_plan_id:
+            plan_name = paddle_plan_name(request.user.profile.paddle_subscription_plan_id)
+        else:
+            plan_name = ''
+
+        paddle = {
+            'live_mode': dj_settings.PADDLE_LIVE_MODE,
+            'vendor_id': dj_settings.PADDLE_VENDOR_ID,
+            'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
+            'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
+            'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
+            'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
+            'plan_name': plan_name,
+        }
+
         context = {
             'user_form': user_form,
             'profile_form': profile_form,
@@ -192,169 +207,91 @@ def settings(request):
             'imports': imports,
             'js_needed': True,
             'trial': trial,
-            'stripe_public_key': stripe_public_key(dj_settings.STRIPE_LIVE_MODE),
+            'paddle': paddle,
         }
 
         return render(request, 'inventory/settings.html', context)
 
 
 @login_required
-def create_checkout_session(request, price):
-    if request.method == 'GET':
-        stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
-        host = get_host(request)
+def subscription_created(request):
+    # For Paddle
+    subscription_message = ''
 
-        if dj_settings.SUBSCRIPTION_TRIAL:
-            trial_period_days = int(dj_settings.SUBSCRIPTION_TRIAL_DURATION)
-        else:
-            trial_period_days = None
-
+    if request.GET.get('plan'):
         try:
-            checkout_session = stripe.checkout.Session.create(
-                client_reference_id=request.user.id,
-                customer_email=request.user.email,
-                success_url=host + reverse('subscription-success') + '?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=host + reverse('settings') + '#subscription',
-                payment_method_types=['card'],
-                mode='subscription',
-                line_items=[
-                    {
-                        'price': stripe_price_id(price),
-                        'quantity': 1,
-                    }
-                ],
-                subscription_data={
-                    'trial_period_days': trial_period_days
-                },
-            )
-            return JsonResponse({'sessionId': checkout_session['id']})
-        except Exception as e:
-            return JsonResponse({'error': str(e)})
-
-
-@login_required
-def subscription_success(request):
-    stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
-
-    try:
-        session = stripe.checkout.Session.retrieve(request.GET.get('session_id'))
-        subscription = stripe_price_name(stripe.Subscription.retrieve(session.subscription).plan.id)
-        subscription_message = f' to the {subscription} plan'
-    except stripe.error.InvalidRequestError:
-        subscription_message = ''
+            plan = paddle_plan_name(request.GET.get('plan'))
+            subscription_message = f' to the {plan} plan'
+        except KeyError:
+            pass
 
     messages.success(
         request,
-        f'Yay, you’re subscribed{subscription_message}! It may take a moment to show up in your settings.'
+        f'You’re subscribed{subscription_message}! It may take a moment to show up in your settings.'
     )
 
     return redirect('settings')
 
 
 @require_POST
-@login_required
-def stripe_portal(request):
-    data = json.loads(request.body)
-    host = get_host(request)
-    stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
-
-    session = stripe.billing_portal.Session.create(
-        customer=request.user.profile.stripe_customer_id,
-        return_url=host + reverse('settings')
-    )
-    return JsonResponse({'url': session['url']})
-
-
 @csrf_exempt
-def stripe_webhook(request):
-    stripe.api_key = stripe_secret_key(dj_settings.STRIPE_LIVE_MODE)
-    endpoint_secret = dj_settings.STRIPE_ENDPOINT_SECRET
-    payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    event = None
+def paddle_webhooks(request):
+    forwarded_for = u'{}'.format(request.META.get('HTTP_X_FORWARDED_FOR'))
 
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
-    except ValueError as e:
-        # Invalid payload
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError as e:
-        # Invalid signature
+    if not is_valid_ip_address(forwarded_for):
+        return HttpResponseForbidden('Permission denied.')
+
+    payload = request.POST.dict()
+
+    if not is_valid_webhook(payload):
         return HttpResponse(status=400)
 
-    # Uncomment the following line to see all the events we’re receiving:
-    # print(f'event[type]: {event["type"]} / {event["data"]["object"]["customer"]}')
+    alert_name = payload.get('alert_name')
+    cn_user_id = payload.get('passthrough')
 
-    event_type = event['type']
-    session = event['data']['object']
+    if not alert_name or not cn_user_id:
+        return HttpResponse(status=400)
 
-    if event_type == 'checkout.session.completed':
-        # Fetch all the required data from session.
-        client_reference_id = session.get('client_reference_id')
-        stripe_customer_id = session.get('customer')
-        stripe_subscription_id = session.get('subscription')
-
-        # Get the user and add their Stripe info.
-        user = User.objects.get(id=client_reference_id)
-        user.profile.stripe_customer_id = stripe_customer_id
-        user.profile.stripe_subscription_id = stripe_subscription_id
-        user.save()
-
-        send_email_to_trey(
-            subject='New Cassette Nest subscription!',
-            message=f'{user.username} / {user.email} subscribed to the {user.profile.subscription} plan!',
-        )
-
-    elif event_type == 'customer.subscription.updated':
-        stripe_customer_id = session.get('customer')
-        user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
-        user.save()
-        subscription = stripe.Subscription.retrieve(user.profile.stripe_subscription_id)
-
-        if subscription.canceled_at:
-            send_email_to_trey(
-                subject='Cassette Nest subscription cancellation. :(',
-                message=f'{user.username} / {user.email} cancelled their {user.profile.subscription} subscription.',
-            )
-        else:
-            send_email_to_trey(
-                subject='Cassette Nest subscription updated!',
-                message=f'{user.username} / {user.email} updated their {user.profile.subscription} subscription.',
-            )
-
-    elif event_type in ['invoice.payment_failed', 'payment_intent.payment_failed']:
-        stripe_customer_id = session.get('customer')
-
-        try:
-            user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
-            user.save()
-            message = f'{user.username} / {user.email} had a failed payment on their subscription.'
-        except User.DoesNotExist:
-            message = f'User with the Stripe ID {stripe_customer_id} had a failed payment'
-
-        send_email_to_trey(
-            subject='Cassette Nest subscription payment failure. :(',
-            message=message,
-        )
-
-    elif event_type == 'customer.subscription.deleted':
-        stripe_customer_id = session.get('customer')
-
-        try:
-            user = User.objects.get(profile__stripe_customer_id=stripe_customer_id)
-            user.save()
-            message = f'Subscription for {user.username} / {user.email} is totally canceled.'
-        except User.DoesNotExist:
-            message = f'Subscription for the user with the Stripe ID {stripe_customer_id} is totally canceled.'
-
-        send_email_to_trey(
-            subject='Cassette Nest subscription totally canceled. :(',
-            message=message,
-        )
+    if alert_name in supported_webhooks:
+        user = get_object_or_404(User, id=cn_user_id)
+        update_subscription(alert_name, user, payload)
 
     return HttpResponse(status=200)
+
+
+@require_POST
+@login_required
+def subscription_update(request):
+    # https://developer.paddle.com/api-reference/intro/api-authentication
+    # https://developer.paddle.com/api-reference/subscription-api/users/updateuser
+    plan = request.POST.get('plan')
+    sandbox = ''
+    if dj_settings.PADDLE_LIVE_MODE == 0:
+        sandbox = 'sandbox-'
+
+    if is_valid_plan(plan):
+        r = requests.post(
+            f'https://{sandbox}vendors.paddle.com/api/2.0/subscription/users/update',
+            data={
+                'vendor_id': dj_settings.PADDLE_VENDOR_ID,
+                'vendor_auth_code': dj_settings.PADDLE_VENDOR_AUTH_CODE,
+                'subscription_id': request.user.profile.paddle_subscription_id,
+                'plan_id': plan,
+            }
+        )
+
+        if r.json()['success'] is True:
+            messages.success(
+                request,
+                f'Your plan is now set to {paddle_plan_name(plan)}. It may take a moment to show up in your settings.'
+            )
+        else:
+            error = r.json()['error']['message']
+            messages.error(request, f'There was a problem changing plans. “{error}” Please try again.')
+    else:
+        messages.error(request, f'There was a problem changing plans. Please try again.')
+
+    return redirect('settings')
 
 
 def register(request):
@@ -642,57 +579,6 @@ def ready(request):
     }
 
     return render(request, 'inventory/ready.html', context)
-
-
-@login_required
-def dashboard(request):
-    owner = request.user
-    rolls = Roll.objects.filter(owner=owner)
-    rolls_storage = rolls.filter(status=status_number('storage')).count()
-    rolls_loaded = rolls.filter(status=status_number('loaded')).count()
-    rolls_ready = rolls.filter(status=status_number('shot')).count()
-    rolls_processing = rolls.filter(status=status_number('processing')).count()
-    rolls_processed = rolls.filter(status=status_number('processed')).count()
-    rolls_scanned = rolls.filter(status=status_number('scanned')).count()
-    rolls_archived = rolls.filter(status=status_number('archived')).count()
-
-    if request.method == 'POST':
-        current_status = request.POST.get('current_status', '')
-        updated_status = request.POST.get('updated_status', '')
-
-        if (current_status in bulk_status_keys
-                and updated_status in bulk_status_keys):
-            rolls_to_update = rolls.filter(
-                status=status_number(current_status)
-            )
-            roll_count = rolls_to_update.count()
-            rolls_to_update.update(
-                status=status_number(updated_status)
-            )
-            messages.success(
-                request,
-                '%s %s updated from %s to %s!' % (
-                    roll_count,
-                    pluralize('roll', roll_count),
-                    current_status,
-                    updated_status
-                )
-            )
-
-        return redirect(reverse('dashboard'))
-
-    context = {
-        'rolls': rolls,
-        'rolls_storage': rolls_storage,
-        'rolls_loaded': rolls_loaded,
-        'rolls_ready': rolls_ready,
-        'rolls_processing': rolls_processing,
-        'rolls_processed': rolls_processed,
-        'rolls_scanned': rolls_scanned,
-        'rolls_archived': rolls_archived,
-    }
-
-    return render(request, 'inventory/dashboard.html', context)
 
 
 @require_POST

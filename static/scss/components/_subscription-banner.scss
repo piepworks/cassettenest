@@ -10,8 +10,7 @@
         &:hover { background: darken($bs-blue-bg, 10%); }
     }
 
-    &--warning,
-    &--canceling {
+    &--deleted {
         color: $bs-yellow;
         background: $bs-yellow-bg;
 
@@ -22,8 +21,8 @@
         }
     }
 
-    &--error,
-    &--canceled {
+    &--paused,
+    &--past_due {
         color: $bs-red;
         background: $bs-red-bg;
 

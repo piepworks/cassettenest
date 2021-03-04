@@ -14,25 +14,30 @@
 
                 <p class="policies">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
 
-                <div class="subscription-plans">
-                    <button class="subscribe" id="btn-monthly" data-price="monthly">$2 per month</button>
-                    <button class="subscribe" id="btn-yearly" data-price="annual">$20 per year</button>
-                </div>
+                {% include 'inventory/_settings-subscription-plans.html' %}
             {% else %}
-                <p>You’re currently subscribed to the <b>{{ user.profile.subscription }}</b> plan.</p>
+                <p>You’re currently subscribed to the <b>{{ paddle.plan_name }}</b> plan.</p>
 
                 {% if user.profile.subscription_status == 'trialing' %}
                     <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
                 {% endif %}
 
-                <div class="subscription-plans">
-                    <button class="manage-subscription">View and manage your subscription details.</button>
-                </div>
+                {% if user.profile.subscription_status == 'deleted' and user.profile.paddle_cancellation_date %}
+                    <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ user.profile.paddle_cancellation_date }}</b>.</p>
+
+                    <hr />
+
+                    <h3>Restore your subscription</h3>
+
+                    {% include 'inventory/_settings-subscription-plans.html' %}
+                {% else %}
+                    {% include 'inventory/_settings-subscription-update.html' %}
+                {% endif %}
             {% endif %}
         </div>
         <div class="no-js">
             <p>Sorry, subscription management requires JavaScript to work. :(</p>
         </div>
-        <p class="subscription-note">Easy and secure billing management with <a href="https://stripe.com">Stripe</a>. Cancel any time.</p>
+        <p class="subscription-note">Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
     {% endif %}
 </div>
