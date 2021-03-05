@@ -41,8 +41,11 @@ class Profile(models.Model):
             return True
         elif self.subscription_status not in ['none', 'paused', 'deleted']:
             return True
-        elif self.subscription_status == 'deleted' and self.paddle_cancellation_date > datetime.date.today():
-            return True
+        elif self.paddle_cancellation_date and self.subscription_status == 'deleted':
+            if self.paddle_cancellation_date > datetime.date.today():
+                return True
+            else:
+                return False
         else:
             return False
 
