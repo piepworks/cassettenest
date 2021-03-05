@@ -30,7 +30,7 @@ def env_var(key, default=None):
 
 
 # Folks who get an email when things break.
-ADMINS = [('Trey', 'treypiepmeier@fastmail.com'), ]
+ADMINS = [('Trey', 'trey@treypiepmeier.com'), ]
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -181,6 +181,7 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = int(os.environ.get('EMAIL_USE_TLS', default=0))
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+SERVER_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 SUBSCRIPTION_TRIAL = int(os.environ.get('SUBSCRIPTION_TRIAL', default=0))
 SUBSCRIPTION_TRIAL_DURATION = os.environ.get('SUBSCRIPTION_TRIAL_DURATION')
