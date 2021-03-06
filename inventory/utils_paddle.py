@@ -108,12 +108,13 @@ def update_subscription(alert_name, user, payload):
     user.profile.paddle_user_id = payload.get('user_id')
     user.profile.paddle_subscription_id = payload.get('subscription_id')
     user.profile.paddle_subscription_plan_id = payload.get('subscription_plan_id')
+    user.profile.subscription_status = payload.get('status')
     if payload.get('update_url'):
         user.profile.paddle_update_url = payload.get('update_url')
     if payload.get('cancel_url'):
         user.profile.paddle_cancel_url = payload.get('cancel_url')
-    user.profile.subscription_status = payload.get('status')
-    user.profile.paddle_cancellation_date = None
+    if payload.get('cancellation_effective_date'):
+        user.profile.paddle_cancellation_date = payload.get('cancellation_effective_date')
 
     user_display = f'{user.username} / {user.email}'
     plan_name = paddle_plan_name(user.profile.paddle_subscription_plan_id)
@@ -133,8 +134,6 @@ def update_subscription(alert_name, user, payload):
             message = f'{user_display} updated something on their {plan_name} subscription.'
 
     elif alert_name == 'subscription_cancelled':
-        user.profile.paddle_cancellation_date = payload.get('cancellation_effective_date')
-
         subject = 'Cassette Nest subscription cancellation. :('
         message = f'{user_display} cancelled their {plan_name} subscription.'
 
