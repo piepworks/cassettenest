@@ -40,11 +40,12 @@ services:
       - internal
       - web
     labels:
-      - traefik.backend=cassettenest_web_1
-      - traefik.frontend.rule=Host:app.cassettenest.com
-      - traefik.docker.network=web
+      - traefik.http.routers.web.rule=Host(`app.cassettenest.com`)
+      - traefik.http.routers.web.tls=true
+      - traefik.http.routers.web.tls.certresolver=lets-encrypt
       - traefik.port=8001
-      - traefik.frontend.headers.customResponseHeaders=Strict-Transport-Security:15552000
+      - traefik.http.routers.web.middlewares=hsts
+      - traefik.http.middlewares.hsts.headers.stsSeconds=15552000
     depends_on:
       - db
   db:
