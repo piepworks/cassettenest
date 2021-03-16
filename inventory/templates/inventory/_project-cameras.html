@@ -35,7 +35,7 @@
             {% endif %}
             {% if camera_backs_empty %}
             {% for back in camera_backs_empty %}
-                {% url 'camera-load' back.camera.id back.id as camera_back_load %}
+                {% url 'camera-back-load' back.camera.id back.id as camera_back_load %}
                 {% include 'inventory/_card.html' with name=back location=camera_back_load slot='reminder' querystring='project' %}
             {% endfor %}
             {% endif %}
