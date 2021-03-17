@@ -18,9 +18,9 @@
             <input id="checkbox-done" type="checkbox" />
         </div>
         {% endcomment %}
+        {% include 'inventory/_form-field.html' with field=form.date %}
         {% include 'inventory/_form-field.html' with field=form.frame %}
         {% include 'inventory/_form-field.html' with field=form.notes %}
-        {% include 'inventory/_form-field.html' with field=form.date %}
         <div class="action"><input type="submit" value="Save" /></div>
     </form>
 </div>
