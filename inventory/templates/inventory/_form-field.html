@@ -30,6 +30,16 @@
         {% if field.help_text and field.label != 'Username' %}
         <small class="c-field__help">{{ field.help_text }}</small>
         {% endif %}
+        {% if not field.field.widget.input_type %}
+        <small class="c-field__help"><a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener">Markdown</a> enabled.</small>
+        <markdown-toolbar for="id_notes" class="markdown-toolbar">
+            <md-bold class="btn btn-sm">bold</md-bold>
+            <md-italic class="btn btn-sm">italic</md-italic>
+            <md-link class="btn btn-sm">link</md-link>
+            <md-unordered-list class="btn btn-sm">unordered-list</md-unordered-list>
+            <md-ordered-list class="btn btn-sm">ordered-list</md-ordered-list>
+        </markdown-toolbar>
+        {% endif %}
         {{ field }}
     {% endif %}
     {% if progressive_link %}

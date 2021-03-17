@@ -1421,6 +1421,7 @@ def roll_journal_edit(request, roll_pk, entry_pk):
             'starting_frame': entry.starting_frame,
             'action': 'Edit',
             'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(

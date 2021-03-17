@@ -7,5 +7,5 @@ module.exports = {
         'declaration-empty-line-before': 'never',
         'no-descending-specificity': null,
     },
-    'ignoreFiles': 'inventory/static/inventory/scss/vendor/**',
+    'ignoreFiles': 'static/scss/vendor/**',
 };
