@@ -17,7 +17,12 @@ form {
 
     .c-card & { margin: auto 1.2rem; }
 
-    .action { margin-top: 1rem; }
+    .action {
+        margin-top: 1rem;
+
+        input[type=submit] + a,
+        button + a { margin-left: 1rem; }
+    }
 }
 
 fieldset {

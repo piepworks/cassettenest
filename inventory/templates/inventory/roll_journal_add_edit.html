@@ -17,7 +17,13 @@
         {% include 'inventory/_form-field.html' with field=form.date %}
         {% include 'inventory/_form-field.html' with field=form.frame %}
         {% include 'inventory/_form-field.html' with field=form.notes %}
-        <div class="action"><input type="submit" value="Save" /></div>
+
+        <div class="action">
+            <input type="submit" value="Save" />
+            {% if action == 'Edit' %}
+            <a href="{% url 'roll-journal-detail' roll.id entry.id %}">Cancel</a>
+            {% endif %}
+        </div>
     </form>
 </div>
 {% endblock %}

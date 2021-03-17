@@ -1417,6 +1417,7 @@ def roll_journal_edit(request, roll_pk, entry_pk):
             'owner': owner,
             'roll': roll,
             'form': form,
+            'entry': entry,
             'starting_frame': entry.starting_frame,
             'action': 'Edit',
         }
