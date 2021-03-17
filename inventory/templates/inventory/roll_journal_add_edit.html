@@ -6,10 +6,6 @@
 <div class="raw">
     <h1>{{ action }} journal entry for {{ roll }}</h1>
 
-    {% if roll.status == '02_loaded' %}
-    <p><a href="{% url 'camera-detail' roll.camera.id %}">Currently loaded in {{ roll.camera }}.</a></p>
-    {% endif %}
-
     <form method="post">
         {% csrf_token %}
         {% comment %}
