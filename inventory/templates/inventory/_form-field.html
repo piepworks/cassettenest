@@ -30,9 +30,6 @@
         {% if field.help_text and field.label != 'Username' %}
         <small class="c-field__help">{{ field.help_text }}</small>
         {% endif %}
-        {% if not field.field.widget.input_type %}
-        <small class="c-field__help"><a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener">Markdown</a> enabled.</small>
-        {% endif %}
         {{ field }}
     {% endif %}
     {% if progressive_link %}
