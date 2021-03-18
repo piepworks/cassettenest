@@ -1,0 +1,26 @@
+.toggle {
+    // TODO: Make this better and more flexible.
+    background: $light;
+    padding: 0 1rem 2rem;
+
+    p {
+        margin: 0;
+        padding-top: 1.5rem;
+    }
+
+    .action { margin-top: 0; }
+}
+
+.js-required,
+.js-link,
+.toggle-button { display: none; }
+
+html.has-js {
+    .no-js,
+    .toggle { display: none; }
+
+    .toggle-button { display: inline; }
+
+    .js-link,
+    .js-required { display: block; }
+}

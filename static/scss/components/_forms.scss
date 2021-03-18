@@ -68,3 +68,8 @@ legend {
 input[type=number] { width: 5em; }
 
 select:focus { outline: 5px solid $gold; }
+
+.markdown-toolbar {
+    display: block;
+    margin-bottom: 0.5rem;
+}
