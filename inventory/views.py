@@ -1375,6 +1375,8 @@ def roll_journal_add(request, roll_pk):
             'roll': roll,
             'form': form,
             'action': 'Add',
+            'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(
