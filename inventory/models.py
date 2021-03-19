@@ -440,7 +440,6 @@ class Roll(models.Model):
         # If we’ve loaded this roll, set the associated camera’s (and perhaps
         # camera_back’s) status to 'loaded'.
         if (self.status == status_number('loaded')):
-            # Should we just ignore camera.status if there’s a camera_back?
             if (self.camera.status == 'empty'):
                 self.camera.status = 'loaded'
                 self.camera.save()

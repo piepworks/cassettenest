@@ -1,16 +1,30 @@
+<div class="c-field">
+    <label>Film</label>
+    <p class="c-field__input-placeholder">{{ roll.film }}</p>
+</div>
 {% include 'inventory/_form-field.html' with field=form.started_on %}
 {% include 'inventory/_form-field.html' with field=form.ended_on %}
-{% if status != '02_loaded' %}
-{% include 'inventory/_form-field.html' with field=form.status %}
+{% if roll.status != '02_loaded' %}
+    {% include 'inventory/_form-field.html' with field=form.status %}
+    {% include 'inventory/_form-field.html' with field=form.camera %}
+    {% include 'inventory/_form-field.html' with field=form.camera_back %}
 {% else %}
-<div class="c-field">
-    <input type="hidden" name="status" value="{{ status }}" />
-    <label>Status</label>
-    <small class="c-field__help">You can't update the status of a loaded roll from this form.</small>
-    <p class="c-field__input-placeholder">Loaded</p>
-</div>
+    <div class="c-field">
+        <input type="hidden" name="status" value="{{ roll.status }}" />
+        <label>Status</label>
+        <small class="c-field__help">You can't update the status of a loaded roll from this form.</small>
+        <p class="c-field__input-placeholder">Loaded</p>
+    </div>
+    {% if roll.camera %}
+        <div class="c-field">
+            <label>Camera / Back</label>
+            <small class="c-field__help">You can't update the camera for a loaded roll of film from this form.</small>
+            <p class="c-field__input-placeholder">
+                {{ roll.camera }}{% if roll.camera_back %}, Back “{{ roll.camera_back.name }}”{% endif %}
+            </p>
+        </div>
+    {% endif %}
 {% endif %}
-{% include 'inventory/_form-field.html' with field=form.camera %}
 {% include 'inventory/_form-field.html' with field=form.lens %}
 {% include 'inventory/_form-field.html' with field=form.project %}
 {% include 'inventory/_form-field.html' with field=form.push_pull %}

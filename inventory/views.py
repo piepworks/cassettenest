@@ -1031,6 +1031,7 @@ def roll_add(request):
         films = Film.objects.all()
         form = RollForm()
         form.fields['camera'].queryset = Camera.objects.filter(owner=owner)
+        form.fields['camera_back'].queryset = CameraBack.objects.filter(camera__owner=owner)
         form.fields['project'].queryset = Project.objects.filter(owner=owner)
         status_choices = Roll._meta.get_field('status').flatchoices
         del status_choices[0:2]  # remove storage & loaded
@@ -1248,24 +1249,23 @@ def roll_edit(request, pk):
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
 
     if request.method == 'POST':
-        form = RollForm(request.POST)
+        form = RollForm(request.POST, instance=roll)
+        camera = None
+        camera_back = None
+
+        if roll.camera:
+            camera = roll.camera
+        if roll.camera_back:
+            camera_back = roll.camera_back
 
         if form.is_valid():
-            roll.started_on = form.cleaned_data['started_on']
-            roll.ended_on = form.cleaned_data['ended_on']
-            roll.camera = form.cleaned_data['camera']
-            roll.code = form.cleaned_data['code']
-            roll.lens = form.cleaned_data['lens']
-            roll.project = form.cleaned_data['project']
-            roll.status = form.cleaned_data['status']
-            roll.push_pull = form.cleaned_data['push_pull']
-            roll.location = form.cleaned_data['location']
-            roll.notes = form.cleaned_data['notes']
-            roll.lab = form.cleaned_data['lab']
-            roll.scanner = form.cleaned_data['scanner']
-            roll.notes_on_development = form.cleaned_data[
-                'notes_on_development'
-            ]
+            roll = form.save(commit=False)
+
+            if camera and not form.cleaned_data['camera']:
+                roll.camera = camera
+            if camera_back and not form.cleaned_data['camera_back']:
+                roll.camera_back = camera_back
+
             roll.save()
 
             messages.success(request, 'Changes saved!')
@@ -1273,12 +1273,9 @@ def roll_edit(request, pk):
             return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         form = RollForm(instance=roll)
-        form.fields['camera'].queryset = Camera.objects.filter(
-            format=roll.film.format,
-            owner=owner
-        )
         form.fields['project'].queryset = Project.objects.filter(owner=owner)
-
+        form.fields['camera'].queryset = Camera.objects.filter(owner=owner)
+        form.fields['camera_back'].queryset = CameraBack.objects.filter(camera__owner=owner)
         status_choices = Roll._meta.get_field('status').flatchoices
         del status_choices[1]  # remove loaded
         form.fields['status'].choices = status_choices
