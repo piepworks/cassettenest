@@ -1464,3 +1464,42 @@ class CameraViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, expected_url=reverse('camera-detail', args=(camera.id,)))
         self.assertIn('Something is amiss. Please try again.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class RollViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_roll_edit_get(self):
+        roll = baker.make(Roll, owner=self.user)
+        response = self.client.get(reverse('roll-edit', args=(roll.id,)))
+        self.assertEqual(response.status_code, 200)
+
+    def test_roll_edit_post(self):
+        roll = baker.make(Roll, owner=self.user)
+        roll.camera = baker.make(Camera, owner=self.user)
+        roll.camera_back = baker.make(CameraBack, camera=roll.camera)
+        roll.save()
+        response = self.client.post(reverse('roll-edit', args=(roll.id,)), data={
+            'lens': '50mm f/1.4',
+            'push_pull': '+2',
+            'status': status_number('storage'),
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, expected_url=reverse('roll-detail', args=(roll.id,)))
+        self.assertIn('Changes saved!', messages)
