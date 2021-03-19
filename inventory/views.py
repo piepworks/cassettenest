@@ -1222,6 +1222,7 @@ def film_add(request):
         context = {
             'form': form,
             'js_needed': True,
+            'wc_needed': True,
         }
 
     return render(request, 'inventory/film_add.html', context)
@@ -1285,6 +1286,8 @@ def roll_edit(request, pk):
             'owner': owner,
             'roll': roll,
             'form': form,
+            'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(
@@ -1698,6 +1701,8 @@ def camera_add(request):
         form = CameraForm()
         context = {
             'form': form,
+            'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/camera_add.html', context)
@@ -1777,6 +1782,7 @@ def camera_edit(request, pk):
             'form': form,
             'camera': camera,
             'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/camera_edit.html', context)
