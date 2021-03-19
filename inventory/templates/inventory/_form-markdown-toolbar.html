@@ -1,6 +1,17 @@
 <markdown-toolbar for="{{ id }}" class="markdown-toolbar js-required">
-    <md-ordered-list class="btn btn-sm">ordered-list</md-ordered-list>
-    <md-unordered-list class="btn btn-sm">unordered-list</md-unordered-list>
-    <md-bold class="btn btn-sm">bold</md-bold>
-    <md-link class="btn btn-sm">link</md-link>
+    <div>
+        <md-ordered-list class="button icon">
+            {% include 'inventory/_github-icon.html' with id='list-ordered' %}
+        </md-ordered-list>
+        <md-unordered-list class="button icon">
+            {% include 'inventory/_github-icon.html' with id='list-unordered' %}
+        </md-unordered-list>
+        <md-bold class="button icon">
+            {% include 'inventory/_github-icon.html' with id='bold' %}
+        </md-bold>
+        <md-link class="button icon">
+            {% include 'inventory/_github-icon.html' with id='link' %}
+        </md-link>
+    </div>
+    <small><a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener">Markdown</a> enabled</small>
 </markdown-toolbar>

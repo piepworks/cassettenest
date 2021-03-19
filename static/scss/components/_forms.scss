@@ -69,7 +69,10 @@ input[type=number] { width: 5em; }
 
 select:focus { outline: 5px solid $gold; }
 
-.markdown-toolbar {
-    display: block;
-    margin-bottom: 0.5rem;
+.has-js .markdown-toolbar.js-required {
+    display: flex;
+    background: $light;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    justify-content: space-between;
 }
