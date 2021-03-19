@@ -32,7 +32,7 @@
         {% endif %}
         {% if not field.field.widget.input_type %}
         <small class="c-field__help"><a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener">Markdown</a> enabled.</small>
-        {% include 'inventory/_form-markdown-toolbar.html' %}
+        {% include 'inventory/_form-markdown-toolbar.html' with id=field.id_for_label %}
         {% endif %}
         {{ field }}
     {% endif %}
