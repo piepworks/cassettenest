@@ -723,6 +723,7 @@ def project_edit(request, pk):
             'project': project,
             'action': 'Edit',
             'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/project_add_edit.html', context)

@@ -15,3 +15,9 @@
 </form>
 </div>
 {% endblock %}
+
+{% block page_js %}
+<script>
+    {% include 'js/markdown-autocomplete.js' with textarea=form.notes.id_for_label %}
+</script>
+{% endblock %}
