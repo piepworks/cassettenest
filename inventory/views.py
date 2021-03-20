@@ -1593,6 +1593,7 @@ def camera_or_back_load(request, pk, back_pk=None):
             'film_counts': film_counts,
             'iso_range': iso['range'],
             'iso_value': iso['value'],
+            'js_needed': True,
         }
 
         return render(request, 'inventory/camera_or_back_load.html', context)
