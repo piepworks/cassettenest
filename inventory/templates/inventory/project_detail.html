@@ -14,9 +14,9 @@
 </header>
 
 <p>Status: {{ project.get_status_display }}</p>
-<hr />
 
 {% if project.notes %}
+    <hr />
     <h3>Notes</h3>
     <div>{{ project.notes|markdown }}</div>
 {% endif %}
