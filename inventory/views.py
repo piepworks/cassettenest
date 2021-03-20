@@ -1824,6 +1824,7 @@ def camera_back_edit(request, pk, back_pk):
             'camera': camera,
             'camera_back': camera_back,
             'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/camera_back_edit.html', context)
