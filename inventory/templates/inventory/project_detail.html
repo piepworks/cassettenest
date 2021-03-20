@@ -14,6 +14,12 @@
 </header>
 
 <p>Status: {{ project.get_status_display }}</p>
+<hr />
+
+{% if project.notes %}
+    <h3>Notes</h3>
+    <div>{{ project.notes|markdown }}</div>
+{% endif %}
 
 {% if project.cameras.all %}
     {% include 'inventory/_project-cameras.html' %}
@@ -46,10 +52,5 @@
 {% endif %}
 </div>
 
-{% if project.notes %}
-<hr />
-<h3>Notes</h3>
-<div>{{ project.notes|markdown }}</div>
-{% endif %}
 </div>
 {% endblock %}
