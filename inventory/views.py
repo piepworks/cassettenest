@@ -133,6 +133,8 @@ def patterns(request):
         'roll1': roll1,
         'roll2': roll2,
         'roll3': roll3,
+        'js_needed': True,
+        'wc_needed': True,
     }
 
     return render(request, 'patterns.html', context)
