@@ -1,0 +1,19 @@
+<small class="no-js c-field__help"><a href="https://www.markdownguide.org/cheat-sheet/#basic-syntax" target="_blank" rel="noopener">Markdown</a> enabled</small>
+
+<markdown-toolbar for="{{ id }}" class="markdown-toolbar js-required">
+    <div>
+        <md-ordered-list class="button icon">
+            {% include 'inventory/_github-icon.html' with id='list-ordered' %}
+        </md-ordered-list>
+        <md-unordered-list class="button icon">
+            {% include 'inventory/_github-icon.html' with id='list-unordered' %}
+        </md-unordered-list>
+        <md-bold class="button icon">
+            {% include 'inventory/_github-icon.html' with id='bold' %}
+        </md-bold>
+        <md-link class="button icon">
+            {% include 'inventory/_github-icon.html' with id='link' %}
+        </md-link>
+    </div>
+    <small><a href="https://www.markdownguide.org/cheat-sheet/#basic-syntax" target="_blank" rel="noopener">Markdown</a> enabled</small>
+</markdown-toolbar>

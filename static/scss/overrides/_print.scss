@@ -1,0 +1,18 @@
+.print-only { display: none; }
+
+@media print {
+    a {
+        text-decoration: none;
+        color: black;
+
+        &[href^='http'] {
+            text-decoration: underline;
+            &::after { content: ' (' attr(href) ')'; }
+        }
+    }
+
+    .action,
+    .do-not-print { display: none; }
+
+    .print-only { display: block; }
+}

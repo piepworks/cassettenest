@@ -30,6 +30,9 @@
         {% if field.help_text and field.label != 'Username' %}
         <small class="c-field__help">{{ field.help_text }}</small>
         {% endif %}
+        {% if not field.field.widget.input_type %}
+        {% include 'inventory/_form-markdown-toolbar.html' with id=field.id_for_label %}
+        {% endif %}
         {{ field }}
     {% endif %}
     {% if progressive_link %}

@@ -133,6 +133,8 @@ def patterns(request):
         'roll1': roll1,
         'roll2': roll2,
         'roll3': roll3,
+        'js_needed': True,
+        'wc_needed': True,
     }
 
     return render(request, 'patterns.html', context)
@@ -723,6 +725,7 @@ def project_edit(request, pk):
             'project': project,
             'action': 'Edit',
             'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/project_add_edit.html', context)
@@ -1221,6 +1224,7 @@ def film_add(request):
         context = {
             'form': form,
             'js_needed': True,
+            'wc_needed': True,
         }
 
     return render(request, 'inventory/film_add.html', context)
@@ -1284,6 +1288,8 @@ def roll_edit(request, pk):
             'owner': owner,
             'roll': roll,
             'form': form,
+            'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(
@@ -1375,6 +1381,8 @@ def roll_journal_add(request, roll_pk):
             'roll': roll,
             'form': form,
             'action': 'Add',
+            'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(
@@ -1417,8 +1425,11 @@ def roll_journal_edit(request, roll_pk, entry_pk):
             'owner': owner,
             'roll': roll,
             'form': form,
+            'entry': entry,
             'starting_frame': entry.starting_frame,
             'action': 'Edit',
+            'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(
@@ -1582,6 +1593,7 @@ def camera_or_back_load(request, pk, back_pk=None):
             'film_counts': film_counts,
             'iso_range': iso['range'],
             'iso_value': iso['value'],
+            'js_needed': True,
         }
 
         return render(request, 'inventory/camera_or_back_load.html', context)
@@ -1692,6 +1704,8 @@ def camera_add(request):
         form = CameraForm()
         context = {
             'form': form,
+            'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/camera_add.html', context)
@@ -1771,6 +1785,7 @@ def camera_edit(request, pk):
             'form': form,
             'camera': camera,
             'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/camera_edit.html', context)
@@ -1812,6 +1827,7 @@ def camera_back_edit(request, pk, back_pk):
             'camera': camera,
             'camera_back': camera_back,
             'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/camera_back_edit.html', context)

@@ -17,7 +17,12 @@ form {
 
     .c-card & { margin: auto 1.2rem; }
 
-    .action { margin-top: 1rem; }
+    .action {
+        margin-top: 1rem;
+
+        input[type=submit] + a,
+        button + a { margin-left: 1rem; }
+    }
 }
 
 fieldset {
@@ -63,3 +68,11 @@ legend {
 input[type=number] { width: 5em; }
 
 select:focus { outline: 5px solid $gold; }
+
+.has-js .markdown-toolbar.js-required {
+    display: flex;
+    background: $light;
+    padding: 0.5rem 1rem;
+    align-items: center;
+    justify-content: space-between;
+}

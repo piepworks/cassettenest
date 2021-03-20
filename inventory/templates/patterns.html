@@ -99,6 +99,26 @@
                 <td>Beaker</td>
                 <td><div class="icon">{% include 'inventory/_github-icon.html' with id='beaker' %}</div></td>
             </tr>
+            <tr>
+                <td>Download</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='download' %}</div></td>
+            </tr>
+            <tr>
+                <td>List-Unordered</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='list-unordered' %}</div></td>
+            </tr>
+            <tr>
+                <td>List-Ordered</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='list-ordered' %}</div></td>
+            </tr>
+            <tr>
+                <td>Bold</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='bold' %}</div></td>
+            </tr>
+            <tr>
+                <td>Link</td>
+                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='link' %}</div></td>
+            </tr>
         </table>
 
         <h3>Icon Buttons</h3>
@@ -167,4 +187,10 @@
         <p>&hellip;</p>
     </section>
 </div>
+{% endblock %}
+
+{% block page_js %}
+<script>
+    {% include 'js/markdown-autocomplete.js' %}
+</script>
 {% endblock %}
