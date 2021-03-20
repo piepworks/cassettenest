@@ -11,7 +11,13 @@
     {% include 'inventory/_form-field.html' with field=form.name %}
     {% include 'inventory/_form-field.html' with field=form.status %}
     {% include 'inventory/_form-field.html' with field=form.notes %}
-    <div class="action"><input type="submit" value="Save project" /></div>
+
+    <div class="action">
+        <input type="submit" value="Save project" />
+        {% if action == 'Edit' %}
+        <a href="{% url 'project-detail' project.id %}">Cancel</a>
+        {% endif %}
+    </div>
 </form>
 </div>
 {% endblock %}

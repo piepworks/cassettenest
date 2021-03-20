@@ -17,7 +17,10 @@
         {% if camera.status != 'loaded' %}
         {% include 'inventory/_form-field.html' with field=form.unavailable %}
         {% endif %}
-        <div class="action"><input type="submit" value="Update camera" /></div>
+        <div class="action">
+            <input type="submit" value="Update camera" />
+            <a href="{% url 'camera-detail' camera.id %}">Cancel</a>
+        </div>
     </form>
 
     {% if not camera.roll_set.all %}
