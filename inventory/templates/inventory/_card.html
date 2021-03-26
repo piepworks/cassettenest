@@ -41,7 +41,7 @@
         </form>
     {% endif %}
     <a href="{{ location|default:'#' }}{% if project and querystring == 'project' %}?project={{ project.id }}{% endif %}">
-        <section class="c-card__name">{{ name }}</section>
+        <section class="c-card__name"><span>{{ name }}</span></section>
         {% if slot == 'count' %}
             <div class="c-card__count" title="Number of rolls"><span>{{ count|default:'0' }}</span></div>
         {% elif slot == 'reminder' %}
