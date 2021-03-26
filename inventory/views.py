@@ -679,6 +679,8 @@ def project_add(request):
         context = {
             'form': form,
             'action': 'Add',
+            'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/project_add_edit.html', context)
