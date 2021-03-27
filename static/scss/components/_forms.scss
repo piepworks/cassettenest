@@ -49,7 +49,10 @@ textarea { -webkit-appearance: none; }
 input:not([type=checkbox]):not([type=submit]),
 textarea { @include input-style; }
 
-textarea { width: 100%; }
+textarea {
+    width: 100%;
+    resize: vertical;
+}
 
 input,
 input[type=submit],
