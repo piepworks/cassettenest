@@ -1,6 +1,9 @@
+/* stylelint-disable value-keyword-case */
+
 $spacing: 0.6rem;
 
 $breakpoints: (
+    XS: '(min-width: 375px)',
     S:  '(min-width: 580px)',
     M:  '(min-width: 890px)',
     L:  '(min-width: 1120px)',

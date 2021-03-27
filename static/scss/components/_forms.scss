@@ -78,4 +78,12 @@ select:focus { outline: 5px solid $gold; }
     padding: 0.5rem 1rem;
     align-items: center;
     justify-content: space-between;
+
+    small { text-align: right; }
+
+    .button + .button {
+        margin-left: 0.5rem;
+
+        @include breakpoint('XS') { margin-left: 1rem; }
+    }
 }
