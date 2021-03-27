@@ -578,6 +578,7 @@ def ready(request):
         'page_obj': page_obj,
         'bulk_status_keys': bulk_status_keys,
         'js_needed': True,
+        'wc_needed': True,
     }
 
     return render(request, 'inventory/ready.html', context)
