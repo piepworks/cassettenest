@@ -1,6 +1,5 @@
 .order {
     @include divider-dashed;
-    border-width: $divider-width 0;
-    margin-bottom: 30px;
+    border-width: $divider-width 0 0;
     padding: 0.2rem 0 2rem;
 }

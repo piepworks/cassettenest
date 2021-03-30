@@ -1,7 +1,6 @@
 .bulk-status {
-    @include divider-dashed;
-    border-width: $divider-width 0;
-    margin-bottom: 2rem;
+    @include divider-solid;
+    border-width: $divider-width 0 0;
     padding: 1.8rem 0 2rem;
 
     p { margin-top: 0; }

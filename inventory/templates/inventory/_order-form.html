@@ -6,5 +6,7 @@
     {% include 'inventory/_form-field.html' with field=form.scanner %}
     {% include 'inventory/_form-field.html' with field=form.notes_on_development %}
 
+    {% include 'inventory/_logbook-table.html' with status='shot' %}
+
     <div class="action"><input id="update-selected" type="submit" value="Update selected" /></div>
 </div>
