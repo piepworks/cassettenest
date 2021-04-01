@@ -1,5 +1,3 @@
-{% url 'login' as login_url %}
-{% url 'dashboard' as dashboard_url %}
 {% url 'settings' as settings_url %}
 <nav>
     <ul>
@@ -15,8 +13,6 @@
         <li class="feedback"><a href="https://cassettenest.com/feedback/?username={{ user.username }}&email={{ user.email }}" target="_blank" rel="noopener">Feedback</a></li>
         {% endif %}
         <li><a href="{% url 'logout' %}">Log out</a></li>
-    {% elif request.path != login_url %}
-        <li><a href="{{ login_url }}">Log in</a></li>
     {% endif %}
     </ul>
 </nav>
