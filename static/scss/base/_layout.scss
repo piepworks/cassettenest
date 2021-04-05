@@ -18,9 +18,11 @@ body { background: $dark; }
 
     > main > section {
         border: 1px solid $light-border;
-        border-top: 0;
+        border-top-width: 0;
 
         &:not(:last-of-type) { border-bottom: 0; }
+
+        @include breakpoint('L') { border-top-width: 1px; }
     }
 
     section.cards { border: 1px solid $light-border; }
