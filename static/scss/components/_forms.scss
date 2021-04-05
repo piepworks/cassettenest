@@ -54,7 +54,7 @@ textarea {
     resize: vertical;
 }
 
-input,
+input:not([type=checkbox]):not([type=radio]),
 input[type=submit],
 textarea,
 button,
