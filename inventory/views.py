@@ -8,7 +8,7 @@ from django.db import IntegrityError
 from django.contrib.auth import login, authenticate
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
 from django.urls import reverse
@@ -351,7 +351,7 @@ def inventory(request):
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
     for format in format_counts:
-        format['format_display'] = force_text(
+        format['format_display'] = force_str(
             format_choices[format['format']],
             strings_only=True
         )
@@ -366,7 +366,7 @@ def inventory(request):
     # Get the display name of types choices.
     type_choices = dict(Film._meta.get_field('type').flatchoices)
     for type in type_counts:
-        type['type_display'] = force_text(
+        type['type_display'] = force_str(
             type_choices[type['type']],
             strings_only=True
         )
@@ -1108,7 +1108,7 @@ def film_format(request, format):
     )
     format_choices = dict(Film._meta.get_field('format').flatchoices)
     context = {
-        'format': force_text(format_choices[format], strings_only=True),
+        'format': force_str(format_choices[format], strings_only=True),
         'total_film_count': total_film_count,
         'film_counts': film_counts,
         'owner': owner,
@@ -1135,7 +1135,7 @@ def film_type(request, type):
     )
     type_choices = dict(Film._meta.get_field('type').flatchoices)
     context = {
-        'type': force_text(type_choices[type], strings_only=True),
+        'type': force_str(type_choices[type], strings_only=True),
         'total_film_count': total_film_count,
         'film_counts': film_counts,
         'owner': owner,

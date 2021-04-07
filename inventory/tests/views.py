@@ -439,7 +439,7 @@ class ImportTests(TestCase):
         next(reader)  # Disregard the header row.
         rows = sum(1 for row in reader)
         self.assertEqual(rows, 1)
-        self.assertEquals(
+        self.assertEqual(
             response1.get('Content-Disposition'),
             'attachment; filename="rolls.csv"'
         )
@@ -491,7 +491,7 @@ class ImportTests(TestCase):
         next(reader)  # Disregard the header row.
         rows = sum(1 for row in reader)
         self.assertEqual(rows, 1)
-        self.assertEquals(
+        self.assertEqual(
             response1.get('Content-Disposition'),
             'attachment; filename="cameras.csv"'
         )
@@ -543,7 +543,7 @@ class ImportTests(TestCase):
         next(reader)  # Disregard the header row.
         rows = sum(1 for row in reader)
         self.assertEqual(rows, 1)
-        self.assertEquals(
+        self.assertEqual(
             response1.get('Content-Disposition'),
             'attachment; filename="camera-backs.csv"'
         )
@@ -597,7 +597,7 @@ class ImportTests(TestCase):
         next(reader)  # Disregard the header row.
         rows = sum(1 for row in reader)
         self.assertEqual(rows, 1)
-        self.assertEquals(
+        self.assertEqual(
             response1.get('Content-Disposition'),
             'attachment; filename="projects.csv"'
         )
@@ -649,7 +649,7 @@ class ImportTests(TestCase):
         next(reader)  # Disregard the header row.
         rows = sum(1 for row in reader)
         self.assertEqual(rows, 1)
-        self.assertEquals(
+        self.assertEqual(
             response1.get('Content-Disposition'),
             'attachment; filename="journals.csv"'
         )
