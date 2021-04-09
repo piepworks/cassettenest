@@ -393,6 +393,7 @@ def inventory(request):
         'format_counts': format_counts,
         'type_counts': type_counts,
         'filters': filters,
+        'js_needed': True,
     }
 
     return render(request, 'inventory/film.html', context)

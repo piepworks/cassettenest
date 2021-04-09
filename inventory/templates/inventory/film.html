@@ -36,7 +36,7 @@
                 {% endfor %}
             </select>
         </label>
-        <button>Filter</button>
+        <button class="no-js">Filter</button>
     </div>
 </form>
 
@@ -57,3 +57,9 @@
 {% endif %}
 </div>
 {% endblock %}
+
+{% block page_js %}
+<script>
+$('#film_filter select').change(() => $('#film_filter').submit());
+</script>
+{% endblock  %}
