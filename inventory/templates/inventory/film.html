@@ -9,25 +9,51 @@
 <p><a href="{% url 'rolls-add' %}">Add rolls to storage.</a></p>
 <p><a href="{% url 'roll-add' %}">Add a roll to a non-storage status.</a></p>
 
+{% if total_rolls %}
+<hr />
+
+<form id="film_filter" method="get">
+    <div class="c-field--filter">
+        <label for="id_format">
+            Format:
+            <select name="format" id="id_format">
+                <option value="">All formats</option>
+                {% for format in format_counts %}
+                <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
+                    {{ format.format_display }} ({{ format.count }})
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+        <label for="id_type">
+            Type:
+            <select name="type" id="id_type">
+                <option value="">All types</option>
+                {% for type in type_counts %}
+                <option value="{{ type.type }}"{% if filters.type == type.type %} selected{% endif %}>
+                    {{ type.type_display }} ({{ type.count }})
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+        <button>Filter</button>
+    </div>
+</form>
+
+{% if filters.format or filters.type %}
+<a href="{% url 'inventory' %}">Reset filter</a>
+{% endif %}
+
+<hr />
+
 {% if total_film_count %}
-<h2>Formats</h2>
-<ul>
-    {% for format in format_counts %}
-    <li><a href="{% url 'film-format' format.format %}">{{ format.format_display }} / {{ format.count }}</a></li>
-    {% endfor %}
-</ul>
-
-<h2>Types</h2>
-<ul>
-    {% for type in type_counts %}
-    <li><a href="{% url 'film-type' type.type %}">{{ type.type_display }} / {{ type.count }}</a></li>
-    {% endfor %}
-</ul>
-
-{% include 'inventory/_unused-rolls.html' %}
+    {% include 'inventory/_unused-rolls.html' %}
+{% else %}
+    <p>No rolls matching the current filter.</p>
+{% endif %}
 
 {% else %}
-<p>No films found.</p>
+<p>No film found.</p>
 {% endif %}
 </div>
 {% endblock %}
