@@ -1,26 +1,39 @@
-{% if total_film_count %}
-    <h2>
-        {% if filters.format or filters.type %}
-        {{ total_film_count.count }}
-        roll{{ total_film_count.count|pluralize }} (filtered),
-        <small>
-        {% endif %}
-        {{ total_rolls }} roll{{ total_rolls|pluralize }}
-        {% if project %}remaining{% endif %}
-        {% if filters.format or filters.type %}
-        total
-        </small>
-        {% endif %}
-    </h2>
-{% endif %}
-
-<section>
-    {% if project %}
-    <h3 class="c-heading c-heading--divider">Ready to Load</h3>
+<div id="unused-rolls-wrapper">
+    {% if filters.format or filters.type %}
+        <a class="js-reset-filter" href="{% url 'inventory' %}">Reset filter</a>
     {% endif %}
-    <section class="cards">
-        {% for film in film_counts %}
-            {% include 'inventory/_card.html' with name=film location=film.get_absolute_url slot='count' count=film.count type='film' film_type=film.type querystring='project' %}
-        {% endfor %}
+
+    <hr />
+
+    {% if total_film_count %}
+        <h2 id="film-summary">
+            {% if filters.format or filters.type %}
+            {{ total_film_count.count }}
+            roll{{ total_film_count.count|pluralize }} (filtered),
+            <small>
+            {% endif %}
+            {{ total_rolls }} roll{{ total_rolls|pluralize }}
+            {% if project %}remaining{% endif %}
+            {% if filters.format or filters.type %}
+            total
+            </small>
+            {% endif %}
+        </h2>
+    {% endif %}
+
+    <section id="film-wrapper">
+        {% if project %}
+        <h3 class="c-heading c-heading--divider">Ready to Load</h3>
+        {% endif %}
+
+        {% if film_counts %}
+            <section class="cards">
+                {% for film in film_counts %}
+                    {% include 'inventory/_card.html' with name=film location=film.get_absolute_url slot='count' count=film.count type='film' film_type=film.type querystring='project' %}
+                {% endfor %}
+            </section>
+        {% else %}
+            <p>No rolls matching the current filter.</p>
+        {% endif %}
     </section>
-</section>
+</div>

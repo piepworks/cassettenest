@@ -47,6 +47,7 @@ from .utils import (
     bulk_status_next_keys,
     get_host,
     send_email_to_trey,
+    inventory_filter,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -339,11 +340,11 @@ def inventory(request):
     total_rolls = total_film_count.count()
 
     # Querystring filters.
-    if request.GET.get('format') and request.GET.get('format') is not None:
+    if request.GET.get('format') and request.GET.get('format') != 'all':
         filters['format'] = request.GET.get('format')
         total_film_count = total_film_count.filter(format=filters['format'])
 
-    if request.GET.get('type') and request.GET.get('type') is not None:
+    if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
         total_film_count = total_film_count.filter(type=filters['type'])
 
@@ -397,6 +398,37 @@ def inventory(request):
     }
 
     return render(request, 'inventory/film.html', context)
+
+
+@login_required
+def inventory_ajax(request, format, type):
+    total_film_count = Film.objects.filter(
+        roll__owner=request.user,
+        roll__status=status_number('storage'),
+    )
+    total_rolls = total_film_count.count()
+
+    if format != 'all':
+        total_film_count = total_film_count.filter(format=format)
+
+    if type != 'all':
+        total_film_count = total_film_count.filter(type=type)
+
+    filters = {
+        'format': True if format != 'all' else False,
+        'type': True if type != 'all' else False,
+    }
+
+    film_counts = inventory_filter(request, Film, format, type)
+
+    context = {
+        'total_film_count': total_film_count,
+        'total_rolls': total_rolls,
+        'filters': filters,
+        'film_counts': film_counts,
+    }
+
+    return render(request, 'inventory/_unused-rolls.html', context)
 
 
 @login_required
@@ -724,7 +756,7 @@ def project_edit(request, pk):
                 roll_count = rolls.count()
 
                 if rolls:
-                    rolls.update(project=None)
+                    rolls.update(project='all')
 
                     plural = pluralize('roll', roll_count)
                     messages.success(

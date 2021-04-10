@@ -18,7 +18,7 @@
             <label for="id_format">
                 Format:
                 <select name="format" id="id_format">
-                    <option value="">All formats</option>
+                    <option value="all">All formats</option>
                     {% for format in format_counts %}
                     <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
                         {{ format.format_display }} ({{ format.count }})
@@ -29,7 +29,7 @@
             <label for="id_type">
                 Type:
                 <select name="type" id="id_type">
-                    <option value="">All types</option>
+                    <option value="all">All types</option>
                     {% for type in type_counts %}
                     <option value="{{ type.type }}"{% if filters.type == type.type %} selected{% endif %}>
                         {{ type.type_display }} ({{ type.count }})
@@ -41,12 +41,6 @@
         <button class="no-js">Filter</button>
     </div>
 </form>
-
-{% if filters.format or filters.type %}
-<a href="{% url 'inventory' %}">Reset filter</a>
-{% endif %}
-
-<hr />
 
 {% if total_film_count %}
     {% include 'inventory/_unused-rolls.html' %}
@@ -62,6 +56,30 @@
 
 {% block page_js %}
 <script>
-$('#film_filter select').change(() => $('#film_filter').submit());
+function resetLink(e) {
+    e.preventDefault();
+
+    fetch(`{% url 'inventory-ajax' format='all' type='all' %}`)
+        .then(response => response.text().then(text => $('#unused-rolls-wrapper').html(text)));
+}
+
+$('#film_filter select').change(() => {
+    const format = ($('#id_format').val()) ? $('#id_format').val() : 'all';
+    const type = ($('#id_type').val()) ? $('#id_type').val() : 'all';
+
+    const inventoryUrl = `{% url 'inventory-ajax' format='f-none' type='t-none' %}`
+        .replace('f-none', format)
+        .replace('t-none', type);
+
+    fetch(inventoryUrl)
+        .then(response => {
+            response.text().then(text => {
+                $('#unused-rolls-wrapper').html(text);
+                $('.js-reset-filter').click(e => resetLink(e));
+
+                // Update the URL too.
+            });
+        });
+});
 </script>
-{% endblock  %}
+{% endblock %}
