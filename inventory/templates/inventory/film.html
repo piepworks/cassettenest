@@ -14,28 +14,30 @@
 
 <form id="film_filter" method="get">
     <div class="c-field--filter">
-        <label for="id_format">
-            Format:
-            <select name="format" id="id_format">
-                <option value="">All formats</option>
-                {% for format in format_counts %}
-                <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
-                    {{ format.format_display }} ({{ format.count }})
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-        <label for="id_type">
-            Type:
-            <select name="type" id="id_type">
-                <option value="">All types</option>
-                {% for type in type_counts %}
-                <option value="{{ type.type }}"{% if filters.type == type.type %} selected{% endif %}>
-                    {{ type.type_display }} ({{ type.count }})
-                </option>
-                {% endfor %}
-            </select>
-        </label>
+        <div class="inner">
+            <label for="id_format">
+                Format:
+                <select name="format" id="id_format">
+                    <option value="">All formats</option>
+                    {% for format in format_counts %}
+                    <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
+                        {{ format.format_display }} ({{ format.count }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label for="id_type">
+                Type:
+                <select name="type" id="id_type">
+                    <option value="">All types</option>
+                    {% for type in type_counts %}
+                    <option value="{{ type.type }}"{% if filters.type == type.type %} selected{% endif %}>
+                        {{ type.type_display }} ({{ type.count }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
         <button class="no-js">Filter</button>
     </div>
 </form>
