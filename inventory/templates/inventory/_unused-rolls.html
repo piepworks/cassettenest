@@ -1,25 +1,23 @@
 <div id="unused-rolls-wrapper">
-    {% if filters.format or filters.type %}
+    {% if filters.format != 'all' or filters.type != 'all' %}
         <a class="js-reset-filter" href="{% url 'inventory' %}">Reset filter</a>
     {% endif %}
 
     <hr />
 
-    {% if total_film_count %}
-        <h2 id="film-summary">
-            {% if filters.format or filters.type %}
-            {{ total_film_count.count }}
-            roll{{ total_film_count.count|pluralize }} (filtered),
-            <small>
-            {% endif %}
-            {{ total_rolls }} roll{{ total_rolls|pluralize }}
-            {% if project %}remaining{% endif %}
-            {% if filters.format or filters.type %}
-            total
-            </small>
-            {% endif %}
-        </h2>
-    {% endif %}
+    <h2 id="film-summary">
+        {% if filters.format or filters.type %}
+        {{ total_film_count.count }}
+        roll{{ total_film_count.count|pluralize }} (filtered),
+        <small>
+        {% endif %}
+        {{ total_rolls }} roll{{ total_rolls|pluralize }}
+        {% if project %}remaining{% endif %}
+        {% if filters.format or filters.type %}
+        total
+        </small>
+        {% endif %}
+    </h2>
 
     <section id="film-wrapper">
         {% if project %}

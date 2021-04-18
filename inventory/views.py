@@ -328,8 +328,8 @@ def register(request):
 @login_required
 def inventory(request):
     filters = {
-        'format': '',
-        'type': '',
+        'format': 'all',
+        'type': 'all',
     }
 
     # All unused rolls
@@ -348,14 +348,7 @@ def inventory(request):
         filters['type'] = request.GET.get('type')
         total_film_count = total_film_count.filter(type=filters['type'])
 
-    film_counts = total_film_count.annotate(
-        count=Count('roll')
-    ).order_by(
-        'type',
-        '-format',
-        'manufacturer__name',
-        'name',
-    )
+    film_counts = inventory_filter(request, Film, filters['format'], filters['type'])
 
     format_counts = Film.objects.filter(
         roll__owner=request.user,
@@ -415,8 +408,8 @@ def inventory_ajax(request, format, type):
         total_film_count = total_film_count.filter(type=type)
 
     filters = {
-        'format': True if format != 'all' else False,
-        'type': True if type != 'all' else False,
+        'format': format,
+        'type': type,
     }
 
     film_counts = inventory_filter(request, Film, format, type)

@@ -42,11 +42,7 @@
     </div>
 </form>
 
-{% if total_film_count %}
-    {% include 'inventory/_unused-rolls.html' %}
-{% else %}
-    <p>No rolls matching the current filter.</p>
-{% endif %}
+{% include 'inventory/_unused-rolls.html' %}
 
 {% else %}
 <p>No film found.</p>
@@ -60,7 +56,12 @@ function resetLink(e) {
     e.preventDefault();
 
     fetch(`{% url 'inventory-ajax' format='all' type='all' %}`)
-        .then(response => response.text().then(text => $('#unused-rolls-wrapper').html(text)));
+        .then(response => response.text().then(text => {
+            $('#unused-rolls-wrapper').html(text);
+            window.history.pushState({}, '', `{% url 'inventory' %}`);
+            $('#id_format').val('all');
+            $('#id_type').val('all');
+        }));
 }
 
 $('#film_filter select').change(() => {
