@@ -1269,12 +1269,14 @@ class ProjectTests(TestCase):
         camera1 = baker.make(Camera, owner=self.user, multiple_backs=True)
         camera2 = baker.make(Camera, owner=self.user)
         baker.make(Roll, status=status_number('loaded'), camera=camera2, owner=self.user)
+        baker.make(Roll, status=status_number('storage'), owner=self.user, project=project)
         project.cameras.add(camera1)
         project.cameras.add(camera2)
         baker.make(CameraBack, camera=camera1)
 
         response = self.client.get(reverse('project-detail', args=(project.id,)))
         self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, '(filtered)')
 
     def test_project_rolls_add(self):
         project = baker.make(Project, owner=self.user)
