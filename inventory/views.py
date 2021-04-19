@@ -47,6 +47,7 @@ from .utils import (
     bulk_status_next_keys,
     get_host,
     send_email_to_trey,
+    inventory_filter,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -326,22 +327,31 @@ def register(request):
 
 @login_required
 def inventory(request):
-    owner = request.user
-    # Unused rolls
+    filters = {
+        'format': 'all',
+        'type': 'all',
+    }
+
+    # All unused rolls
     total_film_count = Film.objects.filter(
-        roll__owner=owner,
+        roll__owner=request.user,
         roll__status=status_number('storage'),
     )
-    film_counts = total_film_count.annotate(
-        count=Count('roll')
-    ).order_by(
-        'type',
-        '-format',
-        'manufacturer__name',
-        'name',
-    )
+    total_rolls = total_film_count.count()
+
+    # Querystring filters.
+    if request.GET.get('format') and request.GET.get('format') != 'all':
+        filters['format'] = request.GET.get('format')
+        total_film_count = total_film_count.filter(format=filters['format'])
+
+    if request.GET.get('type') and request.GET.get('type') != 'all':
+        filters['type'] = request.GET.get('type')
+        total_film_count = total_film_count.filter(type=filters['type'])
+
+    film_counts = inventory_filter(request, Film, filters['format'], filters['type'])
+
     format_counts = Film.objects.filter(
-        roll__owner=owner,
+        roll__owner=request.user,
         roll__status=status_number('storage')
     ).values('format').annotate(
         count=Count('format')
@@ -356,7 +366,7 @@ def inventory(request):
         )
 
     type_counts = Film.objects.filter(
-        roll__owner=owner,
+        roll__owner=request.user,
         roll__status=status_number('storage')
     ).values('type').annotate(
         count=Count('type')
@@ -372,12 +382,46 @@ def inventory(request):
 
     context = {
         'total_film_count': total_film_count,
+        'total_rolls': total_rolls,
         'film_counts': film_counts,
         'format_counts': format_counts,
         'type_counts': type_counts,
+        'filters': filters,
+        'js_needed': True,
     }
 
     return render(request, 'inventory/film.html', context)
+
+
+@login_required
+def inventory_ajax(request, format, type):
+    total_film_count = Film.objects.filter(
+        roll__owner=request.user,
+        roll__status=status_number('storage'),
+    )
+    total_rolls = total_film_count.count()
+
+    if format != 'all':
+        total_film_count = total_film_count.filter(format=format)
+
+    if type != 'all':
+        total_film_count = total_film_count.filter(type=type)
+
+    filters = {
+        'format': format,
+        'type': type,
+    }
+
+    film_counts = inventory_filter(request, Film, format, type)
+
+    context = {
+        'total_film_count': total_film_count,
+        'total_rolls': total_rolls,
+        'filters': filters,
+        'film_counts': film_counts,
+    }
+
+    return render(request, 'inventory/_unused-rolls.html', context)
 
 
 @login_required
@@ -843,6 +887,7 @@ def project_detail(request, pk):
         'camera_backs_empty': camera_backs_empty,
         'rolls_loaded_outside_project': rolls_loaded_outside_project,
         'total_film_count': total_film_count,
+        'total_rolls': total_film_count.count(),
         'film_counts': film_counts,
         'film_available_count': film_available_count,
         'format_counts': format_counts,
@@ -1087,60 +1132,6 @@ def film_rolls(request, slug):
     }
 
     return render(request, 'inventory/film_rolls.html', context)
-
-
-@login_required
-def film_format(request, format):
-    '''All the rolls in a particular format that someone has available.'''
-    owner = request.user
-    total_film_count = Film.objects.filter(
-        roll__owner=owner,
-        roll__status=status_number('storage'),
-        format=format,
-    )
-    film_counts = total_film_count.annotate(
-        count=Count('roll')
-    ).order_by(
-        'type',
-        'manufacturer__name',
-        'name',
-    )
-    format_choices = dict(Film._meta.get_field('format').flatchoices)
-    context = {
-        'format': force_str(format_choices[format], strings_only=True),
-        'total_film_count': total_film_count,
-        'film_counts': film_counts,
-        'owner': owner,
-    }
-
-    return render(request, 'inventory/film_format.html', context)
-
-
-@login_required
-def film_type(request, type):
-    '''All the rolls of a particular film type that someone has available.'''
-    owner = request.user
-    total_film_count = Film.objects.filter(
-        roll__owner=owner,
-        roll__status=status_number('storage'),
-        type=type,
-    )
-    film_counts = total_film_count.annotate(
-        count=Count('roll')
-    ).order_by(
-        '-format',
-        'manufacturer__name',
-        'name',
-    )
-    type_choices = dict(Film._meta.get_field('type').flatchoices)
-    context = {
-        'type': force_str(type_choices[type], strings_only=True),
-        'total_film_count': total_film_count,
-        'film_counts': film_counts,
-        'owner': owner,
-    }
-
-    return render(request, 'inventory/film_type.html', context)
 
 
 @login_required

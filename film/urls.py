@@ -58,9 +58,8 @@ urlpatterns = [
 
     # Films
     path('film/', views.inventory, name='inventory'),
+    path('film/ajax/<slug:format>/<slug:type>', views.inventory_ajax, name='inventory-ajax'),
     path('film/add/', views.film_add, name='film-add'),
-    path('film/type/<type>/', views.film_type, name='film-type'),
-    path('film/format/<format>/', views.film_format, name='film-format'),
     path('film/<slug:slug>/', views.film_rolls, name='film-rolls'),
 
     # Cameras and Backs

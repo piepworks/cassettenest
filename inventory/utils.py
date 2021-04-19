@@ -2,6 +2,7 @@ import os
 import markdown2
 from django.conf import settings
 from django.core.mail import send_mail
+from django.db.models import Count
 
 
 def iso_variables(request):
@@ -167,4 +168,26 @@ def send_email_to_trey(subject, message):
         message=message,
         from_email='trey@cassettenest.com',
         recipient_list=['boss@treylabs.com']
+    )
+
+
+def inventory_filter(request, Film, format, type):
+    film_counts = Film.objects.filter(
+        roll__owner=request.user,
+        roll__status=status_number('storage'),
+    )
+
+    if format != 'all':
+        film_counts = film_counts.filter(format=format)
+
+    if type != 'all':
+        film_counts = film_counts.filter(type=type)
+
+    return film_counts.annotate(
+        count=Count('roll')
+    ).order_by(
+        'type',
+        '-format',
+        'manufacturer__name',
+        'name',
     )

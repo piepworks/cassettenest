@@ -46,4 +46,15 @@
     &--checkbox label { display: inline-flex; }
 
     &--radio label { display: flex; }
+
+    &--filter {
+        &,
+        .inner {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        label { margin-right: 1rem; }
+    }
 }

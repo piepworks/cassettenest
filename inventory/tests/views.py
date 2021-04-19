@@ -224,11 +224,23 @@ class InventoryTests(TestCase):
             password=self.password,
         )
 
-    def test_restricted(self):
+    def test_unfiltered(self):
         response = self.client.get(reverse('inventory'))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Inventory', html=True)
+
+    def test_filtered(self):
+        response = self.client.get(reverse('inventory') + '?format=135&type=c41')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '(filtered)')
+
+    def test_ajax_filter(self):
+        response = self.client.get(reverse('inventory-ajax', kwargs={'format': '135', 'type': 'c41'}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '(filtered)')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)

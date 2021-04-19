@@ -9,25 +9,81 @@
 <p><a href="{% url 'rolls-add' %}">Add rolls to storage.</a></p>
 <p><a href="{% url 'roll-add' %}">Add a roll to a non-storage status.</a></p>
 
-{% if total_film_count %}
-<h2>Formats</h2>
-<ul>
-    {% for format in format_counts %}
-    <li><a href="{% url 'film-format' format.format %}">{{ format.format_display }} / {{ format.count }}</a></li>
-    {% endfor %}
-</ul>
+{% if total_rolls %}
+<hr />
 
-<h2>Types</h2>
-<ul>
-    {% for type in type_counts %}
-    <li><a href="{% url 'film-type' type.type %}">{{ type.type_display }} / {{ type.count }}</a></li>
-    {% endfor %}
-</ul>
+<form id="film_filter" method="get">
+    <div class="c-field--filter">
+        <div class="inner">
+            <label for="id_format">
+                Format:
+                <select name="format" id="id_format">
+                    <option value="all">All formats</option>
+                    {% for format in format_counts %}
+                    <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
+                        {{ format.format_display }} ({{ format.count }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label for="id_type">
+                Type:
+                <select name="type" id="id_type">
+                    <option value="all">All types</option>
+                    {% for type in type_counts %}
+                    <option value="{{ type.type }}"{% if filters.type == type.type %} selected{% endif %}>
+                        {{ type.type_display }} ({{ type.count }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+        <button class="no-js">Filter</button>
+    </div>
+</form>
 
 {% include 'inventory/_unused-rolls.html' %}
 
 {% else %}
-<p>No films found.</p>
+<p>No film found.</p>
 {% endif %}
 </div>
+{% endblock %}
+
+{% block page_js %}
+<script>
+function resetLink(e) {
+    e.preventDefault();
+
+    fetch(`{% url 'inventory-ajax' format='all' type='all' %}`)
+        .then(response => response.text().then(text => {
+            $('#unused-rolls-wrapper').html(text);
+            $('#id_format').val('all');
+            $('#id_type').val('all');
+            window.history.pushState({}, '', `{% url 'inventory' %}`);
+        }));
+}
+
+$('#film_filter select').change(() => {
+    const url = new URL(window.location);
+    const format = $('#id_format').val();
+    const type = $('#id_type').val();
+    const inventoryUrl = `{% url 'inventory-ajax' format='f-none' type='t-none' %}`
+        .replace('f-none', format)
+        .replace('t-none', type);
+
+    fetch(inventoryUrl)
+        .then(response => {
+            response.text().then(text => {
+                $('#unused-rolls-wrapper').html(text);
+                $('.js-reset-filter').click(e => resetLink(e));
+                url.searchParams.set('format', format);
+                url.searchParams.set('type', type);
+                window.history.pushState({}, '', url);
+            });
+        });
+});
+
+$('.js-reset-filter').click(e => resetLink(e));
+</script>
 {% endblock %}
