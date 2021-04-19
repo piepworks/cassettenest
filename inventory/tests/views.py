@@ -229,6 +229,7 @@ class InventoryTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Inventory', html=True)
+        self.assertNotContains(response, '(filtered)')
 
     def test_filtered(self):
         response = self.client.get(reverse('inventory') + '?format=135&type=c41')

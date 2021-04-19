@@ -6,14 +6,14 @@
     <hr />
 
     <h2 id="film-summary">
-        {% if filters.format or filters.type %}
+        {% if filters.format != 'all' or filters.type != 'all' %}
         {{ total_film_count.count }}
         roll{{ total_film_count.count|pluralize }} (filtered),
         <small>
         {% endif %}
         {{ total_rolls }} roll{{ total_rolls|pluralize }}
         {% if project %}remaining{% endif %}
-        {% if filters.format or filters.type %}
+        {% if filters.format != 'all' or filters.type != 'all' %}
         total
         </small>
         {% endif %}
