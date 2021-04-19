@@ -749,7 +749,7 @@ def project_edit(request, pk):
                 roll_count = rolls.count()
 
                 if rolls:
-                    rolls.update(project='all')
+                    rolls.update(project=None)
 
                     plural = pluralize('roll', roll_count)
                     messages.success(
