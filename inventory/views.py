@@ -353,9 +353,7 @@ def inventory(request):
     format_counts = Film.objects.filter(
         roll__owner=request.user,
         roll__status=status_number('storage')
-    ).values('format').annotate(
-        count=Count('format')
-    ).distinct().order_by('format')
+    ).values('format').distinct().order_by('format')
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
@@ -368,9 +366,7 @@ def inventory(request):
     type_counts = Film.objects.filter(
         roll__owner=request.user,
         roll__status=status_number('storage')
-    ).values('type').annotate(
-        count=Count('type')
-    ).distinct().order_by('type')
+    ).values('type').distinct().order_by('type')
 
     # Get the display name of types choices.
     type_choices = dict(Film._meta.get_field('type').flatchoices)

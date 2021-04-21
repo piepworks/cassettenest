@@ -21,7 +21,7 @@
                     <option value="all">All formats</option>
                     {% for format in format_counts %}
                     <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
-                        {{ format.format_display }} ({{ format.count }})
+                        {{ format.format_display }}
                     </option>
                     {% endfor %}
                 </select>
@@ -32,7 +32,7 @@
                     <option value="all">All types</option>
                     {% for type in type_counts %}
                     <option value="{{ type.type }}"{% if filters.type == type.type %} selected{% endif %}>
-                        {{ type.type_display }} ({{ type.count }})
+                        {{ type.type_display }}
                     </option>
                     {% endfor %}
                 </select>
