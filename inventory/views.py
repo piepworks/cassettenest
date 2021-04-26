@@ -495,10 +495,9 @@ def logbook(request):
 
 @login_required
 def ready(request):
-    owner = request.user
     form = ReadyForm()
     rolls = Roll.objects.filter(
-        owner=owner,
+        owner=request.user,
         status=status_number('shot')
     ).order_by(
         '-ended_on',
@@ -611,7 +610,7 @@ def ready(request):
     page_obj = paginator.get_page(page_number)
 
     context = {
-        'owner': owner,
+        'owner': request.user,
         'form': form,
         'rolls': ready_counts,
         'page_obj': page_obj,
