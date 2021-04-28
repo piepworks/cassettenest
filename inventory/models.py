@@ -508,3 +508,14 @@ class Journal(models.Model):
                 else:
                     # If it is the first entry for the roll.
                     return 1
+
+
+# class Frame(models.Model):
+#     roll = models.ForeignKey(Roll, on_delete=models.CASCADE)
+#     frame = models.IntegerField()
+#     date = models.DateField(default=datetime.date.today)
+#     notes = models.TextField(blank=True)
+#     aperture = models.CharField(max_length=20, blank=True)
+#     shutter_speed = models.CharField(max_length=20, blank=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)

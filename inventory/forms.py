@@ -201,3 +201,7 @@ class PatternsForm(forms.Form):
 
 class UploadCSVForm(forms.Form):
     csv = forms.FileField()
+
+
+class FramesForm(ModelForm):
+    pass
