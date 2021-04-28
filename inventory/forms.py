@@ -150,7 +150,7 @@ class UserForm(ModelForm):
         fields = ['username', 'first_name', 'last_name', 'email']
 
 
-class ProfileForm(forms.ModelForm):
+class ProfileForm(ModelForm):
     class Meta:
         model = Profile
         fields = ['timezone']
