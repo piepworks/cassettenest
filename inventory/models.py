@@ -492,9 +492,7 @@ class Journal(models.Model):
         ordering = ['date']
 
     def __str__(self):
-        return 'Journal entry for %s on %s' % (
-            self.roll.code, self.date.strftime('%Y-%m-%d')
-        )
+        return f'Journal entry for {self.roll.code} on {self.date.strftime("%Y-%m-%d")}'
 
     @property
     def starting_frame(self):
