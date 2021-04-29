@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile
+from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile, Frame
 
 
 class RegisterForm(UserCreationForm):
@@ -117,6 +117,15 @@ class JournalForm(ModelForm):
         }
 
 
+class FrameForm(ModelForm):
+    class Meta:
+        model = Frame
+        fields = ['number', 'date', 'notes', 'aperture', 'shutter_speed']
+        widgets = {
+            'date': widgets.DateInput(attrs={'type': 'date'}),
+        }
+
+
 class ReadyForm(forms.Form):
     lab = forms.CharField(
         required=False,
@@ -201,7 +210,3 @@ class PatternsForm(forms.Form):
 
 class UploadCSVForm(forms.Form):
     csv = forms.FileField()
-
-
-class FramesForm(ModelForm):
-    pass

@@ -46,6 +46,12 @@ urlpatterns = [
     path('roll/<int:roll_pk>/journal/<int:entry_pk>/edit/', views.roll_journal_edit, name='roll-journal-edit'),
     path('roll/<int:roll_pk>/journal/<int:entry_pk>/delete/', views.roll_journal_delete, name='roll-journal-delete'),
 
+    # Frames for a Roll
+    path('roll/<int:roll_pk>/frame/add/', views.roll_frame_add, name='roll-frame-add'),
+    path('roll/<int:roll_pk>/frame/<int:number>/', views.roll_frame_detail, name='roll-frame-detail'),
+    path('roll/<int:roll_pk>/frame/<int:number>/edit/', views.roll_frame_edit, name='roll-frame-edit'),
+    path('roll/<int:roll_pk>/frame/<int:number>/delete/', views.roll_frame_delete, name='roll-frame-delete'),
+
     # Projects
     path('projects/', views.projects, name='projects'),
     path('project/add/', views.project_add, name='project-add'),

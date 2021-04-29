@@ -33,6 +33,7 @@ from .forms import (
     FilmForm,
     UserForm,
     UploadCSVForm,
+    FrameForm,
 )
 from .utils import (
     development_statuses,
@@ -1328,8 +1329,7 @@ def roll_journal_detail(request, roll_pk, entry_pk):
 
 @login_required
 def roll_journal_add(request, roll_pk):
-    owner = request.user
-    roll = get_object_or_404(Roll, pk=roll_pk, owner=owner)
+    roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
 
     if request.method == 'POST':
         form = JournalForm(request.POST)
@@ -1365,7 +1365,7 @@ def roll_journal_add(request, roll_pk):
 
         form = JournalForm(initial={'frame': starting_frame})
         context = {
-            'owner': owner,
+            'owner': request.user,
             'roll': roll,
             'form': form,
             'action': 'Add',
@@ -1442,6 +1442,45 @@ def roll_journal_delete(request, roll_pk, entry_pk):
         'Journal entry for %s successfully deleted.' % (entry_date)
     )
     return redirect(reverse('roll-detail', args=(roll.id,)))
+
+
+@login_required
+def roll_frame_add(request, roll_pk):
+    roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
+    form = FrameForm()
+
+    if request.method == 'POST':
+        pass
+    else:
+        context = {
+            'roll': roll,
+            'action': 'Add',
+            'form': form,
+            'js_needed': True,
+            'wc_needed': True,
+        }
+
+        return render(
+            request,
+            'inventory/roll_frame_add_edit.html',
+            context
+        )
+
+
+@login_required
+def roll_frame_detail(request, roll_pk, number):
+    pass
+
+
+@login_required
+def roll_frame_edit(request, roll_pk, number):
+    pass
+
+
+@require_POST
+@login_required
+def roll_frame_delete(request, roll_pk, number):
+    pass
 
 
 @login_required

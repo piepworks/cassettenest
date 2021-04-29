@@ -1,0 +1,27 @@
+{% extends 'base_site.html' %}
+
+{% block title %}{{ action }} frame for {{ roll }}{% endblock %}
+
+{% block content %}
+<div class="raw">
+    <h1>{{ action }} frame for {{ roll }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {% include 'inventory/_form-field.html' with field=field %}
+        {% endfor %}
+
+        <div class="action">
+            <input type="submit" value="Save" />
+            <a href="{% url 'roll-detail' roll.id %}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block page_js %}
+<script>
+    {% include 'js/markdown-autocomplete.js' %}
+</script>
+{% endblock %}
