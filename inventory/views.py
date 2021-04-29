@@ -19,7 +19,7 @@ from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
 import requests
-from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll
+from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll, Frame
 from .forms import (
     CameraForm,
     CameraBackForm,
@@ -1447,11 +1447,19 @@ def roll_journal_delete(request, roll_pk, entry_pk):
 @login_required
 def roll_frame_add(request, roll_pk):
     roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
-    form = FrameForm()
 
     if request.method == 'POST':
         pass
     else:
+        try:
+            starting_number = Frame.objects.filter(
+                roll=roll
+            ).reverse()[0].number + 1
+        except IndexError:
+            starting_number = 1
+
+        form = FrameForm(initial={'number': starting_number})
+
         context = {
             'roll': roll,
             'action': 'Add',
