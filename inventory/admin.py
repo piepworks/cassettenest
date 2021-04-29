@@ -11,6 +11,7 @@ from .models import (
     Profile,
     Project,
     Roll,
+    Frame,
 )
 from .utils_paddle import paddle_plan_name
 
@@ -181,6 +182,7 @@ admin.site.register(Camera, CameraAdmin)
 admin.site.register(CameraBack, CameraBackAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Journal, JournalAdmin)
+admin.site.register(Frame)
 
 # Customize the default User admin.
 admin.site.unregister(User)
