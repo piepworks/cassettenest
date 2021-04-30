@@ -9,9 +9,12 @@
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
-            {% include 'inventory/_form-field.html' with field=field %}
+            {% if field.name == 'aperture' or field.name == 'shutter_speed'%}
+                {% include 'inventory/_form-field.html' with field=field progressive_link=True %}
+            {% else %}
+                {% include 'inventory/_form-field.html' with field=field %}
+            {% endif %}
         {% endfor %}
-
         <div class="action">
             <input type="submit" value="Save" />
             <a href="{% url 'roll-detail' roll.id %}">Cancel</a>
@@ -22,6 +25,7 @@
 
 {% block page_js %}
 <script>
+    {% include 'js/frame-add-edit.js' %}
     {% include 'js/markdown-autocomplete.js' %}
 </script>
 {% endblock %}

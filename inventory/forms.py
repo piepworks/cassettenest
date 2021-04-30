@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile, Frame
+from .utils import apertures, shutter_speeds
 
 
 class RegisterForm(UserCreationForm):
@@ -118,9 +119,17 @@ class JournalForm(ModelForm):
 
 
 class FrameForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FrameForm, self).__init__(*args, **kwargs)
+        self.fields['aperture'].label = 'Or add a custom aperture'
+        self.fields['shutter_speed'].label = 'Or add a custom shutter speed'
+
+    preset_aperture = forms.ChoiceField(choices=apertures, label='Aperture')
+    preset_shutter_speed = forms.ChoiceField(choices=shutter_speeds, label='Shutter speed')
+
     class Meta:
         model = Frame
-        fields = ['number', 'date', 'notes', 'aperture', 'shutter_speed']
+        fields = ['number', 'date', 'preset_aperture', 'aperture', 'preset_shutter_speed', 'shutter_speed', 'notes']
         widgets = {
             'date': widgets.DateInput(attrs={'type': 'date'}),
         }

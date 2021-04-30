@@ -1450,6 +1450,8 @@ def roll_frame_add(request, roll_pk):
 
     if request.method == 'POST':
         pass
+        # Check for custom entry for aperture and shutter and use them if
+        # present, otherwise use the dropdown presets.
     else:
         try:
             starting_number = Frame.objects.filter(
