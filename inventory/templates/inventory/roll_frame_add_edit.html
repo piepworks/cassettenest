@@ -8,6 +8,7 @@
 
     <form method="post">
         {% csrf_token %}
+        {# TODO: Don’t loop--just enter these manually. It’ll be less confusing. #}
         {% for field in form %}
             {% if field.name == 'aperture_preset' or field.name == 'shutter_speed_preset' %}
                 {% include 'inventory/_form-field.html' with field=field progressive=True primary=True %}
@@ -28,7 +29,6 @@
 {% block page_js %}
 <script>
     {% include 'js/progressive-field.js' %}
-    {% include 'js/frame-add-edit.js' %}
     {% include 'js/markdown-autocomplete.js' %}
 </script>
 {% endblock %}

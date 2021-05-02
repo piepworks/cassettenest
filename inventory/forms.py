@@ -121,8 +121,8 @@ class JournalForm(ModelForm):
 class FrameForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(FrameForm, self).__init__(*args, **kwargs)
-        self.fields['aperture'].label = 'Or add a custom aperture'
-        self.fields['shutter_speed'].label = 'Or add a custom shutter speed'
+        self.fields['aperture'].label = 'Or enter your own aperture.'
+        self.fields['shutter_speed'].label = 'Or enter your own shutter speed.'
 
     aperture_preset = forms.ChoiceField(choices=apertures, label='Aperture')
     shutter_speed_preset = forms.ChoiceField(choices=shutter_speeds, label='Shutter speed')
