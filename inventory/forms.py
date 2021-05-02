@@ -124,12 +124,12 @@ class FrameForm(ModelForm):
         self.fields['aperture'].label = 'Or add a custom aperture'
         self.fields['shutter_speed'].label = 'Or add a custom shutter speed'
 
-    preset_aperture = forms.ChoiceField(choices=apertures, label='Aperture')
-    preset_shutter_speed = forms.ChoiceField(choices=shutter_speeds, label='Shutter speed')
+    aperture_preset = forms.ChoiceField(choices=apertures, label='Aperture')
+    shutter_speed_preset = forms.ChoiceField(choices=shutter_speeds, label='Shutter speed')
 
     class Meta:
         model = Frame
-        fields = ['number', 'date', 'preset_aperture', 'aperture', 'preset_shutter_speed', 'shutter_speed', 'notes']
+        fields = ['number', 'date', 'aperture_preset', 'aperture', 'shutter_speed_preset', 'shutter_speed', 'notes']
         widgets = {
             'date': widgets.DateInput(attrs={'type': 'date'}),
         }

@@ -9,8 +9,10 @@
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
-            {% if field.name == 'aperture' or field.name == 'shutter_speed'%}
-                {% include 'inventory/_form-field.html' with field=field progressive_link=True %}
+            {% if field.name == 'aperture_preset' or field.name == 'shutter_speed_preset' %}
+                {% include 'inventory/_form-field.html' with field=field progressive=True primary=True %}
+            {% elif field.name == 'aperture' or field.name == 'shutter_speed'%}
+                {% include 'inventory/_form-field.html' with field=field progressive=True %}
             {% else %}
                 {% include 'inventory/_form-field.html' with field=field %}
             {% endif %}
@@ -25,6 +27,7 @@
 
 {% block page_js %}
 <script>
+    {% include 'js/progressive-field.js' %}
     {% include 'js/frame-add-edit.js' %}
     {% include 'js/markdown-autocomplete.js' %}
 </script>
