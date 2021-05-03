@@ -1,18 +1,21 @@
-const $primaryFields = $('.c-field--progressive-primary');
-const $secondaryFields = $('.c-field--progressive').not('.c-field--progressive-primary');
+const $progressiveFields = $('.c-field--progressive');
 
-$primaryFields.each((index, element) =>{
-    console.log('primary index', index);
-    console.log('primary element', element);
+function progressiveLinkSetup(element) {
+    const $progressiveLink = $(`<a>${$(element).data('progressive-text')}</a>`);
+    const $element = $(element);
+    let clickEvent;
 
-    const primaryLabel = `…or enter your own ${$(element).data('label').toLowerCase()}.`;
-    $(element).find('.js-link').append(`<a>${primaryLabel}</a>`);
-});
+    $progressiveLink.click(() => {
+        if ($element.hasClass('c-field--progressive-primary')) {
+            clickEvent = 'primary click!';
+        } else {
+            clickEvent = 'secondary click!';
+        }
 
-$secondaryFields.each((index, element) => {
-    console.log('secondary index', index);
-    console.log('secondary element', element);
+        console.log('clickEvent', clickEvent);
+    });
 
-    const secondaryLabel = $(element).data('label').replace('Or', '…or').replace('enter your own', 'select a predefined');
-    $(element).find('.js-link').append(`<a>${secondaryLabel}</a>`);
-});
+    $element.find('.js-link').append($progressiveLink);
+}
+
+$progressiveFields.each((index, element) => progressiveLinkSetup(element));
