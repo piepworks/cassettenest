@@ -8,15 +8,10 @@ function progressiveLinkSetup(element) {
     if ($element.hasClass('c-field--progressive-primary')) {
         primaryField = true;
     } else {
+        const primaryLabel = $element.prev('.c-field--progressive').data('label');
+
         $element.hide();
-        const oldLabel = $element.find('label').text();
-        const newLabel = oldLabel.replace('Or', '').replace('.', '');
-
-        // TODO: just change the label of the secondary field to the label
-        // of the primary field. The only thing differentiating them could just
-        // be the JS-clicky text.
-
-        $element.find('label').text(newLabel.substring(1)[0].toUpperCase() + newLabel.substring(2));
+        $element.find('label').text(primaryLabel);
     }
 
     $progressiveLink.click(() => {
