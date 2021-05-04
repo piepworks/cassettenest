@@ -12,11 +12,11 @@
         {% include 'inventory/_form-field.html' with field=form.number %}
         {% include 'inventory/_form-field.html' with field=form.date %}
 
-        {% include 'inventory/_form-field.html' with field=form.aperture_preset progressive=True primary=True progressive_text='Primary aperture!' %}
-        {% include 'inventory/_form-field.html' with field=form.aperture progressive=True progressive_text='Secondary!! aperture' %}
+        {% include 'inventory/_form-field.html' with field=form.aperture_preset progressive=True primary=True progressive_text='…or enter avalue.' %}
+        {% include 'inventory/_form-field.html' with field=form.aperture progressive=True progressive_text='…or choose a preset.' %}
 
-        {% include 'inventory/_form-field.html' with field=form.shutter_speed_preset progressive=True primary=True progressive_text='Primary! shuuuutter speed' %}
-        {% include 'inventory/_form-field.html' with field=form.shutter_speed progressive=True progressive_text='Secondary!! shuuuuutter sppeeed' %}
+        {% include 'inventory/_form-field.html' with field=form.shutter_speed_preset progressive=True primary=True progressive_text='…or enter a value.' %}
+        {% include 'inventory/_form-field.html' with field=form.shutter_speed progressive=True progressive_text='…or choose a preset.' %}
 
         {% include 'inventory/_form-field.html' with field=form.notes %}
 
