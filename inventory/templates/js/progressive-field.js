@@ -3,15 +3,17 @@ const $progressiveFields = $('.c-field--progressive');
 function progressiveLinkSetup(element) {
     const $element = $(element);
     const $progressiveLink = $(`<a>${$element.data('progressive-text')}</a>`);
-    let primaryField;
+    const labelOverride = ($element.data('label-override')) ? $element.data('label-override') : false;
+    let primaryField = false;
 
     if ($element.hasClass('c-field--progressive-primary')) {
         primaryField = true;
     } else {
         const primaryLabel = $element.prev('.c-field--progressive').data('label');
+        const fieldLabel = (labelOverride) ? labelOverride : primaryLabel;
 
         $element.hide();
-        $element.find('label').text(primaryLabel);
+        $element.find('label').text(fieldLabel);
     }
 
     $progressiveLink.click(() => {
