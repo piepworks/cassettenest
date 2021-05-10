@@ -13,7 +13,7 @@
     data-label="{{ field.field.label }}">
     {% if field.field.widget.input_type == 'checkbox' %}
         {% if field.help_text %}
-        <small class="c-field__help">{{ field.help_text }}</small>
+            <small class="c-field__help">{{ field.help_text }}</small>
         {% endif %}
         <label for="{{ field.id_for_label }}">
             {{ field }}
@@ -23,7 +23,7 @@
         <fieldset>
             <legend>{{ field.label }}</legend>
             {% if field.help_text %}
-            <div><small class="c-field__help">{{ field.help_text }}</small></div>
+                <div><small class="c-field__help">{{ field.help_text }}</small></div>
             {% endif %}
             {% for key, value in field.field.choices %}
                 <div>
@@ -37,12 +37,20 @@
     {% else %}
         <label for="{{ field.id_for_label }}">{{ field.label }}</label>
         {% if field.help_text and field.label != 'Username' %}
-        <small class="c-field__help">{{ field.help_text }}</small>
+            <small class="c-field__help">{{ field.help_text }}</small>
         {% endif %}
         {% if not field.field.widget.input_type %}
-        {% include 'inventory/_form-markdown-toolbar.html' with id=field.id_for_label %}
+            {% include 'inventory/_form-markdown-toolbar.html' with id=field.id_for_label %}
         {% endif %}
+        {% if enhanced_label.before %}
+            <span class="subdued"{% if enhanced_label.before_tooltip %} title="{{ enhanced_label.before_tooltip }}"{% endif %}>{{ enhanced_label.before }}</span>
+        {% endif %}
+
         {{ field }}
+
+        {% if enhanced_label.after %}
+            <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
+        {% endif %}
     {% endif %}
     {% if progressive %}
         <div class="js-link"></div>

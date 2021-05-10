@@ -57,4 +57,9 @@
 
         label { margin-right: 1rem; }
     }
+
+    .subdued {
+        color: lighten($bw, 20%);
+        font-size: 0.8em;
+    }
 }

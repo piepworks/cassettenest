@@ -1462,10 +1462,21 @@ def roll_frame_add(request, roll_pk):
 
         form = FrameForm(initial={'number': starting_number})
 
+        enhanced_label_aperture = {
+            'before': 'ƒ/'
+        }
+
+        enhanced_label_shutter_speed = {
+            'after': 's',
+            'after_tooltip': 'second(s)',
+        }
+
         context = {
             'roll': roll,
             'action': 'Add',
             'form': form,
+            'enhanced_label_aperture': enhanced_label_aperture,
+            'enhanced_label_shutter_speed': enhanced_label_shutter_speed,
             'js_needed': True,
             'wc_needed': True,
         }
