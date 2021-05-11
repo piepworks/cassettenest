@@ -1,5 +1,6 @@
 {% extends 'base_site.html' %}
 {% load markdown_deux_tags %}
+{% load waffle_tags %}
 
 {% block title %}{{ roll }}{% endblock %}
 
@@ -125,7 +126,10 @@
 
 {% if roll.status != '01_storage' %}
 <div class="action">
+    {% flag 'frames' %}
     <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
+    {% endflag %}
+
     <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
 </div>
 {% endif %}
