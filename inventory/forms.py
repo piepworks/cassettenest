@@ -124,8 +124,8 @@ class FrameForm(ModelForm):
         self.fields['aperture'].label = 'Or enter an aperture.'
         self.fields['shutter_speed'].label = 'Or enter a shutter speed.'
 
-    aperture_preset = forms.ChoiceField(choices=apertures, label='Aperture')
-    shutter_speed_preset = forms.ChoiceField(choices=shutter_speeds, label='Shutter speed')
+    aperture_preset = forms.ChoiceField(choices=apertures, label='Aperture', required=False)
+    shutter_speed_preset = forms.ChoiceField(choices=shutter_speeds, label='Shutter speed', required=False)
 
     class Meta:
         model = Frame
