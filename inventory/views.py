@@ -1451,9 +1451,27 @@ def roll_frame_add(request, roll_pk):
     roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
 
     if request.method == 'POST':
-        pass
-        # Check for custom entry for aperture and shutter and use them if
-        # present, otherwise use the dropdown presets.
+        form = FrameForm(request.POST)
+
+        if form.is_valid():
+            frame = form.save(commit=False)
+            frame.roll = roll
+
+            if form.cleaned_data['aperture']:
+                frame.aperture = form.cleaned_data['aperture']
+            elif form.cleaned_data['aperture_preset']:
+                frame.aperture = form.cleaned_data['aperture_preset']
+
+            if form.cleaned_data['shutter_speed']:
+                frame.shutter_speed = form.cleaned_data['shutter_speed']
+            elif form.cleaned_data['shutter_speed_preset']:
+                frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
+
+            frame.save()
+
+            messages.success(request, 'Frame saved!')
+
+            return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         try:
             starting_number = Frame.objects.filter(
