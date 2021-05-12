@@ -10,6 +10,7 @@
         {% if top_field %} c-field--progressive__top{% endif %}"
     {% if progressive_text %} data-progressive-text="{{ progressive_text }}"{% endif %}
     {% if label_override %} data-label-override="{{ label_override }}"{% endif %}
+    {% if show_first %} data-show-first="self"{% endif %}
     data-label="{{ field.field.label }}">
     {% if field.field.widget.input_type == 'checkbox' %}
         {% if field.help_text %}

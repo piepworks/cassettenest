@@ -1,4 +1,5 @@
 {% extends 'base_site.html' %}
+{% load capture_tags %}
 
 {% block title %}{{ action }} frame for {{ roll }}{% endblock %}
 
@@ -12,11 +13,13 @@
         {% include 'inventory/_form-field.html' with field=form.number %}
         {% include 'inventory/_form-field.html' with field=form.date %}
 
+        {% capture as first_aperture silent %}{% if frame.aperture %}True{% endif %}{% endcapture %}
         {% include 'inventory/_form-field.html' with field=form.aperture_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_aperture %}
-        {% include 'inventory/_form-field.html' with field=form.aperture progressive=True progressive_text='…or choose a preset.' enhanced_label=enhanced_label_aperture %}
+        {% include 'inventory/_form-field.html' with field=form.aperture progressive=True show_first=first_aperture progressive_text='…or choose a preset.' enhanced_label=enhanced_label_aperture %}
 
+        {% capture as first_shutter silent %}{% if frame.shutter_speed %}True{% endif %}{% endcapture %}
         {% include 'inventory/_form-field.html' with field=form.shutter_speed_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_shutter_speed %}
-        {% include 'inventory/_form-field.html' with field=form.shutter_speed progressive=True progressive_text='…or choose a preset.' enhanced_label=enhanced_label_shutter_speed %}
+        {% include 'inventory/_form-field.html' with field=form.shutter_speed progressive=True show_first=first_shutter progressive_text='…or choose a preset.' enhanced_label=enhanced_label_shutter_speed %}
 
         {% include 'inventory/_form-field.html' with field=form.notes %}
 

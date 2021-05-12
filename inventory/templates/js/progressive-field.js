@@ -9,11 +9,17 @@ function progressiveLinkSetup(element) {
     if ($element.hasClass('c-field--progressive-primary')) {
         primaryField = true;
     } else {
-        const primaryLabel = $element.prev('.c-field--progressive').data('label');
+        const $primaryField = $element.prev('.c-field--progressive');
+        const primaryLabel = $primaryField.data('label');
         const fieldLabel = (labelOverride) ? labelOverride : primaryLabel;
 
-        $element.hide();
         $element.find('label').text(fieldLabel);
+
+        if($element.data('show-first') === 'self') {
+            $primaryField.hide();
+        } else {
+            $element.hide();
+        }
     }
 
     $progressiveLink.click(() => {
@@ -22,6 +28,7 @@ function progressiveLinkSetup(element) {
         if (primaryField) {
             $element.next('.c-field--progressive').show();
         } else {
+            $element.find('input').val('');
             $element.prev('.c-field--progressive').show();
         }
     });
