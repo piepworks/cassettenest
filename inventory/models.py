@@ -515,8 +515,16 @@ class Frame(models.Model):
     number = models.IntegerField()
     date = models.DateField(default=datetime.date.today)
     notes = models.TextField(blank=True)
-    aperture = models.CharField(max_length=20, blank=True)
-    shutter_speed = models.CharField(max_length=20, blank=True)
+    aperture = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text='A custom value here will always override the value in the dropdown.'
+    )
+    shutter_speed = models.CharField(
+        max_length=20,
+        blank=True,
+        help_text='A custom value here will always override the value in the dropdown.'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -1531,6 +1531,11 @@ def roll_frame_edit(request, roll_pk, number):
 
     if request.method == 'POST':
         pass
+        # If the value that comes back from the dropdown and the input
+        # and the input is the same as the current value but the dropdown is
+        # different, use the dropdown.
+        #
+        # This is to make sure things work as expected without JavaScript.
     else:
         form = FrameForm(instance=frame)
 
