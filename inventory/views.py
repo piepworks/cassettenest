@@ -1512,7 +1512,16 @@ def roll_frame_add(request, roll_pk):
 
 @login_required
 def roll_frame_detail(request, roll_pk, number):
-    pass
+    frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
+    context = {
+        'frame': frame
+    }
+
+    return render(
+        request,
+        'inventory/roll_frame_detail.html',
+        context
+    )
 
 
 @login_required
