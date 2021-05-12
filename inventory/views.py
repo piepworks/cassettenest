@@ -1225,12 +1225,14 @@ def roll_detail(request, pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
     journal_entries = Journal.objects.filter(roll=roll).order_by('date')
+    frames = Frame.objects.filter(roll=roll).order_by('number')
 
     context = {
         'owner': owner,
         'roll': roll,
         'development_statuses': development_statuses,
         'journal_entries': journal_entries,
+        'frames': frames,
         'js_needed': True,
     }
 

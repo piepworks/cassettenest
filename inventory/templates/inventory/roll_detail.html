@@ -87,8 +87,21 @@
     {% endif %}
 </ul>
 
+{% if frames %}
+{% flag 'frames' %}
+<div class="frames overflow-x">
+    <h3>Frames</h3>
+    <ul>
+        {% for frame in frames %}
+        <li><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+{% endflag %}
+{% endif %}
+
+{% if journal_entries %}
 <div class="journal-entries overflow-x">
-    {% if journal_entries %}
     <table>
         <thead>
             <tr>
@@ -121,8 +134,8 @@
             {% endfor %}
         </tbody>
     </table>
-    {% endif %}
 </div>
+{% endif %}
 
 {% if roll.status != '01_storage' %}
 <div class="action">
