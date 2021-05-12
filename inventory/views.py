@@ -1527,7 +1527,29 @@ def roll_frame_detail(request, roll_pk, number):
 
 @login_required
 def roll_frame_edit(request, roll_pk, number):
-    pass
+    frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
+
+    if request.method == 'POST':
+        pass
+    else:
+        form = FrameForm(instance=frame)
+
+        context = {
+            'form': form,
+            'roll': frame.roll,
+            'frame': frame,
+            'action': 'Edit',
+            'js_needed': True,
+            'wc_needed': True,
+        }
+
+        print(f'frame: {frame}')
+
+        return render(
+            request,
+            'inventory/roll_frame_add_edit.html',
+            context
+        )
 
 
 @require_POST

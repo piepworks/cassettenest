@@ -1,8 +1,16 @@
 <div class="action">
     {% if parent_item %}
-        <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id item.id %}">
+        {% if key %}
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id key %}">
+        {% else %}
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id item.id %}">
+        {% endif %}
     {% else %}
-        <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' item.id %}">
+        {% if key %}
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' key %}">
+        {% else %}
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' item.id %}">
+        {% endif %}
     {% endif %}
             {% include 'inventory/_github-icon.html' with id='pencil' title='Edit '|add:name %}
         </a>

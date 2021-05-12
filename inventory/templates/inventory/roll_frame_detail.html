@@ -7,9 +7,9 @@
 <div class="raw">
     <header class="c-heading">
         <div class="flex">
-            <h1>{{ frame }}</h1>
+            <h1>Frame #{{ frame.number }} of <a href="{% url 'roll-detail' frame.roll.id %}">{{ frame.roll }}</a></h1>
 
-            {% include 'inventory/_heading-buttons.html' with item=frame parent_item=frame.roll url='roll-frame' name='frame' %}
+            {% include 'inventory/_heading-buttons.html' with item=frame key=frame.number parent_item=frame.roll url='roll-frame' name='frame' %}
         </div>
     </div>
 
