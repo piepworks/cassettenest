@@ -1,9 +1,31 @@
 {% extends 'base_site.html' %}
+{% load markdown_deux_tags %}
 
 {% block title %}{{ frame }}{% endblock %}
 
 {% block content %}
 <div class="raw">
-    <h1>{{ frame }}</h1>
+    <header class="c-heading">
+        <div class="flex">
+            <h1>{{ frame }}</h1>
+
+            {% include 'inventory/_heading-buttons.html' with item=frame parent_item=frame.roll url='roll-frame' name='frame' %}
+        </div>
+    </div>
+
+    <ul>
+        <li>Date: {{ frame.date }}</li>
+        {% if frame.aperture %}
+            <li>Aperture: {{ frame.aperture }}</li>
+        {% endif %}
+        {% if frame.shutter_speed %}
+            <li>Shutter speed: {{ frame.shutter_speed }}</li>
+        {% endif %}
+    </ul>
+
+    {% if frame.notes %}
+        <h2>Notes</h2>
+        <div>{{ frame.notes|markdown }}</div>
+    {% endif %}
 </div>
 {% endblock %}
