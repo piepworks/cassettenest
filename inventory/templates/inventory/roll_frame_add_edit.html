@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="raw">
-    <h1>{{ action }} frame for {{ roll }}</h1>
+    <h1>{{ action }} frame for <a href="{% url 'roll-detail' roll.id %}">{{ roll }}</a></h1>
 
     <form method="post">
         {% csrf_token %}
@@ -24,8 +24,10 @@
         {% include 'inventory/_form-field.html' with field=form.notes %}
 
         <div class="action">
-            <input type="submit" value="Save" />
-            <a href="{% url 'roll-detail' roll.id %}">Cancel</a>
+            <p><input type="submit" value="Save" /> <a href="{% url 'roll-detail' roll.id %}">Cancel</a></p>
+            {% if action == 'Add' %}
+            <p><input type="submit" class="secondary" name="another" value="Save frame and add another" /></p>
+            {% endif %}
         </div>
     </form>
 </div>

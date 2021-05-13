@@ -1473,7 +1473,11 @@ def roll_frame_add(request, roll_pk):
             try:
                 frame.save()
                 messages.success(request, 'Frame saved!')
-                return redirect(reverse('roll-detail', args=(roll.id,)))
+
+                if 'another' in request.POST:
+                    return redirect(reverse('roll-frame-add', args=(frame.roll.id,)))
+                else:
+                    return redirect(reverse('roll-detail', args=(roll.id,)))
             except IntegrityError:
                 messages.error(request, f'This roll already has frame #{frame.number}.')
                 return redirect(reverse('roll-frame-add', args=(frame.roll.id,)))
@@ -1481,7 +1485,7 @@ def roll_frame_add(request, roll_pk):
         try:
             starting_number = Frame.objects.filter(
                 roll=roll
-            ).reverse()[0].number + 1
+            ).order_by('number').reverse()[0].number + 1
         except IndexError:
             starting_number = 1
 
