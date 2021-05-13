@@ -1459,6 +1459,7 @@ def roll_frame_add(request, roll_pk):
             frame = form.save(commit=False)
             frame.roll = roll
 
+            # Custom fields take precedence over dropdown presets.
             if form.cleaned_data['aperture']:
                 frame.aperture = form.cleaned_data['aperture']
             elif form.cleaned_data['aperture_preset']:
@@ -1469,11 +1470,13 @@ def roll_frame_add(request, roll_pk):
             elif form.cleaned_data['shutter_speed_preset']:
                 frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
 
-            frame.save()
-
-            messages.success(request, 'Frame saved!')
-
-            return redirect(reverse('roll-detail', args=(roll.id,)))
+            try:
+                frame.save()
+                messages.success(request, 'Frame saved!')
+                return redirect(reverse('roll-detail', args=(roll.id,)))
+            except IntegrityError:
+                messages.error(request, f'This roll already has frame #{frame.number}.')
+                return redirect(reverse('roll-frame-add', args=(frame.roll.id,)))
     else:
         try:
             starting_number = Frame.objects.filter(
@@ -1530,12 +1533,45 @@ def roll_frame_edit(request, roll_pk, number):
     frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
 
     if request.method == 'POST':
-        pass
-        # If the value that comes back from the dropdown and the input
-        # and the input is the same as the current value but the dropdown is
-        # different, use the dropdown.
-        #
-        # This is to make sure things work as expected without JavaScript.
+        form = FrameForm(request.POST, instance=frame)
+
+        if form.is_valid():
+            frame = form.save(commit=False)
+
+            # TL;DR whichever value is changed takes precedence.
+            #
+            # Example:
+            #
+            # If values comes back from both the dropdown preset and the input…
+            # and the input is the same as the current value…
+            # but the preset dropdown is different,
+            # use the preset dropdown value.
+            #
+            # This is to make sure things work as expected without JavaScript.
+            if (
+                frame.aperture == form.cleaned_data['aperture'] and
+                frame.aperture != form.cleaned_data['aperture_preset']
+            ):
+                frame.aperture = form.cleaned_data['aperture_preset']
+            else:
+                frame.aperture = form.cleaned_data['aperture']
+
+            if (
+                frame.shutter_speed == form.cleaned_data['shutter_speed'] and
+                frame.shutter_speed != form.cleaned_data['shutter_speed_preset']
+            ):
+                frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
+            else:
+                frame.shutter_speed = form.cleaned_data['shutter_speed']
+
+            try:
+                frame.save()
+                messages.success(request, 'Frame updated!')
+                return redirect(reverse('roll-frame-detail', args=(frame.roll.id, frame.number,)))
+            except IntegrityError:
+                messages.error(request, f'This roll already has frame #{frame.number}.')
+                return redirect(reverse('roll-frame-edit', args=(frame.roll.id, number,)))
+
     else:
         form = FrameForm(instance=frame)
 
