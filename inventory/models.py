@@ -512,7 +512,7 @@ class Journal(models.Model):
 
 class Frame(models.Model):
     roll = models.ForeignKey(Roll, on_delete=models.CASCADE)
-    number = models.IntegerField()
+    number = models.PositiveSmallIntegerField()
     date = models.DateField(default=datetime.date.today)
     notes = models.TextField(blank=True)
     aperture = models.CharField(
