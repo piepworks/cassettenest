@@ -115,6 +115,12 @@
 {% endflag %}
 {% endif %}
 
+{% flag 'frames' %}
+<div class="action">
+    <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
+</div>
+{% endflag %}
+
 {% if journal_entries %}
 <div class="journal-entries overflow-x">
     <h3>Journal Entries</h3>
@@ -155,10 +161,6 @@
 
 {% if roll.status != '01_storage' %}
 <div class="action">
-    {% flag 'frames' %}
-    <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
-    {% endflag %}
-
     {% if journal_entries %}
     <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
     {% endif %}
