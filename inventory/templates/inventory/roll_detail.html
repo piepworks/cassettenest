@@ -91,17 +91,33 @@
 {% flag 'frames' %}
 <div class="frames overflow-x">
     <h3>Frames</h3>
-    <ul>
-        {% for frame in frames %}
-        <li><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></li>
-        {% endfor %}
-    </ul>
+    <table>
+        <thead>
+            <tr>
+                <th class="entry-number">#</th>
+                <th class="entry-date">Date</th>
+                <th class="entry-aperture">Aperture</th>
+                <th class="entry-shutter">Shutter Speed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for frame in frames %}
+            <tr>
+                <td><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
+                <td>{{ frame.date }}</td>
+                <td>{{ frame.aperture }}</td>
+                <td>{{ frame.shutter_speed }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endflag %}
 {% endif %}
 
 {% if journal_entries %}
 <div class="journal-entries overflow-x">
+    <h3>Journal Entries</h3>
     <table>
         <thead>
             <tr>

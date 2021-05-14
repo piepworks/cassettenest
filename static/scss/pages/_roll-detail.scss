@@ -1,5 +1,6 @@
 .development { background: $light; }
 
+.frames,
 .journal-entries {
     margin: 3rem 0;
 
@@ -10,7 +11,8 @@
 
         th.entry {
             &-date,
-            &-frames { width: 25%; }
+            &-frames,
+            &-frame { width: 25%; }
         }
 
         th,
@@ -31,6 +33,7 @@
 .meta {
     list-style: none;
     padding: 0;
+    margin-bottom: 3rem;
 
     li + li { margin-top: 1rem; }
 }
