@@ -16,10 +16,10 @@
     <ul>
         <li>Date: {{ frame.date }}</li>
         {% if frame.aperture %}
-            <li>Aperture: {{ frame.aperture }}</li>
+            <li>Aperture: <span class="subdued">ƒ/</span> {{ frame.aperture }}</li>
         {% endif %}
         {% if frame.shutter_speed %}
-            <li>Shutter speed: {{ frame.shutter_speed }}</li>
+            <li>Shutter speed: {{ frame.shutter_speed }} <span class="subdued" title="second(s)">s</span></li>
         {% endif %}
     </ul>
 

@@ -20,3 +20,8 @@ a {
         .timezone { color: $medium; }
     }
 }
+
+.subdued {
+    color: lighten($bw, 20%);
+    font-size: 0.8em;
+}
