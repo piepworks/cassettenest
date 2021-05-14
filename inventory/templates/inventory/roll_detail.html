@@ -143,7 +143,9 @@
     <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
     {% endflag %}
 
+    {% if journal_entries %}
     <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
+    {% endif %}
 </div>
 {% endif %}
 
