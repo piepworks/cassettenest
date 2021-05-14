@@ -1520,8 +1520,13 @@ def roll_frame_add(request, roll_pk):
 @login_required
 def roll_frame_detail(request, roll_pk, number):
     frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
+    previous_frame = Frame.objects.filter(number=number - 1, roll__id=roll_pk, roll__owner=request.user).first()
+    next_frame = Frame.objects.filter(number=number + 1, roll__id=roll_pk, roll__owner=request.user).first()
+
     context = {
         'frame': frame,
+        'previous_frame': previous_frame,
+        'next_frame': next_frame,
         'js_needed': True,
     }
 

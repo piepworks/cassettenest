@@ -3,6 +3,8 @@
 
 {% block title %}{{ frame }}{% endblock %}
 
+{% block bodytag %}class="frame-detail"{% endblock %}
+
 {% block content %}
 <div class="raw">
     <header class="c-heading">
@@ -12,6 +14,25 @@
             {% include 'inventory/_heading-buttons.html' with item=frame key=frame.number parent_item=frame.roll url='roll-frame' name='frame' %}
         </div>
     </div>
+
+    {% if previous_frame or next_frame %}
+    <ol class="nav">
+        {% if previous_frame %}
+            <li>
+                <a title="Previous frame: {{ previous_frame.date}}" href="{% url 'roll-frame-detail' frame.roll.id previous_frame.number %}" class="button icon">
+                    {% include 'inventory/_github-icon.html' with id='arrow-left' %}
+                </a>
+            </li>
+        {% endif %}
+        {% if next_frame %}
+            <li>
+                <a title="Next frame: {{ next_frame.date }}" href="{% url 'roll-frame-detail' frame.roll.id next_frame.number %}" class="button icon">
+                    {% include 'inventory/_github-icon.html' with id='arrow-right' %}
+                </a>
+            </li>
+        {% endif %}
+    </ol>
+    {% endif %}
 
     <ul>
         <li>Date: {{ frame.date }}</li>
