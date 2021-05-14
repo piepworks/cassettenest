@@ -1616,7 +1616,16 @@ def roll_frame_edit(request, roll_pk, number):
 @require_POST
 @login_required
 def roll_frame_delete(request, roll_pk, number):
-    pass
+    frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
+    name = frame.__str__()
+
+    frame.delete()
+
+    messages.success(
+        request,
+        f'{name} successfully deleted.'
+    )
+    return redirect(reverse('roll-detail', args=(roll_pk,)))
 
 
 @login_required
