@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, DetailView, FormView
 from django.db.models import Count, Q
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.contrib.auth import login, authenticate
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -1471,8 +1471,9 @@ def roll_frame_add(request, roll_pk):
                 frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
 
             try:
-                frame.save()
-                messages.success(request, 'Frame saved!')
+                with transaction.atomic():
+                    frame.save()
+                    messages.success(request, 'Frame saved!')
 
                 if 'another' in request.POST:
                     return redirect(reverse('roll-frame-add', args=(frame.roll.id,)))

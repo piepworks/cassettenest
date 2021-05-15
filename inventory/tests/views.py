@@ -1542,7 +1542,18 @@ class FrameViewTests(TestCase):
         self.assertIn('Frame saved!', messages)
 
     def test_frame_create_error(self):
-        pass
+        response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
+            'number': '1',
+            'date': self.today,
+            'aperture': '1',
+            'shutter_speed': '1/500',
+            'notes': 'asdf',
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'This roll already has frame #1.', messages)
 
     def test_frame_create_presets(self):
         pass
