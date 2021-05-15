@@ -1541,6 +1541,22 @@ class FrameViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('Frame saved!', messages)
 
+    def test_frame_create_and_add_another(self):
+        response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture': '1',
+            'shutter_speed': '1/500',
+            'notes': 'asdf',
+            'another': True,
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, expected_url=reverse('roll-frame-add', args=(self.roll.id,)))
+        self.assertIn('Frame saved!', messages)
+
     def test_frame_create_error(self):
         response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
             'number': '1',
@@ -1555,8 +1571,28 @@ class FrameViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn(f'This roll already has frame #1.', messages)
 
+    def test_frame_create_first(self):
+        # First frame of a roll.
+
+        roll = baker.make(Roll, owner=self.user)
+        response = self.client.get(reverse('roll-frame-add', args=(roll.id,)))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['form'].initial['number'], 1)
+
     def test_frame_create_presets(self):
-        pass
+        response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture_preset': '1.4',
+            'shutter_speed_preset': '1/500',
+            'notes': 'asdf',
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Frame saved!', messages)
 
     def test_frame_read(self):
         response = self.client.get(reverse('roll-frame-detail', args=(self.roll.id, 1)))
