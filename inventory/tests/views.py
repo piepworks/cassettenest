@@ -1524,9 +1524,6 @@ class FrameViewTests(TestCase):
             password=self.password,
         )
 
-    def test_frame_create_page(self):
-        pass
-
     def test_frame_create(self):
         response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
             'number': '2',
@@ -1596,6 +1593,11 @@ class FrameViewTests(TestCase):
 
     def test_frame_read(self):
         response = self.client.get(reverse('roll-frame-detail', args=(self.roll.id, 1)))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_frame_update_page(self):
+        response = self.client.get(reverse('roll-frame-edit', args=(self.roll.id, 1)))
 
         self.assertEqual(response.status_code, 200)
 

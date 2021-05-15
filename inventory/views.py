@@ -1607,8 +1607,6 @@ def roll_frame_edit(request, roll_pk, number):
             'wc_needed': True,
         }
 
-        print(f'frame: {frame}')
-
         return render(
             request,
             'inventory/roll_frame_add_edit.html',
