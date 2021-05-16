@@ -105,8 +105,18 @@
             <tr>
                 <td><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
                 <td>{{ frame.date }}</td>
-                <td>{{ frame.aperture }}</td>
-                <td>{{ frame.shutter_speed }}</td>
+                <td>
+                    {% if frame.aperture %}
+                        <span class="subdued">ƒ/</span>
+                        {{ frame.aperture }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if frame.shutter_speed %}
+                        {{ frame.shutter_speed }}
+                        <span class="subdued" title="second(s)">s</span>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
