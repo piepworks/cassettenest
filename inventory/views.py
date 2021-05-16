@@ -1460,20 +1460,21 @@ def roll_frame_add(request, roll_pk):
             frame.roll = roll
 
             # Custom fields take precedence over dropdown presets.
-            if form.cleaned_data['aperture']:
+            if form.cleaned_data['aperture'] != '':
                 frame.aperture = form.cleaned_data['aperture']
-            elif form.cleaned_data['aperture_preset']:
+            elif form.cleaned_data['aperture_preset'] != '':
                 frame.aperture = form.cleaned_data['aperture_preset']
 
-            if form.cleaned_data['shutter_speed']:
+            if form.cleaned_data['shutter_speed'] != '':
                 frame.shutter_speed = form.cleaned_data['shutter_speed']
-            elif form.cleaned_data['shutter_speed_preset']:
+            elif form.cleaned_data['shutter_speed_preset'] != '':
                 frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
 
             try:
                 with transaction.atomic():
                     frame.save()
-                    messages.success(request, 'Frame saved!')
+
+                messages.success(request, 'Frame saved!')
 
                 if 'another' in request.POST:
                     return redirect(reverse('roll-frame-add', args=(frame.roll.id,)))
@@ -1550,36 +1551,24 @@ def roll_frame_edit(request, roll_pk, number):
         if form.is_valid():
             frame = form.save(commit=False)
 
-            # TL;DR whichever value is changed takes precedence.
-            #
-            # Example:
-            #
-            # If values comes back from both the dropdown preset and the input…
-            # and the input is the same as the current value…
-            # but the preset dropdown is different,
-            # use the preset dropdown value.
-            #
-            # This is to make sure things work as expected without JavaScript.
-            if (
-                frame.aperture == form.cleaned_data['aperture'] and
-                frame.aperture != form.cleaned_data['aperture_preset']
-            ):
-                frame.aperture = form.cleaned_data['aperture_preset']
-            else:
+            # Custom fields take precedence over dropdown presets.
+            if form.cleaned_data['aperture'] and form.cleaned_data['aperture_preset'] == '':
                 frame.aperture = form.cleaned_data['aperture']
+            elif form.cleaned_data['aperture_preset'] != '':
+                frame.aperture = form.cleaned_data['aperture_preset']
 
-            if (
-                frame.shutter_speed == form.cleaned_data['shutter_speed'] and
-                frame.shutter_speed != form.cleaned_data['shutter_speed_preset']
-            ):
-                frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
-            else:
+            if form.cleaned_data['shutter_speed'] and form.cleaned_data['shutter_speed_preset'] == '':
                 frame.shutter_speed = form.cleaned_data['shutter_speed']
+            elif form.cleaned_data['shutter_speed_preset'] != '':
+                frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
 
             try:
-                frame.save()
+                with transaction.atomic():
+                    frame.save()
+
                 messages.success(request, 'Frame updated!')
                 return redirect(reverse('roll-frame-detail', args=(frame.roll.id, frame.number,)))
+
             except IntegrityError:
                 messages.error(request, f'This roll already has frame #{frame.number}.')
                 return redirect(reverse('roll-frame-edit', args=(frame.roll.id, number,)))

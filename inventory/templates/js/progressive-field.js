@@ -24,11 +24,11 @@ function progressiveLinkSetup(element) {
 
     $progressiveLink.click(() => {
         $element.hide();
+        $element.find('input, select').val('');
 
         if (primaryField) {
             $element.next('.c-field--progressive').show();
         } else {
-            $element.find('input').val('');
             $element.prev('.c-field--progressive').show();
         }
     });

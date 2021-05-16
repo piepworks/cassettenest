@@ -1602,7 +1602,47 @@ class FrameViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_frame_update(self):
-        pass
+        roll = baker.make(Roll, owner=self.user)
+        frame_number = 2
+        baker.make(Frame, roll=roll, number=frame_number, date=self.today, aperture='1', shutter_speed='1/60')
+
+        response = self.client.post(reverse('roll-frame-edit', args=(roll.id, frame_number)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture': '1.4',
+            'shutter_speed': '1/500',
+        })
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_frame_update_with_presets(self):
+        roll = baker.make(Roll, owner=self.user)
+        frame_number = 2
+        baker.make(Frame, roll=roll, number=frame_number, date=self.today, aperture='1', shutter_speed='1/60')
+
+        response = self.client.post(reverse('roll-frame-edit', args=(roll.id, frame_number)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture_preset': '1.4',
+            'shutter_speed_preset': '1/500',
+        })
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_frame_edit_error(self):
+        roll = baker.make(Roll, owner=self.user)
+        baker.make(Frame, roll=roll, number=1, date=self.today)
+        baker.make(Frame, roll=roll, number=2, date=self.today)
+
+        response = self.client.post(reverse('roll-frame-edit', args=(roll.id, 2)), data={
+            'number': '1',
+            'date': self.today,
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'This roll already has frame #1.', messages)
 
     def test_frame_delete(self):
         pass
