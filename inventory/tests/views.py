@@ -1649,4 +1649,10 @@ class FrameViewTests(TestCase):
         self.assertIn(f'This roll already has frame #1.', messages)
 
     def test_frame_delete(self):
-        pass
+        roll = baker.make(Roll, owner=self.user)
+        frame = baker.make(Frame, roll=roll, date=self.today, number=1)
+        response = self.client.post(reverse('roll-frame-delete', args=(roll.id, frame.number)))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'{frame} successfully deleted.', messages)
