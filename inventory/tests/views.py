@@ -1604,7 +1604,7 @@ class FrameViewTests(TestCase):
     def test_frame_update(self):
         roll = baker.make(Roll, owner=self.user)
         frame_number = 2
-        baker.make(Frame, roll=roll, number=frame_number, date=self.today, aperture='1', shutter_speed='1/60')
+        frame = baker.make(Frame, roll=roll, number=frame_number, date=self.today, aperture='1', shutter_speed='1/60')
 
         response = self.client.post(reverse('roll-frame-edit', args=(roll.id, frame_number)), data={
             'number': '2',
@@ -1614,11 +1614,13 @@ class FrameViewTests(TestCase):
         })
 
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(frame.aperture, '1.4')
+        self.assertTrue(frame.shutter_speed, '1/60')
 
     def test_frame_update_with_presets(self):
         roll = baker.make(Roll, owner=self.user)
         frame_number = 2
-        baker.make(Frame, roll=roll, number=frame_number, date=self.today, aperture='1', shutter_speed='1/60')
+        frame = baker.make(Frame, roll=roll, number=frame_number, date=self.today, aperture='1', shutter_speed='1/60')
 
         response = self.client.post(reverse('roll-frame-edit', args=(roll.id, frame_number)), data={
             'number': '2',
@@ -1628,6 +1630,8 @@ class FrameViewTests(TestCase):
         })
 
         self.assertEqual(response.status_code, 302)
+        self.assertTrue(frame.aperture, '1.4')
+        self.assertTrue(frame.shutter_speed, '1/500')
 
     def test_frame_edit_error(self):
         roll = baker.make(Roll, owner=self.user)
