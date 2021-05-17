@@ -1554,6 +1554,22 @@ class FrameViewTests(TestCase):
         self.assertRedirects(response, expected_url=reverse('roll-frame-add', args=(self.roll.id,)))
         self.assertIn('Frame saved!', messages)
 
+    def test_frame_create_and_add_another_w_input(self):
+        frame = baker.make(Frame, roll=self.roll, aperture='abcd', shutter_speed='efgh')
+        response = self.client.get(reverse('roll-frame-add', args=(self.roll.id,)) + '?another')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['show_input']['aperture'])
+        self.assertTrue(response.context['show_input']['shutter_speed'])
+
+    def test_frame_create_and_add_another_w_preset(self):
+        frame = baker.make(Frame, roll=self.roll, aperture='2', shutter_speed='1/500')
+        response = self.client.get(reverse('roll-frame-add', args=(self.roll.id,)) + '?another')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['show_input']['aperture'])
+        self.assertFalse(response.context['show_input']['shutter_speed'])
+
     def test_frame_create_error(self):
         response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
             'number': '1',

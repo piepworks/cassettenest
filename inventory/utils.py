@@ -226,5 +226,5 @@ shutter_speeds = [
 ]
 
 
-preset_apertures = {key for key in dict(apertures) if key not in ''}
-preset_shutter_speeds = {key for key in dict(shutter_speeds) if key not in ''}
+preset_apertures = {key for key in dict(apertures)}
+preset_shutter_speeds = {key for key in dict(shutter_speeds)}
