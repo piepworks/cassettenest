@@ -1554,7 +1554,7 @@ class FrameViewTests(TestCase):
         self.assertRedirects(response, expected_url=reverse('roll-frame-add', args=(self.roll.id,)))
         self.assertIn('Frame saved!', messages)
 
-    def test_frame_create_and_add_another_w_input(self):
+    def test_frame_create_and_add_another_with_inputs(self):
         frame = baker.make(Frame, roll=self.roll, aperture='abcd', shutter_speed='efgh')
         response = self.client.get(reverse('roll-frame-add', args=(self.roll.id,)) + '?another')
 
@@ -1562,7 +1562,7 @@ class FrameViewTests(TestCase):
         self.assertTrue(response.context['show_input']['aperture'])
         self.assertTrue(response.context['show_input']['shutter_speed'])
 
-    def test_frame_create_and_add_another_w_preset(self):
+    def test_frame_create_and_add_another_with_presets(self):
         frame = baker.make(Frame, roll=self.roll, aperture='2', shutter_speed='1/500')
         response = self.client.get(reverse('roll-frame-add', args=(self.roll.id,)) + '?another')
 
@@ -1612,10 +1612,21 @@ class FrameViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_frame_update_page(self):
-        response = self.client.get(reverse('roll-frame-edit', args=(self.roll.id, 1)))
+    def test_frame_update_page_with_presets(self):
+        frame = baker.make(Frame, roll=self.roll, number='2', aperture='1.4', shutter_speed='1/500')
+        response = self.client.get(reverse('roll-frame-edit', args=(self.roll.id, 2)))
 
         self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['show_input']['aperture'])
+        self.assertFalse(response.context['show_input']['shutter_speed'])
+
+    def test_frame_update_page_with_inputs(self):
+        frame = baker.make(Frame, roll=self.roll, number='2', aperture='abcd', shutter_speed='efgh')
+        response = self.client.get(reverse('roll-frame-edit', args=(self.roll.id, 2)))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['show_input']['aperture'])
+        self.assertTrue(response.context['show_input']['shutter_speed'])
 
     def test_frame_update(self):
         roll = baker.make(Roll, owner=self.user)
