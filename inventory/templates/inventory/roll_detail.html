@@ -171,9 +171,13 @@
 
 {% if roll.status != '01_storage' %}
 <div class="action">
-    {% if journal_entries %}
-    <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
-    {% endif %}
+    {% flag 'frames' %}
+        {% if journal_entries %}
+            <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
+        {% endif %}
+    {% else %}
+        <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
+    {% endflag %}
 </div>
 {% endif %}
 
