@@ -1477,7 +1477,7 @@ def roll_frame_add(request, roll_pk):
                 messages.success(request, 'Frame saved!')
 
                 if 'another' in request.POST:
-                    return redirect(reverse('roll-frame-add', args=(frame.roll.id,)))
+                    return redirect(reverse('roll-frame-add', args=(frame.roll.id,)) + '?another')
                 else:
                     return redirect(reverse('roll-detail', args=(roll.id,)))
             except IntegrityError:
@@ -1485,13 +1485,20 @@ def roll_frame_add(request, roll_pk):
                 return redirect(reverse('roll-frame-add', args=(frame.roll.id,)))
     else:
         try:
-            starting_number = Frame.objects.filter(
-                roll=roll
-            ).order_by('number').reverse()[0].number + 1
+            previous_frame = Frame.objects.filter(roll=roll).order_by('number').reverse()[0]
+            starting_number = previous_frame.number + 1
+            previous_aperture = previous_frame.aperture
+            previous_shutter_speed = previous_frame.shutter_speed
         except IndexError:
             starting_number = 1
 
-        form = FrameForm(initial={'number': starting_number})
+        another = True if 'another' in request.GET else False
+
+        form = FrameForm(initial={
+            'number': starting_number,
+            'aperture': previous_aperture if another else '',
+            'shutter_speed': previous_shutter_speed if another else '',
+        })
 
         enhanced_label_aperture = {
             'before': 'ƒ/'
