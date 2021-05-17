@@ -1507,6 +1507,16 @@ def roll_frame_add(request, roll_pk):
             'shutter_speed': False,
         }
 
+        if another and previous_aperture in preset_apertures:
+            form.fields['aperture_preset'].initial = previous_aperture
+        elif another:
+            show_input['aperture'] = True
+
+        if another and previous_shutter_speed in preset_shutter_speeds:
+            form.fields['shutter_speed_preset'].initial = previous_shutter_speed
+        elif another:
+            show_input['shutter_speed'] = True
+
         enhanced_label_aperture = {
             'before': 'ƒ/'
         }
