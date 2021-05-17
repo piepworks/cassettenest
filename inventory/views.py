@@ -50,6 +50,8 @@ from .utils import (
     get_host,
     send_email_to_trey,
     inventory_filter,
+    preset_apertures,
+    preset_shutter_speeds,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -1500,6 +1502,11 @@ def roll_frame_add(request, roll_pk):
             'shutter_speed': previous_shutter_speed if another else '',
         })
 
+        show_input = {
+            'aperture': False,
+            'shutter_speed': False,
+        }
+
         enhanced_label_aperture = {
             'before': 'ƒ/'
         }
@@ -1513,6 +1520,7 @@ def roll_frame_add(request, roll_pk):
             'roll': roll,
             'action': 'Add',
             'form': form,
+            'show_input': show_input,
             'enhanced_label_aperture': enhanced_label_aperture,
             'enhanced_label_shutter_speed': enhanced_label_shutter_speed,
             'js_needed': True,
@@ -1582,6 +1590,20 @@ def roll_frame_edit(request, roll_pk, number):
 
     else:
         form = FrameForm(instance=frame)
+        show_input = {
+            'aperture': False,
+            'shutter_speed': False,
+        }
+
+        if frame.aperture in preset_apertures:
+            form.fields['aperture_preset'].initial = frame.aperture
+        else:
+            show_input['aperture'] = True
+
+        if frame.shutter_speed in preset_shutter_speeds:
+            form.fields['shutter_speed_preset'].initial = frame.shutter_speed
+        else:
+            show_input['shutter_speed'] = True
 
         enhanced_label_aperture = {
             'before': 'ƒ/'
@@ -1597,6 +1619,7 @@ def roll_frame_edit(request, roll_pk, number):
             'roll': frame.roll,
             'frame': frame,
             'action': 'Edit',
+            'show_input': show_input,
             'enhanced_label_aperture': enhanced_label_aperture,
             'enhanced_label_shutter_speed': enhanced_label_shutter_speed,
             'js_needed': True,

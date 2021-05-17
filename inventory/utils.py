@@ -224,3 +224,7 @@ shutter_speeds = [
     ('1/2000', '1/2000'),
     ('1/4000', '1/4000'),
 ]
+
+
+preset_apertures = {key for key in dict(apertures) if key not in ''}
+preset_shutter_speeds = {key for key in dict(shutter_speeds) if key not in ''}
