@@ -24,7 +24,14 @@
         {% include 'inventory/_form-field.html' with field=form.notes %}
 
         <div class="action">
-            <p><input type="submit" value="Save" /> <a href="{% url 'roll-detail' roll.id %}">Cancel</a></p>
+            <p>
+                <input type="submit" value="Save" />
+                {% if action == 'Add' %}
+                    <a href="{% url 'roll-detail' roll.id %}">Cancel</a>
+                {% elif action == 'Edit' %}
+                    <a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">Cancel</a>
+                {% endif %}
+            </p>
             {% if action == 'Add' %}
             <p><input type="submit" class="secondary" name="another" value="Save frame and add another" /></p>
             {% endif %}
