@@ -13,7 +13,7 @@ from django.conf import settings
 from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
-from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film
+from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
 
@@ -1496,3 +1496,190 @@ class RollViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, expected_url=reverse('roll-detail', args=(roll.id,)))
         self.assertIn('Changes saved!', messages)
+
+
+@override_flag('frames', active=True)
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class FrameViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        cls.roll = baker.make(Roll, owner=cls.user)
+        baker.make(
+            Frame,
+            roll=cls.roll,
+            date=cls.today,
+            number=1,
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_frame_create(self):
+        response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture': '1',
+            'shutter_speed': '1/500',
+            'notes': 'asdf',
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Frame saved!', messages)
+
+    def test_frame_create_and_add_another(self):
+        response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture': '1',
+            'shutter_speed': '1/500',
+            'notes': 'asdf',
+            'another': True,
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, expected_url=reverse('roll-frame-add', args=(self.roll.id,)))
+        self.assertIn('Frame saved!', messages)
+
+    def test_frame_create_and_add_another_with_inputs(self):
+        frame = baker.make(Frame, roll=self.roll, aperture='abcd', shutter_speed='efgh')
+        response = self.client.get(reverse('roll-frame-add', args=(self.roll.id,)) + '?another')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['show_input']['aperture'])
+        self.assertTrue(response.context['show_input']['shutter_speed'])
+
+    def test_frame_create_and_add_another_with_presets(self):
+        frame = baker.make(Frame, roll=self.roll, aperture='2', shutter_speed='1/500')
+        response = self.client.get(reverse('roll-frame-add', args=(self.roll.id,)) + '?another')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['show_input']['aperture'])
+        self.assertFalse(response.context['show_input']['shutter_speed'])
+
+    def test_frame_create_error(self):
+        response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
+            'number': '1',
+            'date': self.today,
+            'aperture': '1',
+            'shutter_speed': '1/500',
+            'notes': 'asdf',
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'This roll already has frame #1.', messages)
+
+    def test_frame_create_first(self):
+        # First frame of a roll.
+
+        roll = baker.make(Roll, owner=self.user)
+        response = self.client.get(reverse('roll-frame-add', args=(roll.id,)))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['form'].initial['number'], 1)
+
+    def test_frame_create_presets(self):
+        response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture_preset': '1.4',
+            'shutter_speed_preset': '1/500',
+            'notes': 'asdf',
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Frame saved!', messages)
+
+    def test_frame_read(self):
+        response = self.client.get(reverse('roll-frame-detail', args=(self.roll.id, 1)))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_frame_update_page_with_presets(self):
+        frame = baker.make(Frame, roll=self.roll, number='2', aperture='1.4', shutter_speed='1/500')
+        response = self.client.get(reverse('roll-frame-edit', args=(self.roll.id, 2)))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.context['show_input']['aperture'])
+        self.assertFalse(response.context['show_input']['shutter_speed'])
+
+    def test_frame_update_page_with_inputs(self):
+        frame = baker.make(Frame, roll=self.roll, number='2', aperture='abcd', shutter_speed='efgh')
+        response = self.client.get(reverse('roll-frame-edit', args=(self.roll.id, 2)))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['show_input']['aperture'])
+        self.assertTrue(response.context['show_input']['shutter_speed'])
+
+    def test_frame_update(self):
+        roll = baker.make(Roll, owner=self.user)
+        frame_number = 2
+        frame = baker.make(Frame, roll=roll, number=frame_number, date=self.today, aperture='1', shutter_speed='1/60')
+
+        response = self.client.post(reverse('roll-frame-edit', args=(roll.id, frame_number)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture': '1.4',
+            'shutter_speed': '1/500',
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(frame.aperture, '1.4')
+        self.assertTrue(frame.shutter_speed, '1/60')
+
+    def test_frame_update_with_presets(self):
+        roll = baker.make(Roll, owner=self.user)
+        frame_number = 2
+        frame = baker.make(Frame, roll=roll, number=frame_number, date=self.today, aperture='1', shutter_speed='1/60')
+
+        response = self.client.post(reverse('roll-frame-edit', args=(roll.id, frame_number)), data={
+            'number': '2',
+            'date': self.today,
+            'aperture_preset': '1.4',
+            'shutter_speed_preset': '1/500',
+        })
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(frame.aperture, '1.4')
+        self.assertTrue(frame.shutter_speed, '1/500')
+
+    def test_frame_edit_error(self):
+        roll = baker.make(Roll, owner=self.user)
+        baker.make(Frame, roll=roll, number=1, date=self.today)
+        baker.make(Frame, roll=roll, number=2, date=self.today)
+
+        response = self.client.post(reverse('roll-frame-edit', args=(roll.id, 2)), data={
+            'number': '1',
+            'date': self.today,
+        })
+
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'This roll already has frame #1.', messages)
+
+    def test_frame_delete(self):
+        roll = baker.make(Roll, owner=self.user)
+        frame = baker.make(Frame, roll=roll, date=self.today, number=1)
+        response = self.client.post(reverse('roll-frame-delete', args=(roll.id, frame.number)))
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'{frame} successfully deleted.', messages)

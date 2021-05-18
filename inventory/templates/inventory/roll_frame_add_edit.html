@@ -1,0 +1,48 @@
+{% extends 'base_site.html' %}
+{% load capture_tags %}
+
+{% block title %}{{ action }} frame for {{ roll }}{% endblock %}
+
+{% block content %}
+<div class="raw">
+    <h1>{{ action }} frame for <a href="{% url 'roll-detail' roll.id %}">{{ roll }}</a></h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {% include 'inventory/_form-field.html' with field=form.number %}
+        {% include 'inventory/_form-field.html' with field=form.date %}
+
+        {% capture as first_aperture silent %}{% if show_input.aperture %}True{% endif %}{% endcapture %}
+        {% include 'inventory/_form-field.html' with field=form.aperture_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_aperture %}
+        {% include 'inventory/_form-field.html' with field=form.aperture progressive=True show_first=first_aperture progressive_text='…or choose a preset.' enhanced_label=enhanced_label_aperture %}
+
+        {% capture as first_shutter silent %}{% if show_input.shutter_speed %}True{% endif %}{% endcapture %}
+        {% include 'inventory/_form-field.html' with field=form.shutter_speed_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_shutter_speed %}
+        {% include 'inventory/_form-field.html' with field=form.shutter_speed progressive=True show_first=first_shutter progressive_text='…or choose a preset.' enhanced_label=enhanced_label_shutter_speed %}
+
+        {% include 'inventory/_form-field.html' with field=form.notes %}
+
+        <div class="action">
+            <p>
+                <input type="submit" value="Save" />
+                {% if action == 'Add' %}
+                    <a href="{% url 'roll-detail' roll.id %}">Cancel</a>
+                {% elif action == 'Edit' %}
+                    <a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">Cancel</a>
+                {% endif %}
+            </p>
+            {% if action == 'Add' %}
+            <p><input type="submit" class="secondary" name="another" value="Save frame and add another" /></p>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block page_js %}
+<script>
+    {% include 'js/progressive-field.js' %}
+    {% include 'js/markdown-autocomplete.js' %}
+</script>
+{% endblock %}

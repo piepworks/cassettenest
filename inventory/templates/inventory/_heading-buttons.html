@@ -1,16 +1,32 @@
 <div class="action">
     {% if parent_item %}
-        <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id item.id %}">
+        {% if key %}
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id key %}">
+        {% else %}
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id item.id %}">
+        {% endif %}
     {% else %}
-        <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' item.id %}">
+        {% if key %}
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' key %}">
+        {% else %}
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' item.id %}">
+        {% endif %}
     {% endif %}
             {% include 'inventory/_github-icon.html' with id='pencil' title='Edit '|add:name %}
         </a>
     {% if not prevent_delete %}
         {% if parent_item %}
-            <form action="{% url url|add:'-delete' parent_item.id item.id %}" onsubmit="return confirmDelete('{{ title|default:name }}');" method="post">
+            {% if key %}
+                <form action="{% url url|add:'-delete' parent_item.id key %}" onsubmit="return confirmDelete('{{ title|default:name }}');" method="post">
+            {% else %}
+                <form action="{% url url|add:'-delete' parent_item.id item.id %}" onsubmit="return confirmDelete('{{ title|default:name }}');" method="post">
+            {% endif %}
         {% else %}
-            <form action="{% url url|add:'-delete' item.id %}" onsubmit="return confirmDelete('{{ name }}');" method="post">
+            {% if key %}
+                <form action="{% url url|add:'-delete' key %}" onsubmit="return confirmDelete('{{ name }}');" method="post">
+            {% else %}
+                <form action="{% url url|add:'-delete' item.id %}" onsubmit="return confirmDelete('{{ name }}');" method="post">
+            {% endif %}
         {% endif %}
                 {% csrf_token %}
                 <button aria-label="Delete {{ name }}" class="icon icon-destructive">

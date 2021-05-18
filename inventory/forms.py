@@ -4,7 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile
+from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile, Frame
+from .utils import apertures, shutter_speeds
 
 
 class RegisterForm(UserCreationForm):
@@ -117,6 +118,23 @@ class JournalForm(ModelForm):
         }
 
 
+class FrameForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(FrameForm, self).__init__(*args, **kwargs)
+        self.fields['aperture'].label = 'Or enter an aperture.'
+        self.fields['shutter_speed'].label = 'Or enter a shutter speed.'
+
+    aperture_preset = forms.ChoiceField(choices=apertures, label='Aperture', required=False)
+    shutter_speed_preset = forms.ChoiceField(choices=shutter_speeds, label='Shutter speed', required=False)
+
+    class Meta:
+        model = Frame
+        fields = ['number', 'date', 'aperture_preset', 'aperture', 'shutter_speed_preset', 'shutter_speed', 'notes']
+        widgets = {
+            'date': widgets.DateInput(attrs={'type': 'date'}),
+        }
+
+
 class ReadyForm(forms.Form):
     lab = forms.CharField(
         required=False,
@@ -150,7 +168,7 @@ class UserForm(ModelForm):
         fields = ['username', 'first_name', 'last_name', 'email']
 
 
-class ProfileForm(forms.ModelForm):
+class ProfileForm(ModelForm):
     class Meta:
         model = Profile
         fields = ['timezone']

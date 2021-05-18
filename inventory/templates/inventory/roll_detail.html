@@ -1,5 +1,6 @@
 {% extends 'base_site.html' %}
 {% load markdown_deux_tags %}
+{% load waffle_tags %}
 
 {% block title %}{{ roll }}{% endblock %}
 
@@ -86,8 +87,53 @@
     {% endif %}
 </ul>
 
+{% if frames %}
+{% flag 'frames' %}
+<div class="frames overflow-x">
+    <h3>Frames</h3>
+    <table>
+        <thead>
+            <tr>
+                <th class="entry-number">#</th>
+                <th class="entry-date">Date</th>
+                <th class="entry-aperture">Aperture</th>
+                <th class="entry-shutter">Shutter Speed</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for frame in frames %}
+            <tr>
+                <td><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
+                <td>{{ frame.date }}</td>
+                <td>
+                    {% if frame.aperture %}
+                        <span class="subdued">ƒ/</span>
+                        {{ frame.aperture }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if frame.shutter_speed %}
+                        {{ frame.shutter_speed }}
+                        <span class="subdued" title="second(s)">s</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endflag %}
+{% endif %}
+
+{% flag 'frames' %}
+<div class="action">
+    <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
+</div>
+{% endflag %}
+
+{% if journal_entries %}
 <div class="journal-entries overflow-x">
-    {% if journal_entries %}
+    <h3>Journal Entries</h3>
     <table>
         <thead>
             <tr>
@@ -120,13 +166,20 @@
             {% endfor %}
         </tbody>
     </table>
-    {% endif %}
 </div>
-
-{% if roll.status != '01_storage' %}
-<div class="action"><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></div>
 {% endif %}
 
+{% if roll.status != '01_storage' %}
+<div class="action">
+    {% flag 'frames' %}
+        {% if journal_entries %}
+            <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
+        {% endif %}
+    {% else %}
+        <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
+    {% endflag %}
+</div>
+{% endif %}
 
 {% if roll.status == '02_loaded' %}
 <hr />

@@ -2,6 +2,7 @@ body {
     &.logbook { @import 'logbook'; }
     &.ready { @import 'ready'; }
     &.roll-detail { @import 'roll-detail'; }
+    &.frame-detail { @import 'frame-detail'; }
     &.journal-entry { @import 'journal-entry'; }
     &.dashboard { @import 'dashboard'; }
     &.patterns { @import 'patterns'; }

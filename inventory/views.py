@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, DetailView, FormView
 from django.db.models import Count, Q
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.contrib.auth import login, authenticate
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -18,8 +18,9 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
+from waffle.decorators import waffle_flag
 import requests
-from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll
+from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll, Frame
 from .forms import (
     CameraForm,
     CameraBackForm,
@@ -33,6 +34,7 @@ from .forms import (
     FilmForm,
     UserForm,
     UploadCSVForm,
+    FrameForm,
 )
 from .utils import (
     development_statuses,
@@ -48,6 +50,8 @@ from .utils import (
     get_host,
     send_email_to_trey,
     inventory_filter,
+    preset_apertures,
+    preset_shutter_speeds,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -1223,12 +1227,14 @@ def roll_detail(request, pk):
     owner = request.user
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
     journal_entries = Journal.objects.filter(roll=roll).order_by('date')
+    frames = Frame.objects.filter(roll=roll).order_by('number')
 
     context = {
         'owner': owner,
         'roll': roll,
         'development_statuses': development_statuses,
         'journal_entries': journal_entries,
+        'frames': frames,
         'js_needed': True,
     }
 
@@ -1328,8 +1334,7 @@ def roll_journal_detail(request, roll_pk, entry_pk):
 
 @login_required
 def roll_journal_add(request, roll_pk):
-    owner = request.user
-    roll = get_object_or_404(Roll, pk=roll_pk, owner=owner)
+    roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
 
     if request.method == 'POST':
         form = JournalForm(request.POST)
@@ -1365,7 +1370,7 @@ def roll_journal_add(request, roll_pk):
 
         form = JournalForm(initial={'frame': starting_frame})
         context = {
-            'owner': owner,
+            'owner': request.user,
             'roll': roll,
             'form': form,
             'action': 'Add',
@@ -1442,6 +1447,216 @@ def roll_journal_delete(request, roll_pk, entry_pk):
         'Journal entry for %s successfully deleted.' % (entry_date)
     )
     return redirect(reverse('roll-detail', args=(roll.id,)))
+
+
+@waffle_flag('frames')
+@login_required
+def roll_frame_add(request, roll_pk):
+    roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
+
+    if request.method == 'POST':
+        form = FrameForm(request.POST)
+
+        if form.is_valid():
+            frame = form.save(commit=False)
+            frame.roll = roll
+
+            # Custom fields take precedence over dropdown presets.
+            if form.cleaned_data['aperture'] != '':
+                frame.aperture = form.cleaned_data['aperture']
+            elif form.cleaned_data['aperture_preset'] != '':
+                frame.aperture = form.cleaned_data['aperture_preset']
+
+            if form.cleaned_data['shutter_speed'] != '':
+                frame.shutter_speed = form.cleaned_data['shutter_speed']
+            elif form.cleaned_data['shutter_speed_preset'] != '':
+                frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
+
+            try:
+                with transaction.atomic():
+                    frame.save()
+
+                messages.success(request, 'Frame saved!')
+
+                if 'another' in request.POST:
+                    return redirect(reverse('roll-frame-add', args=(frame.roll.id,)) + '?another')
+                else:
+                    return redirect(reverse('roll-detail', args=(roll.id,)))
+            except IntegrityError:
+                messages.error(request, f'This roll already has frame #{frame.number}.')
+                return redirect(reverse('roll-frame-add', args=(frame.roll.id,)))
+    else:
+        try:
+            previous_frame = Frame.objects.filter(roll=roll).order_by('number').reverse()[0]
+            starting_number = previous_frame.number + 1
+            previous_aperture = previous_frame.aperture
+            previous_shutter_speed = previous_frame.shutter_speed
+        except IndexError:
+            starting_number = 1
+
+        another = True if 'another' in request.GET else False
+
+        form = FrameForm(initial={
+            'number': starting_number,
+            'aperture': previous_aperture if another else '',
+            'shutter_speed': previous_shutter_speed if another else '',
+        })
+
+        show_input = {
+            'aperture': False,
+            'shutter_speed': False,
+        }
+
+        if another and previous_aperture in preset_apertures:
+            form.fields['aperture_preset'].initial = previous_aperture
+        elif another:
+            show_input['aperture'] = True
+
+        if another and previous_shutter_speed in preset_shutter_speeds:
+            form.fields['shutter_speed_preset'].initial = previous_shutter_speed
+        elif another:
+            show_input['shutter_speed'] = True
+
+        enhanced_label_aperture = {
+            'before': 'ƒ/'
+        }
+
+        enhanced_label_shutter_speed = {
+            'after': 's',
+            'after_tooltip': 'second(s)',
+        }
+
+        context = {
+            'roll': roll,
+            'action': 'Add',
+            'form': form,
+            'show_input': show_input,
+            'enhanced_label_aperture': enhanced_label_aperture,
+            'enhanced_label_shutter_speed': enhanced_label_shutter_speed,
+            'js_needed': True,
+            'wc_needed': True,
+        }
+
+        return render(
+            request,
+            'inventory/roll_frame_add_edit.html',
+            context
+        )
+
+
+@waffle_flag('frames')
+@login_required
+def roll_frame_detail(request, roll_pk, number):
+    frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
+    previous_frame = Frame.objects.filter(number=number - 1, roll__id=roll_pk, roll__owner=request.user).first()
+    next_frame = Frame.objects.filter(number=number + 1, roll__id=roll_pk, roll__owner=request.user).first()
+
+    context = {
+        'frame': frame,
+        'previous_frame': previous_frame,
+        'next_frame': next_frame,
+        'js_needed': True,
+    }
+
+    return render(
+        request,
+        'inventory/roll_frame_detail.html',
+        context
+    )
+
+
+@waffle_flag('frames')
+@login_required
+def roll_frame_edit(request, roll_pk, number):
+    frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
+
+    if request.method == 'POST':
+        form = FrameForm(request.POST, instance=frame)
+
+        if form.is_valid():
+            frame = form.save(commit=False)
+
+            # Custom fields take precedence over dropdown presets.
+            if form.cleaned_data['aperture'] and form.cleaned_data['aperture_preset'] == '':
+                frame.aperture = form.cleaned_data['aperture']
+            elif form.cleaned_data['aperture_preset'] != '':
+                frame.aperture = form.cleaned_data['aperture_preset']
+
+            if form.cleaned_data['shutter_speed'] and form.cleaned_data['shutter_speed_preset'] == '':
+                frame.shutter_speed = form.cleaned_data['shutter_speed']
+            elif form.cleaned_data['shutter_speed_preset'] != '':
+                frame.shutter_speed = form.cleaned_data['shutter_speed_preset']
+
+            try:
+                with transaction.atomic():
+                    frame.save()
+
+                messages.success(request, 'Frame updated!')
+                return redirect(reverse('roll-frame-detail', args=(frame.roll.id, frame.number,)))
+
+            except IntegrityError:
+                messages.error(request, f'This roll already has frame #{frame.number}.')
+                return redirect(reverse('roll-frame-edit', args=(frame.roll.id, number,)))
+
+    else:
+        form = FrameForm(instance=frame)
+        show_input = {
+            'aperture': False,
+            'shutter_speed': False,
+        }
+
+        if frame.aperture in preset_apertures:
+            form.fields['aperture_preset'].initial = frame.aperture
+        else:
+            show_input['aperture'] = True
+
+        if frame.shutter_speed in preset_shutter_speeds:
+            form.fields['shutter_speed_preset'].initial = frame.shutter_speed
+        else:
+            show_input['shutter_speed'] = True
+
+        enhanced_label_aperture = {
+            'before': 'ƒ/'
+        }
+
+        enhanced_label_shutter_speed = {
+            'after': 's',
+            'after_tooltip': 'second(s)',
+        }
+
+        context = {
+            'form': form,
+            'roll': frame.roll,
+            'frame': frame,
+            'action': 'Edit',
+            'show_input': show_input,
+            'enhanced_label_aperture': enhanced_label_aperture,
+            'enhanced_label_shutter_speed': enhanced_label_shutter_speed,
+            'js_needed': True,
+            'wc_needed': True,
+        }
+
+        return render(
+            request,
+            'inventory/roll_frame_add_edit.html',
+            context
+        )
+
+
+@waffle_flag('frames')
+@require_POST
+@login_required
+def roll_frame_delete(request, roll_pk, number):
+    frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
+    name = frame.__str__()
+
+    frame.delete()
+
+    messages.success(
+        request,
+        f'{name} successfully deleted.'
+    )
+    return redirect(reverse('roll-detail', args=(roll_pk,)))
 
 
 @login_required

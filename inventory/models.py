@@ -492,9 +492,7 @@ class Journal(models.Model):
         ordering = ['date']
 
     def __str__(self):
-        return 'Journal entry for %s on %s' % (
-            self.roll.code, self.date.strftime('%Y-%m-%d')
-        )
+        return f'Journal entry for {self.roll.code} on {self.date.strftime("%Y-%m-%d")}'
 
     @property
     def starting_frame(self):
@@ -510,3 +508,20 @@ class Journal(models.Model):
                 else:
                     # If it is the first entry for the roll.
                     return 1
+
+
+class Frame(models.Model):
+    roll = models.ForeignKey(Roll, on_delete=models.CASCADE)
+    number = models.PositiveSmallIntegerField()
+    date = models.DateField(default=datetime.date.today)
+    notes = models.TextField(blank=True)
+    aperture = models.CharField(max_length=20, blank=True, help_text='Preset dropdown will be ignored.')
+    shutter_speed = models.CharField(max_length=20, blank=True, help_text='Preset dropdown will be ignored.')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (('roll', 'number'),)
+
+    def __str__(self):
+        return f'Frame #{self.number} of {self.roll}'

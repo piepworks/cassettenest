@@ -18,7 +18,11 @@
 
         {% for field in form %}
             {% if field.name == 'manufacturer' or field.name == 'new_manufacturer'%}
-                {% include 'inventory/_form-field.html' with field=field progressive_link=True %}
+                {% if field.name == 'manufacturer' %}
+                    {% include 'inventory/_form-field.html' with field=field progressive=True primary=True progressive_text='…or add a new manufacturer.' %}
+                {% else %}
+                    {% include 'inventory/_form-field.html' with field=field progressive=True progressive_text='…or choose an existing manufacturer.' label_override='New Manufacturer' top_field=True %}
+                {% endif %}
             {% else %}
                 {% include 'inventory/_form-field.html' with field=field %}
             {% endif %}
@@ -34,7 +38,7 @@
 
 {% block page_js %}
 <script>
-    {% include 'js/film-add.js' %}
+    {% include 'js/progressive-field.js' %}
     {% include 'js/markdown-autocomplete.js' %}
 </script>
 {% endblock %}
