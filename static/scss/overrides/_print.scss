@@ -12,7 +12,9 @@
     }
 
     .action,
-    .do-not-print { display: none; }
+    .do-not-print { display: none !important; }
 
     .print-only { display: block; }
+
+    .c-site-nav { background: transparent; }
 }

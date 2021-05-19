@@ -3,7 +3,7 @@
 {% url 'ready' as ready_url %}
 {% url 'logbook' as logbook_url %}
 
-<ol class="c-status-nav">
+<ol class="c-status-nav do-not-print">
     {% if 'camera' in request.path %}
     <li class="current">
     {% else %}
