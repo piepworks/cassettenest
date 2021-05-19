@@ -1489,6 +1489,7 @@ def roll_frame_add(request, roll_pk):
         try:
             previous_frame = Frame.objects.filter(roll=roll).order_by('number').reverse()[0]
             starting_number = previous_frame.number + 1
+            previous_date = previous_frame.date
             previous_aperture = previous_frame.aperture
             previous_shutter_speed = previous_frame.shutter_speed
         except IndexError:
@@ -1498,6 +1499,7 @@ def roll_frame_add(request, roll_pk):
 
         form = FrameForm(initial={
             'number': starting_number,
+            'date': previous_date if another else datetime.date.today(),
             'aperture': previous_aperture if another else '',
             'shutter_speed': previous_shutter_speed if another else '',
         })
