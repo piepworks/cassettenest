@@ -124,12 +124,29 @@ class FrameForm(ModelForm):
         self.fields['aperture'].label = 'Or enter an aperture.'
         self.fields['shutter_speed'].label = 'Or enter a shutter speed.'
 
+    additional_frames = forms.IntegerField(
+        label='Apply these settings to additional frames.',
+        initial=0,
+        help_text='These settings will apply to this many more frames after the current one.',
+        min_value=0,
+        max_value=100,
+        required=False,
+    )
     aperture_preset = forms.ChoiceField(choices=apertures, label='Aperture', required=False)
     shutter_speed_preset = forms.ChoiceField(choices=shutter_speeds, label='Shutter speed', required=False)
 
     class Meta:
         model = Frame
-        fields = ['number', 'date', 'aperture_preset', 'aperture', 'shutter_speed_preset', 'shutter_speed', 'notes']
+        fields = [
+            'number',
+            'date',
+            'additional_frames',
+            'aperture_preset',
+            'aperture',
+            'shutter_speed_preset',
+            'shutter_speed',
+            'notes',
+        ]
         widgets = {
             'date': widgets.DateInput(attrs={'type': 'date'}),
         }

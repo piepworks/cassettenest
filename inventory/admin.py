@@ -175,6 +175,14 @@ class UserAdmin(BaseUserAdmin):
     timezone.admin_order_field = 'profile__timezone'
 
 
+class FrameAdmin(admin.ModelAdmin):
+    list_filter = ('roll__owner',)
+    list_display = (
+        'number',
+        'roll',
+    )
+
+
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
@@ -182,7 +190,7 @@ admin.site.register(Camera, CameraAdmin)
 admin.site.register(CameraBack, CameraBackAdmin)
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Journal, JournalAdmin)
-admin.site.register(Frame)
+admin.site.register(Frame, FrameAdmin)
 
 # Customize the default User admin.
 admin.site.unregister(User)

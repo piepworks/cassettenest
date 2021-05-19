@@ -1000,8 +1000,9 @@ def rolls_add(request):
 
             # The first roll has already been created, this creates the rest.
             for x in range(1, quantity):
-                # https://stackoverflow.com/a/4736172/96257
+                # https://docs.djangoproject.com/en/3.2/topics/db/queries/#copying-model-instances
                 roll.pk = None
+                roll._state.adding = True
                 roll.save()
 
             messages.success(
@@ -1476,7 +1477,21 @@ def roll_frame_add(request, roll_pk):
                 with transaction.atomic():
                     frame.save()
 
-                messages.success(request, 'Frame saved!')
+                # Potentially save multiple frames at once.
+                additional_frames = form.cleaned_data['additional_frames']
+                if additional_frames and additional_frames > 0:
+                    starting_number = frame.number
+
+                    for x in range(1, additional_frames + 1):
+                        # https://docs.djangoproject.com/en/3.2/topics/db/queries/#copying-model-instances
+                        frame.pk = None
+                        frame.number = starting_number + x
+                        frame._state.adding = True
+                        frame.save()
+
+                    messages.success(request, f'{additional_frames + 1} frames saved!')
+                else:
+                    messages.success(request, 'Frame saved!')
 
                 if 'another' in request.POST:
                     return redirect(reverse('roll-frame-add', args=(frame.roll.id,)) + '?another')
