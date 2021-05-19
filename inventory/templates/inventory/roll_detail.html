@@ -104,7 +104,10 @@
             {% for frame in frames %}
             <tr>
                 <td><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
-                <td>{{ frame.date }}</td>
+                <td title="{{ frame.date|date:'l, F j, Y' }}">
+                    <span class="do-not-print">{{ frame.date|date:'M j' }}</span>
+                    <span class="print-only">{{ frame.date|date:'M j, Y' }}</span>
+                </td>
                 <td>
                     {% if frame.aperture %}
                         <span class="subdued">ƒ/</span>
