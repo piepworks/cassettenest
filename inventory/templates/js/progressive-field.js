@@ -2,7 +2,7 @@ const $progressiveFields = $('.c-field--progressive');
 
 function progressiveLinkSetup(element) {
     const $element = $(element);
-    const $progressiveLink = $(`<a>${$element.data('progressive-text')}</a>`);
+    const $progressiveLink = $(`<a tabindex="0">${$element.data('progressive-text')}</a>`);
     const labelOverride = ($element.data('label-override')) ? $element.data('label-override') : false;
     let primaryField = false;
 
@@ -27,9 +27,20 @@ function progressiveLinkSetup(element) {
         $element.find('input, select').val('');
 
         if (primaryField) {
-            $element.next('.c-field--progressive').show();
+            $element.next('.c-field--progressive').show().find('input').focus();
         } else {
-            $element.prev('.c-field--progressive').show();
+            $element.prev('.c-field--progressive').show().find('select').focus();
+        }
+    });
+
+    $progressiveLink.keydown(e => {
+        const keys = [13, 32];
+        // 13 is return
+        // 32 is space bar
+
+        if (keys.indexOf(e.which) !== -1) {
+            e.preventDefault();
+            $progressiveLink.click();
         }
     });
 
