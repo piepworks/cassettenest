@@ -18,8 +18,7 @@ Copyright &copy; 2016-2021 Trey Labs LLC. All rights reserved.
 ## Development
 
 - Get [stylelint](https://stylelint.io/) setup (only in your editor for now).
-    1. `nvm use`
-    2. `npm i`.
+    - `npm i`
 - Running Python tests
     - `dev/test`
         - Just run tests.
@@ -36,7 +35,6 @@ dev/server
 
 If you want to use [Browsersync](https://www.browsersync.io)…
 
-- `nvm use`
 - `npm i -g browser-sync`
 
 Then you can just run…
