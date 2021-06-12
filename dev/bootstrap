@@ -4,7 +4,6 @@ cp example-local.env .env
 docker-compose up -d --build
 docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
-. ~/.nvm/nvm.sh
-nvm install
+asdf install
 npm i -g browser-sync
 npm i
