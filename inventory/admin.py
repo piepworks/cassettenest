@@ -122,6 +122,7 @@ class UserAdmin(BaseUserAdmin):
     inlines = [ProfileInline]
     list_display = (
         'username',
+        'email',
         'rolls',
         'cameras',
         'journals',
@@ -132,6 +133,7 @@ class UserAdmin(BaseUserAdmin):
         'last_login',
         'date_joined',
     )
+    list_filter = ('profile__subscription_status', 'is_active',)
     ordering = ('-date_joined',)
 
     def get_queryset(self, request):
@@ -149,12 +151,13 @@ class UserAdmin(BaseUserAdmin):
 
     def has_active_subscription(self, obj):
         return obj.profile.has_active_subscription
-    has_active_subscription.short_description = 'Active'
+    has_active_subscription.short_description = 'Subscribed'
     has_active_subscription.boolean = True
 
     def subscription_status(self, obj):
         return obj.profile.subscription_status
     subscription_status.short_description = 'Status'
+    subscription_status.admin_order_field = 'profile__subscription_status'
 
     def rolls(self, obj):
         return obj.roll_count
