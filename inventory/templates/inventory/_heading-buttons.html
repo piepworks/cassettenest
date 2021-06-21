@@ -1,6 +1,6 @@
 <div class="action">
     {% if parent_item %}
-        {% if key %}
+        {% if key or key is 0 %}
             <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id key %}">
         {% else %}
             <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id item.id %}">
