@@ -162,6 +162,7 @@ class UserAdmin(BaseUserAdmin):
 
     def timezone(self, obj):
         return obj.profile.timezone
+    timezone.admin_order_field = 'profile__timezone'
 
     def has_active_subscription(self, obj):
         return obj.profile.has_active_subscription
@@ -175,24 +176,23 @@ class UserAdmin(BaseUserAdmin):
 
     def rolls(self, obj):
         return obj.roll_count
+    rolls.admin_order_field = 'roll_count'
 
     def cameras(self, obj):
         return obj.camera_count
+    cameras.admin_order_field = 'camera_count'
 
     def frames(self, obj):
         return obj.frame_count
+    frames.admin_order_field = 'frame_count'
 
     def journals(self, obj):
         return obj.journal_count
+    journals.admin_order_field = 'journal_count'
 
     def projects(self, obj):
         return obj.project_count
-
-    rolls.admin_order_field = 'roll_count'
-    cameras.admin_order_field = 'camera_count'
-    journals.admin_order_field = 'journal_count'
     projects.admin_order_field = 'project_count'
-    timezone.admin_order_field = 'profile__timezone'
 
 
 class FrameAdmin(admin.ModelAdmin):
