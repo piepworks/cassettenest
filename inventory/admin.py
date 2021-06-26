@@ -125,6 +125,7 @@ class UserAdmin(BaseUserAdmin):
         'email',
         'rolls',
         'cameras',
+        'frames',
         'journals',
         'projects',
         'has_active_subscription',
@@ -141,6 +142,7 @@ class UserAdmin(BaseUserAdmin):
         qs = qs.annotate(
             roll_count=Count('roll', distinct=True),
             camera_count=Count('camera', distinct=True),
+            frame_count=Count('roll__frame', distinct=True),
             journal_count=Count('roll__journal', distinct=True),
             project_count=Count('project', distinct=True),
         )
@@ -164,6 +166,9 @@ class UserAdmin(BaseUserAdmin):
 
     def cameras(self, obj):
         return obj.camera_count
+
+    def frames(self, obj):
+        return obj.frame_count
 
     def journals(self, obj):
         return obj.journal_count
