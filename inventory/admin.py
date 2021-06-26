@@ -131,8 +131,8 @@ class UserAdmin(BaseUserAdmin):
         'has_active_subscription',
         'subscription_status',
         'timezone',
-        'last_login',
-        'date_joined',
+        'short_last_login',
+        'short_date_joined',
     )
     list_filter = ('profile__subscription_status', 'is_active',)
     ordering = ('-date_joined',)
@@ -147,6 +147,18 @@ class UserAdmin(BaseUserAdmin):
             project_count=Count('project', distinct=True),
         )
         return qs
+
+    def short_last_login(self, obj):
+        if obj:
+            return obj.last_login.date()
+    short_last_login.admin_order_field = 'last_login'
+    short_last_login.short_description = 'Last Login'
+
+    def short_date_joined(self, obj):
+        if obj:
+            return obj.date_joined.date()
+    short_date_joined.admin_order_field = 'date_joined'
+    short_date_joined.short_description = 'Date Joined'
 
     def timezone(self, obj):
         return obj.profile.timezone
