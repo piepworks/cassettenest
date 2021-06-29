@@ -115,6 +115,9 @@ class Stock(models.Model):
         ordering = ['manufacturer__name', 'name']
         unique_together = (('manufacturer', 'name',),)
 
+    def __str__(self):
+        return f'{self.manufacturer} {self.name}'
+
 
 class Film(models.Model):
     TYPE_CHOICES = (
@@ -142,6 +145,7 @@ class Film(models.Model):
         help_text='For user-submitted films. Only visible to the user who added it if this is true.',
     )
     added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    stock = models.ForeignKey(Stock, blank=True, null=True, on_delete=models.CASCADE)
     iso = models.IntegerField(verbose_name='ISO')
     name = models.CharField(
         max_length=50,
@@ -165,9 +169,7 @@ class Film(models.Model):
         unique_together = (('manufacturer', 'name', 'format',),)
 
     def __str__(self):
-        return '%s %s in %s' % (
-            self.manufacturer, self.name, self.get_format_display()
-        )
+        return f'{self.manufacturer} {self.name} in {self.get_format_display()}'
 
     def get_absolute_url(self):
         return reverse('film-rolls', args=(self.slug,))

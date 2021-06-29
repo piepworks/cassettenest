@@ -5,6 +5,7 @@ from django.db.models import Count
 from .models import (
     Camera,
     CameraBack,
+    Stock,
     Film,
     Journal,
     Manufacturer,
@@ -21,6 +22,10 @@ class ManufacturerAdmin(admin.ModelAdmin):
     list_filter = ('personal', 'added_by',)
     prepopulated_fields = {'slug': ('name',)}
     ordering = ('-created_at',)
+
+
+class StockAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
 
 
 class FilmAdmin(admin.ModelAdmin):
@@ -203,6 +208,7 @@ class FrameAdmin(admin.ModelAdmin):
     )
 
 
+admin.site.register(Stock, StockAdmin)
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)
