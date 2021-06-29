@@ -87,6 +87,35 @@ class Manufacturer(models.Model):
         return self.name
 
 
+class Stock(models.Model):
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
+    personal = models.BooleanField(
+        default=False,
+        help_text='For user-submitted stocks. Only visible to the user who added it if this is true.',
+    )
+    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    name = models.CharField(
+        max_length=50,
+        help_text='''
+            The name of the film stock itself without the manufacturer’s name (unless that’s part of the film’s name.)
+        ''',
+    )
+    slug = models.SlugField(max_length=50)
+    url = models.URLField(
+        max_length=200,
+        blank=True,
+        verbose_name='URL',
+        help_text='Any website that describes this film stock, hopefully from the manufacturer themselves.',
+    )
+    description = models.TextField(blank=True, help_text='Any details about the film or how best to use it.')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['manufacturer__name', 'name']
+        unique_together = (('manufacturer', 'name',),)
+
+
 class Film(models.Model):
     TYPE_CHOICES = (
         ('c41', 'C41 Color'),
@@ -117,7 +146,7 @@ class Film(models.Model):
     name = models.CharField(
         max_length=50,
         help_text='''
-            The name of the film stock itself without the manufacturer’s name (unless that’s part of the film’s name.)
+            The name of the film itself without the manufacturer’s name (unless that’s part of the film’s name.)
         ''',
     )
     slug = models.SlugField(max_length=50)

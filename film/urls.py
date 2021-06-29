@@ -62,6 +62,11 @@ urlpatterns = [
     path('project/<int:pk>/remove/', views.project_rolls_remove, name='project-rolls-remove'),
     path('project/<int:pk>/camera/update/', views.project_camera_update, name='project-camera-update'),
 
+    # Stocks
+    path('stocks/', views.stocks, name='stocks'),
+    path('stock/<slug:manufacturer>/', views.stocks_manufacturer, name='stocks-manufacturer'),
+    path('stock/<slug:manufacturer>/<slug:slug>/', views.stock, name='stock'),
+
     # Films
     path('film/', views.inventory, name='inventory'),
     path('film/ajax/<slug:format>/<slug:type>', views.inventory_ajax, name='inventory-ajax'),

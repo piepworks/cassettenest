@@ -300,6 +300,18 @@ def subscription_update(request):
     return redirect('settings')
 
 
+def stocks(request):
+    pass
+
+
+def stocks_manufacturer(request, manufacturer):
+    pass
+
+
+def stock(request, manufacturer, slug):
+    pass
+
+
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
