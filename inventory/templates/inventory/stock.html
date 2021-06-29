@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="raw">
-    <h1>Film Stock: {{ stock }}</h1>
+    <h1>Film Stock: <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> {{ stock.name }}</h1>
 
     <section class="cards">
         {% for film in films %}
