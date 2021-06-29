@@ -88,7 +88,17 @@ class Manufacturer(models.Model):
 
 
 class Stock(models.Model):
+    TYPE_CHOICES = (
+        ('c41', 'C41 Color'),
+        ('bw', 'Black and White'),
+        ('e6', 'E6 Color Reversal'),
+    )
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
+    type = models.CharField(
+        max_length=20,
+        choices=TYPE_CHOICES,
+        default='c41',
+    )
     name = models.CharField(
         max_length=50,
         help_text='''
