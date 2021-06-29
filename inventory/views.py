@@ -336,7 +336,19 @@ def stocks_manufacturer(request, manufacturer):
 
 
 def stock(request, manufacturer, slug):
-    pass
+    manufacturer = get_object_or_404(Manufacturer, slug=manufacturer)
+    stock = get_object_or_404(Stock, manufacturer=manufacturer, slug=slug)
+    films = Film.objects.filter(stock=stock).exclude(
+        Q(personal=True) & ~Q(added_by=request.user)
+    ).annotate(count=Count('roll'))
+
+    context = {
+        'films': films,
+        'stock': stock,
+        'manufacturer': manufacturer,
+    }
+
+    return render(request, 'inventory/stock.html', context)
 
 
 def register(request):
