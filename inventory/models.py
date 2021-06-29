@@ -89,11 +89,6 @@ class Manufacturer(models.Model):
 
 class Stock(models.Model):
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
-    personal = models.BooleanField(
-        default=False,
-        help_text='For user-submitted stocks. Only visible to the user who added it if this is true.',
-    )
-    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(
         max_length=50,
         help_text='''
@@ -108,6 +103,11 @@ class Stock(models.Model):
         help_text='Any website that describes this film stock, hopefully from the manufacturer themselves.',
     )
     description = models.TextField(blank=True, help_text='Any details about the film or how best to use it.')
+    personal = models.BooleanField(
+        default=False,
+        help_text='For user-submitted stocks. Only visible to the user who added it if this is true.',
+    )
+    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -140,11 +140,6 @@ class Film(models.Model):
         choices=FORMAT_CHOICES,
         default='135',
     )
-    personal = models.BooleanField(
-        default=False,
-        help_text='For user-submitted films. Only visible to the user who added it if this is true.',
-    )
-    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     stock = models.ForeignKey(Stock, blank=True, null=True, on_delete=models.CASCADE)
     iso = models.IntegerField(verbose_name='ISO')
     name = models.CharField(
@@ -161,6 +156,11 @@ class Film(models.Model):
         help_text='Any website that describes this film, hopefully from the manufacturer themselves.',
     )
     description = models.TextField(blank=True, help_text='Any details about the film or how best to use it.')
+    personal = models.BooleanField(
+        default=False,
+        help_text='For user-submitted films. Only visible to the user who added it if this is true.',
+    )
+    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
