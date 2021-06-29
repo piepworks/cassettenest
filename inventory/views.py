@@ -304,7 +304,11 @@ def stocks(request):
     # Exclude stocks that are flagged as `personal` and not created by the current user.
     stocks = Stock.objects.all().exclude(
         Q(personal=True) & ~Q(added_by=request.user)
-    ).annotate(count=Count('film'))
+    ).annotate(count=Count('film')).order_by(
+        'type',
+        'manufacturer__name',
+        'name',
+    )
 
     context = {
         'stocks': stocks,
