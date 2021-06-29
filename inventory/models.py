@@ -118,6 +118,9 @@ class Stock(models.Model):
     def __str__(self):
         return f'{self.manufacturer} {self.name}'
 
+    def get_absolute_url(self):
+        return reverse('stock', args=(self.manufacturer.slug, self.slug,))
+
 
 class Film(models.Model):
     TYPE_CHOICES = (

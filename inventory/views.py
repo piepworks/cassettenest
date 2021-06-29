@@ -20,7 +20,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
 from waffle.decorators import waffle_flag
 import requests
-from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll, Frame
+from .models import Camera, CameraBack, Stock, Film, Manufacturer, Journal, Project, Roll, Frame
 from .forms import (
     CameraForm,
     CameraBackForm,
@@ -301,7 +301,16 @@ def subscription_update(request):
 
 
 def stocks(request):
-    pass
+    # Exclude stocks that are flagged as `personal` and not created by the current user.
+    stocks = Stock.objects.all().exclude(
+        Q(personal=True) & ~Q(added_by=request.user)
+    ).annotate(count=Count('film'))
+
+    context = {
+        'stocks': stocks,
+    }
+
+    return render(request, 'inventory/stocks.html', context)
 
 
 def stocks_manufacturer(request, manufacturer):
