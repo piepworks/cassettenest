@@ -64,7 +64,7 @@ urlpatterns = [
 
     # Stocks
     path('stocks/', views.stocks, name='stocks'),
-    path('stock/<slug:manufacturer>/', views.stocks_manufacturer, name='stocks-manufacturer'),
+    path('stocks/<slug:manufacturer>/', views.stocks_manufacturer, name='stocks-manufacturer'),
     path('stock/<slug:manufacturer>/<slug:slug>/', views.stock, name='stock'),
 
     # Films

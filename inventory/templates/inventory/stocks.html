@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="raw">
-    <h1>Film Stocks</h1>
+    <h1>{% if manufacturer %}{{ manufacturer }} {% endif %}Film Stocks</h1>
 
     <section class="cards">
         {% for stock in stocks %}
