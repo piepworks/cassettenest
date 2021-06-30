@@ -3,8 +3,14 @@
 {% block title %}Film Stocks{% if manufacturer %}: {{ manufacturer }}{% endif %}{% endblock %}
 
 {% block content %}
+{% url 'stocks' as stocks_url %}
 <div class="raw">
-    <h1><a href="{% url 'stocks' %}">Film Stocks</a>{% if manufacturer %} &gt; {{ manufacturer }}{% endif %}</h1>
+    <h1>
+        {% if request.path != stocks_url %}<a href="{{ stocks_url }}">{% endif %}
+        Film Stocks
+        {% if request.path != stocks_url %}</a>{% endif %}
+        {% if manufacturer %} &gt; {{ manufacturer }}{% endif %}
+    </h1>
 
     <section class="cards">
         {% for stock in stocks %}
