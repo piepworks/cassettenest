@@ -65,6 +65,7 @@ urlpatterns = [
     # Stocks
     path('stocks/', views.stocks, name='stocks'),
     path('stocks/<slug:manufacturer>/', views.stocks_manufacturer, name='stocks-manufacturer'),
+    path('stock/', RedirectView.as_view(pattern_name='stocks')),
     path('stock/<slug:manufacturer>/<slug:slug>/', views.stock, name='stock'),
 
     # Films
