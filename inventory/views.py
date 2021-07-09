@@ -301,14 +301,23 @@ def subscription_update(request):
 
 
 def stocks(request):
-    # Exclude stocks that are flagged as `personal` and not created by the current user.
-    stocks = Stock.objects.all().exclude(
-        Q(personal=True) & ~Q(added_by=request.user)
-    ).annotate(count=Count('film')).order_by(
-        'type',
-        'manufacturer__name',
-        'name',
-    )
+    if request.user.is_authenticated:
+        # Exclude stocks that are flagged as `personal` and not created by the current user.
+        stocks = Stock.objects.all().exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).annotate(count=Count('film')).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+    else:
+        stocks = Stock.objects.all().exclude(
+            Q(personal=True)
+        ).annotate(count=Count('film')).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
 
     context = {
         'stocks': stocks,
@@ -338,21 +347,29 @@ def stocks_manufacturer(request, manufacturer):
 def stock(request, manufacturer, slug):
     manufacturer = get_object_or_404(Manufacturer, slug=manufacturer)
     stock = get_object_or_404(Stock, manufacturer=manufacturer, slug=slug)
-    films = Film.objects.filter(stock=stock).exclude(
-        Q(personal=True) & ~Q(added_by=request.user)
-    ).annotate(count=Count('roll'))
+
+    if request.user.is_authenticated:
+        films = Film.objects.filter(stock=stock).exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).annotate(count=Count('roll'))
+    else:
+        films = Film.objects.filter(stock=stock).exclude(Q(personal=True)).annotate(count=Count('roll'))
 
     films_list = []
     total_rolls = 0
     for film in films:
+        user_count = None
+        if request.user.is_authenticated:
+            user_count = Roll.objects.filter(
+                owner=request.user, film=film, status=status_number('storage')
+            ).count()
+
         films_list.append({
           'name': film.get_format_display(),
           'url': film.get_absolute_url(),
           'type': film.stock.type,
           'count': film.count,
-          'user_count': Roll.objects.filter(
-              owner=request.user, film=film, status=status_number('storage')
-          ).count(),
+          'user_count': user_count,
         })
         total_rolls = total_rolls + film.count
 
