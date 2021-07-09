@@ -342,8 +342,24 @@ def stock(request, manufacturer, slug):
         Q(personal=True) & ~Q(added_by=request.user)
     ).annotate(count=Count('roll'))
 
+    films_list = []
+    total_rolls = 0
+    for film in films:
+        films_list.append({
+          'name': film.get_format_display(),
+          'url': film.get_absolute_url(),
+          'type': film.stock.type,
+          'count': film.count,
+          'user_count': Roll.objects.filter(
+              owner=request.user, film=film, status=status_number('storage')
+          ).count(),
+        })
+        total_rolls = total_rolls + film.count
+
     context = {
         'films': films,
+        'films_list': films_list,
+        'total_rolls': total_rolls,
         'stock': stock,
         'manufacturer': manufacturer,
     }

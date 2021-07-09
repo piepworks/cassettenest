@@ -6,10 +6,23 @@
 <div class="raw">
     <h1><a href="{% url 'stocks' %}">Film Stocks</a> &gt; <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> &gt; {{ stock.name }}</h1>
 
+    <p>Total rolls of this stock in Cassette Nest: <b>{{ total_rolls }}</b></p>
+
+    <ul>
+    {% for film in films %}
+        <li>{{ film.get_format_display }}: {{ film.count }}</li>
+    {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+
+    <h2>Your inventory of this stock:</h2>
+
     <section class="cards">
-        {% for film in films %}
-            {% include 'inventory/_card.html' with name=film.get_format_display location=film.get_absolute_url type='film' film_type=film.stock.type %}
+        {% for film in films_list %}
+            {% include 'inventory/_card.html' with name=film.name location=film.url slot='count' count=film.user_count type='film' film_type=film.type %}
         {% endfor %}
     </section>
+    {% endif %}
 </div>
 {% endblock %}
