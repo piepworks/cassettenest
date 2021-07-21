@@ -357,19 +357,30 @@ def stock(request, manufacturer, slug):
 
     films_list = []
     total_rolls = 0
+    total_inventory = 0
+    total_history = 0
     for film in films:
-        user_count = None
+        user_inventory_count = None
+        user_history_count = None
         if request.user.is_authenticated:
-            user_count = Roll.objects.filter(
+            user_inventory_count = Roll.objects.filter(
                 owner=request.user, film=film, status=status_number('storage')
             ).count()
+            user_history_count = Roll.objects.filter(
+                owner=request.user, film=film
+            ).exclude(
+                status=status_number('storage')
+            ).count()
+            total_inventory = total_inventory + user_inventory_count
+            total_history = total_history + user_history_count
 
         films_list.append({
           'name': film.get_format_display(),
           'url': film.get_absolute_url(),
           'type': film.stock.type,
           'count': film.count,
-          'user_count': user_count,
+          'user_inventory_count': user_inventory_count,
+          'user_history_count': user_history_count,
         })
         total_rolls = total_rolls + film.count
 
@@ -377,6 +388,8 @@ def stock(request, manufacturer, slug):
         'films': films,
         'films_list': films_list,
         'total_rolls': total_rolls,
+        'total_inventory': total_inventory,
+        'total_history': total_history,
         'stock': stock,
         'manufacturer': manufacturer,
     }
