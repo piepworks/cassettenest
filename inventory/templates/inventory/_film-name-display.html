@@ -1,11 +1,9 @@
-{% if film.manufacturer.url %}
-    <a href="{{ film.manufacturer.url }}">{{ film.manufacturer }}</a>
-{% else %}
+{% if not film.stock %}
     {{ film.manufacturer }}
 {% endif %}
 
-{% if film.url %}
-    <a href="{{ film.url }}">{{ film.name }} in {{ film.get_format_display }}</a>
+{% if film.stock %}
+    <a href="{{ film.stock.get_absolute_url }}">{{ film.stock }}</a> in {{ film.get_format_display }}
 {% else %}
     {{ film.name }} in {{ film.get_format_display }}
 {% endif %}
