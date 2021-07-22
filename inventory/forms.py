@@ -124,10 +124,10 @@ class FrameForm(ModelForm):
         self.fields['aperture'].label = 'Or enter an aperture.'
         self.fields['shutter_speed'].label = 'Or enter a shutter speed.'
 
-    additional_frames = forms.IntegerField(
-        label='Apply these settings to additional frames.',
+    ending_number = forms.IntegerField(
+        label='Ending number',
         initial=0,
-        help_text='These settings will apply to this many more frames after the current one.',
+        help_text='Apply the same settings to all the frames in this range.',
         min_value=0,
         max_value=100,
         required=False,
@@ -140,7 +140,7 @@ class FrameForm(ModelForm):
         fields = [
             'number',
             'date',
-            'additional_frames',
+            'ending_number',
             'aperture_preset',
             'aperture',
             'shutter_speed_preset',

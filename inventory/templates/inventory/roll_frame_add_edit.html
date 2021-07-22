@@ -11,7 +11,9 @@
         {% csrf_token %}
 
         {% include 'inventory/_form-field.html' with field=form.number %}
-        {% include 'inventory/_form-field.html' with field=form.additional_frames %}
+        {% if action == 'Add' %}
+        {% include 'inventory/_form-field.html' with field=form.ending_number %}
+        {% endif %}
         {% include 'inventory/_form-field.html' with field=form.date %}
 
         {% capture as first_aperture silent %}{% if show_input.aperture %}True{% endif %}{% endcapture %}
@@ -45,18 +47,5 @@
 <script>
     {% include 'js/progressive-field.js' %}
     {% include 'js/markdown-autocomplete.js' %}
-
-    const $numberField = $('#{{ form.number.id_for_label }}');
-    const $additionalFramesField = $('#{{ form.additional_frames.id_for_label }}');
-    const $addtionalFramesHelp = $additionalFramesField.parent('.c-field').find('.c-field__help');
-
-    function updateHelpText(number, additional) {
-        const lastFrame = parseInt(number) + parseInt(additional);
-        $addtionalFramesHelp.html(`These settings will apply to frames <b>${number}–${lastFrame}</b>.`);
-    }
-
-    $('#{{ form.number.id_for_label }}, #{{ form.additional_frames.id_for_label }}').change(
-        () => updateHelpText($numberField.val(), $additionalFramesField.val())
-    );
 </script>
 {% endblock %}

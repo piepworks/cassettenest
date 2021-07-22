@@ -1478,9 +1478,10 @@ def roll_frame_add(request, roll_pk):
                     frame.save()
 
                 # Potentially save multiple frames at once.
-                additional_frames = form.cleaned_data['additional_frames']
-                if additional_frames and additional_frames > 0:
+                ending_number = form.cleaned_data['ending_number']
+                if ending_number and ending_number > frame.number:
                     starting_number = frame.number
+                    additional_frames = ending_number - starting_number
 
                     for x in range(1, additional_frames + 1):
                         # https://docs.djangoproject.com/en/3.2/topics/db/queries/#copying-model-instances
@@ -1514,10 +1515,12 @@ def roll_frame_add(request, roll_pk):
 
         form = FrameForm(initial={
             'number': starting_number,
+            'ending_number': starting_number,
             'date': previous_date if another else datetime.date.today(),
             'aperture': previous_aperture if another else '',
             'shutter_speed': previous_shutter_speed if another else '',
         })
+        form.fields['ending_number'].widget.attrs['min'] = starting_number
 
         show_input = {
             'aperture': False,

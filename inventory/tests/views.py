@@ -1542,7 +1542,7 @@ class FrameViewTests(TestCase):
         response = self.client.post(reverse('roll-frame-add', args=(self.roll.id,)), data={
             'number': '2',
             'date': self.today,
-            'additional_frames': 2,
+            'ending_number': '4',
             'aperture': '1',
             'shutter_speed': '1/500',
             'notes': 'asdf',
