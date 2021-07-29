@@ -9,5 +9,28 @@ jobs:
         run: docker network create web
       - name: Build the stack
         run: docker-compose up -d
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: ${{ secrets.DEBUG }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          EMAIL_BACKEND: ${{ secrets.EMAIL_BACKEND }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
+          DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+          RELOAD: ${{ secrets.RELOAD }}
+          SUBSCRIPTION_TRIAL: ${{ secrets.SUBSCRIPTION_TRIAL }}
+          SUBSCRIPTION_TRIAL_DURATION: ${{ secrets.SUBSCRIPTION_TRIAL_DURATION }}
+          PADDLE_LIVE_MODE: ${{ secrets.PADDLE_LIVE_MODE }}
+          PADDLE_VENDOR_ID: ${{ secrets.PADDLE_VENDOR_ID }}
+          PADDLE_VENDOR_AUTH_CODE: ${{ secrets.PADDLE_VENDOR_AUTH_CODE }}
+          PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
+          PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
+          PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
       - name: Run coverage report
-        run: docker-compose exec web coverage report
+        run: docker-compose exec -T web coverage report
