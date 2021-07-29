@@ -33,6 +33,6 @@ jobs:
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
       - name: Run tests
-        run: docker-compose exec -T web coverage run manage.py test --keepdb
-      - name: Generate coverage report
-        run: docker-compose exec -T web coverage report
+        run: docker-compose exec -T web python manage.py test --keepdb
+#      - name: Generate coverage report
+#        run: docker-compose exec -T web coverage report
