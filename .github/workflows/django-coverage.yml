@@ -7,5 +7,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack
         run: docker-compose up -d
-      - name: Test
+      - name: Create the network
+        run: docker network create web
+      - name: Run coverage report
         run: docker-compose exec web coverage report
