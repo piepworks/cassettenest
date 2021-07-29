@@ -5,9 +5,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build the stack
-        run: docker-compose up -d
       - name: Create the network
         run: docker network create web
+      - name: Build the stack
+        run: docker-compose up -d
       - name: Run coverage report
         run: docker-compose exec web coverage report
