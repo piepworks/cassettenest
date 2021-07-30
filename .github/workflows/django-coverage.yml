@@ -8,10 +8,11 @@ jobs:
       - name: Build the stack, run tests, generate report
         run: |
           set -x
-          docker network create web
-          docker-compose up -d --build
-          docker-compose exec -T cassettenest_web_ coverage run manage.py test
-          docker-compose exec -T cassettenest_web_ coverage report
+          echo 'Hello, world.'
+          # docker network create web
+          # docker-compose up -d --build
+          # docker-compose exec -T web coverage run manage.py test
+          # docker-compose exec -T web coverage report
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
