@@ -8,9 +8,9 @@ jobs:
       - name: Build the stack, run tests, generate report
         run: |
           set -x
-          echo 'Hello, world.'
-          # docker network create web
-          # docker-compose up -d --build
+          docker network create web
+          docker-compose up -d --build
+          docker ps 
           # docker-compose exec -T web coverage run manage.py test
           # docker-compose exec -T web coverage report
         env:
