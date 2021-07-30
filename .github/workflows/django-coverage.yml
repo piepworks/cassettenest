@@ -5,10 +5,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Create the network
-        run: docker network create web
       - name: Build the stack
-        run: docker-compose up -d
+        run: |
+          docker network create web
+          docker-compose up -d
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
