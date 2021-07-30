@@ -14,7 +14,7 @@ jobs:
           # docker-compose exec -T web ls
           # docker-compose exec -T web coverage run manage.py test
           # docker-compose exec -T web coverage report
-          docker-compose exec -T web python /code/manage.py
+          docker-compose exec -T web /bin/sh -c "cd /code; python manage.py"
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
