@@ -9,7 +9,7 @@ jobs:
         run: |
           set -x
           docker network create web
-          docker-compose up -d
+          docker-compose up -d --build
           docker-compose exec -T cassettenest_web_ coverage run manage.py test
           docker-compose exec -T cassettenest_web_ coverage report
         env:
