@@ -5,10 +5,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build the stack
+      - name: Build the stack, run tests, generate report
         run: |
+          set -x
           docker network create web
           docker-compose up -d
+          docker-compose exec -T web coverage run manage.py test
+          docker-compose exec -T web coverage report
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
@@ -32,8 +35,3 @@ jobs:
           PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
-      - name: Run tests and generate coverage report
-        run: |
-          set -x
-          docker-compose exec -T web coverage run manage.py test
-          docker-compose exec -T web coverage report
