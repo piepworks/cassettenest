@@ -9,7 +9,7 @@ jobs:
         run: |
           set -x
           docker network create web
-          docker-compose up -d --build
+          docker-compose -f docker-compose.yml up -d --build
           # docker ps 
           # docker-compose exec -T web ls
           # docker-compose exec -T web coverage run manage.py test
