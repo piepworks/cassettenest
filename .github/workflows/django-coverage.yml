@@ -34,5 +34,5 @@ jobs:
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
       - name: Run tests and generate coverage report
         run: |
-          docker-compose exec -t web coverage run manage.py test
-          docker-compose exec -t web coverage report
+          coverage run manage.py test
+          coverage report
