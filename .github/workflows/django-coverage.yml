@@ -11,8 +11,9 @@ jobs:
           docker network create web
           docker-compose up -d --build
           # docker ps 
-          docker-compose exec -T app coverage run manage.py test
-          docker-compose exec -T app coverage report
+          docker-compose exec -T web ls
+          # docker-compose exec -T web coverage run manage.py test
+          # docker-compose exec -T web coverage report
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
