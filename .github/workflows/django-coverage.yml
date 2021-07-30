@@ -15,7 +15,8 @@ jobs:
           # docker-compose exec -T web coverage run manage.py test
           # docker-compose exec -T web coverage report
           # docker-compose exec -T web /usr/local/bin/coverage
-          docker ps -a
+          # docker ps -a
+          docker-compose exec -T web bash -c "which coverage"
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
