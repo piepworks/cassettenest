@@ -18,7 +18,7 @@ jobs:
           sleep 5
           docker ps -a
           docker-compose logs web
-          # docker-compose exec -T web python manage.py test
+          docker-compose exec -T web python manage.py test
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
