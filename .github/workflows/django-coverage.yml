@@ -15,6 +15,7 @@ jobs:
           # docker-compose exec -T web coverage run manage.py test
           # docker-compose exec -T web coverage report
           # docker ps -a
+          sleep 5
           docker-compose exec -T web python manage.py test --no-faulthandler
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
