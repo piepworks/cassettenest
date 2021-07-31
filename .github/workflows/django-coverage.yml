@@ -9,15 +9,15 @@ jobs:
         run: |
           set -x
           docker network create web
-          docker-compose build
-          docker-compose up -d
+          docker-compose up -d --build
           # docker ps 
           # docker-compose exec -T web ls
           # docker-compose exec -T web coverage run manage.py test
           # docker-compose exec -T web coverage report
-          # docker ps -a
+          docker ps -a
           sleep 5
-          docker-compose exec -T web python manage.py test --no-faulthandler
+          docker ps -a
+          docker-compose exec -T web python manage.py test
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
