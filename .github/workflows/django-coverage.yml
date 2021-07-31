@@ -7,7 +7,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack, run tests, generate report
         run: |
-          set -x
+          # set -x
           docker network create web
           docker-compose up -d --build
           docker-compose exec -T web python manage.py migrate --noinput
@@ -41,3 +41,10 @@ jobs:
           PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          flags: unittests
+          fail_ci_if_error: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
