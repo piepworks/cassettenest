@@ -53,6 +53,8 @@ jobs:
           PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
+      - name: See what files we have access to.
+        run: ls -al
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
