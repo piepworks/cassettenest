@@ -7,7 +7,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack, run tests, generate report
         run: |
-          # set -x
           docker network create web
           docker-compose up -d --build
           docker-compose exec -T web python manage.py migrate --noinput
