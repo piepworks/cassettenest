@@ -59,4 +59,5 @@ jobs:
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./.coverage
+          files: .coverage
+          verbose: true
