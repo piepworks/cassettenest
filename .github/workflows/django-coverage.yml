@@ -18,6 +18,9 @@ jobs:
           # sleep 5
           # docker ps -a
           # docker-compose logs web
+          docker-compose exec -T web curl -Os https://uploader.codecov.io/latest/linux/codecov
+          docker-compose exec -T web chmod +x codecov
+          docker-compose exec -T web ./codecov -t ${{ secrets.CODECOV_TOKEN }}
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
@@ -41,14 +44,3 @@ jobs:
           PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
-      - uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: /.coverage
-      - uses: actions/download-artifact@v2
-        with:
-          name: coverage-report
-      - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
