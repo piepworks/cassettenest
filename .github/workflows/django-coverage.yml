@@ -14,21 +14,22 @@ jobs:
           docker-compose exec -T web python manage.py collectstatic --noinput
           docker-compose exec -T web python manage.py compress --force
           docker-compose exec -T web coverage run manage.py test
+
           # docker-compose exec -T web coverage report
           # sleep 5
           # docker ps -a
           # docker-compose logs web
           # docker-compose exec -T web ls -al
 
-          docker-compose exec -T curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import # One-time step
-          docker-compose exec -T curl -Os https://uploader.codecov.io/latest/linux/codecov
-          docker-compose exec -T curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
-          docker-compose exec -T curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
-          docker-compose exec -T gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
-          docker-compose exec -T shasum -a 256 -c codecov.SHA256SUM
+          # docker-compose exec -T curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --import # One-time step
+          # docker-compose exec -T curl -Os https://uploader.codecov.io/latest/linux/codecov
+          # docker-compose exec -T curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM
+          # docker-compose exec -T curl -Os https://uploader.codecov.io/latest/linux/codecov.SHA256SUM.sig
+          # docker-compose exec -T gpg --verify codecov.SHA256SUM.sig codecov.SHA256SUM
+          # docker-compose exec -T shasum -a 256 -c codecov.SHA256SUM
 
-          docker-compose exec -T web chmod +x codecov
-          docker-compose exec -T web ./codecov -f ./.coverage -t ${{ secrets.CODECOV_TOKEN }}
+          # docker-compose exec -T web chmod +x codecov
+          # docker-compose exec -T web ./codecov -f ./.coverage -t ${{ secrets.CODECOV_TOKEN }}
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
@@ -52,3 +53,8 @@ jobs:
           PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: /code/.coverage
