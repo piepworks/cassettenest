@@ -18,6 +18,7 @@ jobs:
           # sleep 5
           # docker ps -a
           # docker-compose logs web
+          docker-compose exec -T web ls -al
           docker-compose exec -T web curl -Os https://uploader.codecov.io/latest/linux/codecov
           docker-compose exec -T web chmod +x codecov
           docker-compose exec -T web ./codecov -t ${{ secrets.CODECOV_TOKEN }}
