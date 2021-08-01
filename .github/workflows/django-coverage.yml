@@ -21,7 +21,7 @@ jobs:
           # docker-compose exec -T web ls -al
           docker-compose exec -T web curl -Os https://uploader.codecov.io/latest/linux/codecov
           docker-compose exec -T web chmod +x codecov
-          docker-compose exec -T web ./codecov -f ./.coverage -t ${{ secrets.CODECOV_TOKEN }} -v
+          docker-compose exec -T web ./codecov -v -f ./.coverage -t ${{ secrets.CODECOV_TOKEN }}
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
