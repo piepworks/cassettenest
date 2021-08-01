@@ -41,6 +41,13 @@ jobs:
           PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: /code/.coverage
+      - uses: actions/download-artifact@v2
+        with:
+          name: coverage-report
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
