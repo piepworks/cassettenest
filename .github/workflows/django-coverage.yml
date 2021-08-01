@@ -1,0 +1,44 @@
+name: Django Test Coverage
+on: pull_request
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the stack, run tests, generate report
+        run: |
+          docker network create web
+          docker-compose up -d --build
+          docker-compose exec -T web python manage.py migrate --noinput
+          docker-compose exec -T web python manage.py collectstatic --noinput
+          docker-compose exec -T web python manage.py compress --force
+          docker-compose exec -T web coverage run manage.py test
+          docker-compose exec -T web coverage xml
+        env:
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DEBUG: ${{ secrets.DEBUG }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          EMAIL_BACKEND: ${{ secrets.EMAIL_BACKEND }}
+          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+          EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+          EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+          EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
+          DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
+          RELOAD: ${{ secrets.RELOAD }}
+          SUBSCRIPTION_TRIAL: ${{ secrets.SUBSCRIPTION_TRIAL }}
+          SUBSCRIPTION_TRIAL_DURATION: ${{ secrets.SUBSCRIPTION_TRIAL_DURATION }}
+          PADDLE_LIVE_MODE: ${{ secrets.PADDLE_LIVE_MODE }}
+          PADDLE_VENDOR_ID: ${{ secrets.PADDLE_VENDOR_ID }}
+          PADDLE_VENDOR_AUTH_CODE: ${{ secrets.PADDLE_VENDOR_AUTH_CODE }}
+          PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
+          PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
+          PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage.xml
