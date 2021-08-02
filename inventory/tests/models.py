@@ -12,6 +12,9 @@ from inventory.models import (
     Profile,
     Project,
     Journal,
+    Stock,
+    Manufacturer,
+    Frame,
 )
 from inventory.utils import status_number
 
@@ -360,3 +363,47 @@ class JournalModelTests(TestCase):
 
         self.assertEqual(journal1.starting_frame, 1)
         self.assertEqual(journal2.starting_frame, 4)
+
+
+class StockModelTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.stock_slug = 'portra'
+        cls.manufacturer_slug = 'kodak'
+        cls.stock = baker.make(
+            Stock,
+            name='Portra',
+            slug=cls.stock_slug,
+            manufacturer=baker.make(Manufacturer, name='Kodak', slug=cls.manufacturer_slug)
+        )
+
+    def test_model_str(self):
+        self.assertEqual(str(self.stock), 'Kodak Portra')
+
+    def test_absolute_url(self):
+        self.assertEqual(self.stock.get_absolute_url(), f'/stock/{self.manufacturer_slug}/{self.stock_slug}/')
+
+
+class FrameModelTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.today = datetime.datetime.now().date()
+        cls.frame_number = 1
+        cls.manufacturer_name = 'Kodak'
+        cls.film_name = 'Portra'
+        cls.frame = baker.make(
+            Frame, number=1, roll=baker.make(
+                Roll,
+                film=baker.make(
+                    Film,
+                    manufacturer=baker.make(Manufacturer, name=cls.manufacturer_name),
+                    name=cls.film_name
+                )
+            )
+        )
+
+    def test_model_str(self):
+        self.assertEqual(
+            str(self.frame),
+            f'Frame #{self.frame_number} of {self.manufacturer_name} {self.film_name} in 35mm added on {self.today}'
+        )
