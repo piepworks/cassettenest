@@ -13,7 +13,7 @@ from django.conf import settings
 from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
-from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame
+from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame, Stock, Manufacturer
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
 
@@ -1702,3 +1702,47 @@ class FrameViewTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn(f'{frame} successfully deleted.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class StockViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        cls.personal_stock = baker.make(
+            Stock,
+            name='Portra',
+            personal=True,
+            added_by=cls.user,
+            manufacturer=baker.make(Manufacturer, name='Kodak')
+        )
+        cls.public_stock = baker.make(
+            Stock,
+            name='Dracula',
+            manufacturer=baker.make(Manufacturer, name='FPP')
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_stocks_page(self):
+        response = self.client.get(reverse('stocks'))
+        self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
+        self.assertContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
+        self.assertIsNotNone(response.context['stocks'])
+
+    def test_stocks_page_logged_out(self):
+        self.client.logout()
+        response = self.client.get(reverse('stocks'))
+        self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
+        self.assertNotContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
+        self.assertIsNotNone(response.context['stocks'])
