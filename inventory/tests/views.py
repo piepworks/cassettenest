@@ -1715,16 +1715,17 @@ class StockViewTests(TestCase):
             password=cls.password,
         )
         cls.today = datetime.date.today()
-        cls.personal_stock = baker.make(
-            Stock,
-            name='Portra',
-            personal=True,
-            added_by=cls.user,
-            manufacturer=baker.make(Manufacturer, name='Kodak')
-        )
         cls.public_stock = baker.make(
             Stock,
+            name='Portra 400',
+            slug='portra-400',
+            manufacturer=baker.make(Manufacturer, name='Kodak')
+        )
+        cls.personal_stock = baker.make(
+            Stock,
             name='Dracula',
+            personal=True,
+            added_by=cls.user,
             manufacturer=baker.make(Manufacturer, name='FPP')
         )
 
@@ -1746,3 +1747,22 @@ class StockViewTests(TestCase):
         self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
         self.assertNotContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
         self.assertIsNotNone(response.context['stocks'])
+
+    def test_stocks_manufacturer_page(self):
+        response = self.client.get(reverse('stocks-manufacturer', args=(self.public_stock.manufacturer.slug,)))
+        self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
+        self.assertIsNotNone(response.context['stocks'])
+
+    def test_stock_page(self):
+        film = baker.make(Film, name='Portra 400', slug='portra-400-135', stock=self.public_stock)
+        response = self.client.get(reverse('stock', args=(self.public_stock.manufacturer.slug, self.public_stock.slug)))
+        self.assertContains(response, f'{self.public_stock.name}')
+        self.assertContains(response, 'Your inventory of this stock')
+        self.assertIsNotNone(response.context['stock'])
+
+    def test_stock_page_logged_out(self):
+        self.client.logout()
+        response = self.client.get(reverse('stock', args=(self.public_stock.manufacturer.slug, self.public_stock.slug)))
+        self.assertContains(response, f'{self.public_stock.name}')
+        self.assertNotContains(response, 'Your inventory of this stock')
+        self.assertIsNotNone(response.context['stock'])
