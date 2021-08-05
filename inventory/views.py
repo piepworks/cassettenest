@@ -385,10 +385,21 @@ def stocks_manufacturer(request, manufacturer):
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
 
+    types_available = Stock.objects.filter(manufacturer=manufacturer).values('type').distinct()
+    # Get the display name of types choices.
+    type_names = dict(Film._meta.get_field('type').flatchoices)
+    type_choices = {}
+    for type in types_available:
+        type_choices[type['type']] = force_str(
+            type_names[type['type']],
+            strings_only=True
+        )
+
     context = {
         'stocks': stocks,
         'manufacturers': manufacturers,
         'manufacturer': manufacturer,
+        'type_choices': type_choices,
         'filters': filters,
         'js_needed': True,
     }
