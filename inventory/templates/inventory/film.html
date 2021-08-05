@@ -46,7 +46,9 @@
     </div>
 </form>
 
-{% include 'inventory/_unused-rolls.html' %}
+<div id="unused-rolls-wrapper">
+    {% include 'inventory/_unused-rolls.html' %}
+</div>
 
 {% else %}
 <p>No film found.</p>
