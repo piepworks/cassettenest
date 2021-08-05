@@ -306,6 +306,18 @@ def stocks(request):
         'type': 'all',
     }
 
+    if request.GET.get('type') and request.GET.get('type') != 'all':
+        filters['type'] = request.GET.get('type')
+
+    if request.GET.get('manufacturer') and request.GET.get('manufacturer') != 'all':
+        filters['manufacturer'] = request.GET.get('manufacturer')
+        type_passthrough = ''
+
+        if filters['type'] != 'all':
+            type_passthrough = '?type=' + filters['type']
+
+        return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
+
     if request.user.is_authenticated:
         # Exclude stocks that are flagged as `personal` and not created by the current user.
         manufacturers = Manufacturer.objects.all().exclude(
@@ -327,18 +339,6 @@ def stocks(request):
             'manufacturer__name',
             'name',
         )
-
-    if request.GET.get('type') and request.GET.get('type') != 'all':
-        filters['type'] = request.GET.get('type')
-
-    if request.GET.get('manufacturer') and request.GET.get('manufacturer') != 'all':
-        filters['manufacturer'] = request.GET.get('manufacturer')
-        type_passthrough = ''
-
-        if filters['type'] != 'all':
-            type_passthrough = '?type=' + filters['type']
-
-        return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
 
     type_choices = dict(Stock._meta.get_field('type').flatchoices)
 
