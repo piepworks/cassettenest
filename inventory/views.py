@@ -331,6 +331,15 @@ def stocks(request):
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
 
+    if request.GET.get('manufacturer') and request.GET.get('manufacturer') != 'all':
+        filters['manufacturer'] = request.GET.get('manufacturer')
+        type_passthrough = ''
+
+        if filters['type'] != 'all':
+            type_passthrough = '?type=' + filters['type']
+
+        return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
+
     type_choices = dict(Stock._meta.get_field('type').flatchoices)
 
     context = {
