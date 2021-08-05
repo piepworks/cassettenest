@@ -1,0 +1,5 @@
+<section class="cards">
+    {% for stock in stocks %}
+        {% include 'inventory/_card.html' with name=stock location=stock.get_absolute_url type='film' sub_type='stock' film_type=stock.type %}
+    {% endfor %}
+</section>

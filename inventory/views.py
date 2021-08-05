@@ -413,7 +413,33 @@ def stocks_manufacturer(request, manufacturer):
 
 
 def stocks_ajax(request, manufacturer, type):
-    pass
+    if request.user.is_authenticated:
+        stocks = Stock.objects.exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+    else:
+        stocks = Stock.objects.exclude(
+            Q(personal=True)
+        ).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+
+    if manufacturer != 'all':
+        stocks = stocks.filter(manufacturer__slug=manufacturer)
+    if type != 'all':
+        stocks = stocks.filter(type=type)
+
+    context = {
+        'stocks': stocks,
+    }
+
+    return render(request, 'inventory/_stocks-list.html', context)
 
 
 def stock(request, manufacturer, slug):

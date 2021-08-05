@@ -42,11 +42,9 @@
 
     <hr />
 
-    <section class="cards">
-        {% for stock in stocks %}
-            {% include 'inventory/_card.html' with name=stock location=stock.get_absolute_url type='film' sub_type='stock' film_type=stock.type %}
-        {% endfor %}
-    </section>
+    <div id="stocks-list-wrapper">
+        {% include 'inventory/_stocks-list.html' %}
+    </div>
 </div>
 {% endblock %}
 
@@ -59,6 +57,9 @@ $('#stock_filter select').change((e) => {
     let manufacturerUrl = (newManufacturer === 'all')
         ? `{% url 'stocks' %}`
         : `{% url 'stocks-manufacturer' manufacturer='m-none' %}`.replace('m-none', newManufacturer);
+    const typeUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`
+        .replace('m-none', newManufacturer)
+        .replace('t-none', newType);
 
     if (e.target.name === 'manufacturer') {
         if (newType !== 'all') {
@@ -68,9 +69,11 @@ $('#stock_filter select').change((e) => {
     }
 
     if (e.target.name === 'type') {
-        if (newType !== 'all') {
-            console.log(`Get some ajax for ${newType}.`);
-        }
+        fetch(typeUrl).then((response) => {
+            response.text().then((text) => {
+                $('#stocks-list-wrapper').html(text);
+            });
+        });
     }
 });
 </script>
