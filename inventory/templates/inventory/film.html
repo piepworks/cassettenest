@@ -77,11 +77,13 @@ $('#film_filter select').change(() => {
     const inventoryUrl = `{% url 'inventory-ajax' format='f-none' type='t-none' %}`
         .replace('f-none', format)
         .replace('t-none', type);
+    const $wrapper = $('#unused-rolls-wrapper');
 
+    $wrapper.html('<div class="loader" />');
     fetch(inventoryUrl)
         .then(response => {
             response.text().then(text => {
-                $('#unused-rolls-wrapper').html(text);
+                $wrapper.html(text);
                 $('.js-reset-filter').click(e => resetLink(e));
                 url.searchParams.set('format', format);
                 url.searchParams.set('type', type);

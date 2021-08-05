@@ -69,9 +69,12 @@ $('#stock_filter select').change((e) => {
     }
 
     if (e.target.name === 'type') {
+        const $wrapper = $('#stocks-list-wrapper');
+
+        $wrapper.html('<div class="loader" />');
         fetch(typeUrl).then((response) => {
             response.text().then((text) => {
-                $('#stocks-list-wrapper').html(text);
+                $wrapper.html(text);
             });
         });
     }
