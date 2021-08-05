@@ -12,7 +12,7 @@
         {% if manufacturer %} &gt; {{ manufacturer }}{% endif %}
     </h1>
 
-    <form id="stock_filter" action="get">
+    <form id="stock_filter" method="get" action={% url 'stocks' %}>
         <div class="c-field--filter">
             <div class="inner">
                 <label for="id_manufacturer">
