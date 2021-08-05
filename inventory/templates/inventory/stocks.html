@@ -12,6 +12,36 @@
         {% if manufacturer %} &gt; {{ manufacturer }}{% endif %}
     </h1>
 
+    <form id="stock_filter" action="get">
+        <div class="c-field--filter">
+            <div class="inner">
+                <label for="id_manufacturer">
+                    Manufacturer:
+                    <select name="manufacturer" id="id_manufacturer">
+                        <option value="all">All manufacturers</option>
+                        {% for manufacturer in manufacturers %}
+                        <option value={{ manufacturer.slug }}{% if filters.manufacturer == manufacturer.slug %} selected{% endif %}>
+                            {{ manufacturer }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label for="id_type">
+                    Type:
+                    <select name="type" id="id_type">
+                        <option value="all">All types</option>
+                        {% for key, value in type_choices.items %}
+                        <option value="{{ key }}"{% if filters.type == key %} selected{% endif %}>{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            <button class="no-js">Filter</button>
+        </div>
+    </form>
+
+    <hr />
+
     <section class="cards">
         {% for stock in stocks %}
             {% include 'inventory/_card.html' with name=stock location=stock.get_absolute_url type='film' sub_type='stock' film_type=stock.type %}

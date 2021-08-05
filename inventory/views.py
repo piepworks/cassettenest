@@ -301,8 +301,16 @@ def subscription_update(request):
 
 
 def stocks(request):
+    filters = {
+        'manufacturer': 'all',
+        'type': 'all',
+    }
+
     if request.user.is_authenticated:
         # Exclude stocks that are flagged as `personal` and not created by the current user.
+        manufacturers = Manufacturer.objects.all().exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        )
         stocks = Stock.objects.all().exclude(
             Q(personal=True) & ~Q(added_by=request.user)
         ).annotate(count=Count('film')).order_by(
@@ -311,6 +319,7 @@ def stocks(request):
             'name',
         )
     else:
+        manufacturers = Manufacturer.objects.all().exclude(Q(personal=True))
         stocks = Stock.objects.all().exclude(
             Q(personal=True)
         ).annotate(count=Count('film')).order_by(
@@ -319,8 +328,17 @@ def stocks(request):
             'name',
         )
 
+    if request.GET.get('type') and request.GET.get('type') != 'all':
+        filters['type'] = request.GET.get('type')
+
+    type_choices = dict(Stock._meta.get_field('type').flatchoices)
+
     context = {
+        'manufacturers': manufacturers,
         'stocks': stocks,
+        'filters': filters,
+        'type_choices': type_choices,
+        'js_needed': True,
     }
 
     return render(request, 'inventory/stocks.html', context)
@@ -328,17 +346,42 @@ def stocks(request):
 
 def stocks_manufacturer(request, manufacturer):
     manufacturer = get_object_or_404(Manufacturer, slug=manufacturer)
-    stocks = Stock.objects.filter(manufacturer=manufacturer).exclude(
-        Q(personal=True) & ~Q(added_by=request.user)
-    ).annotate(count=Count('film')).order_by(
-        'type',
-        'manufacturer__name',
-        'name',
-    )
+    filters = {
+        'manufacturer': manufacturer.slug,
+        'type': 'all',
+    }
+
+    if request.user.is_authenticated:
+        manufacturers = Manufacturer.objects.all().exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        )
+        stocks = Stock.objects.filter(manufacturer=manufacturer).exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).annotate(count=Count('film')).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+    else:
+        manufacturers = Manufacturer.objects.all().exclude(Q(personal=True))
+        stocks = Stock.objects.filter(manufacturer=manufacturer).exclude(
+            Q(personal=True)
+        ).annotate(count=Count('film')).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+
+    filters['type'] = 'all'
+    if request.GET.get('type') and request.GET.get('type') != 'all':
+        filters['type'] = request.GET.get('type')
 
     context = {
         'stocks': stocks,
+        'manufacturers': manufacturers,
         'manufacturer': manufacturer,
+        'filters': filters,
+        'js_needed': True,
     }
 
     return render(request, 'inventory/stocks.html', context)
