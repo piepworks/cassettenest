@@ -52,6 +52,19 @@
 
 {% block page_js %}
 <script>
-    console.log('Hello, world.');
+    $('#stock_filter select').change((e) => {
+        const url = new URL(window.location);
+        const newManufacturer = $('#id_manufacturer').val();
+        const newType = $('#id_type').val();
+        let manufacturerUrl = `{% url 'stocks-manufacturer' manufacturer='m-none' %}`
+            .replace('m-none', newManufacturer);
+
+        if (e.target.name === 'manufacturer') {
+            if (newType !== 'all') {
+                manufacturerUrl += `?type=${newType}`;
+            }
+            window.location.href = manufacturerUrl;
+        }
+    });
 </script>
 {% endblock %}
