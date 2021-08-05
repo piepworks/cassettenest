@@ -11,7 +11,7 @@
             {% if filters.format != 'all' or filters.type != 'all' %}
                 {{ total_film_count.count }}
                 roll{{ total_film_count.count|pluralize }} (filtered),
-                <small>
+                <small><a class="js-reset-filter" href="{% url 'inventory' %}">
             {% endif %}
         {% endif %}
         {{ total_rolls }} roll{{ total_rolls|pluralize }}
@@ -19,8 +19,7 @@
             remaining
         {% else %}
             {% if filters.format != 'all' or filters.type != 'all' %}
-                total
-                </small>
+                total</a></small>
             {% endif %}
         {% endif %}
     </h2>
