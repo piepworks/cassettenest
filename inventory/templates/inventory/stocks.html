@@ -66,6 +66,12 @@
             }
             window.location.href = manufacturerUrl;
         }
+
+        if (e.target.name === 'type') {
+            if (newType !== 'all') {
+                console.log(`Get some ajax for ${newType}.`);
+            }
+        }
     });
 </script>
 {% endblock %}

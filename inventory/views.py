@@ -340,6 +340,9 @@ def stocks(request):
             'name',
         )
 
+    if filters['type'] != 'all':
+        stocks = stocks.filter(type=filters['type'])
+
     type_choices = dict(Stock._meta.get_field('type').flatchoices)
 
     context = {
@@ -381,9 +384,11 @@ def stocks_manufacturer(request, manufacturer):
             'name',
         )
 
-    filters['type'] = 'all'
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
+
+    if filters['type'] != 'all':
+        stocks = stocks.filter(type=filters['type'])
 
     types_available = Stock.objects.filter(manufacturer=manufacturer).values('type').distinct()
     # Get the display name of types choices.
