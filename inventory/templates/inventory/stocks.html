@@ -56,13 +56,9 @@
         const url = new URL(window.location);
         const newManufacturer = $('#id_manufacturer').val();
         const newType = $('#id_type').val();
-        let manufacturerUrl;
-        if (newManufacturer === 'all') {
-            manufacturerUrl = `{% url 'stocks' %}`;
-        } else {
-            manufacturerUrl = `{% url 'stocks-manufacturer' manufacturer='m-none' %}`
-                .replace('m-none', newManufacturer);
-        }
+        let manufacturerUrl = (newManufacturer === 'all')
+            ? `{% url 'stocks' %}`
+            : `{% url 'stocks-manufacturer' manufacturer='m-none' %}`.replace('m-none', newManufacturer);
 
         if (e.target.name === 'manufacturer') {
             if (newType !== 'all') {
