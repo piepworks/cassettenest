@@ -52,26 +52,26 @@
 
 {% block page_js %}
 <script>
-    $('#stock_filter select').change((e) => {
-        const url = new URL(window.location);
-        const newManufacturer = $('#id_manufacturer').val();
-        const newType = $('#id_type').val();
-        let manufacturerUrl = (newManufacturer === 'all')
-            ? `{% url 'stocks' %}`
-            : `{% url 'stocks-manufacturer' manufacturer='m-none' %}`.replace('m-none', newManufacturer);
+$('#stock_filter select').change((e) => {
+    const url = new URL(window.location);
+    const newManufacturer = $('#id_manufacturer').val();
+    const newType = $('#id_type').val();
+    let manufacturerUrl = (newManufacturer === 'all')
+        ? `{% url 'stocks' %}`
+        : `{% url 'stocks-manufacturer' manufacturer='m-none' %}`.replace('m-none', newManufacturer);
 
-        if (e.target.name === 'manufacturer') {
-            if (newType !== 'all') {
-                manufacturerUrl += `?type=${newType}`;
-            }
-            window.location.href = manufacturerUrl;
+    if (e.target.name === 'manufacturer') {
+        if (newType !== 'all') {
+            manufacturerUrl += `?type=${newType}`;
         }
+        window.location.href = manufacturerUrl;
+    }
 
-        if (e.target.name === 'type') {
-            if (newType !== 'all') {
-                console.log(`Get some ajax for ${newType}.`);
-            }
+    if (e.target.name === 'type') {
+        if (newType !== 'all') {
+            console.log(`Get some ajax for ${newType}.`);
         }
-    });
+    }
+});
 </script>
 {% endblock %}
