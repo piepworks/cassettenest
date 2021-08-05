@@ -396,6 +396,10 @@ def stocks_manufacturer(request, manufacturer):
     return render(request, 'inventory/stocks.html', context)
 
 
+def stocks_ajax(request, manufacturer, type):
+    pass
+
+
 def stock(request, manufacturer, slug):
     manufacturer = get_object_or_404(Manufacturer, slug=manufacturer)
     stock = get_object_or_404(Stock, manufacturer=manufacturer, slug=slug)
