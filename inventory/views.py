@@ -313,6 +313,11 @@ def stocks(request, manufacturer='all'):
     if request.GET.get('manufacturer') and request.GET.get('manufacturer') != 'all':
         filters['manufacturer'] = request.GET.get('manufacturer')
 
+        if filters['type'] != 'all':
+            type_passthrough = '?type=' + filters['type']
+
+        return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
+
     if request.user.is_authenticated:
         # Exclude stocks that are flagged as `personal` and not created by the current user.
         manufacturers = Manufacturer.objects.all().exclude(
