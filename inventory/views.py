@@ -360,7 +360,11 @@ def stocks(request, manufacturer='all'):
 
     if filters['type'] != 'all':
         stocks = stocks.filter(type=filters['type'])
-        type_name = type_choices[filters['type']]
+        try:
+            type_name = type_choices[filters['type']]
+        except KeyError:
+            # If the given type doesn’t exist for the manufacturer, redirect without a type filter.
+            return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)))
 
     context = {
         'manufacturer': m,
