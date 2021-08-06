@@ -48,6 +48,19 @@ const $wrapper = $('#stocks-list-wrapper');
 const $typeSwitcher = $('#id_type');
 let typeChoices;
 
+function resetTypes() {
+    if (Object.keys(typeChoices).length > 1) {
+        $typeSwitcher.html('<option value="all">All types</option>');
+        $typeSwitcher.removeAttr('disabled');
+    } else {
+        $typeSwitcher.html('');
+        $typeSwitcher.attr('disabled', 'true');
+    }
+    for (const key in typeChoices) {
+        $typeSwitcher.append(`<option value="${key}">${typeChoices[key]}</option>`);
+    }
+}
+
 function resetLink(e) {
     e.preventDefault();
 
@@ -57,6 +70,7 @@ function resetLink(e) {
             $('#id_manufacturer').val('all');
             $('#id_type').val('all');
             window.history.pushState({}, '', `{% url 'stocks' %}`);
+            resetTypes();
         }));
 }
 
@@ -88,16 +102,7 @@ $('#stock_filter select').change((e) => {
             }
 
             if (e.target.name === 'manufacturer') {
-                if (Object.keys(typeChoices).length > 1) {
-                    $typeSwitcher.html('<option value="all">All types</option>');
-                    $typeSwitcher.removeAttr('disabled');
-                } else {
-                    $typeSwitcher.html('');
-                    $typeSwitcher.attr('disabled', 'true');
-                }
-                for (const key in typeChoices) {
-                    $typeSwitcher.append(`<option value="${key}">${typeChoices[key]}</option>`);
-                }
+                resetTypes();
             }
             window.history.pushState({}, '', url);
         });
