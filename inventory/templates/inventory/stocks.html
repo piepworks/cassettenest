@@ -50,6 +50,20 @@
 
 {% block page_js %}
 <script>
+const $wrapper = $('#stocks-list-wrapper');
+
+function resetLink(e) {
+    e.preventDefault();
+
+    fetch(`{% url 'stocks-ajax' manufacturer='all' type='all' %}`)
+        .then(response => response.text().then(text => {
+            $wrapper.html(text);
+            $('#id_manufacturer').val('all');
+            $('#id_type').val('all');
+            window.history.pushState({}, '', `{% url 'stocks' %}`);
+        }));
+}
+
 $('#stock_filter select').change((e) => {
     const url = new URL(window.location);
     const newManufacturer = $('#id_manufacturer').val();
@@ -61,17 +75,18 @@ $('#stock_filter select').change((e) => {
         .replace('m-none', newManufacturer)
         .replace('t-none', newType);
 
-    const $wrapper = $('#stocks-list-wrapper');
-
     $wrapper.html('<div class="loader" />');
     fetch(typeUrl).then((response) => {
         response.text().then((text) => {
             $wrapper.html(text);
+            $('.js-reset-filter').click((e) => resetLink(e));
             url.pathname = manufacturerUrl;
             url.searchParams.set('type', newType);
             window.history.pushState({}, '', url);
         });
     });
 });
+
+$('.js-reset-filter').click((e) => resetLink(e));
 </script>
 {% endblock %}

@@ -361,6 +361,11 @@ def stocks(request, manufacturer='all'):
 
 
 def stocks_ajax(request, manufacturer, type):
+    filters = {
+        'manufacturer': manufacturer,
+        'type': type,
+    }
+
     if request.user.is_authenticated:
         stocks = Stock.objects.exclude(
             Q(personal=True) & ~Q(added_by=request.user)
@@ -385,6 +390,7 @@ def stocks_ajax(request, manufacturer, type):
 
     context = {
         'stocks': stocks,
+        'filters': filters,
     }
 
     return render(request, 'inventory/_stocks-list.html', context)

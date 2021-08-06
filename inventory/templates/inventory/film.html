@@ -58,12 +58,14 @@
 
 {% block page_js %}
 <script>
+const $wrapper = $('#unused-rolls-wrapper');
+
 function resetLink(e) {
     e.preventDefault();
 
     fetch(`{% url 'inventory-ajax' format='all' type='all' %}`)
-        .then(response => response.text().then(text => {
-            $('#unused-rolls-wrapper').html(text);
+        .then(response => response.text().then((text) => {
+            $wrapper.html(text);
             $('#id_format').val('all');
             $('#id_type').val('all');
             window.history.pushState({}, '', `{% url 'inventory' %}`);
@@ -77,14 +79,13 @@ $('#film_filter select').change(() => {
     const inventoryUrl = `{% url 'inventory-ajax' format='f-none' type='t-none' %}`
         .replace('f-none', format)
         .replace('t-none', type);
-    const $wrapper = $('#unused-rolls-wrapper');
 
     $wrapper.html('<div class="loader" />');
     fetch(inventoryUrl)
         .then(response => {
-            response.text().then(text => {
+            response.text().then((text) => {
                 $wrapper.html(text);
-                $('.js-reset-filter').click(e => resetLink(e));
+                $('.js-reset-filter').click((e) => resetLink(e));
                 url.searchParams.set('format', format);
                 url.searchParams.set('type', type);
                 window.history.pushState({}, '', url);
@@ -92,6 +93,6 @@ $('#film_filter select').change(() => {
         });
 });
 
-$('.js-reset-filter').click(e => resetLink(e));
+$('.js-reset-filter').click((e) => resetLink(e));
 </script>
 {% endblock %}
