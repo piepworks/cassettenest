@@ -1,4 +1,16 @@
 {% if filters.manufacturer != 'all' or filters.type != 'all' %}
+    <h2>
+        {% if manufacturer %}
+            {{ manufacturer }}
+            {% if filters.type != 'all' %}
+                / {{ type_name }}
+            {% endif %}
+        {% else %}
+            {% if filters.type != 'all' %}
+                {{ type_name }}
+            {% endif %}
+        {% endif %}
+    </h2>
     <p><a class="js-reset-filter" href="{% url 'stocks' %}">Reset filters</a></p>
 {% endif %}
 <section class="cards">

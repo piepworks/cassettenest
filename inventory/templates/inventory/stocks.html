@@ -3,14 +3,8 @@
 {% block title %}Film Stocks{% if manufacturer %}: {{ manufacturer }}{% endif %}{% endblock %}
 
 {% block content %}
-{% url 'stocks' as stocks_url %}
 <div class="raw">
-    <h1>
-        {% if request.path != stocks_url %}<a href="{{ stocks_url }}">{% endif %}
-        Film Stocks
-        {% if request.path != stocks_url %}</a>{% endif %}
-        {% if manufacturer %} &gt; {{ manufacturer }}{% endif %}
-    </h1>
+    <h1>Film Stocks</h1>
 
     <form id="stock_filter" method="get" action={% url 'stocks' %}>
         <div class="c-field--filter">
@@ -39,8 +33,6 @@
             <button class="no-js">Filter</button>
         </div>
     </form>
-
-    <hr />
 
     <div id="stocks-list-wrapper">
         {% include 'inventory/_stocks-list.html' %}

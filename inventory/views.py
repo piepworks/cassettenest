@@ -306,6 +306,7 @@ def stocks(request, manufacturer='all'):
         'type': 'all',
     }
     m = None
+    type_name = ''
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
@@ -340,13 +341,14 @@ def stocks(request, manufacturer='all'):
             'name',
         )
 
+    type_choices = dict(Stock._meta.get_field('type').flatchoices)
+
     if manufacturer != 'all':
         m = get_object_or_404(Manufacturer, slug=manufacturer)
         stocks = stocks.filter(manufacturer=m)
     if filters['type'] != 'all':
         stocks = stocks.filter(type=filters['type'])
-
-    type_choices = dict(Stock._meta.get_field('type').flatchoices)
+        type_name = type_choices[filters['type']]
 
     context = {
         'manufacturer': m,
@@ -354,6 +356,7 @@ def stocks(request, manufacturer='all'):
         'stocks': stocks,
         'filters': filters,
         'type_choices': type_choices,
+        'type_name': type_name,
         'js_needed': True,
     }
 
@@ -365,6 +368,8 @@ def stocks_ajax(request, manufacturer, type):
         'manufacturer': manufacturer,
         'type': type,
     }
+    m = None
+    type_name = ''
 
     if request.user.is_authenticated:
         stocks = Stock.objects.exclude(
@@ -384,13 +389,18 @@ def stocks_ajax(request, manufacturer, type):
         )
 
     if manufacturer != 'all':
-        stocks = stocks.filter(manufacturer__slug=manufacturer)
+        m = get_object_or_404(Manufacturer, slug=manufacturer)
+        stocks = stocks.filter(manufacturer=m)
     if type != 'all':
         stocks = stocks.filter(type=type)
+        type_names = dict(Film._meta.get_field('type').flatchoices)
+        type_name = type_names[type]
 
     context = {
         'stocks': stocks,
         'filters': filters,
+        'manufacturer': m,
+        'type_name': type_name,
     }
 
     return render(request, 'inventory/_stocks-list.html', context)
