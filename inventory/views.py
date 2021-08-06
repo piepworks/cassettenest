@@ -344,6 +344,7 @@ def stocks(request, manufacturer='all'):
     type_choices = dict(Stock._meta.get_field('type').flatchoices)
 
     if manufacturer != 'all':
+        filters['manufacturer'] = manufacturer
         m = get_object_or_404(Manufacturer, slug=manufacturer)
         stocks = stocks.filter(manufacturer=m)
     if filters['type'] != 'all':
