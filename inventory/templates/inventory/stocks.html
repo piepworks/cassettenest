@@ -83,10 +83,9 @@ $('#stock_filter select').change((e) => {
         : `{% url 'stocks-manufacturer' manufacturer='m-none' %}`.replace('m-none', newManufacturer);
     let typeUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`;
 
-    m = (e.target.name === 'manufacturer') ? newManufacturer : 'all';
-    t = (e.target.name === 'type') ? newType : 'all';
-    typeUrl = typeUrl.replace('m-none', m);
-    typeUrl = typeUrl.replace('t-none', t);
+    // If we’re switching manufacturer, reset type to `all`.
+    let t = (e.target.name === 'manufacturer') ? 'all' : newType;
+    typeUrl = typeUrl.replace('t-none', t).replace('m-none', newManufacturer);
 
     $wrapper.html('<div class="loader" />');
     fetch(typeUrl).then((response) => {
