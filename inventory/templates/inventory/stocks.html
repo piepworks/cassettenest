@@ -81,12 +81,12 @@ $('#stock_filter select').change((e) => {
     let manufacturerUrl = (newManufacturer === 'all')
         ? `{% url 'stocks' %}`
         : `{% url 'stocks-manufacturer' manufacturer='m-none' %}`.replace('m-none', newManufacturer);
-    let typeUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`
-        .replace('m-none', newManufacturer)
-        .replace('t-none', 'all');
-    if (e.target.name === 'type') {
-        typeUrl.replace('all', newType);
-    }
+    let typeUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`;
+
+    m = (e.target.name === 'manufacturer') ? newManufacturer : 'all';
+    t = (e.target.name === 'type') ? newType : 'all';
+    typeUrl = typeUrl.replace('m-none', m);
+    typeUrl = typeUrl.replace('t-none', t);
 
     $wrapper.html('<div class="loader" />');
     fetch(typeUrl).then((response) => {
