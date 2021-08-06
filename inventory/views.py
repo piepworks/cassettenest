@@ -341,12 +341,22 @@ def stocks(request, manufacturer='all'):
             'name',
         )
 
-    type_choices = dict(Stock._meta.get_field('type').flatchoices)
+    type_names = dict(Stock._meta.get_field('type').flatchoices)
+    type_choices = {}
 
     if manufacturer != 'all':
         filters['manufacturer'] = manufacturer
         m = get_object_or_404(Manufacturer, slug=manufacturer)
         stocks = stocks.filter(manufacturer=m)
+        types_available = Stock.objects.filter(manufacturer=m).values('type').distinct()
+        for t in types_available:
+            type_choices[t['type']] = force_str(
+                type_names[t['type']],
+                strings_only=True
+            )
+    else:
+        type_choices = type_names
+
     if filters['type'] != 'all':
         stocks = stocks.filter(type=filters['type'])
         type_name = type_choices[filters['type']]
@@ -389,12 +399,22 @@ def stocks_ajax(request, manufacturer, type):
             'name',
         )
 
+    type_names = dict(Film._meta.get_field('type').flatchoices)
+    type_choices = {}
+
     if manufacturer != 'all':
         m = get_object_or_404(Manufacturer, slug=manufacturer)
         stocks = stocks.filter(manufacturer=m)
+        types_available = Stock.objects.filter(manufacturer=m).values('type').distinct()
+        for t in types_available:
+            type_choices[t['type']] = force_str(
+                type_names[t['type']],
+                strings_only=True
+            )
+    else:
+        type_choices = type_names
     if type != 'all':
         stocks = stocks.filter(type=type)
-        type_names = dict(Film._meta.get_field('type').flatchoices)
         type_name = type_names[type]
 
     context = {
@@ -402,6 +422,7 @@ def stocks_ajax(request, manufacturer, type):
         'filters': filters,
         'manufacturer': m,
         'type_name': type_name,
+        'type_choices': type_choices,
     }
 
     return render(request, 'inventory/_stocks-list.html', context)

@@ -22,8 +22,10 @@
                 </label>
                 <label for="id_type">
                     Type:
-                    <select name="type" id="id_type">
-                        <option value="all">All types</option>
+                    <select name="type" id="id_type"{% if type_choices.items|length == 1 %} disabled{% endif %}>
+                        {% if type_choices.items|length > 1 %}
+                            <option value="all">All types</option>
+                        {% endif %}
                         {% for key, value in type_choices.items %}
                         <option value="{{ key }}"{% if filters.type == key %} selected{% endif %}>{{ value }}</option>
                         {% endfor %}
@@ -43,6 +45,8 @@
 {% block page_js %}
 <script>
 const $wrapper = $('#stocks-list-wrapper');
+const $typeSwitcher = $('#id_type');
+let typeChoices;
 
 function resetLink(e) {
     e.preventDefault();
@@ -63,9 +67,12 @@ $('#stock_filter select').change((e) => {
     let manufacturerUrl = (newManufacturer === 'all')
         ? `{% url 'stocks' %}`
         : `{% url 'stocks-manufacturer' manufacturer='m-none' %}`.replace('m-none', newManufacturer);
-    const typeUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`
+    let typeUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`
         .replace('m-none', newManufacturer)
-        .replace('t-none', newType);
+        .replace('t-none', 'all');
+    if (e.target.name === 'type') {
+        typeUrl.replace('all', newType);
+    }
 
     $wrapper.html('<div class="loader" />');
     fetch(typeUrl).then((response) => {
@@ -73,7 +80,25 @@ $('#stock_filter select').change((e) => {
             $wrapper.html(text);
             $('.js-reset-filter').click((e) => resetLink(e));
             url.pathname = manufacturerUrl;
-            url.searchParams.set('type', newType);
+
+            if (e.target.name === 'type') {
+                url.searchParams.set('type', newType);
+            } else {
+                url.searchParams.set('type', 'all');
+            }
+
+            if (e.target.name === 'manufacturer') {
+                if (Object.keys(typeChoices).length > 1) {
+                    $typeSwitcher.html('<option value="all">All types</option>');
+                    $typeSwitcher.removeAttr('disabled');
+                } else {
+                    $typeSwitcher.html('');
+                    $typeSwitcher.attr('disabled', 'true');
+                }
+                for (const key in typeChoices) {
+                    $typeSwitcher.append(`<option value="${key}">${typeChoices[key]}</option>`);
+                }
+            }
             window.history.pushState({}, '', url);
         });
     });
