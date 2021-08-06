@@ -93,12 +93,7 @@ $('#stock_filter select').change((e) => {
             $wrapper.html(text);
             $('.js-reset-filter').click((e) => resetLink(e));
             url.pathname = manufacturerUrl;
-
-            if (e.target.name === 'type') {
-                url.searchParams.set('type', newType);
-            } else {
-                url.searchParams.set('type', 'all');
-            }
+            url.searchParams.set('type', (e.target.name === 'type') ? newType : 'all');
 
             if (e.target.name === 'manufacturer') {
                 resetTypes();
