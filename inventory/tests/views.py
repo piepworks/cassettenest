@@ -1719,14 +1719,14 @@ class StockViewTests(TestCase):
             Stock,
             name='Portra 400',
             slug='portra-400',
-            manufacturer=baker.make(Manufacturer, name='Kodak')
+            manufacturer=baker.make(Manufacturer, name='Kodak', slug='kodak')
         )
         cls.personal_stock = baker.make(
             Stock,
             name='Dracula',
             personal=True,
             added_by=cls.user,
-            manufacturer=baker.make(Manufacturer, name='FPP')
+            manufacturer=baker.make(Manufacturer, name='FPP', slug='fpp')
         )
 
     def setUp(self):
@@ -1740,6 +1740,23 @@ class StockViewTests(TestCase):
         self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
         self.assertContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
         self.assertIsNotNone(response.context['stocks'])
+
+    def test_stocks_page_with_filtering_type(self):
+        response = self.client.get(reverse('stocks') + '?type=c41')
+        self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
+        self.assertContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
+        self.assertIsNotNone(response.context['stocks'])
+        self.assertContains(response, '<h2>C41 Color</h2>', html=True)
+
+    def test_stocks_page_with_manufacturer_redirect(self):
+        response = self.client.get(reverse('stocks') + '?manufacturer=kodak&type=c41')
+        self.assertEqual(response.status_code, 302)
+
+    def test_stocks_page_with_unavailable_type(self):
+        response = self.client.get(
+            reverse('stocks-manufacturer', args=(self.public_stock.manufacturer.slug,)) + '?type=bw'
+        )
+        self.assertEqual(response.status_code, 302)
 
     def test_stocks_page_logged_out(self):
         self.client.logout()
@@ -1766,3 +1783,19 @@ class StockViewTests(TestCase):
         self.assertContains(response, f'{self.public_stock.name}')
         self.assertNotContains(response, 'Your inventory of this stock')
         self.assertIsNotNone(response.context['stock'])
+
+    def test_stocks_ajax_with_type(self):
+        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'all', 'type': 'c41'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
+
+    def test_stocks_ajax_with_manufacturer(self):
+        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'kodak', 'type': 'c41'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
+
+    def test_stocks_ajax_logged_out(self):
+        self.client.logout()
+        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'kodak', 'type': 'c41'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
