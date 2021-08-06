@@ -64,10 +64,10 @@ urlpatterns = [
 
     # Stocks
     path('stocks/', views.stocks, name='stocks'),
-    path('stocks/<slug:manufacturer>/', views.stocks_manufacturer, name='stocks-manufacturer'),
+    path('stocks/<slug:manufacturer>/', views.stocks, name='stocks-manufacturer'),
+    path('stocks/<slug:manufacturer>/<slug:slug>/', views.stock, name='stock'),
     path('stocks/ajax/<slug:manufacturer>/<slug:type>', views.stocks_ajax, name='stocks-ajax'),
     path('stock/', RedirectView.as_view(pattern_name='stocks')),
-    path('stock/<slug:manufacturer>/<slug:slug>/', views.stock, name='stock'),
 
     # Films
     path('film/', views.inventory, name='inventory'),

@@ -300,23 +300,18 @@ def subscription_update(request):
     return redirect('settings')
 
 
-def stocks(request):
+def stocks(request, manufacturer='all'):
     filters = {
         'manufacturer': 'all',
         'type': 'all',
     }
+    m = None
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
 
     if request.GET.get('manufacturer') and request.GET.get('manufacturer') != 'all':
         filters['manufacturer'] = request.GET.get('manufacturer')
-        type_passthrough = ''
-
-        if filters['type'] != 'all':
-            type_passthrough = '?type=' + filters['type']
-
-        return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
 
     if request.user.is_authenticated:
         # Exclude stocks that are flagged as `personal` and not created by the current user.
@@ -340,72 +335,20 @@ def stocks(request):
             'name',
         )
 
+    if manufacturer != 'all':
+        m = get_object_or_404(Manufacturer, slug=manufacturer)
+        stocks = stocks.filter(manufacturer=m)
     if filters['type'] != 'all':
         stocks = stocks.filter(type=filters['type'])
 
     type_choices = dict(Stock._meta.get_field('type').flatchoices)
 
     context = {
+        'manufacturer': m,
         'manufacturers': manufacturers,
         'stocks': stocks,
         'filters': filters,
         'type_choices': type_choices,
-        'js_needed': True,
-    }
-
-    return render(request, 'inventory/stocks.html', context)
-
-
-def stocks_manufacturer(request, manufacturer):
-    manufacturer = get_object_or_404(Manufacturer, slug=manufacturer)
-    filters = {
-        'manufacturer': manufacturer.slug,
-        'type': 'all',
-    }
-
-    if request.user.is_authenticated:
-        manufacturers = Manufacturer.objects.all().exclude(
-            Q(personal=True) & ~Q(added_by=request.user)
-        )
-        stocks = Stock.objects.filter(manufacturer=manufacturer).exclude(
-            Q(personal=True) & ~Q(added_by=request.user)
-        ).annotate(count=Count('film')).order_by(
-            'type',
-            'manufacturer__name',
-            'name',
-        )
-    else:
-        manufacturers = Manufacturer.objects.all().exclude(Q(personal=True))
-        stocks = Stock.objects.filter(manufacturer=manufacturer).exclude(
-            Q(personal=True)
-        ).annotate(count=Count('film')).order_by(
-            'type',
-            'manufacturer__name',
-            'name',
-        )
-
-    if request.GET.get('type') and request.GET.get('type') != 'all':
-        filters['type'] = request.GET.get('type')
-
-    if filters['type'] != 'all':
-        stocks = stocks.filter(type=filters['type'])
-
-    types_available = Stock.objects.filter(manufacturer=manufacturer).values('type').distinct()
-    # Get the display name of types choices.
-    type_names = dict(Film._meta.get_field('type').flatchoices)
-    type_choices = {}
-    for type in types_available:
-        type_choices[type['type']] = force_str(
-            type_names[type['type']],
-            strings_only=True
-        )
-
-    context = {
-        'stocks': stocks,
-        'manufacturers': manufacturers,
-        'manufacturer': manufacturer,
-        'type_choices': type_choices,
-        'filters': filters,
         'js_needed': True,
     }
 

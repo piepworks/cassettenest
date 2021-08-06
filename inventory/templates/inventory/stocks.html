@@ -19,9 +19,9 @@
                     Manufacturer:
                     <select name="manufacturer" id="id_manufacturer">
                         <option value="all">All manufacturers</option>
-                        {% for manufacturer in manufacturers %}
-                        <option value={{ manufacturer.slug }}{% if filters.manufacturer == manufacturer.slug %} selected{% endif %}>
-                            {{ manufacturer }}
+                        {% for m in manufacturers %}
+                        <option value={{ m.slug }}{% if manufacturer.slug == m.slug %} selected{% endif %}>
+                            {{ m }}
                         </option>
                         {% endfor %}
                     </select>
@@ -61,23 +61,17 @@ $('#stock_filter select').change((e) => {
         .replace('m-none', newManufacturer)
         .replace('t-none', newType);
 
-    if (e.target.name === 'manufacturer') {
-        if (newType !== 'all') {
-            manufacturerUrl += `?type=${newType}`;
-        }
-        window.location.href = manufacturerUrl;
-    }
+    const $wrapper = $('#stocks-list-wrapper');
 
-    if (e.target.name === 'type') {
-        const $wrapper = $('#stocks-list-wrapper');
-
-        $wrapper.html('<div class="loader" />');
-        fetch(typeUrl).then((response) => {
-            response.text().then((text) => {
-                $wrapper.html(text);
-            });
+    $wrapper.html('<div class="loader" />');
+    fetch(typeUrl).then((response) => {
+        response.text().then((text) => {
+            $wrapper.html(text);
+            url.pathname = manufacturerUrl;
+            url.searchParams.set('type', newType);
+            window.history.pushState({}, '', url);
         });
-    }
+    });
 });
 </script>
 {% endblock %}
