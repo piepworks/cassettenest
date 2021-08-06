@@ -4,7 +4,7 @@
 
 {% if film.stock %}
     <a href="{% url 'stocks' %}">Film Stocks</a> &gt;
-    <a href="{% url 'stocks-manufacturer' film.stock.manufacturer.slug %}">{{ film.stock.manufacturer }}</a> &gt;
+    <a href="{% url 'stocks-manufacturer' film.stock.manufacturer.slug %}">{{ film.stock.manufacturer }}</a>
     <a href="{{ film.stock.get_absolute_url }}">{{ film.stock.name }}</a> in {{ film.get_format_display }}
 {% else %}
     {{ film.name }} in {{ film.get_format_display }}

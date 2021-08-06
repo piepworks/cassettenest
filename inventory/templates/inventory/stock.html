@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="raw">
-    <h1><a href="{% url 'stocks' %}">Film Stocks</a> &gt; <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> &gt; {{ stock.name }}</h1>
+    <h1><a href="{% url 'stocks' %}">Film Stocks</a> &gt; <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> {{ stock.name }}</h1>
 
     <p>Total rolls of this stock in Cassette Nest: <b>{{ total_rolls }}</b></p>
 

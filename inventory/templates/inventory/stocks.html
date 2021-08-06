@@ -4,7 +4,12 @@
 
 {% block content %}
 <div class="raw">
-    <h1>Film Stocks</h1>
+    <h1>
+        <span id="page-name">{% if manufacturer %}<a href="{% url 'stocks' %}">{% endif %}Film Stocks{% if manufacturer %}</a>{% endif %}</span>
+        <span id="manufacturer-name">
+            {% if manufacturer %} &gt; {{ manufacturer }}{% endif %}
+        </span>
+    </h1>
 
     <form id="stock_filter" method="get" action={% url 'stocks' %}>
         <div class="c-field--filter">
@@ -46,7 +51,23 @@
 <script>
 const $wrapper = $('#stocks-list-wrapper');
 const $typeSwitcher = $('#id_type');
+const $pageName = $('#page-name');
+const $manufacturerName = $('#manufacturer-name');
 let typeChoices;
+let manufacturerName;
+
+function resetTitle() {
+    $manufacturerName.html('');
+    $pageName.html('Film Stocks');
+    document.title = document.title.replace(/^[^\/]+/, 'Film Stocks ');
+
+    if (manufacturerName !== 'None') {
+        $pageName.html(`<a href="{% url 'stocks' %}">Film Stocks</a>`);
+        $pageName.find('a').click((e) => resetLink(e));
+        $manufacturerName.html(` &gt; ${manufacturerName}`);
+        document.title = document.title.replace('Film Stocks ', `Film Stocks: ${manufacturerName} `);
+    }
+}
 
 function resetTypes() {
     if (Object.keys(typeChoices).length > 1) {
@@ -72,6 +93,7 @@ function resetLink(e) {
             $('#id_type').val('all');
             window.history.pushState({}, '', `{% url 'stocks' %}`);
             resetTypes();
+            resetTitle();
         }));
 }
 
@@ -100,10 +122,12 @@ $('#stock_filter select').change((e) => {
                 resetTypes();
             }
             window.history.pushState({}, '', url);
+            resetTitle();
         });
     });
 });
 
 $('.js-reset-filter').click((e) => resetLink(e));
+$pageName.find('a').click((e) => resetLink(e));
 </script>
 {% endblock %}
