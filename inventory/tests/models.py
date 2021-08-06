@@ -381,7 +381,7 @@ class StockModelTests(TestCase):
         self.assertEqual(str(self.stock), 'Kodak Portra')
 
     def test_absolute_url(self):
-        self.assertEqual(self.stock.get_absolute_url(), f'/stock/{self.manufacturer_slug}/{self.stock_slug}/')
+        self.assertEqual(self.stock.get_absolute_url(), f'/stocks/{self.manufacturer_slug}/{self.stock_slug}/')
 
 
 class FrameModelTests(TestCase):
