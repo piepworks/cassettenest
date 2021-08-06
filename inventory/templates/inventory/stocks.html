@@ -64,6 +64,7 @@ function resetTypes() {
 function resetLink(e) {
     e.preventDefault();
 
+    $wrapper.html('<div class="loader" />');
     fetch(`{% url 'stocks-ajax' manufacturer='all' type='all' %}`)
         .then(response => response.text().then(text => {
             $wrapper.html(text);
