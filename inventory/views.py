@@ -307,6 +307,7 @@ def stocks(request, manufacturer='all'):
     }
     m = None
     type_name = ''
+    type_passthrough = ''
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
