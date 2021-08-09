@@ -543,7 +543,7 @@ def inventory(request):
     format_counts = Film.objects.filter(
         roll__owner=request.user,
         roll__status=status_number('storage')
-    ).values('format').distinct().order_by('format')
+    ).values('format').distinct().order_by('-format')
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
