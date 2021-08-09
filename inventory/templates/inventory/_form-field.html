@@ -13,26 +13,33 @@
     {% if show_first %} data-show-first="self"{% endif %}
     data-label="{{ field.field.label }}">
     {% if field.field.widget.input_type == 'checkbox' %}
-        {% if field.help_text %}
-            <small class="c-field__help">{{ field.help_text }}</small>
+        {% if field|length > 1 %}
+            <fieldset>
+                <legend>{{ field.label }}</legend>
+                {% if field.help_text %}
+                    <small class="c-field__help">{{ field.help_text }}</small>
+                {% endif %}
+                {% for f in field %}
+                    <div>{{ f }}</div>
+                {% endfor %}
+            </fieldset>
+        {% else %}
+            {% if field.help_text %}
+                <small class="c-field__help">{{ field.help_text }}</small>
+            {% endif %}
+            <label for="{{ field.id_for_label }}">
+                {{ field }}
+                {{ field.label }}
+            </label>
         {% endif %}
-        <label for="{{ field.id_for_label }}">
-            {{ field }}
-            {{ field.label }}
-        </label>
     {% elif field.field.widget.input_type == 'radio' %}
         <fieldset>
             <legend>{{ field.label }}</legend>
             {% if field.help_text %}
-                <div><small class="c-field__help">{{ field.help_text }}</small></div>
+                <small class="c-field__help">{{ field.help_text }}</small>
             {% endif %}
-            {% for key, value in field.field.choices %}
-                <div>
-                    <label for="id_{{ key }}">
-                        <input id="id_{{ key }}" type="radio" name="{{ field.name }}" value="{{ key }}" />
-                        {{ value }}
-                    </label>
-                </div>
+            {% for f in field %}
+                <div>{{ f }}</div>
             {% endfor %}
         </fieldset>
     {% else %}

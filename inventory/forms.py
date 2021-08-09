@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile, Frame
-from .utils import apertures, shutter_speeds
+from .utils import apertures, shutter_speeds, film_formats
 
 
 class RegisterForm(UserCreationForm):
@@ -88,11 +88,16 @@ class FilmForm(ModelForm):
         label='Or add a new manufacturer',
         required=False,
     )
+    formats = forms.MultipleChoiceField(
+        choices=film_formats,
+        widget=forms.CheckboxSelectMultiple,
+        help_text='Choose at least one.',
+    )
     destination = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
         model = Film
-        fields = ['manufacturer', 'new_manufacturer', 'name', 'type', 'format', 'iso', 'url', 'description']
+        fields = ['manufacturer', 'new_manufacturer', 'name', 'type', 'formats', 'iso', 'url', 'description']
 
     def clean(self):
         cleaned_data = super().clean()
