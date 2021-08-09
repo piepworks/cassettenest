@@ -216,7 +216,7 @@ class InventoryTests(TestCase):
             username=cls.username,
             password=cls.password,
         )
-        baker.make(Roll, owner=cls.user)
+        baker.make(Roll, owner=cls.user, film=baker.make(Film, slug='slug'))
 
     def setUp(self):
         self.client.login(
@@ -1265,11 +1265,12 @@ class ProjectTests(TestCase):
         self.assertIn('Project deleted and 2 rolls now available for other projects.', messages)
 
     def test_project_detail(self):
+        film = baker.make(Film, slug='slug')
         project = baker.make(Project, owner=self.user)
         camera1 = baker.make(Camera, owner=self.user, multiple_backs=True)
         camera2 = baker.make(Camera, owner=self.user)
-        baker.make(Roll, status=status_number('loaded'), camera=camera2, owner=self.user)
-        baker.make(Roll, status=status_number('storage'), owner=self.user, project=project)
+        baker.make(Roll, film=film, status=status_number('loaded'), camera=camera2, owner=self.user)
+        baker.make(Roll, film=film, status=status_number('storage'), owner=self.user, project=project)
         project.cameras.add(camera1)
         project.cameras.add(camera2)
         baker.make(CameraBack, camera=camera1)
@@ -1483,6 +1484,7 @@ class RollViewTests(TestCase):
 
     def test_roll_edit_post(self):
         roll = baker.make(Roll, owner=self.user)
+        roll.film = baker.make(Film, slug='slug', iso=100)
         roll.camera = baker.make(Camera, owner=self.user)
         roll.camera_back = baker.make(CameraBack, camera=roll.camera)
         roll.save()
