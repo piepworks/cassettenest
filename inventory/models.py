@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
-from .utils import status_number
+from .utils import status_number, film_types, film_formats
 
 
 class Profile(models.Model):
@@ -88,11 +88,7 @@ class Manufacturer(models.Model):
 
 
 class Stock(models.Model):
-    TYPE_CHOICES = (
-        ('c41', 'C41 Color'),
-        ('bw', 'Black and White'),
-        ('e6', 'E6 Color Reversal'),
-    )
+    TYPE_CHOICES = film_types
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     type = models.CharField(
         max_length=20,
@@ -106,6 +102,7 @@ class Stock(models.Model):
         ''',
     )
     slug = models.SlugField(max_length=50)
+    iso = models.PositiveSmallIntegerField(default=100, verbose_name='ISO')
     url = models.URLField(
         max_length=200,
         blank=True,
@@ -133,20 +130,14 @@ class Stock(models.Model):
 
 
 class Film(models.Model):
-    TYPE_CHOICES = (
-        ('c41', 'C41 Color'),
-        ('bw', 'Black and White'),
-        ('e6', 'E6 Color Reversal'),
-    )
-    FORMAT_CHOICES = (
-        ('135', '35mm'),
-        ('120', '120'),
-    )
-    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
+    TYPE_CHOICES = film_types
+    FORMAT_CHOICES = film_formats
+    manufacturer = models.ForeignKey(Manufacturer, blank=True, null=True, on_delete=models.CASCADE)
     type = models.CharField(
         max_length=20,
         choices=TYPE_CHOICES,
         default='c41',
+        blank=True,
     )
     format = models.CharField(
         max_length=20,
@@ -154,14 +145,15 @@ class Film(models.Model):
         default='135',
     )
     stock = models.ForeignKey(Stock, blank=True, null=True, on_delete=models.CASCADE)
-    iso = models.IntegerField(verbose_name='ISO')
+    iso = models.IntegerField(blank=True, null=True, verbose_name='ISO')
     name = models.CharField(
+        blank=True,
         max_length=50,
         help_text='''
             The name of the film itself without the manufacturer’s name (unless that’s part of the film’s name.)
         ''',
     )
-    slug = models.SlugField(max_length=50)
+    slug = models.SlugField(max_length=50, blank=True)
     url = models.URLField(
         max_length=200,
         blank=True,

@@ -225,6 +225,16 @@ shutter_speeds = [
     ('1/4000', '1/4000'),
 ]
 
-
 preset_apertures = {key for key in dict(apertures)}
 preset_shutter_speeds = {key for key in dict(shutter_speeds)}
+
+film_types = [
+    ('c41', 'C41 Color'),
+    ('bw', 'Black and White'),
+    ('e6', 'E6 Color Reversal'),
+]
+
+film_formats = [
+    ('135', '35mm'),
+    ('120', '120'),
+]
