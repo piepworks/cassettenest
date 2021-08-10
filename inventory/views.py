@@ -1321,7 +1321,7 @@ def film_rolls(request, slug):
 
 
 @login_required
-def film_add(request):
+def stock_add(request):
     if request.method == 'POST':
         form = FilmForm(request.POST, user=request.user)
         output = 'error'
@@ -1379,13 +1379,13 @@ def film_add(request):
 
             if form.cleaned_data['destination'] != 'add-storage':
                 if 'another' in request.POST:
-                    return redirect(reverse('film-add') + '?destination=add-logbook')
+                    return redirect(reverse('stock-add') + '?destination=add-logbook')
                 else:
                     # Go back to add roll to logbook page.
                     return redirect(reverse('roll-add') + f'?film={film.id}')
             else:
                 if 'another' in request.POST:
-                    return redirect('film-add')
+                    return redirect('stock-add')
                 else:
                     # Go back to add rolls to storage page.
                     return redirect(reverse('rolls-add') + f'?film={film.id}')

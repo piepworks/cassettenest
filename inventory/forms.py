@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile, Frame
+from .models import Camera, CameraBack, Roll, Stock, Manufacturer, Project, Journal, User, Profile, Frame
 from .utils import apertures, shutter_speeds, film_formats
 
 
@@ -96,7 +96,7 @@ class FilmForm(ModelForm):
     destination = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
-        model = Film
+        model = Stock
         fields = ['manufacturer', 'new_manufacturer', 'name', 'type', 'formats', 'iso', 'url', 'description']
 
     def clean(self):
