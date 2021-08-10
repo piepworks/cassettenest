@@ -228,6 +228,15 @@ class PatternsForm(forms.Form):
         help_text=help_text,
         required=False
     )
+    multiple_checkboxes = forms.MultipleChoiceField(
+        help_text=help_text,
+        choices=[
+            ('1', 'Checkbox 1'),
+            ('2', 'Checkbox 2'),
+            ('3', 'Checkbox 3')
+        ],
+        widget=forms.CheckboxSelectMultiple
+    )
     radio = forms.ChoiceField(
         help_text=help_text,
         choices=[
