@@ -68,8 +68,8 @@ class ReminderCardTests(TestCase):
     def test_bw_card(self):
         roll = baker.make(
             Roll,
+            film__stock=baker.make(Stock, type='bw'),
             owner=self.user,
-            film__type='bw',
             camera=baker.make(Camera),
         )
         roll.started_on = self.today
@@ -216,7 +216,7 @@ class InventoryTests(TestCase):
             username=cls.username,
             password=cls.password,
         )
-        baker.make(Roll, owner=cls.user, film=baker.make(Film, slug='slug'))
+        baker.make(Roll, owner=cls.user, film=baker.make(Film, slug='slug', stock=baker.make(Stock)))
 
     def setUp(self):
         self.client.login(
@@ -257,6 +257,7 @@ class LogbookTests(TestCase):
         cls.today = datetime.date.today()
         baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             owner=cls.user,
             status=status_number('shot'),
             started_on=cls.today,
@@ -430,6 +431,7 @@ class ImportTests(TestCase):
         roll = baker.make(
             Roll,
             owner=self.user,
+            film__stock=baker.make(Stock),
             camera=camera,
             camera_back=baker.make(CameraBack, camera=camera),
             project=project,
@@ -786,6 +788,7 @@ class ReadyTests(TestCase):
     def test_ready_page_with_a_roll(self):
         baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             owner=self.user,
             status=status_number('shot'),
             started_on=self.today,
@@ -816,6 +819,7 @@ class RollsUpdateTests(TestCase):
         cls.camera = baker.make(Camera, owner=cls.user)
         baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             owner=cls.user,
             status=status_number('processing'),
             started_on=cls.today,
@@ -823,6 +827,7 @@ class RollsUpdateTests(TestCase):
         )
         baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             owner=cls.user,
             status=status_number('processing'),
             started_on=cls.today,

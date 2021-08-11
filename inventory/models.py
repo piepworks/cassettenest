@@ -136,7 +136,6 @@ class Film(models.Model):
     type = models.CharField(
         max_length=20,
         choices=TYPE_CHOICES,
-        default='c41',
         blank=True,
     )
     format = models.CharField(
@@ -174,7 +173,12 @@ class Film(models.Model):
         unique_together = (('manufacturer', 'name', 'format',),)
 
     def __str__(self):
-        return f'{self.manufacturer} {self.name} in {self.get_format_display()}'
+        if self.stock:
+            name = self.stock
+        else:
+            name = f'{self.manufacturer} {self.name}'
+
+        return f'{name} in {self.get_format_display()}'
 
     def get_absolute_url(self):
         return reverse('film-rolls', args=(self.slug,))
@@ -192,10 +196,7 @@ class Camera(models.Model):
         ('loaded', 'Loaded'),
         ('unavailable', 'Unavailable'),
     )
-    FORMAT_CHOICES = (
-        ('135', '35mm'),
-        ('120', '120'),
-    )
+    FORMAT_CHOICES = film_formats
     format = models.CharField(
         max_length=20,
         choices=FORMAT_CHOICES,
@@ -243,10 +244,7 @@ class CameraBack(models.Model):
         ('unavailable', 'Unavailable'),
     )
     # Identical to FORMAT_CHOICES on the Camera model.
-    FORMAT_CHOICES = (
-        ('135', '35mm'),
-        ('120', '120'),
-    )
+    FORMAT_CHOICES = film_formats
     camera = models.ForeignKey(
         Camera,
         on_delete=models.CASCADE,
@@ -407,14 +405,24 @@ class Roll(models.Model):
         "Calculates the effective ISO for a pushed or pulled roll."
 
         # Using a dictionary as a case/switch statement.
-        return {
-            '': self.film.iso,
-            '-2': int(self.film.iso * .25),
-            '-1': int(self.film.iso * .5),
-            '+1': self.film.iso * 2,
-            '+2': self.film.iso * 4,
-            '+3': self.film.iso * 8,
-        }[self.push_pull]
+        if self.film.stock:
+            return {
+                '': self.film.stock.iso,
+                '-2': int(self.film.stock.iso * .25),
+                '-1': int(self.film.stock.iso * .5),
+                '+1': self.film.stock.iso * 2,
+                '+2': self.film.stock.iso * 4,
+                '+3': self.film.stock.iso * 8,
+            }[self.push_pull]
+        else:
+            return {
+                '': self.film.iso,
+                '-2': int(self.film.iso * .25),
+                '-1': int(self.film.iso * .5),
+                '+1': self.film.iso * 2,
+                '+2': self.film.iso * 4,
+                '+3': self.film.iso * 8,
+            }[self.push_pull]
 
     def save(self, *args, **kwargs):
         # If the started_on field has been populated and the `code` field has
@@ -428,7 +436,7 @@ class Roll(models.Model):
         #    within the year of the `started_on` field. Add one to that number.
         if not self.code and self.started_on:
             sequence = Roll.objects\
-                .filter(film__type=self.film.type)\
+                .filter(film__stock__type=self.film.stock.type)\
                 .filter(film__format=self.film.format)\
                 .filter(started_on__year=self.started_on.year)\
                 .filter(owner=self.owner)\
@@ -437,7 +445,7 @@ class Roll(models.Model):
             format = '35' if self.film.format == '135' else self.film.format
 
             # TODO: Check for proper validation of the code field somehow?
-            self.code = '%s-%s-%d' % (format, self.film.type, sequence)
+            self.code = '%s-%s-%d' % (format, self.film.stock.type, sequence)
             if self.status == status_number('storage'):
                 self.status = status_number('loaded')
 

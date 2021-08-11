@@ -124,8 +124,8 @@ class RollTests(TestCase):
 
         roll = baker.make(
             Roll,
-            film__manufacturer__name=manufacturer,
-            film__name=film,
+            film__stock__manufacturer__name=manufacturer,
+            film__stock__name=film,
         )
 
         self.assertEqual(
@@ -148,7 +148,7 @@ class RollTests(TestCase):
         self.assertEqual(roll2.effective_iso, 1600)
 
     def test_loaded_rolls_get_code_and_status(self):
-        roll = baker.make(Roll)
+        roll = baker.make(Roll, film__stock=baker.make(Stock))
         camera = baker.make(Camera)
 
         roll.camera = camera
@@ -161,35 +161,35 @@ class RollTests(TestCase):
         roll1 = baker.make(
             Roll,
             owner__id=1,
-            film__type='e6',
+            film__stock__type='e6',
             camera=baker.make(Camera),
             started_on=self.today
         )
         roll2 = baker.make(
             Roll,
             owner__id=1,
-            film__type='c41',
+            film__stock__type='c41',
             camera=baker.make(Camera),
             started_on=self.today
         )
         roll3 = baker.make(
             Roll,
             owner__id=1,
-            film__type='e6',
+            film__stock__type='e6',
             camera=baker.make(Camera),
             started_on=self.today
         )
         roll4 = baker.make(
             Roll,
             owner__id=1,
-            film__type='c41',
+            film__stock__type='c41',
             camera=baker.make(Camera),
             started_on=self.today
         )
         roll5 = baker.make(
             Roll,
             owner__id=1,
-            film__type='bw',
+            film__stock__type='bw',
             camera=baker.make(Camera),
             started_on=self.today
         )
@@ -197,7 +197,7 @@ class RollTests(TestCase):
         roll6 = baker.make(
             Roll,
             owner__id=2,
-            film__type='bw',
+            film__stock__type='bw',
             camera=baker.make(Camera),
             started_on=self.today
         )
@@ -219,7 +219,7 @@ class RollTests(TestCase):
     def test_roll_change_from_loaded_to_storage(self):
         camera = baker.make(Camera)
         camera_back = baker.make(CameraBack)
-        roll = baker.make(Roll, camera=camera, camera_back=camera_back)
+        roll = baker.make(Roll, film__stock=baker.make(Stock), camera=camera, camera_back=camera_back)
 
         roll.started_on = self.today
         # Save to create a code for the roll.
@@ -243,7 +243,7 @@ class RollTests(TestCase):
 
     def test_roll_change_from_loaded_to_shot(self):
         camera = baker.make(Camera)
-        roll = baker.make(Roll, camera=camera)
+        roll = baker.make(Roll, camera=camera, film__stock=baker.make(Stock))
 
         roll.started_on = self.today
         # Save to create a code for the roll and load camera.
@@ -260,7 +260,7 @@ class RollTests(TestCase):
 
     def test_roll_change_from_shot_to_loaded(self):
         camera = baker.make(Camera)
-        roll = baker.make(Roll, camera=camera)
+        roll = baker.make(Roll, film__stock=baker.make(Stock), camera=camera)
 
         self.assertIsNone(roll.ended_on)
 
@@ -283,6 +283,7 @@ class RollTests(TestCase):
         camera_back = baker.make(CameraBack)
         roll = baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             camera=baker.make(Camera),
             started_on=self.today,
             camera_back=camera_back,
@@ -351,13 +352,13 @@ class JournalModelTests(TestCase):
         cls.yesterday = cls.today - datetime.timedelta(days=1)
 
     def test_model_str(self):
-        roll = baker.make(Roll, started_on=self.today, camera=baker.make(Camera))
+        roll = baker.make(Roll, film__stock=baker.make(Stock), started_on=self.today, camera=baker.make(Camera))
         journal = baker.make(Journal, roll=roll, date=self.today)
 
         self.assertEqual(str(journal), f'Journal entry for 35-c41-1 on {self.today}')
 
     def test_starting_frame(self):
-        roll = baker.make(Roll, started_on=self.yesterday, camera=baker.make(Camera))
+        roll = baker.make(Roll, film__stock=baker.make(Stock), started_on=self.yesterday, camera=baker.make(Camera))
         journal1 = baker.make(Journal, roll=roll, date=self.yesterday, frame=3)
         journal2 = baker.make(Journal, roll=roll, date=self.today)
 
@@ -396,8 +397,8 @@ class FrameModelTests(TestCase):
                 Roll,
                 film=baker.make(
                     Film,
-                    manufacturer=baker.make(Manufacturer, name=cls.manufacturer_name),
-                    name=cls.film_name
+                    stock__manufacturer=baker.make(Manufacturer, name=cls.manufacturer_name),
+                    stock__name=cls.film_name
                 )
             )
         )

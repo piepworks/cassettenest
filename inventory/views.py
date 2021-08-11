@@ -31,7 +31,7 @@ from .forms import (
     ReadyForm,
     RegisterForm,
     RollForm,
-    FilmForm,
+    StockForm,
     UserForm,
     UploadCSVForm,
     FrameForm,
@@ -536,7 +536,7 @@ def inventory(request):
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
-        total_film_count = total_film_count.filter(type=filters['type'])
+        total_film_count = total_film_count.filter(stock__type=filters['type'])
 
     film_counts = inventory_filter(request, Film, filters['format'], filters['type'])
 
@@ -556,13 +556,13 @@ def inventory(request):
     type_counts = Film.objects.filter(
         roll__owner=request.user,
         roll__status=status_number('storage')
-    ).values('type').distinct().order_by('type')
+    ).values('stock__type').distinct().order_by('stock__type')
 
     # Get the display name of types choices.
-    type_choices = dict(Film._meta.get_field('type').flatchoices)
+    type_choices = dict(Stock._meta.get_field('type').flatchoices)
     for type in type_counts:
         type['type_display'] = force_str(
-            type_choices[type['type']],
+            type_choices[type['stock__type']],
             strings_only=True
         )
 
@@ -591,7 +591,7 @@ def inventory_ajax(request, format, type):
         total_film_count = total_film_count.filter(format=format)
 
     if type != 'all':
-        total_film_count = total_film_count.filter(type=type)
+        total_film_count = total_film_count.filter(stock__type=type)
 
     filters = {
         'format': format,
@@ -696,20 +696,20 @@ def ready(request):
     )
 
     ready_rolls = {
-        'c41': rolls.filter(film__type='c41'),
-        'bw': rolls.filter(film__type='bw'),
-        'e6': rolls.filter(film__type='e6'),
+        'c41': rolls.filter(film__stock__type='c41'),
+        'bw': rolls.filter(film__stock__type='bw'),
+        'e6': rolls.filter(film__stock__type='e6'),
         '135': {
             'all': rolls.filter(film__format=135),
-            'c41': rolls.filter(film__format=135, film__type='c41'),
-            'bw': rolls.filter(film__format=135, film__type='bw'),
-            'e6': rolls.filter(film__format=135, film__type='e6'),
+            'c41': rolls.filter(film__format=135, film__stock__type='c41'),
+            'bw': rolls.filter(film__format=135, film__stock__type='bw'),
+            'e6': rolls.filter(film__format=135, film__stock__type='e6'),
         },
         '120': {
             'all': rolls.filter(film__format=120),
-            'c41': rolls.filter(film__format=120, film__type='c41'),
-            'bw': rolls.filter(film__format=120, film__type='bw'),
-            'e6': rolls.filter(film__format=120, film__type='e6'),
+            'c41': rolls.filter(film__format=120, film__stock__type='c41'),
+            'bw': rolls.filter(film__format=120, film__stock__type='bw'),
+            'e6': rolls.filter(film__format=120, film__stock__type='e6'),
         }
     }
 
@@ -1022,7 +1022,7 @@ def project_detail(request, pk):
     ).order_by(
         'type',
         '-format',
-        'manufacturer__name',
+        'stock__manufacturer__name',
         'name',
     )
 
@@ -1040,7 +1040,7 @@ def project_detail(request, pk):
         count=Count('roll')
     ).order_by(
         'type',
-        'manufacturer__name',
+        'stock__manufacturer__name',
         'name',
     )
 
@@ -1206,7 +1206,7 @@ def rolls_add(request):
 
     else:
         # Exclude films that are flagged as `personal` and not created by the current user.
-        films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner))
+        films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner)).order_by('stock')
         context = {
             'films': films,
             'js_needed': True,
@@ -1264,7 +1264,7 @@ def roll_add(request):
             return redirect(reverse('roll-add'))
 
     else:
-        films = Film.objects.all()
+        films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner)).order_by('stock')
         form = RollForm()
         form.fields['camera'].queryset = Camera.objects.filter(owner=owner)
         form.fields['camera_back'].queryset = CameraBack.objects.filter(camera__owner=owner)
@@ -1323,7 +1323,7 @@ def film_rolls(request, slug):
 @login_required
 def stock_add(request):
     if request.method == 'POST':
-        form = FilmForm(request.POST, user=request.user)
+        form = StockForm(request.POST, user=request.user)
         output = 'error'
 
         if form.is_valid():
@@ -1348,19 +1348,36 @@ def stock_add(request):
             else:
                 manufacturer = form.cleaned_data['manufacturer']
 
-            film = Film.objects.create(
+            # 1. Create stock
+            # 2. Create film(s)
+
+            stock = Stock.objects.create(
                 personal=True,
                 added_by=request.user,
                 manufacturer=manufacturer,
                 name=form.cleaned_data['name'],
                 slug=slugify(form.cleaned_data['name']),
-                format=form.cleaned_data['format'],
                 type=form.cleaned_data['type'],
                 iso=form.cleaned_data['iso'],
                 url=form.cleaned_data['url'],
                 description=form.cleaned_data['description'],
             )
-            messages.success(request, f'New film “{film}” added!')
+
+            formats = form.cleaned_data['formats']
+            # TODO: Halt and give an error if there is no format selected.
+
+            for format in formats:
+                Film.objects.create(
+                    personal=True,
+                    added_by=request.user,
+                    stock=stock,
+                    format=format,
+                )
+
+            format_message = ', '.join(str(f) for f in formats)
+            format_message = format_message.replace('135', '35mm')
+
+            messages.success(request, f'New film stock “{stock}” (in {format_message}) added!')
 
             current_site = get_current_site(request)
             if 'new_manufacturer' in locals():
@@ -1370,9 +1387,9 @@ def stock_add(request):
             else:
                 message_addendum = ''
             send_email_to_trey(
-                subject='New film added!',
-                message=f'''{request.user} added “{film}.”\n
-                    https://{current_site}{reverse('admin:inventory_film_change', args=(film.id,))}\n
+                subject='New film stock added!',
+                message=f'''{request.user} added “{stock} (in {format_message}).”\n
+                    https://{current_site}{reverse('admin:inventory_stock_change', args=(stock.id,))}\n
                     {message_addendum}
                 ''',
             )
@@ -1388,7 +1405,8 @@ def stock_add(request):
                     return redirect('stock-add')
                 else:
                     # Go back to add rolls to storage page.
-                    return redirect(reverse('rolls-add') + f'?film={film.id}')
+                    # TODO: Make this work. Needs to point to one of the stock formats.
+                    return redirect(reverse('rolls-add') + f'?film={stock.id}')
         else:
             context = {
                 'form': form,
@@ -1397,16 +1415,16 @@ def stock_add(request):
     else:
         destination = request.GET.get('destination')
         if destination:
-            form = FilmForm(user=request.user, initial={'destination': destination})
+            form = StockForm(user=request.user, initial={'destination': destination})
         else:
-            form = FilmForm(user=request.user, initial={'destination': 'add-storage'})
+            form = StockForm(user=request.user, initial={'destination': 'add-storage'})
         context = {
             'form': form,
             'js_needed': True,
             'wc_needed': True,
         }
 
-    return render(request, 'inventory/film_add.html', context)
+    return render(request, 'inventory/stock_add.html', context)
 
 
 @login_required

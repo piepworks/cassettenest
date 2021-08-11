@@ -26,6 +26,8 @@ class ManufacturerAdmin(admin.ModelAdmin):
 
 class StockAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
+    list_display = ('name', 'type', 'iso', 'added_by',)
+    list_filter = ('manufacturer', 'type', 'added_by',)
 
 
 class FilmAdmin(admin.ModelAdmin):

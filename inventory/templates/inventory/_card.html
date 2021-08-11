@@ -49,10 +49,12 @@
                 <div class="c-card__count" title="Number of rolls"><span>{{ count|default:'0' }}</span></div>
             {% endif %}
         {% elif slot == 'reminder' %}
-            <section class="c-reminder c-reminder--{{ roll.film.type|default:'empty' }}">
-                {% if roll.film.iso %}
-                    {% capture as iso silent %}{% if roll.push_pull %}{{ roll.effective_iso }}{% else %}{{ roll.film.iso }}{% endif %}{% endcapture %}
-                    {% capture as film_description silent %}Loaded with {{ roll.film.type|upper }} film with an ISO of {{ iso }}.{% endcapture %}
+            {% capture as roll_type silent %}{% if roll.film.stock %}{{ roll.film.stock.type }}{% else %}{{ roll.film.type }}{% endif %}{% endcapture %}
+            {% capture as roll_iso silent %}{% if roll.film.stock %}{{ roll.film.stock.iso }}{% else %}{{ roll.film.iso }}{% endif %}{% endcapture %}
+            <section class="c-reminder c-reminder--{{ roll_type|default:'empty' }}">
+                {% if roll_iso %}
+                    {% capture as iso silent %}{% if roll.push_pull %}{{ roll.effective_iso }}{% else %}{{ roll_iso }}{% endif %}{% endcapture %}
+                    {% capture as film_description silent %}Loaded with {{ roll_type|upper }} film with an ISO of {{ iso }}.{% endcapture %}
                     <div class="c-reminder__iso" title="{{ film_description }}" aria-label="{{ film_description }}">{{ iso }}</div>
                 {% endif %}
                 <ul class="c-reminder__meta">
@@ -63,9 +65,9 @@
                         {% endif %}
                     {% endcomment %}
                     {% if roll.push_pull %}
-                    <li class="push_pull" title="{{ roll.film.iso }} {{ roll.get_push_pull_display }}">{{ roll.film.iso }} {{ roll.push_pull }}</li>
+                        <li class="push_pull" title="{{ roll_iso }} {{ roll.get_push_pull_display }}">{{ roll_iso }} {{ roll.push_pull }}</li>
                     {% endif %}
-                    <li class="type">{{ roll.film.type|upper }}</li>
+                    <li class="type">{{ roll_type|upper }}</li>
                 </ul>
             </section>
         {% endif %}

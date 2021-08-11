@@ -181,12 +181,12 @@ def inventory_filter(request, Film, format, type):
         film_counts = film_counts.filter(format=format)
 
     if type != 'all':
-        film_counts = film_counts.filter(type=type)
+        film_counts = film_counts.filter(stock__type=type)
 
     return film_counts.annotate(
         count=Count('roll')
     ).order_by(
-        'type',
+        'stock__type',
         '-format',
         'manufacturer__name',
         'name',

@@ -75,10 +75,10 @@ class RollForm(ModelForm):
         }
 
 
-class FilmForm(ModelForm):
+class StockForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
-        super(FilmForm, self).__init__(*args, **kwargs)
+        super(StockForm, self).__init__(*args, **kwargs)
         self.fields['manufacturer'] = forms.ModelChoiceField(
             queryset=Manufacturer.objects.all().exclude(Q(personal=True) & ~Q(added_by=self.user)),
             required=False,
@@ -90,6 +90,7 @@ class FilmForm(ModelForm):
     )
     formats = forms.MultipleChoiceField(
         choices=film_formats,
+        initial='135',
         widget=forms.CheckboxSelectMultiple,
         help_text='Choose at least one.',
     )
