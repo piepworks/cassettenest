@@ -35,9 +35,12 @@
                 <select name="type" id="id_type">
                     <option value="all">All types</option>
                     {% for type in type_counts %}
-                    <option value="{{ type.type }}"{% if filters.type == type.type %} selected{% endif %}>
-                        {{ type.type_display }}
-                    </option>
+                        {# TODO: Remove this if statement. #}
+                        {% if type.stock__type != None %}
+                            <option value="{{ type.stock__type }}"{% if filters.type == type.stock__type %} selected{% endif %}>
+                                {{ type.type_display }}
+                            </option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </label>

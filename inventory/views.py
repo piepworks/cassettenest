@@ -561,10 +561,11 @@ def inventory(request):
     # Get the display name of types choices.
     type_choices = dict(Stock._meta.get_field('type').flatchoices)
     for type in type_counts:
-        type['type_display'] = force_str(
-            type_choices[type['stock__type']],
-            strings_only=True
-        )
+        if type['stock__type'] is not None:
+            type['type_display'] = force_str(
+                type_choices[type['stock__type']],
+                strings_only=True
+            )
 
     context = {
         'total_film_count': total_film_count,
@@ -1020,7 +1021,7 @@ def project_detail(request, pk):
     film_counts = total_film_count.annotate(
         count=Count('roll')
     ).order_by(
-        'type',
+        'stock__type',
         '-format',
         'stock__manufacturer__name',
         'name',
@@ -1039,9 +1040,9 @@ def project_detail(request, pk):
     ).annotate(
         count=Count('roll')
     ).order_by(
-        'type',
+        'stock__type',
         'stock__manufacturer__name',
-        'name',
+        'format',
     )
 
     # Filter available films by ISO if set. Return the unaltered list if not.
@@ -1284,12 +1285,19 @@ def roll_add(request):
 
 
 @login_required
-def film_rolls(request, slug):
+def film_rolls(request, stock=None, format=None, slug=None):
     '''All the rolls of a particular film that someone has or has used.'''
-    owner = request.user
+    if stock:
+        film = get_object_or_404(Film, stock__slug=stock, format=format)
+    else:
+        film = get_object_or_404(Film, slug=slug)
+
+        # If this film does have a stock associated with it, redirect to the new URL.
+        if film.stock:
+            return redirect(reverse('film-rolls', args=(film.stock.slug, film.format,)))
+
     current_project = None
-    film = get_object_or_404(Film, slug=slug)
-    rolls = Roll.objects.filter(owner=owner, film__slug=slug)
+    rolls = Roll.objects.filter(owner=request.user, film=film)
     rolls_storage = rolls.filter(status=status_number('storage'))
     rolls_history = rolls.exclude(
         status=status_number('storage')
@@ -1301,7 +1309,7 @@ def film_rolls(request, slug):
     if request.GET.get('project'):
         current_project = get_project_or_none(
             Project,
-            owner,
+            request.user,
             request.GET.get('project'),
         )
     if current_project is not None and current_project != 0:
@@ -1312,8 +1320,7 @@ def film_rolls(request, slug):
         'rolls_storage': rolls_storage,
         'rolls_history': rolls_history,
         'film': film,
-        'slug': slug,
-        'owner': owner,
+        'owner': request.user,
         'current_project': current_project,
     }
 
@@ -1954,12 +1961,7 @@ def camera_or_back_load(request, pk, back_pk=None):
         roll.save()
         messages.success(
             request,
-            '%s loaded with %s %s (code: %s)!' % (
-                camera_or_back,
-                roll.film.manufacturer,
-                roll.film.name,
-                roll.code,
-            )
+            f'{camera_or_back} loaded with {roll.film} (code: {roll.code})!'
         )
 
         if current_project:
@@ -1986,11 +1988,10 @@ def camera_or_back_load(request, pk, back_pk=None):
                 roll__status=status_number('storage'),
                 roll__project=current_project
             ).annotate(
-                count=Count('name')
+                count=Count('format')
             ).order_by(
-                'type',
-                'manufacturer__name',
-                'name',
+                'stock__type',
+                'stock__manufacturer',
             )
             if camera_or_back.format:
                 film_counts = film_counts.filter(format=camera_or_back.format)
@@ -1999,11 +2000,10 @@ def camera_or_back_load(request, pk, back_pk=None):
                 roll__owner=owner,
                 roll__status=status_number('storage')
             ).annotate(
-                count=Count('name')
+                count=Count('format')
             ).order_by(
-                'type',
-                'manufacturer__name',
-                'name',
+                'stock__type',
+                'stock__manufacturer',
             )
             if camera_or_back.format:
                 film_counts = film_counts.filter(format=camera_or_back.format)
@@ -2047,11 +2047,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
         roll.save()
         messages.success(
             request,
-            'Roll of %s %s (code: %s) finished!' % (
-                roll.film.manufacturer,
-                roll.film.name,
-                roll.code,
-            )
+            f'Roll of {roll.film} (code: {roll.code}) finished!'
         )
 
         if roll.project:

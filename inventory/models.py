@@ -181,7 +181,10 @@ class Film(models.Model):
         return f'{name} in {self.get_format_display()}'
 
     def get_absolute_url(self):
-        return reverse('film-rolls', args=(self.slug,))
+        if self.stock:
+            return reverse('film-rolls', args=(self.stock.slug, self.format,))
+        else:
+            return reverse('film-slug-redirect', args=(self.slug,))
 
 
 class Camera(models.Model):

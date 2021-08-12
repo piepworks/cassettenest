@@ -31,11 +31,11 @@ def iso_variables(request):
 
 def iso_filter(iso, objects):
     if iso['range'] == 'gte':
-        objects = objects.filter(iso__gte=iso['value'])
+        objects = objects.filter(stock__iso__gte=iso['value'])
     elif iso['range'] == 'lte':
-        objects = objects.filter(iso__lte=iso['value'])
+        objects = objects.filter(stock__iso__lte=iso['value'])
     elif iso['range'] == 'equals':
-        objects = objects.filter(iso=iso['value'])
+        objects = objects.filter(stock__iso=iso['value'])
 
     return objects
 

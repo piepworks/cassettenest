@@ -1,3 +1,5 @@
+{% if roll.film.stock %}{% url 'film-rolls' roll.film.stock.slug roll.film.format as film_url %}{% else %}{% url 'film-slug-redirect' roll.film.slug as film_url %}{% endif %}
+
 {% if roll.project %}
-/ <a href="{% url 'film-rolls' roll.film.slug %}?project={{ roll.project.id }}">{{ roll.project.name }}</a>
+/ <a href="{{ film_url }}?project={{ roll.project.id }}">{{ roll.project.name }}</a>
 {% endif %}

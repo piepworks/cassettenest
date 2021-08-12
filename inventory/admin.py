@@ -31,8 +31,8 @@ class StockAdmin(admin.ModelAdmin):
 
 
 class FilmAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'type', 'iso', 'created_at', 'added_by',)
-    list_filter = ('format', 'type', 'manufacturer', 'iso', 'personal', 'added_by',)
+    list_display = ('__str__', 'created_at', 'added_by',)
+    list_filter = ('format', 'personal', 'added_by',)
     prepopulated_fields = {'slug': ('name', 'format',)}
     ordering = ('-created_at',)
 

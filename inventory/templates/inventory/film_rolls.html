@@ -1,5 +1,6 @@
 {% extends 'base_site.html' %}
 {% load markdown_deux_tags %}
+{% load capture_tags %}
 
 {% block title %}{{ film }}{% endblock %}
 
@@ -7,16 +8,20 @@
 <div class="raw">
 <h1>{% include 'inventory/_film-name-display.html' with film=film %}</h1>
 
-<p>ISO {{ film.iso }}</p>
+{% capture as film_iso silent %}{% if film.stock %}{{ film.stock.iso }}{% else %}{{ film.iso }}{% endif %}{% endcapture %}
+{% capture as film_description silent %}{% if film.stock %}{{ film.stock.description }}{% else %}{{ film.description }}{% endif %}{% endcapture %}
+{% if film.stock %}{% url 'film-rolls' film.stock.slug film.format as film_url %}{% else %}{% url 'film-slug-redirect' film.slug as film_url %}{% endif %}
 
-{% if film.description %}
-    <div>{{ film.description|markdown }}</div>
+<p>ISO {{ film_iso }}</p>
+
+{% if film_description %}
+    <div>{{ film_description|markdown }}</div>
 {% endif %}
 
 {% if current_project %}
     <hr />
     <p>Viewing rolls in project: <b><a href="{% url 'project-detail' current_project.id %}">{{ current_project }}</a></b>.</p>
-    <p><a href="{% url 'film-rolls' slug %}">View all your rolls of {{ film }}.</a></p>
+    <p><a href="{{ film_url }}">View all your rolls of {{ film }}.</a></p>
 {% endif %}
 
 <section class="storage">
@@ -31,7 +36,7 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p>You don&rsquo;t have any of this film.</p>
+        <p>You don’t have any of this film.</p>
     {% endif %}
 </section>
 
@@ -48,7 +53,7 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p>You don&rsquo;t have any finished rolls of this film yet.</p>
+        <p>You don’t have any finished rolls of this film yet.</p>
     {% endif %}
 </section>
 </div>
