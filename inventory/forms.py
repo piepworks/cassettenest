@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from .models import Camera, CameraBack, Roll, Stock, Manufacturer, Project, Journal, User, Profile, Frame
+from .models import Camera, CameraBack, Roll, Stock, Manufacturer, Project, Journal, User, Profile, Frame, Film
 from .utils import apertures, shutter_speeds, film_formats
 
 
@@ -251,3 +251,20 @@ class PatternsForm(forms.Form):
 
 class UploadCSVForm(forms.Form):
     csv = forms.FileField()
+
+
+class FilmForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['stock'].required = True
+
+    class Meta:
+        model = Film
+        exclude = [
+            'iso',
+            'manufacturer',
+            'type',
+            'slug',
+            'name',
+            'url',
+        ]

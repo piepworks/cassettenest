@@ -170,7 +170,7 @@ class Film(models.Model):
 
     class Meta:
         ordering = ['manufacturer__name', 'name']
-        unique_together = (('manufacturer', 'name', 'format',),)
+        unique_together = (('stock', 'format',),)
 
     def __str__(self):
         if self.stock:

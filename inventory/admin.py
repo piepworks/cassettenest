@@ -15,6 +15,7 @@ from .models import (
     Frame,
 )
 from .utils_paddle import paddle_plan_name
+from .forms import FilmForm
 
 
 class ManufacturerAdmin(admin.ModelAdmin):
@@ -33,8 +34,13 @@ class StockAdmin(admin.ModelAdmin):
 class FilmAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'created_at', 'added_by',)
     list_filter = ('format', 'personal', 'added_by',)
-    prepopulated_fields = {'slug': ('name', 'format',)}
     ordering = ('-created_at',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        if request.user.is_superuser:
+            kwargs['form'] = FilmForm
+
+        return super().get_form(request, obj, **kwargs)
 
 
 class RollAdmin(admin.ModelAdmin):
