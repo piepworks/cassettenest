@@ -93,6 +93,7 @@ class StockForm(ModelForm):
         initial='135',
         widget=forms.CheckboxSelectMultiple,
         help_text='Choose at least one.',
+        error_messages={'required': 'Please choose at least one format.'},
     )
     destination = forms.CharField(widget=forms.HiddenInput(), required=False)
 

@@ -1371,7 +1371,6 @@ def stock_add(request):
             )
 
             formats = form.cleaned_data['formats']
-            # TODO: Halt and give an error if there is no format selected.
 
             for format in formats:
                 Film.objects.create(
