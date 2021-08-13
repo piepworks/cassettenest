@@ -1,7 +1,9 @@
-<div class="c-field">
-    <label>Film</label>
-    <p class="c-field__input-placeholder">{{ roll.film }}</p>
-</div>
+{% if method != 'add' %}
+    <div class="c-field">
+        <label>Film</label>
+        <p class="c-field__input-placeholder">{{ roll.film }}</p>
+    </div>
+{% endif %}
 {% include 'inventory/_form-field.html' with field=form.started_on %}
 {% include 'inventory/_form-field.html' with field=form.ended_on %}
 {% if roll.status != '02_loaded' %}
