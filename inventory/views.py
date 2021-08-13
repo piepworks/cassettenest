@@ -1401,19 +1401,20 @@ def stock_add(request):
                 ''',
             )
 
+            film_id_to_add = Film.objects.filter(stock=stock).first().id
+
             if form.cleaned_data['destination'] != 'add-storage':
                 if 'another' in request.POST:
                     return redirect(reverse('stock-add') + '?destination=add-logbook')
                 else:
                     # Go back to add roll to logbook page.
-                    return redirect(reverse('roll-add') + f'?film={film.id}')
+                    return redirect(reverse('roll-add') + f'?film={film_id_to_add}')
             else:
                 if 'another' in request.POST:
                     return redirect('stock-add')
                 else:
                     # Go back to add rolls to storage page.
-                    # TODO: Make this work. Needs to point to one of the stock formats.
-                    return redirect(reverse('rolls-add') + f'?film={stock.id}')
+                    return redirect(reverse('rolls-add') + f'?film={film_id_to_add}')
         else:
             context = {
                 'form': form,
