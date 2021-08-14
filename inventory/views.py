@@ -1414,22 +1414,18 @@ def stock_add(request):
                 else:
                     # Go back to add rolls to storage page.
                     return redirect(reverse('rolls-add') + f'?film={film_id_to_add}')
-        else:
-            context = {
-                'form': form,
-                'js_needed': True,
-            }
     else:
         destination = request.GET.get('destination')
         if destination:
             form = StockForm(user=request.user, initial={'destination': destination})
         else:
             form = StockForm(user=request.user, initial={'destination': 'add-storage'})
-        context = {
-            'form': form,
-            'js_needed': True,
-            'wc_needed': True,
-        }
+
+    context = {
+        'form': form,
+        'js_needed': True,
+        'wc_needed': True,
+    }
 
     return render(request, 'inventory/stock_add.html', context)
 
