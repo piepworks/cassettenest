@@ -140,7 +140,7 @@ class RollTests(TestCase):
         self.assertEqual(str(roll), f'35-c41-1 / {roll.started_on.year}')
 
     def test_effective_iso(self):
-        film = baker.make(Film, iso=400)
+        film = baker.make(Film, stock=baker.make(Stock, iso=400))
         roll1 = baker.make(Roll, film=film)
         roll2 = baker.make(Roll, film=film, push_pull='+2')
 
