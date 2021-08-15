@@ -860,6 +860,63 @@ class RollsAddTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class RollAddTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        cls.film = baker.make(Film, stock=baker.make(Stock))
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_roll_add_page(self):
+        response = self.client.get(reverse('roll-add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Add a roll to your&nbsp;logbook', html=True)
+
+    def test_adding_a_roll(self):
+        response = self.client.post(reverse('roll-add'), data={
+            'film': self.film.id,
+            'status': status_number('shot'),
+            'started_on': self.today,
+            'ended_on': self.today,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(f'Added a roll:' in messages[0])
+
+    def test_adding_a_roll_and_start_another(self):
+        response = self.client.post(reverse('roll-add'), data={
+            'film': self.film.id,
+            'status': status_number('shot'),
+            'started_on': self.today,
+            'ended_on': self.today,
+            'another': True,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(f'Added a roll:' in messages[0])
+
+    def test_adding_a_roll_error(self):
+        response = self.client.post(reverse('roll-add'), data={})
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Please fill out the form.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RollsUpdateTests(TestCase):
     @classmethod
     def setUpTestData(cls):

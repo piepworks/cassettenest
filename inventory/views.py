@@ -1243,13 +1243,10 @@ def roll_add(request):
             ]
             roll.save()
 
+            roll_url = reverse('roll-detail', args=(roll.id,))
             messages.success(
                 request,
-                'Added a roll: <a href="%s">%s</a>!'
-                % (
-                    reverse('roll-detail', args=(roll.id,)),
-                    roll.code
-                ),
+                f'Added a roll: <a href="{roll_url}">{roll}</a>!',
                 extra_tags='safe'
             )
             # TODO: redirect to year=year for this roll and status=all.
