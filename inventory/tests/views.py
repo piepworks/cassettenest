@@ -806,6 +806,60 @@ class ReadyTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class RollsAddTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.film = baker.make(Film, stock=baker.make(Stock))
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_add_rolls_page(self):
+        response = self.client.get(reverse('rolls-add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Add rolls to storage', html=True)
+
+    def test_adding_rolls(self):
+        response = self.client.post(reverse('rolls-add'), data={
+            'film': self.film.id,
+            'quantity': 2,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'Added 2 rolls of {self.film}!', messages)
+
+    def test_adding_rolls_invalid_quantity(self):
+        response = self.client.post(reverse('rolls-add'), data={
+            'film': self.film.id,
+            'quantity': 'fish',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Enter a valid quantity.', messages)
+
+    def test_adding_rolls_less_than_1(self):
+        response = self.client.post(reverse('rolls-add'), data={
+            'film': self.film.id,
+            'quantity': 0,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Enter a quantity of 1 or more.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RollsUpdateTests(TestCase):
     @classmethod
     def setUpTestData(cls):

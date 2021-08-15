@@ -1192,13 +1192,10 @@ def rolls_add(request):
                 roll._state.adding = True
                 roll.save()
 
+            roll_plural = pluralize('roll', quantity)
             messages.success(
                 request,
-                'Added %s %s of %s!' % (
-                    quantity,
-                    pluralize('roll', quantity),
-                    film
-                )
+                f'Added {quantity} {roll_plural} of {film}!',
             )
         else:
             messages.error(request, 'Enter a quantity of 1 or more.')
