@@ -1325,27 +1325,28 @@ def film_rolls(request, stock=None, format=None, slug=None):
 def stock_add(request):
     if request.method == 'POST':
         form = StockForm(request.POST, user=request.user)
-        output = 'error'
 
         if form.is_valid():
             if form.cleaned_data['new_manufacturer']:
                 # Create new manufactuter and get a reference to it.
                 new_manufacturer = form.cleaned_data['new_manufacturer']
                 try:
-                    manufacturer = Manufacturer.objects.create(
-                        personal=True,
-                        added_by=request.user,
-                        name=new_manufacturer,
-                        slug=slugify(new_manufacturer),
-                    )
+                    with transaction.atomic():
+                        manufacturer = Manufacturer.objects.create(
+                            personal=True,
+                            added_by=request.user,
+                            name=new_manufacturer,
+                            slug=slugify(new_manufacturer),
+                        )
                 except IntegrityError:
                     messages.error(request, 'There’s already a manufacturer with that name.')
                     context = {
                         'form': form,
                         'js_needed': True,
+                        'wc_needed': True,
                     }
 
-                    return render(request, 'inventory/film_add.html', context)
+                    return render(request, 'inventory/stock_add.html', context)
             else:
                 manufacturer = form.cleaned_data['manufacturer']
 

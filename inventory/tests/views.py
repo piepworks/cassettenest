@@ -1958,3 +1958,114 @@ class StockViewTests(TestCase):
         response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'kodak', 'type': 'c41'}))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Reset filters')
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class StockAddTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.manufacturer = baker.make(Manufacturer, name='Kodak', slug='kodak')
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_stock_add_page(self):
+        response = self.client.get(reverse('stock-add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Add Film Stock')
+
+    def test_stock_add_page_with_destination(self):
+        response = self.client.get(reverse('stock-add') + f'?destination=add-logbook')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Add Film Stock')
+
+    def test_adding_new_stock(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'manufacturer': self.manufacturer.id,
+            'name': 'Ektar 100',
+            'formats': [135],
+            'type': 'c41',
+            'iso': 100,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Kodak Ektar 100” (in 35mm) added!', messages)
+
+    def test_adding_new_stock_and_new_manufacturer(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'new_manufacturer': 'Fujifilm',
+            'name': 'Provia 100',
+            'formats': [135, 120],
+            'type': 'e6',
+            'iso': 100,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Fujifilm Provia 100” (in 35mm, 120) added!', messages)
+
+    def test_adding_new_stock_and_new_manufacturer_error(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'new_manufacturer': self.manufacturer.name,
+            'name': 'Ektar 100',
+            'formats': [135],
+            'type': 'c41',
+            'iso': 100,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('There’s already a manufacturer with that name.', messages)
+
+    def test_adding_new_stock_and_another(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'manufacturer': self.manufacturer.id,
+            'name': 'Gold 200',
+            'formats': [135],
+            'type': 'c41',
+            'iso': 200,
+            'another': True,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Kodak Gold 200” (in 35mm) added!', messages)
+
+    def test_adding_new_stock_from_inventory(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'manufacturer': self.manufacturer.id,
+            'name': 'UltraMax 400',
+            'formats': [135],
+            'type': 'c41',
+            'iso': 400,
+            'destination': 'add-storage',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Kodak UltraMax 400” (in 35mm) added!', messages)
+
+    def test_adding_new_stock_from_inventory_and_another(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'manufacturer': self.manufacturer.id,
+            'name': 'Tri-X 400',
+            'formats': [135, 120],
+            'type': 'c41',
+            'iso': 400,
+            'destination': 'add-storage',
+            'another': True,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Kodak Tri-X 400” (in 35mm, 120) added!', messages)
