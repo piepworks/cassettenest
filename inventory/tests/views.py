@@ -981,6 +981,47 @@ class RollsUpdateTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class FilmRollsTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        cls.film = baker.make(Film, stock=baker.make(Stock), slug='slug')
+        baker.make(Roll, film=cls.film)
+        baker.make(Roll, film=cls.film)
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_film_rolls_with_stock(self):
+        response = self.client.get(reverse('film-rolls', args=(self.film.stock.slug, self.film.format,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Storage')
+
+    def test_film_rolls_without_stock(self):
+        response = self.client.get(reverse('film-slug-redirect', args=(self.film.slug,)))
+        self.assertEqual(response.status_code, 302)
+
+    def test_film_rolls_with_project(self):
+        project = baker.make(Project, owner=self.user)
+        response = self.client.get(
+            reverse(
+                'film-rolls', args=(self.film.stock.slug, self.film.format,)
+            ) + f'?project={project.id}'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Viewing rolls in project')
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class SubscriptionTests(TestCase):
     @classmethod
     def setUpTestData(cls):
