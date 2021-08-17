@@ -1,9 +1,4 @@
 <form method="get">
-    {% if iso_range and iso_value %}
-    <input type="hidden" name="iso_range" value="{{ iso_range }}" />
-    <input type="hidden" name="iso_value" value="{{ iso_value }}" />
-    {% endif %}
-
     <div class="c-field">
         <label for="id_project_filter">Project filter: {{ current_project.name|default:'inactive' }}</label>
         <button id="id_project_filter" class="toggle-button">Show</button>

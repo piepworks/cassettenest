@@ -5,41 +5,6 @@ from django.core.mail import send_mail
 from django.db.models import Count
 
 
-def iso_variables(request):
-    range = None
-    value = None
-
-    if request.GET.get('iso_range') and request.GET.get('iso_value'):
-        ranges = (
-            'gte',
-            'lte',
-            'equals',
-        )
-        if request.GET.get('iso_range') in ranges:
-            range = request.GET.get('iso_range')
-            try:
-                value = int(request.GET.get('iso_value'))
-            except ValueError:
-                range = None
-                value = None
-
-    return {
-        'range': range,
-        'value': value
-    }
-
-
-def iso_filter(iso, objects):
-    if iso['range'] == 'gte':
-        objects = objects.filter(stock__iso__gte=iso['value'])
-    elif iso['range'] == 'lte':
-        objects = objects.filter(stock__iso__lte=iso['value'])
-    elif iso['range'] == 'equals':
-        objects = objects.filter(stock__iso=iso['value'])
-
-    return objects
-
-
 def get_project_or_none(Project, owner, project_id):
     try:
         current_project = Project.objects.get(

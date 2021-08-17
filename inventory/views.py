@@ -40,8 +40,6 @@ from .utils import (
     development_statuses,
     bulk_status_keys,
     get_project_or_none,
-    iso_filter,
-    iso_variables,
     pluralize,
     status_description,
     status_keys,
@@ -984,7 +982,6 @@ def project_delete(request, pk):
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
-    iso = iso_variables(request)
     # Get all of this user's cameras not already associated with this project.
     cameras = Camera.objects.filter(owner=owner).exclude(
         pk__in=project.cameras.values_list('pk', flat=True)
@@ -1045,9 +1042,6 @@ def project_detail(request, pk):
         'format',
     )
 
-    # Filter available films by ISO if set. Return the unaltered list if not.
-    film_available_count = iso_filter(iso, film_available_count)
-
     roll_logbook = Roll.objects.filter(
         owner=owner,
         project=project
@@ -1078,8 +1072,6 @@ def project_detail(request, pk):
         'film_available_count': film_available_count,
         'format_counts': format_counts,
         'loaded_roll_list': loaded_roll_list,
-        'iso_range': iso['range'],
-        'iso_value': iso['value'],
         'roll_logbook': roll_logbook,
         'page_obj': page_obj,
         'js_needed': True,
@@ -1963,7 +1955,6 @@ def camera_or_back_load(request, pk, back_pk=None):
             return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         projects = Project.objects.filter(owner=owner, status='current')
-        iso = iso_variables(request)
 
         # Querystring
         if request.GET.get('project'):
@@ -1999,8 +1990,6 @@ def camera_or_back_load(request, pk, back_pk=None):
             if camera_or_back.format:
                 film_counts = film_counts.filter(format=camera_or_back.format)
 
-        film_counts = iso_filter(iso, film_counts)
-
         context = {
             'owner': owner,
             'camera': camera,
@@ -2009,8 +1998,6 @@ def camera_or_back_load(request, pk, back_pk=None):
             'current_project': current_project,
             'projects': projects,
             'film_counts': film_counts,
-            'iso_range': iso['range'],
-            'iso_value': iso['value'],
             'js_needed': True,
         }
 
