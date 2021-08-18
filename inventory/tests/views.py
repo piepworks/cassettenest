@@ -1006,9 +1006,19 @@ class FilmRollsTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Storage')
 
+    def test_personal_film_rolls_404_with_stock(self):
+        film = baker.make(Film, stock=baker.make(Stock), personal=True, added_by=baker.make(User))
+        response = self.client.get(reverse('film-rolls', args=(film.stock.slug, film.format,)))
+        self.assertEqual(response.status_code, 404)
+
     def test_film_rolls_without_stock(self):
         response = self.client.get(reverse('film-slug-redirect', args=(self.film.slug,)))
         self.assertEqual(response.status_code, 302)
+
+    def test_personal_film_rolls_404_without_stock(self):
+        film = baker.make(Film, slug='private-slug', personal=True, added_by=baker.make(User))
+        response = self.client.get(reverse('film-slug-redirect', args=(film.slug,)))
+        self.assertEqual(response.status_code, 404)
 
     def test_film_rolls_with_project(self):
         project = baker.make(Project, owner=self.user)

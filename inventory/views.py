@@ -1279,10 +1279,17 @@ def roll_add(request):
 @login_required
 def film_rolls(request, stock=None, format=None, slug=None):
     '''All the rolls of a particular film that someone has or has used.'''
+
     if stock:
         film = get_object_or_404(Film, stock__slug=stock, format=format)
+
+        if film.personal and film.added_by != request.user:
+            raise Http404()
     else:
         film = get_object_or_404(Film, slug=slug)
+
+        if film.personal and film.added_by != request.user:
+            raise Http404()
 
         # If this film does have a stock associated with it, redirect to the new URL.
         if film.stock:
