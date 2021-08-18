@@ -1,6 +1,6 @@
 import datetime
 import json
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, DetailView, FormView
 from django.db.models import Count, Q
@@ -436,10 +436,16 @@ def stock(request, manufacturer, slug):
     stock = get_object_or_404(Stock, manufacturer=manufacturer, slug=slug)
 
     if request.user.is_authenticated:
+        if stock.personal and stock.added_by != request.user:
+            raise Http404()
+
         films = Film.objects.filter(stock=stock).exclude(
             Q(personal=True) & ~Q(added_by=request.user)
         ).annotate(count=Count('roll'))
     else:
+        if stock.personal:
+            raise Http404()
+
         films = Film.objects.filter(stock=stock).exclude(Q(personal=True)).annotate(count=Count('roll'))
 
     films_list = []

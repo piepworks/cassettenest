@@ -1959,6 +1959,24 @@ class StockViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Reset filters')
 
+    def test_personal_stock_logged_in(self):
+        response = self.client.get(
+            reverse('stock', args=(self.personal_stock.manufacturer.slug, self.personal_stock.slug))
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_personal_stock_404_logged_out(self):
+        self.client.logout()
+        response = self.client.get(
+            reverse('stock', args=(self.personal_stock.manufacturer.slug, self.personal_stock.slug))
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_personal_stock_404_logged_in(self):
+        stock = baker.make(Stock, personal=True, added_by=baker.make(User))
+        response = self.client.get(reverse('stock', args=(stock.manufacturer.slug, stock.slug)))
+        self.assertEqual(response.status_code, 404)
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class StockAddTests(TestCase):
