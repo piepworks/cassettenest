@@ -7,6 +7,15 @@
 <div class="raw">
     <h1><a href="{% url 'stocks' %}">Film Stocks</a> &gt; <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> {{ stock.name }}</h1>
 
+    {% if stock.added_by %}
+        <div class="notes">
+            {% include 'inventory/_github-icon.html' with id='heart-fill' %}
+            <div class="inner">This stock was added by the Cassette Nest community!</div>
+        </div>
+    {% endif %}
+
+    <hr />
+
     <p>Total rolls of this stock in Cassette Nest: <b>{{ total_rolls }}</b></p>
 
     <ul>
