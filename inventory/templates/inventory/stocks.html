@@ -53,6 +53,12 @@ const $wrapper = $('#stocks-list-wrapper');
 const $typeSwitcher = $('#id_type');
 const $pageName = $('#page-name');
 const $manufacturerName = $('#manufacturer-name');
+
+let stocksUrl = `{% url 'stocks' %}`;
+let manufacturerUrl = `{% url 'stocks-manufacturer' manufacturer='m-none' %}`;
+let ajaxUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`;
+
+{% comment %}These variables are set in `_stocks-list.html`.{% endcomment %}
 let typeChoices;
 let manufacturerName;
 
@@ -97,37 +103,52 @@ function resetLink(e) {
         }));
 }
 
+function changeFilters(manufacturer, type='all', changed='type') {
+    const t = (changed === 'type') ? type : 'all';
+    const newAjaxUrl = ajaxUrl.replace('t-none', t).replace('m-none', manufacturer);
+
+    $wrapper.html('<div class="loader" />');
+    fetch(newAjaxUrl).then((response) => {
+        response.text().then((text) => {
+            $wrapper.html(text);
+            $('.js-reset-filter').click((e) => resetLink(e));
+
+            if (changed === 'manufacturer') {
+                resetTypes();
+            }
+            resetTitle();
+        });
+    });
+}
+
 $('#stock_filter select').change((e) => {
     const url = new URL(window.location);
     const newManufacturer = $('#id_manufacturer').val();
     const newType = $('#id_type').val();
-    let manufacturerUrl = (newManufacturer === 'all')
-        ? `{% url 'stocks' %}`
-        : `{% url 'stocks-manufacturer' manufacturer='m-none' %}`.replace('m-none', newManufacturer);
-    let typeUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`;
 
-    // If we’re switching manufacturer, reset type to `all`.
-    let t = (e.target.name === 'manufacturer') ? 'all' : newType;
-    typeUrl = typeUrl.replace('t-none', t).replace('m-none', newManufacturer);
+    let changed = (e.target.name === 'manufacturer') ? 'manufacturer' : 'type';
 
-    $wrapper.html('<div class="loader" />');
-    fetch(typeUrl).then((response) => {
-        response.text().then((text) => {
-            $wrapper.html(text);
-            $('.js-reset-filter').click((e) => resetLink(e));
-            url.pathname = manufacturerUrl;
-            url.searchParams.set('type', (e.target.name === 'type') ? newType : 'all');
+    changeFilters(newManufacturer, newType, changed);
 
-            if (e.target.name === 'manufacturer') {
-                resetTypes();
-            }
-            window.history.pushState({}, '', url);
-            resetTitle();
-        });
-    });
+    const newUrl = (newManufacturer === 'all')
+        ? stocksUrl
+        : manufacturerUrl.replace('m-none', newManufacturer);
+
+    url.pathname = newUrl;
+    url.searchParams.set('type', (e.target.name === 'type') ? newType : 'all');
+    window.history.pushState({}, '', url);
 });
 
 $('.js-reset-filter').click((e) => resetLink(e));
 $pageName.find('a').click((e) => resetLink(e));
+
+window.onpopstate = (e) => {
+    const url = new URL(window.location);
+    const newType = url.searchParams.get('type');
+    const newManufacturer = (url.pathname.split('/')[2]) ? url.pathname.split('/')[2] : 'all';
+
+    changeFilters(newManufacturer, newType);
+    // TODO: change the select dropdowns selections based on what's changed.
+}
 </script>
 {% endblock %}
