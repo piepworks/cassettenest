@@ -142,11 +142,11 @@ $('#stock_filter select').change((e) => {
 $('.js-reset-filter').click((e) => resetLink(e));
 $pageName.find('a').click((e) => resetLink(e));
 
-window.onpopstate = (e) => {
+window.onpopstate = () => {
     const url = new URL(window.location);
     const newType = url.searchParams.get('type');
     const newManufacturer = (url.pathname.split('/')[2]) ? url.pathname.split('/')[2] : 'all';
-    const $manufacturerField = $('#id_manufacturer')
+    const $manufacturerField = $('#id_manufacturer');
     const $typeField = $('#id_type');
 
     changeFilters(newManufacturer, newType);
@@ -154,13 +154,13 @@ window.onpopstate = (e) => {
     // Update selected dropdown items.
     $manufacturerField.find('option').each((index, element) => {
         if ($(element).val() === newManufacturer) {
-            $manufacturerField.prop('selectedIndex') = index;
+            $manufacturerField.prop('selectedIndex', index);
         }
     });
 
     $typeField.find('option').each((index, element) => {
         if ($(element).val() === newType) {
-            $typeField.prop('selectedIndex') = index;
+            $typeField.prop('selectedIndex', index);
         }
     });
 }
