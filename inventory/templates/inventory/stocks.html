@@ -144,7 +144,7 @@ $pageName.find('a').click((e) => resetLink(e));
 
 window.onpopstate = () => {
     const url = new URL(window.location);
-    const newType = url.searchParams.get('type');
+    const newType = (url.searchParams.get('type')) ? url.searchParams.get('type') : 'all';
     const newManufacturer = (url.pathname.split('/')[2]) ? url.pathname.split('/')[2] : 'all';
     const $manufacturerField = $('#id_manufacturer');
     const $typeField = $('#id_type');
