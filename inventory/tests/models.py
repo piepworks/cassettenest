@@ -345,6 +345,7 @@ class ProjectTests(TestCase):
         self.assertEqual(self.project.get_rolls_remaining(), 0)
 
 
+@freeze_time(datetime.datetime.now().date())
 class JournalModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -385,6 +386,7 @@ class StockModelTests(TestCase):
         self.assertEqual(self.stock.get_absolute_url(), f'/stocks/{self.manufacturer_slug}/{self.stock_slug}/')
 
 
+@freeze_time(datetime.datetime.now().date())
 class FrameModelTests(TestCase):
     @classmethod
     def setUpTestData(cls):
