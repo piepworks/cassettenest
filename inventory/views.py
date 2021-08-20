@@ -407,7 +407,7 @@ def stocks_ajax(request, manufacturer, type):
         type_choices = available_types(request, Stock, type_names, type_choices, m)
     else:
         type_choices = type_names
-    if type != 'all':
+    if type != 'all' and type != 'null':
         stocks = stocks.filter(type=type)
         type_name = type_names[type]
 
