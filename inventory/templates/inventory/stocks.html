@@ -75,7 +75,18 @@ function resetTitle() {
     }
 }
 
-function resetTypes() {
+function resetManufacturerSelection(manufacturer) {
+    const $manufacturerField = $('#id_manufacturer');
+
+    // Update selected manufacturer.
+    $manufacturerField.find('option').each((index, element) => {
+        if ($(element).val() === manufacturer) {
+            $manufacturerField.prop('selectedIndex', index);
+        }
+    });
+}
+
+function resetTypes(type) {
     if (Object.keys(typeChoices).length > 1) {
         $typeSwitcher.html('<option value="all">All types</option>');
         $typeSwitcher.removeAttr('disabled');
@@ -85,6 +96,9 @@ function resetTypes() {
     }
     for (const key in typeChoices) {
         $typeSwitcher.append(`<option value="${key}">${typeChoices[key]}</option>`);
+        if (key === type) {
+            $typeSwitcher.find(`option[value=${key}]`).prop('selected', true);
+        }
     }
 }
 
@@ -103,9 +117,8 @@ function resetLink(e) {
         }));
 }
 
-function changeFilters(manufacturer, type='all', changed='type') {
-    const t = (changed === 'type') ? type : 'all';
-    const newAjaxUrl = ajaxUrl.replace('t-none', t).replace('m-none', manufacturer);
+function changeFilters(manufacturer, type='all') {
+    const newAjaxUrl = ajaxUrl.replace('t-none', type).replace('m-none', manufacturer);
 
     $wrapper.html('<div class="loader" />');
     fetch(newAjaxUrl).then((response) => {
@@ -113,9 +126,8 @@ function changeFilters(manufacturer, type='all', changed='type') {
             $wrapper.html(text);
             $('.js-reset-filter').click((e) => resetLink(e));
 
-            if (changed === 'manufacturer') {
-                resetTypes();
-            }
+            resetTypes(type);
+            resetManufacturerSelection(manufacturer);
             resetTitle();
         });
     });
@@ -125,9 +137,8 @@ $('#stock_filter select').change((e) => {
     const url = new URL(window.location);
     const newManufacturer = $('#id_manufacturer').val();
     const newType = $('#id_type').val();
-    let changed = (e.target.name === 'manufacturer') ? 'manufacturer' : 'type';
 
-    changeFilters(newManufacturer, newType, changed);
+    changeFilters(newManufacturer, newType);
 
     const newUrl = (newManufacturer === 'all')
         ? stocksUrl
@@ -145,24 +156,8 @@ window.onpopstate = () => {
     const url = new URL(window.location);
     const newType = (url.searchParams.get('type')) ? url.searchParams.get('type') : 'all';
     const newManufacturer = (url.pathname.split('/')[2]) ? url.pathname.split('/')[2] : 'all';
-    const $manufacturerField = $('#id_manufacturer');
-    const $typeField = $('#id_type');
-    const changed = (newType === 'all') ? 'manufacturer' : 'type';
 
-    changeFilters(newManufacturer, newType, changed);
-
-    // Update selected dropdown items.
-    $manufacturerField.find('option').each((index, element) => {
-        if ($(element).val() === newManufacturer) {
-            $manufacturerField.prop('selectedIndex', index);
-        }
-    });
-
-    $typeField.find('option').each((index, element) => {
-        if ($(element).val() === newType) {
-            $typeField.prop('selectedIndex', index);
-        }
-    });
+    changeFilters(newManufacturer, newType);
 }
 </script>
 {% endblock %}
