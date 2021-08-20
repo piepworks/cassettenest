@@ -6,6 +6,10 @@
 <div class="raw">
 <h1>Inventory</h1>
 
+<p><a href="{% url 'stocks' %}">View all Film Stocks</a> <small><a href="https://cassettenest.com/docs/stocks">(What is this?)</a></small></p>
+
+<hr />
+
 <p><a href="{% url 'rolls-add' %}">Add rolls to storage.</a></p>
 <p><a href="{% url 'roll-add' %}">Add a roll to a non-storage status.</a></p>
 
@@ -31,9 +35,12 @@
                 <select name="type" id="id_type">
                     <option value="all">All types</option>
                     {% for type in type_counts %}
-                    <option value="{{ type.type }}"{% if filters.type == type.type %} selected{% endif %}>
-                        {{ type.type_display }}
-                    </option>
+                        {# TODO: Remove this if statement. #}
+                        {% if type.stock__type != None %}
+                            <option value="{{ type.stock__type }}"{% if filters.type == type.stock__type %} selected{% endif %}>
+                                {{ type.type_display }}
+                            </option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </label>
@@ -42,7 +49,9 @@
     </div>
 </form>
 
-{% include 'inventory/_unused-rolls.html' %}
+<div id="unused-rolls-wrapper">
+    {% include 'inventory/_unused-rolls.html' %}
+</div>
 
 {% else %}
 <p>No film found.</p>
@@ -52,12 +61,15 @@
 
 {% block page_js %}
 <script>
+const $wrapper = $('#unused-rolls-wrapper');
+
 function resetLink(e) {
     e.preventDefault();
 
+    $wrapper.html('<div class="loader" />');
     fetch(`{% url 'inventory-ajax' format='all' type='all' %}`)
-        .then(response => response.text().then(text => {
-            $('#unused-rolls-wrapper').html(text);
+        .then(response => response.text().then((text) => {
+            $wrapper.html(text);
             $('#id_format').val('all');
             $('#id_type').val('all');
             window.history.pushState({}, '', `{% url 'inventory' %}`);
@@ -72,11 +84,12 @@ $('#film_filter select').change(() => {
         .replace('f-none', format)
         .replace('t-none', type);
 
+    $wrapper.html('<div class="loader" />');
     fetch(inventoryUrl)
         .then(response => {
-            response.text().then(text => {
-                $('#unused-rolls-wrapper').html(text);
-                $('.js-reset-filter').click(e => resetLink(e));
+            response.text().then((text) => {
+                $wrapper.html(text);
+                $('.js-reset-filter').click((e) => resetLink(e));
                 url.searchParams.set('format', format);
                 url.searchParams.set('type', type);
                 window.history.pushState({}, '', url);
@@ -84,6 +97,6 @@ $('#film_filter select').change(() => {
         });
 });
 
-$('.js-reset-filter').click(e => resetLink(e));
+$('.js-reset-filter').click((e) => resetLink(e));
 </script>
 {% endblock %}

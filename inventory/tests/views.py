@@ -13,7 +13,7 @@ from django.conf import settings
 from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
-from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame
+from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame, Stock, Manufacturer
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
 
@@ -68,8 +68,8 @@ class ReminderCardTests(TestCase):
     def test_bw_card(self):
         roll = baker.make(
             Roll,
+            film__stock=baker.make(Stock, type='bw'),
             owner=self.user,
-            film__type='bw',
             camera=baker.make(Camera),
         )
         roll.started_on = self.today
@@ -216,7 +216,7 @@ class InventoryTests(TestCase):
             username=cls.username,
             password=cls.password,
         )
-        baker.make(Roll, owner=cls.user)
+        baker.make(Roll, owner=cls.user, film=baker.make(Film, slug='slug', stock=baker.make(Stock)))
 
     def setUp(self):
         self.client.login(
@@ -257,6 +257,7 @@ class LogbookTests(TestCase):
         cls.today = datetime.date.today()
         baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             owner=cls.user,
             status=status_number('shot'),
             started_on=cls.today,
@@ -430,6 +431,7 @@ class ImportTests(TestCase):
         roll = baker.make(
             Roll,
             owner=self.user,
+            film__stock=baker.make(Stock),
             camera=camera,
             camera_back=baker.make(CameraBack, camera=camera),
             project=project,
@@ -786,6 +788,7 @@ class ReadyTests(TestCase):
     def test_ready_page_with_a_roll(self):
         baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             owner=self.user,
             status=status_number('shot'),
             started_on=self.today,
@@ -803,6 +806,117 @@ class ReadyTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class RollsAddTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.film = baker.make(Film, stock=baker.make(Stock))
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_add_rolls_page(self):
+        response = self.client.get(reverse('rolls-add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Add rolls to storage', html=True)
+
+    def test_adding_rolls(self):
+        response = self.client.post(reverse('rolls-add'), data={
+            'film': self.film.id,
+            'quantity': 2,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn(f'Added 2 rolls of {self.film}!', messages)
+
+    def test_adding_rolls_invalid_quantity(self):
+        response = self.client.post(reverse('rolls-add'), data={
+            'film': self.film.id,
+            'quantity': 'fish',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Enter a valid quantity.', messages)
+
+    def test_adding_rolls_less_than_1(self):
+        response = self.client.post(reverse('rolls-add'), data={
+            'film': self.film.id,
+            'quantity': 0,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Enter a quantity of 1 or more.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class RollAddTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        cls.film = baker.make(Film, stock=baker.make(Stock))
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_roll_add_page(self):
+        response = self.client.get(reverse('roll-add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Add a roll to your&nbsp;logbook', html=True)
+
+    def test_adding_a_roll(self):
+        response = self.client.post(reverse('roll-add'), data={
+            'film': self.film.id,
+            'status': status_number('shot'),
+            'started_on': self.today,
+            'ended_on': self.today,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(f'Added a roll:' in messages[0])
+
+    def test_adding_a_roll_and_start_another(self):
+        response = self.client.post(reverse('roll-add'), data={
+            'film': self.film.id,
+            'status': status_number('shot'),
+            'started_on': self.today,
+            'ended_on': self.today,
+            'another': True,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(f'Added a roll:' in messages[0])
+
+    def test_adding_a_roll_error(self):
+        response = self.client.post(reverse('roll-add'), data={})
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Please fill out the form.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RollsUpdateTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -816,6 +930,7 @@ class RollsUpdateTests(TestCase):
         cls.camera = baker.make(Camera, owner=cls.user)
         baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             owner=cls.user,
             status=status_number('processing'),
             started_on=cls.today,
@@ -823,6 +938,7 @@ class RollsUpdateTests(TestCase):
         )
         baker.make(
             Roll,
+            film__stock=baker.make(Stock),
             owner=cls.user,
             status=status_number('processing'),
             started_on=cls.today,
@@ -862,6 +978,57 @@ class RollsUpdateTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('Something is amiss.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class FilmRollsTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        cls.film = baker.make(Film, stock=baker.make(Stock), slug='slug')
+        baker.make(Roll, film=cls.film)
+        baker.make(Roll, film=cls.film)
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_film_rolls_with_stock(self):
+        response = self.client.get(reverse('film-rolls', args=(self.film.stock.slug, self.film.format,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Storage')
+
+    def test_personal_film_rolls_404_with_stock(self):
+        film = baker.make(Film, stock=baker.make(Stock), personal=True, added_by=baker.make(User))
+        response = self.client.get(reverse('film-rolls', args=(film.stock.slug, film.format,)))
+        self.assertEqual(response.status_code, 404)
+
+    def test_film_rolls_without_stock(self):
+        response = self.client.get(reverse('film-slug-redirect', args=(self.film.slug,)))
+        self.assertEqual(response.status_code, 302)
+
+    def test_personal_film_rolls_404_without_stock(self):
+        film = baker.make(Film, slug='private-slug', personal=True, added_by=baker.make(User))
+        response = self.client.get(reverse('film-slug-redirect', args=(film.slug,)))
+        self.assertEqual(response.status_code, 404)
+
+    def test_film_rolls_with_project(self):
+        project = baker.make(Project, owner=self.user)
+        response = self.client.get(
+            reverse(
+                'film-rolls', args=(self.film.stock.slug, self.film.format,)
+            ) + f'?project={project.id}'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Viewing rolls in project')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -1265,11 +1432,12 @@ class ProjectTests(TestCase):
         self.assertIn('Project deleted and 2 rolls now available for other projects.', messages)
 
     def test_project_detail(self):
+        film = baker.make(Film, slug='slug')
         project = baker.make(Project, owner=self.user)
         camera1 = baker.make(Camera, owner=self.user, multiple_backs=True)
         camera2 = baker.make(Camera, owner=self.user)
-        baker.make(Roll, status=status_number('loaded'), camera=camera2, owner=self.user)
-        baker.make(Roll, status=status_number('storage'), owner=self.user, project=project)
+        baker.make(Roll, film=film, status=status_number('loaded'), camera=camera2, owner=self.user)
+        baker.make(Roll, film=film, status=status_number('storage'), owner=self.user, project=project)
         project.cameras.add(camera1)
         project.cameras.add(camera2)
         baker.make(CameraBack, camera=camera1)
@@ -1483,6 +1651,7 @@ class RollViewTests(TestCase):
 
     def test_roll_edit_post(self):
         roll = baker.make(Roll, owner=self.user)
+        roll.film = baker.make(Film, slug='slug', iso=100)
         roll.camera = baker.make(Camera, owner=self.user)
         roll.camera_back = baker.make(CameraBack, camera=roll.camera)
         roll.save()
@@ -1702,3 +1871,229 @@ class FrameViewTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn(f'{frame} successfully deleted.', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class StockViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.today = datetime.date.today()
+        cls.public_stock = baker.make(
+            Stock,
+            name='Portra 400',
+            slug='portra-400',
+            manufacturer=baker.make(Manufacturer, name='Kodak', slug='kodak')
+        )
+        cls.personal_stock = baker.make(
+            Stock,
+            name='Dracula',
+            personal=True,
+            added_by=cls.user,
+            manufacturer=baker.make(Manufacturer, name='FPP', slug='fpp')
+        )
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_stocks_page(self):
+        response = self.client.get(reverse('stocks'))
+        self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
+        self.assertContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
+        self.assertIsNotNone(response.context['stocks'])
+
+    def test_stocks_page_with_filtering_type(self):
+        response = self.client.get(reverse('stocks') + '?type=c41')
+        self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
+        self.assertContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
+        self.assertIsNotNone(response.context['stocks'])
+        self.assertContains(response, '<h2>C41 Color</h2>', html=True)
+
+    def test_stocks_page_with_manufacturer_redirect(self):
+        response = self.client.get(reverse('stocks') + '?manufacturer=kodak&type=c41')
+        self.assertEqual(response.status_code, 302)
+
+    def test_stocks_page_with_unavailable_type(self):
+        response = self.client.get(
+            reverse('stocks-manufacturer', args=(self.public_stock.manufacturer.slug,)) + '?type=bw'
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_stocks_page_logged_out(self):
+        self.client.logout()
+        response = self.client.get(reverse('stocks'))
+        self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
+        self.assertNotContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
+        self.assertIsNotNone(response.context['stocks'])
+
+    def test_stocks_manufacturer_page(self):
+        response = self.client.get(reverse('stocks-manufacturer', args=(self.public_stock.manufacturer.slug,)))
+        self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
+        self.assertIsNotNone(response.context['stocks'])
+
+    def test_stock_page(self):
+        film = baker.make(Film, name='Portra 400', slug='portra-400-135', stock=self.public_stock)
+        response = self.client.get(reverse('stock', args=(self.public_stock.manufacturer.slug, self.public_stock.slug)))
+        self.assertContains(response, f'{self.public_stock.name}')
+        self.assertContains(response, 'Your inventory of this stock')
+        self.assertIsNotNone(response.context['stock'])
+
+    def test_stock_page_logged_out(self):
+        self.client.logout()
+        response = self.client.get(reverse('stock', args=(self.public_stock.manufacturer.slug, self.public_stock.slug)))
+        self.assertContains(response, f'{self.public_stock.name}')
+        self.assertNotContains(response, 'Your inventory of this stock')
+        self.assertIsNotNone(response.context['stock'])
+
+    def test_stocks_ajax_with_type(self):
+        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'all', 'type': 'c41'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
+
+    def test_stocks_ajax_with_manufacturer(self):
+        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'kodak', 'type': 'c41'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
+
+    def test_stocks_ajax_logged_out(self):
+        self.client.logout()
+        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'kodak', 'type': 'c41'}))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
+
+    def test_personal_stock_logged_in(self):
+        response = self.client.get(
+            reverse('stock', args=(self.personal_stock.manufacturer.slug, self.personal_stock.slug))
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_personal_stock_404_logged_out(self):
+        self.client.logout()
+        response = self.client.get(
+            reverse('stock', args=(self.personal_stock.manufacturer.slug, self.personal_stock.slug))
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_personal_stock_404_logged_in(self):
+        stock = baker.make(Stock, personal=True, added_by=baker.make(User))
+        response = self.client.get(reverse('stock', args=(stock.manufacturer.slug, stock.slug)))
+        self.assertEqual(response.status_code, 404)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class StockAddTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+        cls.manufacturer = baker.make(Manufacturer, name='Kodak', slug='kodak')
+
+    def setUp(self):
+        self.client.login(
+            username=self.username,
+            password=self.password,
+        )
+
+    def test_stock_add_page(self):
+        response = self.client.get(reverse('stock-add'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Add Film Stock')
+
+    def test_stock_add_page_with_destination(self):
+        response = self.client.get(reverse('stock-add') + f'?destination=add-logbook')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Add Film Stock')
+
+    def test_adding_new_stock(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'manufacturer': self.manufacturer.id,
+            'name': 'Ektar 100',
+            'formats': [135],
+            'type': 'c41',
+            'iso': 100,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Kodak Ektar 100” (in 35mm) added!', messages)
+
+    def test_adding_new_stock_and_new_manufacturer(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'new_manufacturer': 'Fujifilm',
+            'name': 'Provia 100',
+            'formats': [135, 120],
+            'type': 'e6',
+            'iso': 100,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Fujifilm Provia 100” (in 35mm, 120) added!', messages)
+
+    def test_adding_new_stock_and_new_manufacturer_error(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'new_manufacturer': self.manufacturer.name,
+            'name': 'Ektar 100',
+            'formats': [135],
+            'type': 'c41',
+            'iso': 100,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('There’s already a manufacturer with that name.', messages)
+
+    def test_adding_new_stock_and_another(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'manufacturer': self.manufacturer.id,
+            'name': 'Gold 200',
+            'formats': [135],
+            'type': 'c41',
+            'iso': 200,
+            'another': True,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Kodak Gold 200” (in 35mm) added!', messages)
+
+    def test_adding_new_stock_from_inventory(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'manufacturer': self.manufacturer.id,
+            'name': 'UltraMax 400',
+            'formats': [135],
+            'type': 'c41',
+            'iso': 400,
+            'destination': 'add-storage',
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Kodak UltraMax 400” (in 35mm) added!', messages)
+
+    def test_adding_new_stock_from_inventory_and_another(self):
+        response = self.client.post(reverse('stock-add'), data={
+            'manufacturer': self.manufacturer.id,
+            'name': 'Tri-X 400',
+            'formats': [135, 120],
+            'type': 'c41',
+            'iso': 400,
+            'destination': 'add-storage',
+            'another': True,
+        })
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('New film stock “Kodak Tri-X 400” (in 35mm, 120) added!', messages)

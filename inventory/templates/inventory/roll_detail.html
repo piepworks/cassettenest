@@ -7,6 +7,7 @@
 {% block bodytag %}class="roll-detail"{% endblock %}
 
 {% block content %}
+{% if roll.film.stock %}{% url 'film-rolls' roll.film.stock.slug roll.film.format as film_url %}{% else %}{% url 'film-slug-redirect' roll.film.slug as film_url %}{% endif %}
 <div class="raw">
     <header class="c-heading">
         <div class="flex">
@@ -20,7 +21,7 @@
             {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
         </div>
 
-        <h2>{{ roll.film.manufacturer }} <a href="{% url 'film-rolls' roll.film.slug %}">{{ roll.film.name }} in {{ roll.film.get_format_display }}</a> </h2>
+        <h2>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{{ roll.film }}</a> </h2>
     </header>
 
 <ul class="meta">

@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
-from .utils import status_number
+from .utils import status_number, film_types, film_formats
 
 
 class Profile(models.Model):
@@ -87,33 +87,14 @@ class Manufacturer(models.Model):
         return self.name
 
 
-class Film(models.Model):
-    TYPE_CHOICES = (
-        ('c41', 'C41 Color'),
-        ('bw', 'Black and White'),
-        ('e6', 'E6 Color Reversal'),
-    )
-    FORMAT_CHOICES = (
-        ('135', '35mm'),
-        ('120', '120'),
-    )
+class Stock(models.Model):
+    TYPE_CHOICES = film_types
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.CASCADE)
     type = models.CharField(
         max_length=20,
         choices=TYPE_CHOICES,
         default='c41',
     )
-    format = models.CharField(
-        max_length=20,
-        choices=FORMAT_CHOICES,
-        default='135',
-    )
-    personal = models.BooleanField(
-        default=False,
-        help_text='For user-submitted films. Only visible to the user who added it if this is true.',
-    )
-    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
-    iso = models.IntegerField(verbose_name='ISO')
     name = models.CharField(
         max_length=50,
         help_text='''
@@ -121,6 +102,57 @@ class Film(models.Model):
         ''',
     )
     slug = models.SlugField(max_length=50)
+    iso = models.PositiveSmallIntegerField(default=100, verbose_name='ISO')
+    url = models.URLField(
+        max_length=200,
+        blank=True,
+        verbose_name='URL',
+        help_text='Any website that describes this film stock, hopefully from the manufacturer themselves.',
+    )
+    description = models.TextField(blank=True, help_text='Any details about the film or how best to use it.')
+    personal = models.BooleanField(
+        default=False,
+        help_text='For user-submitted stocks. Only visible to the user who added it if this is true.',
+    )
+    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['manufacturer__name', 'name']
+        unique_together = (('manufacturer', 'name',),)
+
+    def __str__(self):
+        return f'{self.manufacturer} {self.name}'
+
+    def get_absolute_url(self):
+        return reverse('stock', args=(self.manufacturer.slug, self.slug,))
+
+
+class Film(models.Model):
+    TYPE_CHOICES = film_types
+    FORMAT_CHOICES = film_formats
+    manufacturer = models.ForeignKey(Manufacturer, blank=True, null=True, on_delete=models.CASCADE)
+    type = models.CharField(
+        max_length=20,
+        choices=TYPE_CHOICES,
+        blank=True,
+    )
+    format = models.CharField(
+        max_length=20,
+        choices=FORMAT_CHOICES,
+        default='135',
+    )
+    stock = models.ForeignKey(Stock, blank=True, null=True, on_delete=models.CASCADE)
+    iso = models.IntegerField(blank=True, null=True, verbose_name='ISO')
+    name = models.CharField(
+        blank=True,
+        max_length=50,
+        help_text='''
+            The name of the film itself without the manufacturer’s name (unless that’s part of the film’s name.)
+        ''',
+    )
+    slug = models.SlugField(max_length=50, blank=True)
     url = models.URLField(
         max_length=200,
         blank=True,
@@ -128,20 +160,31 @@ class Film(models.Model):
         help_text='Any website that describes this film, hopefully from the manufacturer themselves.',
     )
     description = models.TextField(blank=True, help_text='Any details about the film or how best to use it.')
+    personal = models.BooleanField(
+        default=False,
+        help_text='For user-submitted films. Only visible to the user who added it if this is true.',
+    )
+    added_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['manufacturer__name', 'name']
-        unique_together = (('manufacturer', 'name', 'format',),)
+        unique_together = (('stock', 'format',),)
 
     def __str__(self):
-        return '%s %s in %s' % (
-            self.manufacturer, self.name, self.get_format_display()
-        )
+        if self.stock:
+            name = self.stock
+        else:
+            name = f'{self.manufacturer} {self.name}'
+
+        return f'{name} in {self.get_format_display()}'
 
     def get_absolute_url(self):
-        return reverse('film-rolls', args=(self.slug,))
+        if self.stock:
+            return reverse('film-rolls', args=(self.stock.slug, self.format,))
+        else:
+            return reverse('film-slug-redirect', args=(self.slug,))
 
 
 class Camera(models.Model):
@@ -156,10 +199,7 @@ class Camera(models.Model):
         ('loaded', 'Loaded'),
         ('unavailable', 'Unavailable'),
     )
-    FORMAT_CHOICES = (
-        ('135', '35mm'),
-        ('120', '120'),
-    )
+    FORMAT_CHOICES = film_formats
     format = models.CharField(
         max_length=20,
         choices=FORMAT_CHOICES,
@@ -207,10 +247,7 @@ class CameraBack(models.Model):
         ('unavailable', 'Unavailable'),
     )
     # Identical to FORMAT_CHOICES on the Camera model.
-    FORMAT_CHOICES = (
-        ('135', '35mm'),
-        ('120', '120'),
-    )
+    FORMAT_CHOICES = film_formats
     camera = models.ForeignKey(
         Camera,
         on_delete=models.CASCADE,
@@ -371,14 +408,24 @@ class Roll(models.Model):
         "Calculates the effective ISO for a pushed or pulled roll."
 
         # Using a dictionary as a case/switch statement.
-        return {
-            '': self.film.iso,
-            '-2': int(self.film.iso * .25),
-            '-1': int(self.film.iso * .5),
-            '+1': self.film.iso * 2,
-            '+2': self.film.iso * 4,
-            '+3': self.film.iso * 8,
-        }[self.push_pull]
+        if self.film.stock:
+            return {
+                '': self.film.stock.iso,
+                '-2': int(self.film.stock.iso * .25),
+                '-1': int(self.film.stock.iso * .5),
+                '+1': self.film.stock.iso * 2,
+                '+2': self.film.stock.iso * 4,
+                '+3': self.film.stock.iso * 8,
+            }[self.push_pull]
+        else:
+            return {
+                '': self.film.iso,
+                '-2': int(self.film.iso * .25),
+                '-1': int(self.film.iso * .5),
+                '+1': self.film.iso * 2,
+                '+2': self.film.iso * 4,
+                '+3': self.film.iso * 8,
+            }[self.push_pull]
 
     def save(self, *args, **kwargs):
         # If the started_on field has been populated and the `code` field has
@@ -392,7 +439,7 @@ class Roll(models.Model):
         #    within the year of the `started_on` field. Add one to that number.
         if not self.code and self.started_on:
             sequence = Roll.objects\
-                .filter(film__type=self.film.type)\
+                .filter(film__stock__type=self.film.stock.type)\
                 .filter(film__format=self.film.format)\
                 .filter(started_on__year=self.started_on.year)\
                 .filter(owner=self.owner)\
@@ -401,7 +448,7 @@ class Roll(models.Model):
             format = '35' if self.film.format == '135' else self.film.format
 
             # TODO: Check for proper validation of the code field somehow?
-            self.code = '%s-%s-%d' % (format, self.film.type, sequence)
+            self.code = '%s-%s-%d' % (format, self.film.stock.type, sequence)
             if self.status == status_number('storage'):
                 self.status = status_number('loaded')
 

@@ -34,16 +34,17 @@
             background: $light;
             padding: 1rem;
             border: 0.25rem solid $light;
+            display: inline-flex;
 
-            &:hover {
-                border-color: $medium;
-            }
+            &:hover { border-color: $medium; }
         }
 
-        fieldset { display: block; }
-    }
+        fieldset {
+            display: block;
 
-    &--checkbox label { display: inline-flex; }
+            label { display: flex; }
+        }
+    }
 
     &--radio label { display: flex; }
 

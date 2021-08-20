@@ -4,8 +4,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.utils.safestring import mark_safe
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from .models import Camera, CameraBack, Roll, Film, Manufacturer, Project, Journal, User, Profile, Frame
-from .utils import apertures, shutter_speeds
+from .models import Camera, CameraBack, Roll, Stock, Manufacturer, Project, Journal, User, Profile, Frame, Film
+from .utils import apertures, shutter_speeds, film_formats
 
 
 class RegisterForm(UserCreationForm):
@@ -75,10 +75,10 @@ class RollForm(ModelForm):
         }
 
 
-class FilmForm(ModelForm):
+class StockForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop('user')
-        super(FilmForm, self).__init__(*args, **kwargs)
+        super(StockForm, self).__init__(*args, **kwargs)
         self.fields['manufacturer'] = forms.ModelChoiceField(
             queryset=Manufacturer.objects.all().exclude(Q(personal=True) & ~Q(added_by=self.user)),
             required=False,
@@ -88,11 +88,18 @@ class FilmForm(ModelForm):
         label='Or add a new manufacturer',
         required=False,
     )
+    formats = forms.MultipleChoiceField(
+        choices=film_formats,
+        initial='135',
+        widget=forms.CheckboxSelectMultiple,
+        help_text='Choose at least one.',
+        error_messages={'required': 'Please choose at least one format.'},
+    )
     destination = forms.CharField(widget=forms.HiddenInput(), required=False)
 
     class Meta:
-        model = Film
-        fields = ['manufacturer', 'new_manufacturer', 'name', 'type', 'format', 'iso', 'url', 'description']
+        model = Stock
+        fields = ['manufacturer', 'new_manufacturer', 'name', 'type', 'formats', 'iso', 'url', 'description']
 
     def clean(self):
         cleaned_data = super().clean()
@@ -223,6 +230,15 @@ class PatternsForm(forms.Form):
         help_text=help_text,
         required=False
     )
+    multiple_checkboxes = forms.MultipleChoiceField(
+        help_text=help_text,
+        choices=[
+            ('1', 'Checkbox 1'),
+            ('2', 'Checkbox 2'),
+            ('3', 'Checkbox 3')
+        ],
+        widget=forms.CheckboxSelectMultiple
+    )
     radio = forms.ChoiceField(
         help_text=help_text,
         choices=[
@@ -236,3 +252,20 @@ class PatternsForm(forms.Form):
 
 class UploadCSVForm(forms.Form):
     csv = forms.FileField()
+
+
+class FilmForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['stock'].required = True
+
+    class Meta:
+        model = Film
+        exclude = [
+            'iso',
+            'manufacturer',
+            'type',
+            'slug',
+            'name',
+            'url',
+        ]

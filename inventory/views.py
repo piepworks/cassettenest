@@ -1,6 +1,6 @@
 import datetime
 import json
-from django.http import HttpResponse, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, DetailView, FormView
 from django.db.models import Count, Q
@@ -20,7 +20,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
 from waffle.decorators import waffle_flag
 import requests
-from .models import Camera, CameraBack, Film, Manufacturer, Journal, Project, Roll, Frame
+from .models import Camera, CameraBack, Stock, Film, Manufacturer, Journal, Project, Roll, Frame
 from .forms import (
     CameraForm,
     CameraBackForm,
@@ -31,7 +31,7 @@ from .forms import (
     ReadyForm,
     RegisterForm,
     RollForm,
-    FilmForm,
+    StockForm,
     UserForm,
     UploadCSVForm,
     FrameForm,
@@ -40,8 +40,6 @@ from .utils import (
     development_statuses,
     bulk_status_keys,
     get_project_or_none,
-    iso_filter,
-    iso_variables,
     pluralize,
     status_description,
     status_keys,
@@ -52,6 +50,7 @@ from .utils import (
     inventory_filter,
     preset_apertures,
     preset_shutter_speeds,
+    available_types,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -300,6 +299,188 @@ def subscription_update(request):
     return redirect('settings')
 
 
+def stocks(request, manufacturer='all'):
+    filters = {
+        'manufacturer': 'all',
+        'type': 'all',
+    }
+    m = None
+    type_name = ''
+    type_passthrough = ''
+
+    if request.GET.get('type') and request.GET.get('type') != 'all':
+        filters['type'] = request.GET.get('type')
+
+    if request.GET.get('manufacturer') and request.GET.get('manufacturer') != 'all':
+        filters['manufacturer'] = request.GET.get('manufacturer')
+
+        if filters['type'] != 'all':
+            type_passthrough = '?type=' + filters['type']
+
+        return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
+
+    if request.user.is_authenticated:
+        # Exclude stocks that are flagged as `personal` and not created by the current user.
+        manufacturers = Manufacturer.objects.all().exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        )
+        stocks = Stock.objects.all().exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).annotate(count=Count('film')).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+    else:
+        manufacturers = Manufacturer.objects.all().exclude(Q(personal=True))
+        stocks = Stock.objects.all().exclude(
+            Q(personal=True)
+        ).annotate(count=Count('film')).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+
+    type_names = dict(Stock._meta.get_field('type').flatchoices)
+    type_choices = {}
+
+    if manufacturer != 'all':
+        filters['manufacturer'] = manufacturer
+        m = get_object_or_404(Manufacturer, slug=manufacturer)
+        stocks = stocks.filter(manufacturer=m)
+        type_choices = available_types(request, Stock, type_names, type_choices, m)
+    else:
+        type_choices = type_names
+
+    if filters['type'] != 'all':
+        stocks = stocks.filter(type=filters['type'])
+        try:
+            type_name = type_choices[filters['type']]
+        except KeyError:
+            # If the given type doesn’t exist for the manufacturer, redirect without a type filter.
+            return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)))
+
+    context = {
+        'manufacturer': m,
+        'manufacturers': manufacturers,
+        'stocks': stocks,
+        'filters': filters,
+        'type_choices': type_choices,
+        'type_name': type_name,
+        'js_needed': True,
+    }
+
+    return render(request, 'inventory/stocks.html', context)
+
+
+def stocks_ajax(request, manufacturer, type):
+    filters = {
+        'manufacturer': manufacturer,
+        'type': type,
+    }
+    m = None
+    type_name = ''
+
+    if request.user.is_authenticated:
+        stocks = Stock.objects.exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+    else:
+        stocks = Stock.objects.exclude(
+            Q(personal=True)
+        ).order_by(
+            'type',
+            'manufacturer__name',
+            'name',
+        )
+
+    type_names = dict(Film._meta.get_field('type').flatchoices)
+    type_choices = {}
+
+    if manufacturer != 'all':
+        m = get_object_or_404(Manufacturer, slug=manufacturer)
+        stocks = stocks.filter(manufacturer=m)
+        type_choices = available_types(request, Stock, type_names, type_choices, m)
+    else:
+        type_choices = type_names
+    if type != 'all' and type != 'null':
+        stocks = stocks.filter(type=type)
+        type_name = type_names[type]
+
+    context = {
+        'stocks': stocks,
+        'filters': filters,
+        'manufacturer': m,
+        'type_name': type_name,
+        'type_choices': type_choices,
+    }
+
+    return render(request, 'inventory/_stocks-list.html', context)
+
+
+def stock(request, manufacturer, slug):
+    manufacturer = get_object_or_404(Manufacturer, slug=manufacturer)
+    stock = get_object_or_404(Stock, manufacturer=manufacturer, slug=slug)
+
+    if request.user.is_authenticated:
+        if stock.personal and stock.added_by != request.user:
+            raise Http404()
+
+        films = Film.objects.filter(stock=stock).exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).annotate(count=Count('roll'))
+    else:
+        if stock.personal:
+            raise Http404()
+
+        films = Film.objects.filter(stock=stock).exclude(Q(personal=True)).annotate(count=Count('roll'))
+
+    films_list = []
+    total_rolls = 0
+    total_inventory = 0
+    total_history = 0
+    for film in films:
+        user_inventory_count = None
+        user_history_count = None
+        if request.user.is_authenticated:
+            user_inventory_count = Roll.objects.filter(
+                owner=request.user, film=film, status=status_number('storage')
+            ).count()
+            user_history_count = Roll.objects.filter(
+                owner=request.user, film=film
+            ).exclude(
+                status=status_number('storage')
+            ).count()
+            total_inventory = total_inventory + user_inventory_count
+            total_history = total_history + user_history_count
+
+        films_list.append({
+          'name': film.get_format_display(),
+          'url': film.get_absolute_url(),
+          'type': film.stock.type,
+          'count': film.count,
+          'user_inventory_count': user_inventory_count,
+          'user_history_count': user_history_count,
+        })
+        total_rolls = total_rolls + film.count
+
+    context = {
+        'films': films,
+        'films_list': films_list,
+        'total_rolls': total_rolls,
+        'total_inventory': total_inventory,
+        'total_history': total_history,
+        'stock': stock,
+        'manufacturer': manufacturer,
+    }
+
+    return render(request, 'inventory/stock.html', context)
+
+
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
@@ -350,14 +531,14 @@ def inventory(request):
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
-        total_film_count = total_film_count.filter(type=filters['type'])
+        total_film_count = total_film_count.filter(stock__type=filters['type'])
 
     film_counts = inventory_filter(request, Film, filters['format'], filters['type'])
 
     format_counts = Film.objects.filter(
         roll__owner=request.user,
         roll__status=status_number('storage')
-    ).values('format').distinct().order_by('format')
+    ).values('format').distinct().order_by('-format')
 
     # Get the display name of formats choices.
     format_choices = dict(Film._meta.get_field('format').flatchoices)
@@ -370,15 +551,16 @@ def inventory(request):
     type_counts = Film.objects.filter(
         roll__owner=request.user,
         roll__status=status_number('storage')
-    ).values('type').distinct().order_by('type')
+    ).values('stock__type').distinct().order_by('stock__type')
 
     # Get the display name of types choices.
-    type_choices = dict(Film._meta.get_field('type').flatchoices)
+    type_choices = dict(Stock._meta.get_field('type').flatchoices)
     for type in type_counts:
-        type['type_display'] = force_str(
-            type_choices[type['type']],
-            strings_only=True
-        )
+        if type['stock__type'] is not None:
+            type['type_display'] = force_str(
+                type_choices[type['stock__type']],
+                strings_only=True
+            )
 
     context = {
         'total_film_count': total_film_count,
@@ -405,7 +587,7 @@ def inventory_ajax(request, format, type):
         total_film_count = total_film_count.filter(format=format)
 
     if type != 'all':
-        total_film_count = total_film_count.filter(type=type)
+        total_film_count = total_film_count.filter(stock__type=type)
 
     filters = {
         'format': format,
@@ -510,20 +692,20 @@ def ready(request):
     )
 
     ready_rolls = {
-        'c41': rolls.filter(film__type='c41'),
-        'bw': rolls.filter(film__type='bw'),
-        'e6': rolls.filter(film__type='e6'),
+        'c41': rolls.filter(film__stock__type='c41'),
+        'bw': rolls.filter(film__stock__type='bw'),
+        'e6': rolls.filter(film__stock__type='e6'),
         '135': {
             'all': rolls.filter(film__format=135),
-            'c41': rolls.filter(film__format=135, film__type='c41'),
-            'bw': rolls.filter(film__format=135, film__type='bw'),
-            'e6': rolls.filter(film__format=135, film__type='e6'),
+            'c41': rolls.filter(film__format=135, film__stock__type='c41'),
+            'bw': rolls.filter(film__format=135, film__stock__type='bw'),
+            'e6': rolls.filter(film__format=135, film__stock__type='e6'),
         },
         '120': {
             'all': rolls.filter(film__format=120),
-            'c41': rolls.filter(film__format=120, film__type='c41'),
-            'bw': rolls.filter(film__format=120, film__type='bw'),
-            'e6': rolls.filter(film__format=120, film__type='e6'),
+            'c41': rolls.filter(film__format=120, film__stock__type='c41'),
+            'bw': rolls.filter(film__format=120, film__stock__type='bw'),
+            'e6': rolls.filter(film__format=120, film__stock__type='e6'),
         }
     }
 
@@ -797,7 +979,6 @@ def project_delete(request, pk):
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
-    iso = iso_variables(request)
     # Get all of this user's cameras not already associated with this project.
     cameras = Camera.objects.filter(owner=owner).exclude(
         pk__in=project.cameras.values_list('pk', flat=True)
@@ -834,9 +1015,9 @@ def project_detail(request, pk):
     film_counts = total_film_count.annotate(
         count=Count('roll')
     ).order_by(
-        'type',
+        'stock__type',
         '-format',
-        'manufacturer__name',
+        'stock__manufacturer__name',
         'name',
     )
 
@@ -853,13 +1034,10 @@ def project_detail(request, pk):
     ).annotate(
         count=Count('roll')
     ).order_by(
-        'type',
-        'manufacturer__name',
-        'name',
+        'stock__type',
+        'stock__manufacturer__name',
+        'format',
     )
-
-    # Filter available films by ISO if set. Return the unaltered list if not.
-    film_available_count = iso_filter(iso, film_available_count)
 
     roll_logbook = Roll.objects.filter(
         owner=owner,
@@ -891,8 +1069,6 @@ def project_detail(request, pk):
         'film_available_count': film_available_count,
         'format_counts': format_counts,
         'loaded_roll_list': loaded_roll_list,
-        'iso_range': iso['range'],
-        'iso_value': iso['value'],
         'roll_logbook': roll_logbook,
         'page_obj': page_obj,
         'js_needed': True,
@@ -1005,13 +1181,10 @@ def rolls_add(request):
                 roll._state.adding = True
                 roll.save()
 
+            roll_plural = pluralize('roll', quantity)
             messages.success(
                 request,
-                'Added %s %s of %s!' % (
-                    quantity,
-                    pluralize('roll', quantity),
-                    film
-                )
+                f'Added {quantity} {roll_plural} of {film}!',
             )
         else:
             messages.error(request, 'Enter a quantity of 1 or more.')
@@ -1020,7 +1193,7 @@ def rolls_add(request):
 
     else:
         # Exclude films that are flagged as `personal` and not created by the current user.
-        films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner))
+        films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner)).order_by('stock')
         context = {
             'films': films,
             'js_needed': True,
@@ -1059,13 +1232,10 @@ def roll_add(request):
             ]
             roll.save()
 
+            roll_url = reverse('roll-detail', args=(roll.id,))
             messages.success(
                 request,
-                'Added a roll: <a href="%s">%s</a>!'
-                % (
-                    reverse('roll-detail', args=(roll.id,)),
-                    roll.code
-                ),
+                f'Added a roll: <a href="{roll_url}">{roll}</a>!',
                 extra_tags='safe'
             )
             # TODO: redirect to year=year for this roll and status=all.
@@ -1078,7 +1248,7 @@ def roll_add(request):
             return redirect(reverse('roll-add'))
 
     else:
-        films = Film.objects.all()
+        films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner)).order_by('stock')
         form = RollForm()
         form.fields['camera'].queryset = Camera.objects.filter(owner=owner)
         form.fields['camera_back'].queryset = CameraBack.objects.filter(camera__owner=owner)
@@ -1098,12 +1268,26 @@ def roll_add(request):
 
 
 @login_required
-def film_rolls(request, slug):
+def film_rolls(request, stock=None, format=None, slug=None):
     '''All the rolls of a particular film that someone has or has used.'''
-    owner = request.user
+
+    if stock:
+        film = get_object_or_404(Film, stock__slug=stock, format=format)
+
+        if film.personal and film.added_by != request.user:
+            raise Http404()
+    else:
+        film = get_object_or_404(Film, slug=slug)
+
+        if film.personal and film.added_by != request.user:
+            raise Http404()
+
+        # If this film does have a stock associated with it, redirect to the new URL.
+        if film.stock:
+            return redirect(reverse('film-rolls', args=(film.stock.slug, film.format,)))
+
     current_project = None
-    film = get_object_or_404(Film, slug=slug)
-    rolls = Roll.objects.filter(owner=owner, film__slug=slug)
+    rolls = Roll.objects.filter(owner=request.user, film=film)
     rolls_storage = rolls.filter(status=status_number('storage'))
     rolls_history = rolls.exclude(
         status=status_number('storage')
@@ -1115,7 +1299,7 @@ def film_rolls(request, slug):
     if request.GET.get('project'):
         current_project = get_project_or_none(
             Project,
-            owner,
+            request.user,
             request.GET.get('project'),
         )
     if current_project is not None and current_project != 0:
@@ -1126,8 +1310,7 @@ def film_rolls(request, slug):
         'rolls_storage': rolls_storage,
         'rolls_history': rolls_history,
         'film': film,
-        'slug': slug,
-        'owner': owner,
+        'owner': request.user,
         'current_project': current_project,
     }
 
@@ -1135,46 +1318,63 @@ def film_rolls(request, slug):
 
 
 @login_required
-def film_add(request):
+def stock_add(request):
     if request.method == 'POST':
-        form = FilmForm(request.POST, user=request.user)
-        output = 'error'
+        form = StockForm(request.POST, user=request.user)
 
         if form.is_valid():
             if form.cleaned_data['new_manufacturer']:
                 # Create new manufactuter and get a reference to it.
                 new_manufacturer = form.cleaned_data['new_manufacturer']
                 try:
-                    manufacturer = Manufacturer.objects.create(
-                        personal=True,
-                        added_by=request.user,
-                        name=new_manufacturer,
-                        slug=slugify(new_manufacturer),
-                    )
+                    with transaction.atomic():
+                        manufacturer = Manufacturer.objects.create(
+                            personal=True,
+                            added_by=request.user,
+                            name=new_manufacturer,
+                            slug=slugify(new_manufacturer),
+                        )
                 except IntegrityError:
                     messages.error(request, 'There’s already a manufacturer with that name.')
                     context = {
                         'form': form,
                         'js_needed': True,
+                        'wc_needed': True,
                     }
 
-                    return render(request, 'inventory/film_add.html', context)
+                    return render(request, 'inventory/stock_add.html', context)
             else:
                 manufacturer = form.cleaned_data['manufacturer']
 
-            film = Film.objects.create(
+            # 1. Create stock
+            # 2. Create film(s)
+
+            stock = Stock.objects.create(
                 personal=True,
                 added_by=request.user,
                 manufacturer=manufacturer,
                 name=form.cleaned_data['name'],
                 slug=slugify(form.cleaned_data['name']),
-                format=form.cleaned_data['format'],
                 type=form.cleaned_data['type'],
                 iso=form.cleaned_data['iso'],
                 url=form.cleaned_data['url'],
                 description=form.cleaned_data['description'],
             )
-            messages.success(request, f'New film “{film}” added!')
+
+            formats = form.cleaned_data['formats']
+
+            for format in formats:
+                Film.objects.create(
+                    personal=True,
+                    added_by=request.user,
+                    stock=stock,
+                    format=format,
+                )
+
+            format_message = ', '.join(str(f) for f in formats)
+            format_message = format_message.replace('135', '35mm')
+
+            messages.success(request, f'New film stock “{stock}” (in {format_message}) added!')
 
             current_site = get_current_site(request)
             if 'new_manufacturer' in locals():
@@ -1184,43 +1384,41 @@ def film_add(request):
             else:
                 message_addendum = ''
             send_email_to_trey(
-                subject='New film added!',
-                message=f'''{request.user} added “{film}.”\n
-                    https://{current_site}{reverse('admin:inventory_film_change', args=(film.id,))}\n
+                subject='New film stock added!',
+                message=f'''{request.user} added “{stock} (in {format_message}).”\n
+                    https://{current_site}{reverse('admin:inventory_stock_change', args=(stock.id,))}\n
                     {message_addendum}
                 ''',
             )
 
+            film_id_to_add = Film.objects.filter(stock=stock).first().id
+
             if form.cleaned_data['destination'] != 'add-storage':
                 if 'another' in request.POST:
-                    return redirect(reverse('film-add') + '?destination=add-logbook')
+                    return redirect(reverse('stock-add') + '?destination=add-logbook')
                 else:
                     # Go back to add roll to logbook page.
-                    return redirect(reverse('roll-add') + f'?film={film.id}')
+                    return redirect(reverse('roll-add') + f'?film={film_id_to_add}')
             else:
                 if 'another' in request.POST:
-                    return redirect('film-add')
+                    return redirect('stock-add')
                 else:
                     # Go back to add rolls to storage page.
-                    return redirect(reverse('rolls-add') + f'?film={film.id}')
-        else:
-            context = {
-                'form': form,
-                'js_needed': True,
-            }
+                    return redirect(reverse('rolls-add') + f'?film={film_id_to_add}')
     else:
         destination = request.GET.get('destination')
         if destination:
-            form = FilmForm(user=request.user, initial={'destination': destination})
+            form = StockForm(user=request.user, initial={'destination': destination})
         else:
-            form = FilmForm(user=request.user, initial={'destination': 'add-storage'})
-        context = {
-            'form': form,
-            'js_needed': True,
-            'wc_needed': True,
-        }
+            form = StockForm(user=request.user, initial={'destination': 'add-storage'})
 
-    return render(request, 'inventory/film_add.html', context)
+    context = {
+        'form': form,
+        'js_needed': True,
+        'wc_needed': True,
+    }
+
+    return render(request, 'inventory/stock_add.html', context)
 
 
 @login_required
@@ -1750,12 +1948,7 @@ def camera_or_back_load(request, pk, back_pk=None):
         roll.save()
         messages.success(
             request,
-            '%s loaded with %s %s (code: %s)!' % (
-                camera_or_back,
-                roll.film.manufacturer,
-                roll.film.name,
-                roll.code,
-            )
+            f'{camera_or_back} loaded with {roll.film} (code: {roll.code})!'
         )
 
         if current_project:
@@ -1766,7 +1959,6 @@ def camera_or_back_load(request, pk, back_pk=None):
             return redirect(reverse('roll-detail', args=(roll.id,)))
     else:
         projects = Project.objects.filter(owner=owner, status='current')
-        iso = iso_variables(request)
 
         # Querystring
         if request.GET.get('project'):
@@ -1782,11 +1974,10 @@ def camera_or_back_load(request, pk, back_pk=None):
                 roll__status=status_number('storage'),
                 roll__project=current_project
             ).annotate(
-                count=Count('name')
+                count=Count('format')
             ).order_by(
-                'type',
-                'manufacturer__name',
-                'name',
+                'stock__type',
+                'stock__manufacturer',
             )
             if camera_or_back.format:
                 film_counts = film_counts.filter(format=camera_or_back.format)
@@ -1795,16 +1986,13 @@ def camera_or_back_load(request, pk, back_pk=None):
                 roll__owner=owner,
                 roll__status=status_number('storage')
             ).annotate(
-                count=Count('name')
+                count=Count('format')
             ).order_by(
-                'type',
-                'manufacturer__name',
-                'name',
+                'stock__type',
+                'stock__manufacturer',
             )
             if camera_or_back.format:
                 film_counts = film_counts.filter(format=camera_or_back.format)
-
-        film_counts = iso_filter(iso, film_counts)
 
         context = {
             'owner': owner,
@@ -1814,8 +2002,6 @@ def camera_or_back_load(request, pk, back_pk=None):
             'current_project': current_project,
             'projects': projects,
             'film_counts': film_counts,
-            'iso_range': iso['range'],
-            'iso_value': iso['value'],
             'js_needed': True,
         }
 
@@ -1843,11 +2029,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
         roll.save()
         messages.success(
             request,
-            'Roll of %s %s (code: %s) finished!' % (
-                roll.film.manufacturer,
-                roll.film.name,
-                roll.code,
-            )
+            f'Roll of {roll.film} (code: {roll.code}) finished!'
         )
 
         if roll.project:

@@ -1,0 +1,47 @@
+{% extends 'base_site.html' %}
+{% load capture_tags %}
+
+{% block title %}Film Stock: {{ stock }}{% endblock %}
+
+{% block content %}
+<div class="raw">
+    <h1><a href="{% url 'stocks' %}">Film Stocks</a> &gt; <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> {{ stock.name }}</h1>
+
+    {% if stock.added_by %}
+        <div class="notes">
+            {% include 'inventory/_github-icon.html' with id='heart-fill' %}
+            <div class="inner">This stock was added by the Cassette Nest community!</div>
+        </div>
+    {% endif %}
+
+    <hr />
+
+    <p>Total rolls of this stock in Cassette Nest: <b>{{ total_rolls }}</b></p>
+
+    <ul>
+    {% for film in films %}
+        <li>{{ film.get_format_display }}: {{ film.count }}</li>
+    {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+
+    <h2>Your inventory of this stock ({{ total_inventory }})</h2>
+
+    <section class="cards">
+        {% for film in films_list %}
+            {% include 'inventory/_card.html' with name=film.name location=film.url slot='count' count=film.user_inventory_count type='film' film_type=film.type %}
+        {% endfor %}
+    </section>
+
+    <h2>Your history of this stock ({{ total_history }})</h2>
+
+    <section class="cards">
+        {% for film in films_list %}
+            {% capture as history_url silent %}{{ film.url }}#film_history_heading{% endcapture %}
+            {% include 'inventory/_card.html' with name=film.name location=history_url slot='count' count=film.user_history_count type='film' film_type=film.type %}
+        {% endfor %}
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

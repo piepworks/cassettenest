@@ -5,6 +5,7 @@ from django.db.models import Count
 from .models import (
     Camera,
     CameraBack,
+    Stock,
     Film,
     Journal,
     Manufacturer,
@@ -14,6 +15,7 @@ from .models import (
     Frame,
 )
 from .utils_paddle import paddle_plan_name
+from .forms import FilmForm
 
 
 class ManufacturerAdmin(admin.ModelAdmin):
@@ -23,11 +25,22 @@ class ManufacturerAdmin(admin.ModelAdmin):
     ordering = ('-created_at',)
 
 
+class StockAdmin(admin.ModelAdmin):
+    prepopulated_fields = {'slug': ('name',)}
+    list_display = ('name', 'type', 'iso', 'added_by',)
+    list_filter = ('manufacturer', 'type', 'added_by',)
+
+
 class FilmAdmin(admin.ModelAdmin):
-    list_display = ('__str__', 'type', 'iso', 'created_at', 'added_by',)
-    list_filter = ('format', 'type', 'manufacturer', 'iso', 'personal', 'added_by',)
-    prepopulated_fields = {'slug': ('name', 'format',)}
+    list_display = ('__str__', 'created_at', 'added_by',)
+    list_filter = ('format', 'personal', 'added_by',)
     ordering = ('-created_at',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        if request.user.is_superuser:
+            kwargs['form'] = FilmForm
+
+        return super().get_form(request, obj, **kwargs)
 
 
 class RollAdmin(admin.ModelAdmin):
@@ -203,6 +216,7 @@ class FrameAdmin(admin.ModelAdmin):
     )
 
 
+admin.site.register(Stock, StockAdmin)
 admin.site.register(Film, FilmAdmin)
 admin.site.register(Roll, RollAdmin)
 admin.site.register(Manufacturer, ManufacturerAdmin)

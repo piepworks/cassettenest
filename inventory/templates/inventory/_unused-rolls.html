@@ -1,43 +1,40 @@
-<div id="unused-rolls-wrapper">
+{% if not project %}
+    {% if filters.format != 'all' or filters.type != 'all' %}
+        <a class="js-reset-filter" href="{% url 'inventory' %}">Reset filter</a>
+    {% endif %}
+    <hr />
+{% endif %}
+
+<h2 id="film-summary">
     {% if not project %}
         {% if filters.format != 'all' or filters.type != 'all' %}
-            <a class="js-reset-filter" href="{% url 'inventory' %}">Reset filter</a>
+            {{ total_film_count.count }}
+            roll{{ total_film_count.count|pluralize }} (filtered),
+            <small><a class="js-reset-filter" href="{% url 'inventory' %}">
         {% endif %}
-        <hr />
+    {% endif %}
+    {{ total_rolls }} roll{{ total_rolls|pluralize }}
+    {% if project %}
+        remaining
+    {% else %}
+        {% if filters.format != 'all' or filters.type != 'all' %}
+            total</a></small>
+        {% endif %}
+    {% endif %}
+</h2>
+
+<section id="film-wrapper">
+    {% if project %}
+    <h3 class="c-heading c-heading--divider">Ready to Load</h3>
     {% endif %}
 
-    <h2 id="film-summary">
-        {% if not project %}
-            {% if filters.format != 'all' or filters.type != 'all' %}
-                {{ total_film_count.count }}
-                roll{{ total_film_count.count|pluralize }} (filtered),
-                <small>
-            {% endif %}
-        {% endif %}
-        {{ total_rolls }} roll{{ total_rolls|pluralize }}
-        {% if project %}
-            remaining
-        {% else %}
-            {% if filters.format != 'all' or filters.type != 'all' %}
-                total
-                </small>
-            {% endif %}
-        {% endif %}
-    </h2>
-
-    <section id="film-wrapper">
-        {% if project %}
-        <h3 class="c-heading c-heading--divider">Ready to Load</h3>
-        {% endif %}
-
-        {% if film_counts %}
-            <section class="cards">
-                {% for film in film_counts %}
-                    {% include 'inventory/_card.html' with name=film location=film.get_absolute_url slot='count' count=film.count type='film' film_type=film.type querystring='project' %}
-                {% endfor %}
-            </section>
-        {% else %}
-            <p>No rolls matching the current filter.</p>
-        {% endif %}
-    </section>
-</div>
+    {% if film_counts %}
+        <section class="cards">
+            {% for film in film_counts %}
+                {% include 'inventory/_card.html' with name=film location=film.get_absolute_url slot='count' count=film.count type='film' film_type=film.type querystring='project' %}
+            {% endfor %}
+        </section>
+    {% else %}
+        <p>No rolls matching the current filter.</p>
+    {% endif %}
+</section>

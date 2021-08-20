@@ -1,15 +1,15 @@
 {% extends 'base_site.html' %}
 
-{% block title %}Add Film{% endblock %}
+{% block title %}Add Film Stock{% endblock %}
 
 {% block content %}
 <div class="raw">
-    <h1>Add Film</h1>
+    <h1>Add Film Stock</h1>
 
     <div class="notes">
         {% include 'inventory/_github-icon.html' with id='beaker' %}
         <div class="inner">
-            <p>Thanks for helping! For the sake of consistency, we may need to make adjustments to this new film before making it available for everyone to use.</p>
+            <p>Thanks for helping! For the sake of consistency, we may need to make adjustments to this new film stock before <a target="_blank" rel="noopener" href="https://cassettenest.com/policies/privacy/#your-content-in-cassette-nest">making it available for everyone to use</a>.</p>
         </div>
     </div>
 
@@ -29,8 +29,8 @@
         {% endfor %}
 
         <div class="action">
-            <p><input type="submit" value="Save film" ></p>
-            <p><input type="submit" class="secondary" name="another" value="Save film and add another" /></p>
+            <p><input type="submit" value="Save film stock" /></p>
+            <p><input type="submit" class="secondary" name="another" value="Save film stock and add another" /></p>
         </div>
     </form>
 </div>

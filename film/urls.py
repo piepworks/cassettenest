@@ -62,11 +62,19 @@ urlpatterns = [
     path('project/<int:pk>/remove/', views.project_rolls_remove, name='project-rolls-remove'),
     path('project/<int:pk>/camera/update/', views.project_camera_update, name='project-camera-update'),
 
+    # Stocks
+    path('stocks/', views.stocks, name='stocks'),
+    path('stocks/<slug:manufacturer>/', views.stocks, name='stocks-manufacturer'),
+    path('stocks/<slug:manufacturer>/<slug:slug>/', views.stock, name='stock'),
+    path('stocks/ajax/<slug:manufacturer>/<slug:type>', views.stocks_ajax, name='stocks-ajax'),
+    path('stock/add/', views.stock_add, name='stock-add'),
+    path('stock/', RedirectView.as_view(pattern_name='stocks')),
+
     # Films
     path('film/', views.inventory, name='inventory'),
     path('film/ajax/<slug:format>/<slug:type>', views.inventory_ajax, name='inventory-ajax'),
-    path('film/add/', views.film_add, name='film-add'),
-    path('film/<slug:slug>/', views.film_rolls, name='film-rolls'),
+    path('film/<slug:stock>/<slug:format>/', views.film_rolls, name='film-rolls'),
+    path('film/<slug:slug>/', views.film_rolls, name='film-slug-redirect'),
 
     # Cameras and Backs
     path('cameras/', views.cameras, name='cameras'),

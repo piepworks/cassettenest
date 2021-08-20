@@ -19,11 +19,11 @@
         <div class="c-field">
             <p>
                 Not seeing the film you need?
-                <a href="{% url 'film-add' %}?destination=add-logbook">Add a new kind of film to the list.</a>
+                <a href="{% url 'stock-add' %}?destination=add-logbook">Add a new kind of film to the list.</a>
             </p>
         </div>
 
-        {% include 'inventory/_form-roll.html' %}
+        {% include 'inventory/_form-roll.html' with method='add' %}
         <div class="action">
             <p><input type="submit" name="" value="Save roll to logbook" /></p>
             <p><input type="submit" class="secondary" name="another" value="Save roll to logbook and add another" /></p>

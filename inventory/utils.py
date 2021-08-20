@@ -2,42 +2,8 @@ import os
 import markdown2
 from django.conf import settings
 from django.core.mail import send_mail
-from django.db.models import Count
-
-
-def iso_variables(request):
-    range = None
-    value = None
-
-    if request.GET.get('iso_range') and request.GET.get('iso_value'):
-        ranges = (
-            'gte',
-            'lte',
-            'equals',
-        )
-        if request.GET.get('iso_range') in ranges:
-            range = request.GET.get('iso_range')
-            try:
-                value = int(request.GET.get('iso_value'))
-            except ValueError:
-                range = None
-                value = None
-
-    return {
-        'range': range,
-        'value': value
-    }
-
-
-def iso_filter(iso, objects):
-    if iso['range'] == 'gte':
-        objects = objects.filter(iso__gte=iso['value'])
-    elif iso['range'] == 'lte':
-        objects = objects.filter(iso__lte=iso['value'])
-    elif iso['range'] == 'equals':
-        objects = objects.filter(iso=iso['value'])
-
-    return objects
+from django.db.models import Count, Q
+from django.utils.encoding import force_str
 
 
 def get_project_or_none(Project, owner, project_id):
@@ -181,16 +147,37 @@ def inventory_filter(request, Film, format, type):
         film_counts = film_counts.filter(format=format)
 
     if type != 'all':
-        film_counts = film_counts.filter(type=type)
+        film_counts = film_counts.filter(stock__type=type)
 
     return film_counts.annotate(
         count=Count('roll')
     ).order_by(
-        'type',
+        'stock__type',
         '-format',
         'manufacturer__name',
         'name',
     )
+
+
+def available_types(request, Stock, type_names, type_choices, manufacturer):
+    '''Determine the available types (bw, c41, e6) for a given manufacturer.'''
+
+    if request.user.is_authenticated:
+        types_available = Stock.objects.filter(manufacturer=manufacturer).exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).values('type').distinct()
+    else:
+        types_available = Stock.objects.filter(manufacturer=manufacturer).exclude(
+            Q(personal=True)
+        ).values('type').distinct()
+
+    for t in types_available:
+        type_choices[t['type']] = force_str(
+            type_names[t['type']],
+            strings_only=True
+        )
+
+    return type_choices
 
 
 apertures = [
@@ -225,6 +212,16 @@ shutter_speeds = [
     ('1/4000', '1/4000'),
 ]
 
-
 preset_apertures = {key for key in dict(apertures)}
 preset_shutter_speeds = {key for key in dict(shutter_speeds)}
+
+film_types = [
+    ('c41', 'C41 Color'),
+    ('bw', 'Black and White'),
+    ('e6', 'E6 Color Reversal'),
+]
+
+film_formats = [
+    ('135', '35mm'),
+    ('120', '120'),
+]
