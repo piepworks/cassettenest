@@ -125,7 +125,6 @@ $('#stock_filter select').change((e) => {
     const url = new URL(window.location);
     const newManufacturer = $('#id_manufacturer').val();
     const newType = $('#id_type').val();
-
     let changed = (e.target.name === 'manufacturer') ? 'manufacturer' : 'type';
 
     changeFilters(newManufacturer, newType, changed);
@@ -148,8 +147,9 @@ window.onpopstate = () => {
     const newManufacturer = (url.pathname.split('/')[2]) ? url.pathname.split('/')[2] : 'all';
     const $manufacturerField = $('#id_manufacturer');
     const $typeField = $('#id_type');
+    const changed = (newType === 'all') ? 'manufacturer' : 'type';
 
-    changeFilters(newManufacturer, newType);
+    changeFilters(newManufacturer, newType, changed);
 
     // Update selected dropdown items.
     $manufacturerField.find('option').each((index, element) => {
