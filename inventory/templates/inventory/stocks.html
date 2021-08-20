@@ -146,9 +146,23 @@ window.onpopstate = (e) => {
     const url = new URL(window.location);
     const newType = url.searchParams.get('type');
     const newManufacturer = (url.pathname.split('/')[2]) ? url.pathname.split('/')[2] : 'all';
+    const $manufacturerField = $('#id_manufacturer')
+    const $typeField = $('#id_type');
 
     changeFilters(newManufacturer, newType);
-    // TODO: change the select dropdowns selections based on what's changed.
+
+    // Update selected dropdown items.
+    $manufacturerField.find('option').each((index, element) => {
+        if ($(element).val() === newManufacturer) {
+            $manufacturerField.prop('selectedIndex') = index;
+        }
+    });
+
+    $typeField.find('option').each((index, element) => {
+        if ($(element).val() === newType) {
+            $typeField.prop('selectedIndex') = index;
+        }
+    });
 }
 </script>
 {% endblock %}
