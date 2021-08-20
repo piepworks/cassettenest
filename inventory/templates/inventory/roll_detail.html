@@ -1,13 +1,19 @@
 {% extends 'base_site.html' %}
 {% load markdown_deux_tags %}
 {% load waffle_tags %}
+{% load capture_tags %}
 
 {% block title %}{{ roll }}{% endblock %}
 
 {% block bodytag %}class="roll-detail"{% endblock %}
 
 {% block content %}
-{% if roll.film.stock %}{% url 'film-rolls' roll.film.stock.slug roll.film.format as film_url %}{% else %}{% url 'film-slug-redirect' roll.film.slug as film_url %}{% endif %}
+
+{% if roll.film.stock %}
+    {% capture as film_url silent %}{% url 'film-rolls' roll.film.stock.slug roll.film.format %}{% endcapture %}
+{% else %}
+    {% capture as film_url silent %}{% url 'film-slug-redirect' roll.film.slug %}{% endcapture %}
+{% endif %}
 <div class="raw">
     <header class="c-heading">
         <div class="flex">
