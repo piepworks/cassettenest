@@ -2,7 +2,8 @@ import os
 import markdown2
 from django.conf import settings
 from django.core.mail import send_mail
-from django.db.models import Count
+from django.db.models import Count, Q
+from django.utils.encoding import force_str
 
 
 def get_project_or_none(Project, owner, project_id):
@@ -156,6 +157,27 @@ def inventory_filter(request, Film, format, type):
         'manufacturer__name',
         'name',
     )
+
+
+def available_types(request, Stock, type_names, type_choices, manufacturer):
+    '''Determine the available types (bw, c41, e6) for a given manufacturer.'''
+
+    if request.user.is_authenticated:
+        types_available = Stock.objects.filter(manufacturer=manufacturer).exclude(
+            Q(personal=True) & ~Q(added_by=request.user)
+        ).values('type').distinct()
+    else:
+        types_available = Stock.objects.filter(manufacturer=manufacturer).exclude(
+            Q(personal=True)
+        ).values('type').distinct()
+
+    for t in types_available:
+        type_choices[t['type']] = force_str(
+            type_names[t['type']],
+            strings_only=True
+        )
+
+    return type_choices
 
 
 apertures = [

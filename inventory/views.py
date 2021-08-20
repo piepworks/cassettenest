@@ -50,6 +50,7 @@ from .utils import (
     inventory_filter,
     preset_apertures,
     preset_shutter_speeds,
+    available_types,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -347,12 +348,7 @@ def stocks(request, manufacturer='all'):
         filters['manufacturer'] = manufacturer
         m = get_object_or_404(Manufacturer, slug=manufacturer)
         stocks = stocks.filter(manufacturer=m)
-        types_available = Stock.objects.filter(manufacturer=m).values('type').distinct()
-        for t in types_available:
-            type_choices[t['type']] = force_str(
-                type_names[t['type']],
-                strings_only=True
-            )
+        type_choices = available_types(request, Stock, type_names, type_choices, m)
     else:
         type_choices = type_names
 
@@ -408,12 +404,7 @@ def stocks_ajax(request, manufacturer, type):
     if manufacturer != 'all':
         m = get_object_or_404(Manufacturer, slug=manufacturer)
         stocks = stocks.filter(manufacturer=m)
-        types_available = Stock.objects.filter(manufacturer=m).values('type').distinct()
-        for t in types_available:
-            type_choices[t['type']] = force_str(
-                type_names[t['type']],
-                strings_only=True
-            )
+        type_choices = available_types(request, Stock, type_names, type_choices, m)
     else:
         type_choices = type_names
     if type != 'all':
