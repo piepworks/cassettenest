@@ -27,7 +27,7 @@
             {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
         </div>
 
-        <h2>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{{ roll.film }}</a> </h2>
+        <h2>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{% if not roll.film.stock %}{{ roll.film.name }}{% else %}{{ roll.film }}{% endif %}</a> </h2>
     </header>
 
 <ul class="meta">
