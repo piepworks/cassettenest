@@ -104,20 +104,22 @@ function resetTypes(type) {
 
 function resetLink(e) {
     e.preventDefault();
+    const newAjaxUrl = ajaxUrl.replace('t-none', 'all').replace('m-none', 'all');
 
     $wrapper.html('<div class="loader" />');
-    fetch(`{% url 'stocks-ajax' manufacturer='all' type='all' %}`)
-        .then(response => response.text().then(text => {
+    fetch(newAjaxUrl).then((response) =>{
+        response.text().then((text) => {
             $wrapper.html(text);
             $('#id_manufacturer').val('all');
             $('#id_type').val('all');
             window.history.pushState({}, '', `{% url 'stocks' %}`);
-            resetTypes();
+            resetTypes('all');
             resetTitle();
-        }));
+        });
+    });
 }
 
-function changeFilters(manufacturer, type='all') {
+function changeFilters(manufacturer, type='all', changed='all') {
     const newAjaxUrl = ajaxUrl.replace('t-none', type).replace('m-none', manufacturer);
 
     $wrapper.html('<div class="loader" />');
@@ -126,7 +128,12 @@ function changeFilters(manufacturer, type='all') {
             $wrapper.html(text);
             $('.js-reset-filter').click((e) => resetLink(e));
 
-            resetTypes(type);
+            if (changed === 'manufacturer') {
+                // Reset type selection whenever changing manufacturer.
+                resetTypes('all');
+            } else {
+                resetTypes(type);
+            }
             resetManufacturerSelection(manufacturer);
             resetTitle();
         });
@@ -137,8 +144,9 @@ $('#stock_filter select').change((e) => {
     const url = new URL(window.location);
     const newManufacturer = $('#id_manufacturer').val();
     const newType = $('#id_type').val();
+    const changed = (e.target.name === 'manufacturer') ? 'manufacturer' : 'type';
 
-    changeFilters(newManufacturer, newType);
+    changeFilters(newManufacturer, newType, changed);
 
     const newUrl = (newManufacturer === 'all')
         ? stocksUrl
