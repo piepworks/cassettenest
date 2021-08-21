@@ -120,7 +120,8 @@ function resetLink(e) {
 }
 
 function changeFilters(manufacturer, type='all', changed='all') {
-    const newAjaxUrl = ajaxUrl.replace('t-none', type).replace('m-none', manufacturer);
+    const newType = (changed === 'type') ? type : 'all';
+    const newAjaxUrl = ajaxUrl.replace('t-none', newType).replace('m-none', manufacturer);
 
     $wrapper.html('<div class="loader" />');
     fetch(newAjaxUrl).then((response) => {
