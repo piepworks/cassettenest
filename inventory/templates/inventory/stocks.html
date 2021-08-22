@@ -166,7 +166,7 @@ window.onpopstate = () => {
     const newType = (url.searchParams.get('type')) ? url.searchParams.get('type') : 'all';
     const newManufacturer = (url.pathname.split('/')[2]) ? url.pathname.split('/')[2] : 'all';
 
-    changeFilters(newManufacturer, newType);
+    changeFilters(newManufacturer, newType, changed='type');
 }
 </script>
 {% endblock %}
