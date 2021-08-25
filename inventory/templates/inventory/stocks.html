@@ -1,6 +1,18 @@
 {% extends 'base_site.html' %}
 
-{% block title %}Film Stocks{% if manufacturer %}: {{ manufacturer }}{% endif %}{% endblock %}
+{% block title %}
+{% spaceless %}
+    Film Stocks{% if manufacturer or filters.type != 'all' %}: {% endif %}
+    {% if manufacturer %}
+        {{ manufacturer }}
+        {% if filters.type != 'all' %} ({{ type_name }}){% endif %}
+    {% else %}
+        {% if filters.type != 'all' %}
+            {{ type_name }}
+        {% endif %}
+    {% endif %}
+{% endspaceless %}
+{% endblock %}
 
 {% block content %}
 <div class="raw">
@@ -61,6 +73,7 @@ let ajaxUrl = `{% url 'stocks-ajax' manufacturer='m-none' type='t-none' %}`;
 {% comment %}These variables are set in `_stocks-list.html`.{% endcomment %}
 let typeChoices;
 let manufacturerName;
+let typeName;
 
 function resetTitle() {
     $manufacturerName.html('');
@@ -68,10 +81,20 @@ function resetTitle() {
     document.title = document.title.replace(/^[^\/]+/, 'Film Stocks ');
 
     if (manufacturerName !== 'None') {
+        const titlePrefix = `Film Stocks: ${manufacturerName} `;
+
         $pageName.html(`<a href="{% url 'stocks' %}">Film Stocks</a>`);
         $pageName.find('a').click((e) => resetLink(e));
         $manufacturerName.html(` &gt; ${manufacturerName}`);
-        document.title = document.title.replace('Film Stocks ', `Film Stocks: ${manufacturerName} `);
+        document.title = document.title.replace('Film Stocks ', titlePrefix);
+
+        if (typeName !== 'all') {
+            document.title = document.title.replace(titlePrefix, `${titlePrefix} (${typeName}) `);
+        }
+    } else {
+        if (typeName !== 'all') {
+            document.title = document.title.replace('Film Stocks', `Film Stocks: ${typeName} `);
+        }
     }
 }
 

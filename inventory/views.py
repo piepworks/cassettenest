@@ -305,7 +305,7 @@ def stocks(request, manufacturer='all'):
         'type': 'all',
     }
     m = None
-    type_name = ''
+    type_name = 'all'
     type_passthrough = ''
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
@@ -379,7 +379,7 @@ def stocks_ajax(request, manufacturer, type):
         'type': type,
     }
     m = None
-    type_name = ''
+    type_name = 'all'
 
     if request.user.is_authenticated:
         stocks = Stock.objects.exclude(
