@@ -1,5 +1,6 @@
 const $wrapper = $('#stocks-list-wrapper');
 const $typeSwitcher = $('#id_type');
+const $manufacturerSwitcher = $('#id_manufacturer');
 const $pageName = $('#page-name');
 const $manufacturerName = $('#manufacturer-name');
 
@@ -64,19 +65,15 @@ function resetTypes(type) {
 
 function resetLink(e) {
     e.preventDefault();
-    const newAjaxUrl = ajaxUrl.replace('t-none', 'all').replace('m-none', 'all');
+    window.history.pushState({}, '', `{% url 'stocks' %}`);
 
-    $wrapper.html('<div class="loader" />');
-    fetch(newAjaxUrl).then((response) =>{
-        response.text().then((text) => {
-            $wrapper.html(text);
-            $('#id_manufacturer').val('all');
-            $('#id_type').val('all');
-            window.history.pushState({}, '', `{% url 'stocks' %}`);
-            resetTypes('all');
-            resetTitle();
-        });
-    });
+    $manufacturerSwitcher.val('all');
+    $typeSwitcher.val('all');
+
+    resetTypes('all');
+    resetTitle();
+
+    changeFilters('all', 'all', 'all');
 }
 
 function changeFilters(manufacturer, type='all', changed='all') {
