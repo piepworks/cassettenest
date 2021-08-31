@@ -2075,6 +2075,11 @@ def camera_or_back_detail(request, pk, back_pk=None):
                     status=status_number('loaded')
                 )[0]
 
+        # Pagination / 20 per page
+        paginator = Paginator(rolls_history, 20)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
             'owner': owner,
             'camera': camera,
@@ -2082,6 +2087,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
             'camera_or_back': camera_or_back,
             'roll': roll,
             'rolls_history': rolls_history,
+            'page_obj': page_obj,
         }
 
         if camera_back:
