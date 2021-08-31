@@ -515,7 +515,11 @@ def inventory(request):
     filters = {
         'format': 'all',
         'type': 'all',
+        'format_name': 'all',
+        'type_name': 'all',
     }
+    type_names = dict(Stock._meta.get_field('type').flatchoices)
+    format_names = dict(Film._meta.get_field('format').flatchoices)
 
     # All unused rolls
     total_film_count = Film.objects.filter(
@@ -527,10 +531,12 @@ def inventory(request):
     # Querystring filters.
     if request.GET.get('format') and request.GET.get('format') != 'all':
         filters['format'] = request.GET.get('format')
+        filters['format_name'] = format_names[filters['format']]
         total_film_count = total_film_count.filter(format=filters['format'])
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
+        filters['type_name'] = type_names[filters['type']]
         total_film_count = total_film_count.filter(stock__type=filters['type'])
 
     film_counts = inventory_filter(request, Film, filters['format'], filters['type'])

@@ -1,6 +1,16 @@
 {% extends 'base_site.html' %}
 
-{% block title %}Inventory{% endblock %}
+{% block title %}
+{% spaceless %}
+    Inventory
+    {% if filters.format_name != 'all' %}
+        ({{ filters.format_name }}
+        {% if filters.type_name != 'all' %}, {{ filters.type_name }}{% endif %})
+    {% elif filters.type_name != 'all' %}
+        ({{ filters.type_name }})
+    {% endif %}
+{% endspaceless %}
+{% endblock %}
 
 {% block content %}
 <div class="raw">
