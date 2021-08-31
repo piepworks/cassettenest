@@ -515,7 +515,11 @@ def inventory(request):
     filters = {
         'format': 'all',
         'type': 'all',
+        'format_name': 'all',
+        'type_name': 'all',
     }
+    type_names = dict(Stock._meta.get_field('type').flatchoices)
+    format_names = dict(Film._meta.get_field('format').flatchoices)
 
     # All unused rolls
     total_film_count = Film.objects.filter(
@@ -527,10 +531,12 @@ def inventory(request):
     # Querystring filters.
     if request.GET.get('format') and request.GET.get('format') != 'all':
         filters['format'] = request.GET.get('format')
+        filters['format_name'] = format_names[filters['format']]
         total_film_count = total_film_count.filter(format=filters['format'])
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
+        filters['type_name'] = type_names[filters['type']]
         total_film_count = total_film_count.filter(stock__type=filters['type'])
 
     film_counts = inventory_filter(request, Film, filters['format'], filters['type'])
@@ -572,7 +578,7 @@ def inventory(request):
         'js_needed': True,
     }
 
-    return render(request, 'inventory/film.html', context)
+    return render(request, 'inventory/inventory.html', context)
 
 
 @login_required
@@ -582,17 +588,23 @@ def inventory_ajax(request, format, type):
         roll__status=status_number('storage'),
     )
     total_rolls = total_film_count.count()
-
-    if format != 'all':
-        total_film_count = total_film_count.filter(format=format)
-
-    if type != 'all':
-        total_film_count = total_film_count.filter(stock__type=type)
+    type_names = dict(Stock._meta.get_field('type').flatchoices)
+    format_names = dict(Film._meta.get_field('format').flatchoices)
 
     filters = {
         'format': format,
         'type': type,
+        'format_name': 'all',
+        'type_name': 'all',
     }
+
+    if format != 'all':
+        total_film_count = total_film_count.filter(format=format)
+        filters['format_name'] = format_names[format]
+
+    if type != 'all':
+        total_film_count = total_film_count.filter(stock__type=type)
+        filters['type_name'] = type_names[type]
 
     film_counts = inventory_filter(request, Film, format, type)
 

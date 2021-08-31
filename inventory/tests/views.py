@@ -235,6 +235,7 @@ class InventoryTests(TestCase):
         response = self.client.get(reverse('inventory') + '?format=135&type=c41')
 
         self.assertEqual(response.status_code, 200)
+        self.assertContains(response, '(35mm, C41 Color)')
         self.assertContains(response, '(filtered)')
 
     def test_ajax_filter(self):
@@ -242,6 +243,8 @@ class InventoryTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '(filtered)')
+        self.assertEqual(response.context['filters']['type_name'], 'C41 Color')
+        self.assertEqual(response.context['filters']['format_name'], '35mm')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)

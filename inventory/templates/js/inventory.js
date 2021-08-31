@@ -1,7 +1,10 @@
 const $wrapper = $('#unused-rolls-wrapper');
+const $pageName = $('#page-name');
 const ajaxUrl = `{% url 'inventory-ajax' format='f-none' type='t-none' %}`;
 const $format = $('#id_format');
 const $type = $('#id_type');
+let formatName = '{{ filters.format_name }}';
+let typeName = '{{ filters.type_name }}';
 
 function resetLink(e) {
     e.preventDefault();
@@ -13,6 +16,31 @@ function resetLink(e) {
     changeFilters();
 }
 
+function resetTitle() {
+    const titlePrefix = 'Inventory';
+    let newSubtitle = '';
+
+    $pageName.html(titlePrefix);
+    document.title = document.title.replace(/^[^/]+/, `${titlePrefix} `);
+
+    if (formatName !== 'all') {
+        if (typeName !== 'all') {
+            newSubtitle = `${formatName}, ${typeName}`;
+        } else {
+            newSubtitle = formatName;
+        }
+    } else {
+        if (typeName !== 'all') {
+            newSubtitle = typeName;
+        }
+    }
+
+    if (newSubtitle !== '') {
+        $pageName.html(`${titlePrefix} <small>(${newSubtitle})</small>`);
+        document.title = document.title.replace(`${titlePrefix} `, `${titlePrefix} (${newSubtitle}) `);
+    }
+}
+
 function changeFilters(type='all', format='all') {
     const newAjaxUrl = ajaxUrl.replace('f-none', format).replace('t-none', type);
 
@@ -21,6 +49,7 @@ function changeFilters(type='all', format='all') {
         response.text().then((text) => {
             $wrapper.html(text);
             $('.js-reset-filter').click((e) => resetLink(e));
+            resetTitle();
         });
     });
 }
