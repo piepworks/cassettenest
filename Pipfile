@@ -9,7 +9,7 @@ pycodestyle = "*"
 [packages]
 autopep8 = "==1.5.2"
 django-capture-tag = "==1.0"
-django-compressor = "==2.4"
+django-compressor = "==2.4.1"
 django-debug-toolbar = "~=3.2.1"
 django-libsass = "==0.9"
 django-markdown-deux = "==1.0.5"
