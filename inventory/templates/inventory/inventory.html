@@ -6,7 +6,7 @@ Inventory{% if filters.format_name != 'all' %} ({{ filters.format_name }}{% if f
 
 {% block content %}
 <div class="raw">
-<h1>Inventory</h1>
+<h1 id="page-name">Inventory{% if filters.format_name != 'all' %} <small>({{ filters.format_name }}{% if filters.type_name != 'all' %}, {{ filters.type_name }}{% endif %})</small>{% elif filters.type_name != 'all' %} <small>({{ filters.type_name }})</small>{% endif %}</h1>
 
 <p><a href="{% url 'stocks' %}">View all Film Stocks</a> <small><a href="https://cassettenest.com/docs/stocks">(What is this?)</a></small></p>
 

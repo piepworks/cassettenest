@@ -588,17 +588,23 @@ def inventory_ajax(request, format, type):
         roll__status=status_number('storage'),
     )
     total_rolls = total_film_count.count()
-
-    if format != 'all':
-        total_film_count = total_film_count.filter(format=format)
-
-    if type != 'all':
-        total_film_count = total_film_count.filter(stock__type=type)
+    type_names = dict(Stock._meta.get_field('type').flatchoices)
+    format_names = dict(Film._meta.get_field('format').flatchoices)
 
     filters = {
         'format': format,
         'type': type,
+        'format_name': 'all',
+        'type_name': 'all',
     }
+
+    if format != 'all':
+        total_film_count = total_film_count.filter(format=format)
+        filters['format_name'] = format_names[format]
+
+    if type != 'all':
+        total_film_count = total_film_count.filter(stock__type=type)
+        filters['type_name'] = type_names[type]
 
     film_counts = inventory_filter(request, Film, format, type)
 
