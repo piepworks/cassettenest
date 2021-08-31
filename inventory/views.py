@@ -572,7 +572,7 @@ def inventory(request):
         'js_needed': True,
     }
 
-    return render(request, 'inventory/film.html', context)
+    return render(request, 'inventory/inventory.html', context)
 
 
 @login_required
