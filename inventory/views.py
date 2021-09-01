@@ -2022,13 +2022,12 @@ def camera_or_back_load(request, pk, back_pk=None):
 
 @login_required
 def camera_or_back_detail(request, pk, back_pk=None):
-    owner = request.user
-    camera = get_object_or_404(Camera, id=pk, owner=owner)
+    camera = get_object_or_404(Camera, id=pk, owner=request.user)
     if back_pk:
         camera_back = get_object_or_404(
             CameraBack,
             id=back_pk,
-            camera__owner=owner
+            camera__owner=request.user
         )
         camera_or_back = camera_back
     else:
@@ -2051,11 +2050,19 @@ def camera_or_back_detail(request, pk, back_pk=None):
     else:
         roll = ''
         if camera_back:
-            rolls_history = ''
+            rolls_history = Roll.objects.filter(
+                owner=request.user,
+                camera=pk,
+                camera_back=camera_back,
+            ).exclude(
+                status=status_number('loaded')
+            ).order_by(
+                '-started_on'
+            )
         else:
             rolls_history = Roll.objects.filter(
-                owner=owner,
-                camera=pk
+                owner=request.user,
+                camera=pk,
             ).exclude(
                 status=status_number('loaded')
             ).order_by(
@@ -2081,7 +2088,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
         page_obj = paginator.get_page(page_number)
 
         context = {
-            'owner': owner,
+            'owner': request.user,
             'camera': camera,
             'camera_back': camera_back,
             'camera_or_back': camera_or_back,

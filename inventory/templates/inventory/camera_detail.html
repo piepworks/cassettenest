@@ -63,9 +63,13 @@
         <hr />
 
         <section class="history">
-            <h3>{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
+            <h3 id="previous-rolls">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
 
-            {% include 'inventory/_logbook-table.html' with rolls=rolls_history page='project' %}
+            {% if camera.multiple_backs %}
+                {% include 'inventory/_logbook-table.html' with rolls=rolls_history page='camera_with_backs' %}
+            {% else %}
+                {% include 'inventory/_logbook-table.html' with rolls=rolls_history %}
+            {% endif %}
         </section>
     {% endif %}
 </div>
