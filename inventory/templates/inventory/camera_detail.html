@@ -63,7 +63,7 @@
         <hr />
 
         <section class="history">
-            <h3>{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
+            <h3 id="previous-rolls">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
 
             {% include 'inventory/_logbook-table.html' with rolls=rolls_history page='project' %}
         </section>
