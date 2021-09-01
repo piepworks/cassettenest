@@ -1629,6 +1629,20 @@ class CameraViewTests(TestCase):
         self.assertRedirects(response, expected_url=reverse('camera-detail', args=(camera.id,)))
         self.assertIn('Something is amiss. Please try again.', messages)
 
+    def test_camera_detail(self):
+        camera = baker.make(Camera, owner=self.user)
+        response = self.client.get(
+            reverse('camera-detail', args=(camera.id,))
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_camera_back_detail(self):
+        camera_back = baker.make(CameraBack, camera=baker.make(Camera, owner=self.user))
+        response = self.client.get(
+            reverse('camera-back-detail', args=(camera_back.camera.id, camera_back.id))
+        )
+        self.assertEqual(response.status_code, 200)
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RollViewTests(TestCase):
