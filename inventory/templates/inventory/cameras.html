@@ -15,7 +15,7 @@
 
         <section class="cards">
             {% for camera in status.list %}
-                {% include 'inventory/_card.html' with name=camera.name location=camera.get_absolute_url %}
+                {% include 'inventory/_card.html' with name=camera.name slot='count' sub_type='camera' count=camera.get_finished_rolls location=camera.get_absolute_url %}
             {% endfor %}
         </section>
     {% endfor %}

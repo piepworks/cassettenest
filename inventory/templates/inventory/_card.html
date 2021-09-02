@@ -45,6 +45,8 @@
         {% if slot == 'count' %}
             {% if sub_type == 'stock' %}
                 <div class="c-card__count" title="Number of films for this stock."><span>{{ count|default:'0' }}</span></div>
+            {% elif sub_type == 'camera' %}
+                <div class="c-card__count" title="Number of rolls finished with this camera."><span>{{ count|default:'0' }}</span></div>
             {% else %}
                 <div class="c-card__count" title="Number of rolls"><span>{{ count|default:'0' }}</span></div>
             {% endif %}
