@@ -310,6 +310,13 @@ class CameraTests(TestCase):
     def test_get_absolute_url(self):
         self.assertEqual(self.camera.get_absolute_url(), f'/camera/{self.id}/')
 
+    def test_get_finished_rolls(self):
+        baker.make(Roll, camera=self.camera, status=status_number('shot'))
+        baker.make(Roll, camera=self.camera, status=status_number('shot'))
+        baker.make(Roll, camera=self.camera, status=status_number('shot'))
+
+        self.assertEqual(self.camera.get_finished_rolls(), 3)
+
 
 class CameraBackTests(TestCase):
     def test_model_str(self):

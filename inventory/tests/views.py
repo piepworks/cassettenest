@@ -1554,6 +1554,10 @@ class CameraViewTests(TestCase):
             password=self.password,
         )
 
+    def test_cameras_page(self):
+        response = self.client.get(reverse('cameras'))
+        self.assertEqual(response.status_code, 200)
+
     def test_camera_add_get(self):
         response = self.client.get(reverse('camera-add'))
         self.assertEqual(response.status_code, 200)
