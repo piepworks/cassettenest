@@ -94,6 +94,20 @@
     {% endif %}
 </ul>
 
+{% if roll.status == '02_loaded' %}
+<div class="action">
+    {% include 'inventory/_form-finish-roll.html' with camera=roll.camera roll=roll %}
+</div>
+{% endif %}
+
+{% flag 'frames' %}
+<hr />
+<div class="action">
+    <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
+    <p><small><a href="https://cassettenest.com/docs/frames">Learn more about frames.</a></small></p>
+</div>
+{% endflag %}
+
 {% if frames %}
 {% flag 'frames' %}
 <div class="frames overflow-x">
@@ -134,12 +148,6 @@
 </div>
 {% endflag %}
 {% endif %}
-
-{% flag 'frames' %}
-<div class="action">
-    <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
-</div>
-{% endflag %}
 
 {% if journal_entries %}
 <div class="journal-entries overflow-x">
@@ -191,10 +199,4 @@
 </div>
 {% endif %}
 
-{% if roll.status == '02_loaded' %}
-<hr />
-<div class="action">
-    {% include 'inventory/_form-finish-roll.html' with camera=roll.camera roll=roll %}
-</div>
-{% endif %}
 {% endblock %}
