@@ -233,6 +233,9 @@ class Camera(models.Model):
     def get_absolute_url(self):
         return reverse('camera-detail', args=(self.id,))
 
+    def get_finished_rolls(self):
+        return Roll.objects.filter(camera=self).exclude(status=status_number('loaded')).count()
+
 
 class CameraBack(models.Model):
     """
