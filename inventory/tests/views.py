@@ -59,11 +59,13 @@ class MarketingSiteCORSTests(TestCase):
 
     def test_logged_out(self):
         response = self.client.get(reverse('marketing-site'))
+        self.assertEqual(response.status_code, 403)
         self.assertEqual(response.content, b'You are not logged in.')
 
     def test_logged_in(self):
         self.client.login(username=self.username, password=self.password)
         response = self.client.get(reverse('marketing-site'))
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.content, b'You are logged in.')
 
 
