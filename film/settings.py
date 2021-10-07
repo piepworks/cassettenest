@@ -215,6 +215,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_METHODS = ['GET']
 CORS_ALLOW_CREDENTIALS = True
+CORS_URLS_REGEX = r"^/marketing-site$"
 
 # Django Debug Toolbar w/ Docker
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
