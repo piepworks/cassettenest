@@ -47,6 +47,26 @@ class IndexTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
+class MarketingSiteCORSTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.username = 'test'
+        cls.password = 'secret'
+        cls.user = User.objects.create_user(
+            username=cls.username,
+            password=cls.password,
+        )
+
+    def test_logged_out(self):
+        response = self.client.get(reverse('marketing-site'))
+        self.assertEqual(response.content, b'You are not logged in.')
+
+    def test_logged_in(self):
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse('marketing-site'))
+        self.assertEqual(response.content, b'You are logged in.')
+
+
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class ReminderCardTests(TestCase):
     @classmethod
