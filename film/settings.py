@@ -64,10 +64,12 @@ INSTALLED_APPS = [
     'capture_tag',
     'debug_toolbar',
     'waffle',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -206,6 +208,14 @@ INTERNAL_IPS = ['127.0.0.1']
 # https://github.com/torchbox/django-libsass#settings
 LIBSASS_SOURCE_COMMENTS = env_var('DEBUG')
 LIBSASS_SOURCEMAPS = env_var('DEBUG')
+
+# Allow for checking if someone is logged on via the marketing site.
+CORS_ALLOWED_ORIGINS = [
+    os.environ.get('MARKETING_SITE_URL')
+]
+CORS_ALLOW_METHODS = ['GET']
+CORS_ALLOW_CREDENTIALS = True
+CORS_URLS_REGEX = r"^/marketing-site$"
 
 # Django Debug Toolbar w/ Docker
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())

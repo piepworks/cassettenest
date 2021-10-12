@@ -143,6 +143,13 @@ def patterns(request):
     return render(request, 'patterns.html', context)
 
 
+def marketing_site(request):
+    if request.user.is_authenticated:
+        return HttpResponse('You are logged in.')
+    else:
+        return HttpResponseForbidden('You are not logged in.')
+
+
 @login_required
 def settings(request):
     if request.method == 'POST':
