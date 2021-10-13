@@ -8,14 +8,11 @@
 <div class="raw">
     <h1>Create an account to continue.</h1>
 
-    {% include 'inventory/_note-subscription.html' %}
-
     <form method="post">
         {% csrf_token %}
         {% for field in form %}
             {% include 'inventory/_form-field.html' with field=field %}
         {% endfor %}
-
 
         <p class="policies">By creating an account, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
 

@@ -38,10 +38,7 @@
         </header>
 
         {% if user.is_authenticated %}
-            {% flag 'paddle' %}
-                {% include 'inventory/_subscription-banner-wrapper.html' %}
-            {% endflag %}
-
+            {% include 'inventory/_subscription-banner-wrapper.html' %}
             {% include 'inventory/_nav-status.html' %}
         {% endif %}
 
