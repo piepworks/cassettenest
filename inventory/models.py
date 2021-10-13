@@ -49,6 +49,14 @@ class Profile(models.Model):
         else:
             return False
 
+    @property
+    def trial_period(self):
+        today = datetime.date.today()
+        date_joined = self.user.date_joined.date()
+        time_delta = datetime.timedelta(days=int(settings.SUBSCRIPTION_TRIAL_DURATION))
+
+        return (today - date_joined) < time_delta
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
