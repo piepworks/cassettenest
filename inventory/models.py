@@ -57,6 +57,14 @@ class Profile(models.Model):
 
         return (today - date_joined) < time_delta
 
+    @property
+    def trial_days_remaining(self):
+        today = datetime.date.today()
+        date_joined = self.user.date_joined.date()
+        trial_duration = int(settings.SUBSCRIPTION_TRIAL_DURATION)
+
+        return trial_duration - (today - date_joined).days
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

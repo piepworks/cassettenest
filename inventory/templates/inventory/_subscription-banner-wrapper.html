@@ -1,7 +1,7 @@
 {% url 'settings' as subscribe_url %}
 {% load capture_tags %}
-{% if not user.profile.has_active_subscription and user.profile.subscription_status == 'none' %}
-        {% capture as message silent %}Paid plans are now available. Help support this project and <a href="{{ subscribe_url }}#subscription">subscribe</a>!{% endcapture %}
+{% if not user.profile.has_active_subscription and user.profile.trial_period %}
+        {% capture as message silent %}You have {{ user.profile.trial_days_remaining }} days left in your free trial. Whenever you’re ready, you can <a href="{{ subscribe_url }}#subscription">choose a plan</a>!{% endcapture %}
 {% elif user.profile.subscription_status != 'none' %}
     {% if user.profile.subscription_status == 'past_due' %}
         {% capture as message silent %}Looks like there’s a problem with your subscription. <a href="{{ subscribe_url }}#subscription">Please check your settings.</a>{% endcapture %}
