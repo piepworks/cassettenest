@@ -50,20 +50,16 @@ class Profile(models.Model):
             return False
 
     @property
-    def trial_period(self):
-        today = datetime.date.today()
-        date_joined = self.user.date_joined.date()
-        time_delta = datetime.timedelta(days=int(settings.SUBSCRIPTION_TRIAL_DURATION))
-
-        return (today - date_joined) < time_delta
-
-    @property
     def trial_days_remaining(self):
         today = datetime.date.today()
         date_joined = self.user.date_joined.date()
         trial_duration = int(settings.SUBSCRIPTION_TRIAL_DURATION)
 
         return trial_duration - (today - date_joined).days
+
+    @property
+    def trial_period(self):
+        return self.trial_days_remaining > 0
 
 
 @receiver(post_save, sender=User)
