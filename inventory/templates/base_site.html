@@ -38,7 +38,10 @@
         </header>
 
         {% if user.is_authenticated %}
-            {% include 'inventory/_subscription-banner-wrapper.html' %}
+            <div class="c-subscription-banner c-subscription-banner--{{ subscription_banner.status }}">
+                {{ subscription_banner.message }}
+            </div>
+
             {% include 'inventory/_nav-status.html' %}
         {% endif %}
 

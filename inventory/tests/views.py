@@ -1274,7 +1274,6 @@ class SubscriptionBannerTests(TestCase):
 
         response = self.client.get(reverse('index'))
 
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Paid plans are now available.')
 
     def test_subscription_banner_cancelled(self):
@@ -1283,7 +1282,6 @@ class SubscriptionBannerTests(TestCase):
 
         response = self.client.get(reverse('index'))
 
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription has been cancelled.')
 
     def test_subscription_banner_past_due(self):
@@ -1292,7 +1290,6 @@ class SubscriptionBannerTests(TestCase):
 
         response = self.client.get(reverse('index'))
 
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Looks like there’s a problem with your subscription.')
 
     def test_subscription_banner_cancelling(self):
@@ -1302,7 +1299,6 @@ class SubscriptionBannerTests(TestCase):
 
         response = self.client.get(reverse('index'))
 
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription is scheduled to be canceled.')
 
 
