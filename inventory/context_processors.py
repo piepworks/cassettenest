@@ -39,7 +39,6 @@ def subscription_banner(request):
     elif subscription_status != 'none':
         if subscription_status == 'deleted':
             cancellation_date = user_profile.paddle_cancellation_date
-
             if cancellation_date and cancellation_date > datetime.date.today():
                 message = messages['cancelling']
             else:
@@ -47,14 +46,13 @@ def subscription_banner(request):
         else:
             if subscription_status != 'active':
                 message = messages[subscription_status]
-            else:
-                return no_banner
+
+    if 'message' in locals():
+        return {
+            'subscription_banner': {
+                'status': status,
+                'message': message,
+            }
+        }
     else:
         return no_banner
-
-    return {
-        'subscription_banner': {
-            'status': status,
-            'message': message,
-        }
-    }
