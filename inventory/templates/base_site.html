@@ -38,10 +38,11 @@
         </header>
 
         {% if user.is_authenticated %}
-            <div class="c-subscription-banner c-subscription-banner--{{ subscription_banner.status }}">
-                {{ subscription_banner.message }}
-            </div>
-
+            {% if subscription_banner != '' %}
+                <div class="c-subscription-banner c-subscription-banner--{{ subscription_banner.status }}">
+                    {{ subscription_banner.message | safe }}
+                </div>
+            {% endif %}
             {% include 'inventory/_nav-status.html' %}
         {% endif %}
 

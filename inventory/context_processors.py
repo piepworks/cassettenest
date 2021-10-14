@@ -3,6 +3,11 @@ from django.urls import reverse
 
 
 def subscription_banner(request):
+    no_banner = {'subscription_banner': ''}
+
+    if not request.user.is_authenticated:
+        return no_banner
+
     user_profile = request.user.profile
     active_subscription = user_profile.has_active_subscription
     trial_days_remaining = user_profile.trial_days_remaining
@@ -29,15 +34,20 @@ def subscription_banner(request):
     # Default to what's in the Profile model.
     status = subscription_status
 
-    if subscription_status == 'deleted':
-        cancellation_date = user_profile.paddle_cancellation_date
-
-        if cancellation_date and cancellation_date > datetime.date.today():
-            message = messages['cancelling']
-        else:
-            message = messages['cancelled']
-    else:
+    if not active_subscription and subscription_status == 'none':
         message = messages[subscription_status]
+    elif subscription_status != 'none':
+        if subscription_status == 'deleted':
+            cancellation_date = user_profile.paddle_cancellation_date
+
+            if cancellation_date and cancellation_date > datetime.date.today():
+                message = messages['cancelling']
+            else:
+                message = messages['cancelled']
+        else:
+            message = messages[subscription_status]
+    else:
+        return no_banner
 
     return {
         'subscription_banner': {
