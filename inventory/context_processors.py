@@ -45,7 +45,10 @@ def subscription_banner(request):
             else:
                 message = messages['cancelled']
         else:
-            message = messages[subscription_status]
+            if subscription_status != 'active':
+                message = messages[subscription_status]
+            else:
+                return no_banner
     else:
         return no_banner
 
