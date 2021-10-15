@@ -52,6 +52,7 @@ from .utils import (
     preset_shutter_speeds,
     available_types,
     is_active,
+    is_inactive,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -151,10 +152,11 @@ def marketing_site(request):
         return HttpResponseForbidden('You are not logged in.')
 
 
+@user_passes_test(is_inactive, login_url=reverse_lazy('index'), redirect_field_name=None)
 @login_required
-def trial_expired(request):
+def account_inactive(request):
     context = {}
-    return render(request, 'trial-expired.html', context)
+    return render(request, 'account-inactive.html', context)
 
 
 @login_required
@@ -1466,7 +1468,7 @@ def roll_detail(request, pk):
     return render(request, 'inventory/roll_detail.html', context)
 
 
-@user_passes_test(is_active, login_url=reverse_lazy('trial-expired'), redirect_field_name=None)
+@user_passes_test(is_active, login_url=reverse_lazy('account-inactive'), redirect_field_name=None)
 @login_required
 def roll_edit(request, pk):
     owner = request.user

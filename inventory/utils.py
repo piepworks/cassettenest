@@ -251,3 +251,7 @@ def is_active(user):
             return False
     else:
         return False
+
+
+def is_inactive(user):
+    return not is_active(user)
