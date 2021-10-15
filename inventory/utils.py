@@ -1,4 +1,5 @@
 import os
+import datetime
 import markdown2
 from django.conf import settings
 from django.core.mail import send_mail
@@ -232,6 +233,21 @@ def is_active(user):
     For use with `user_passes_test` decorator.
     Example:
 
-    @user_passes_test(is_active, login_url=reverse_lazy('trial-expired'))
+    @user_passes_test(is_active, login_url=reverse_lazy('trial-expired'), redirect_field_name=None)
     '''
-    return user.profile.has_active_subscription
+    status = user.profile.subscription_status
+    trial_active = user.profile.trial_period
+
+    if user.is_staff or user.profile.friend:
+        return True
+    elif trial_active:
+        return True
+    elif status not in ['none', 'paused', 'deleted']:
+        return True
+    elif user.profile.paddle_cancellation_date and status == 'deleted':
+        if user.profile.paddle_cancellation_date > datetime.date.today():
+            return True
+        else:
+            return False
+    else:
+        return False
