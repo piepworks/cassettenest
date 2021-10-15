@@ -11,6 +11,7 @@ def subscription_banner(request):
     user_profile = request.user.profile
     active_subscription = user_profile.has_active_subscription
     trial_days_remaining = user_profile.trial_days_remaining
+    trial_period = user_profile.trial_period
     subscription_status = user_profile.subscription_status
     settings_url = reverse('settings') + '#subscription'
 
@@ -35,7 +36,7 @@ def subscription_banner(request):
     }
 
     if not active_subscription and subscription_status == 'none':
-        if trial_days_remaining > 0:
+        if trial_period:
             message = messages['trial']
         else:
             message = messages['trial_over']
