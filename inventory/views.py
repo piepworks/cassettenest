@@ -11,8 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_str
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
-from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+from django.urls import reverse, reverse_lazy
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -51,6 +51,7 @@ from .utils import (
     preset_apertures,
     preset_shutter_speeds,
     available_types,
+    is_active,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -148,6 +149,12 @@ def marketing_site(request):
         return HttpResponse('You are logged in.')
     else:
         return HttpResponseForbidden('You are not logged in.')
+
+
+@login_required
+def trial_expired(request):
+    context = {}
+    return render(request, 'trial-expired.html', context)
 
 
 @login_required
@@ -1459,6 +1466,7 @@ def roll_detail(request, pk):
     return render(request, 'inventory/roll_detail.html', context)
 
 
+@user_passes_test(is_active, login_url=reverse_lazy('trial-expired'))
 @login_required
 def roll_edit(request, pk):
     owner = request.user

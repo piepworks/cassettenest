@@ -225,3 +225,13 @@ film_formats = [
     ('135', '35mm'),
     ('120', '120'),
 ]
+
+
+def is_active(user):
+    '''
+    For use with `user_passes_test` decorator.
+    Example:
+
+    @user_passes_test(is_active, login_url=reverse_lazy('trial-expired'))
+    '''
+    return user.profile.has_active_subscription

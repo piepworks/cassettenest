@@ -16,6 +16,7 @@ urlpatterns = [
     path('innards/', admin.site.urls),
     path('register/', views.register, name='register'),
     path('marketing-site', views.marketing_site, name='marketing-site'),
+    path('trial-expired', views.trial_expired, name='trial-expired'),
 
     # Since browsers always ask for /favicon.ico, give it ’em.
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
