@@ -11,8 +11,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_str
 from django.utils.decorators import method_decorator
 from django.utils.text import slugify
-from django.urls import reverse, reverse_lazy
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -51,8 +51,8 @@ from .utils import (
     preset_apertures,
     preset_shutter_speeds,
     available_types,
-    is_active,
-    is_inactive,
+    user_account_active,
+    user_account_inactive,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -152,7 +152,7 @@ def marketing_site(request):
         return HttpResponseForbidden('You are not logged in.')
 
 
-@user_passes_test(is_inactive, login_url=reverse_lazy('index'), redirect_field_name=None)
+@user_account_inactive
 @login_required
 def account_inactive(request):
     context = {}
@@ -1468,7 +1468,7 @@ def roll_detail(request, pk):
     return render(request, 'inventory/roll_detail.html', context)
 
 
-@user_passes_test(is_active, login_url=reverse_lazy('account-inactive'), redirect_field_name=None)
+@user_account_active
 @login_required
 def roll_edit(request, pk):
     owner = request.user
