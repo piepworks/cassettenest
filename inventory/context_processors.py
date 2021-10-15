@@ -15,8 +15,11 @@ def subscription_banner(request):
     settings_url = reverse('settings') + '#subscription'
 
     messages = {
-        'none':       f'Paid plans are now available. Help support this project '
-                      f'and <a href="{settings_url}">subscribe</a>!',
+        'trial':      f'You have {trial_days_remaining} days left in your free trial. '
+                      f'<a href="{settings_url}">Choose a plan.</a>',
+
+        'trial_over': f'Your free trial has ended.'
+                      f'Please <a href="{settings_url}">choose a plan</a> to continue to add new stuff!',
 
         'past_due':   f'Looks like there’s a problem with your subscription. '
                       f'<a href="{settings_url}">Please check your settings.</a>',
@@ -31,11 +34,11 @@ def subscription_banner(request):
                       f'a href="{settings_url}">Update your settings to resubscribe</a>.',
     }
 
-    # Default to what's in the Profile model.
-    status = subscription_status
-
     if not active_subscription and subscription_status == 'none':
-        message = messages[subscription_status]
+        if trial_days_remaining:
+            message = messages['trial']
+        else:
+            message = messages['trial_over']
     elif subscription_status != 'none':
         if subscription_status == 'deleted':
             cancellation_date = user_profile.paddle_cancellation_date
@@ -50,7 +53,7 @@ def subscription_banner(request):
     if 'message' in locals():
         return {
             'subscription_banner': {
-                'status': status,
+                'status': subscription_status,
                 'message': message,
             }
         }

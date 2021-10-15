@@ -1251,6 +1251,7 @@ class SubscriptionTests(TestCase):
         self.assertContains(response, f'There was a problem changing plans. Please try again.')
 
 
+@freeze_time(datetime.datetime.now())
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class SubscriptionBannerTests(TestCase):
     @classmethod
@@ -1274,7 +1275,7 @@ class SubscriptionBannerTests(TestCase):
 
         response = self.client.get(reverse('index'))
 
-        self.assertContains(response, 'Paid plans are now available.')
+        self.assertContains(response, f'You have {settings.SUBSCRIPTION_TRIAL_DURATION} days left in your free trial.')
 
     def test_subscription_banner_cancelled(self):
         self.user.profile.subscription_status = 'deleted'
