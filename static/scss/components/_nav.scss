@@ -22,6 +22,24 @@ $logo-size: 35px;
         width: $logo-size;
     }
 
+    .badge-wrapper {
+        position: relative;
+
+        .beta {
+            position: absolute;
+            top: -0.3rem;
+            right: -0.75rem;
+            background: rgb(30, 64, 175); // blue-800
+            color: rgb(219, 234, 254); // blue-100
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 16px;
+            padding: 0.05rem 0.4rem;
+            border-radius: 9999px;
+        }
+    }
+
     nav {
         @media print { display: none; }
 

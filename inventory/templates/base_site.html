@@ -25,13 +25,22 @@
 <body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
     <div class="wrapper">
         <header class="c-site-nav">
-            <div class="film-icon">
+            <div class="badge-wrapper">
+                <div class="film-icon">
+                    {% if user.is_authenticated %}
+                    <a href="/">
+                    {% else %}
+                    <a href="https://cassettenest.com">
+                    {% endif %}
+                        <img src="{% static 'img/icon.svg' %}" height="35" width="35" alt="Cassette Nest Icon" />
+                    </a>
+                </div>
                 {% if user.is_authenticated %}
                 <a href="/">
                 {% else %}
                 <a href="https://cassettenest.com">
                 {% endif %}
-                    <img src="{% static 'img/icon.svg' %}" height="35" width="35" alt="Cassette Nest Icon" />
+                    <span title="We’re currently in Beta. Things are gonna be much fancier soon!" class="beta">Beta</span>
                 </a>
             </div>
             {% include 'inventory/_nav.html' %}
