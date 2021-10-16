@@ -38,21 +38,23 @@
     {% endflag %}
 
     {% flag 'import-data' %}
-    <hr />
+        {% if user.profile.account_active %}
+            <hr />
 
-    <h2 id="import">Import previously exported data</h2>
-    <ul>
-        {% for import in imports %}
-            <li>
-                {{ import }}
-                <form method="post" action="{% url 'import-'|add:import|lower %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ csv_form.csv }}
-                    <input type="submit" value="Upload" />
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
+            <h2 id="import">Import previously exported data</h2>
+            <ul>
+                {% for import in imports %}
+                    <li>
+                        {{ import }}
+                        <form method="post" action="{% url 'import-'|add:import|lower %}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {{ csv_form.csv }}
+                            <input type="submit" value="Upload" />
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     {% endflag %}
 </div>
 {% endblock %}

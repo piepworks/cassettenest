@@ -10,10 +10,11 @@ Inventory{% if filters.format_name != 'all' %} ({{ filters.format_name }}{% if f
 
 <p><a href="{% url 'stocks' %}">View all Film Stocks</a> <small><a href="https://cassettenest.com/docs/stocks">(What is this?)</a></small></p>
 
-<hr />
-
-<p><a href="{% url 'rolls-add' %}">Add rolls to storage.</a></p>
-<p><a href="{% url 'roll-add' %}">Add a roll to a non-storage status.</a></p>
+{% if user.profile.account_active %}
+    <hr />
+    <p><a href="{% url 'rolls-add' %}">Add rolls to storage.</a></p>
+    <p><a href="{% url 'roll-add' %}">Add a roll to a non-storage status.</a></p>
+{% endif %}
 
 {% if total_rolls %}
 <hr />

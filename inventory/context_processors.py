@@ -20,7 +20,7 @@ def subscription_banner(request):
                       f'<a href="{settings_url}">Choose a plan.</a>',
 
         'trial_over': f'Your free trial has ended. '
-                      f'Please <a href="{settings_url}">choose a plan</a> to continue to add new stuff!',
+                      f'Please <a href="{settings_url}">choose a plan</a>!',
 
         'past_due':   f'Looks like there’s a problem with your subscription. '
                       f'<a href="{settings_url}">Please check your settings.</a>',

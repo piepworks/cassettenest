@@ -39,14 +39,16 @@
 
 <div class="do-not-print">
 {% if project.status != 'archived' %}
-    {% if film_available_count %}
-        <hr />
-        {% include 'inventory/_project-add-rolls.html' %}
-    {% endif %}
+    {% if user.profile.account_active %}
+        {% if film_available_count %}
+            <hr />
+            {% include 'inventory/_project-add-rolls.html' %}
+        {% endif %}
 
-    {% if cameras %}
-        <hr />
-        {% include 'inventory/_project-add-camera.html' %}
+        {% if cameras %}
+            <hr />
+            {% include 'inventory/_project-add-camera.html' %}
+        {% endif %}
     {% endif %}
 {% else %}
     <hr />
