@@ -2124,3 +2124,23 @@ class StockAddTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('New film stock “Kodak Tri-X 400” (in 35mm, 120) added!', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class SubscriptionRequirementTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.active_user = User.objects.create_user('active')
+        trial_duration = datetime.timedelta(days=int(settings.SUBSCRIPTION_TRIAL_DURATION))
+        with freeze_time(datetime.date.today() - trial_duration):
+            cls.inactive_user = User.objects.create_user('inactive')
+
+    def test_account_inactive_page(self):
+        self.client.force_login(self.inactive_user)
+        response = self.client.get(reverse('account-inactive'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_account_inactive_page_redirect(self):
+        self.client.force_login(self.active_user)
+        response = self.client.get(reverse('account-inactive'))
+        self.assertEqual(response.status_code, 302)
