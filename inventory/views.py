@@ -835,6 +835,7 @@ def ready(request):
     return render(request, 'inventory/ready.html', context)
 
 
+@user_account_active
 @require_POST
 @login_required
 def rolls_update(request):
@@ -906,6 +907,7 @@ def projects(request):
     return render(request, 'inventory/projects.html', context)
 
 
+@user_account_active
 @login_required
 def project_add(request):
     if request.method == 'POST':
@@ -938,6 +940,7 @@ def project_add(request):
         return render(request, 'inventory/project_add_edit.html', context)
 
 
+@user_account_active
 @login_required
 def project_edit(request, pk):
     project = get_object_or_404(Project, id=pk, owner=request.user)
@@ -985,6 +988,7 @@ def project_edit(request, pk):
         return render(request, 'inventory/project_add_edit.html', context)
 
 
+@user_account_active
 @require_POST
 @login_required
 def project_delete(request, pk):
@@ -1104,6 +1108,7 @@ def project_detail(request, pk):
     return render(request, 'inventory/project_detail.html', context)
 
 
+@user_account_active
 @require_POST
 @login_required
 def project_rolls_add(request, pk):
@@ -1134,6 +1139,7 @@ def project_rolls_add(request, pk):
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
+@user_account_active
 @require_POST
 @login_required
 def project_rolls_remove(request, pk):
@@ -1157,6 +1163,7 @@ def project_rolls_remove(request, pk):
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
+@user_account_active
 @require_POST
 @login_required
 def project_camera_update(request, pk):
@@ -1185,6 +1192,7 @@ def project_camera_update(request, pk):
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
+@user_account_active
 @login_required
 def rolls_add(request):
     owner = request.user
@@ -1229,6 +1237,7 @@ def rolls_add(request):
         return render(request, 'inventory/rolls_add.html', context)
 
 
+@user_account_active
 @login_required
 def roll_add(request):
     '''For adding non-storage rolls.'''
@@ -1344,6 +1353,7 @@ def film_rolls(request, stock=None, format=None, slug=None):
     return render(request, 'inventory/film_rolls.html', context)
 
 
+@user_account_active
 @login_required
 def stock_add(request):
     if request.method == 'POST':
@@ -1520,6 +1530,7 @@ def roll_edit(request, pk):
         )
 
 
+@user_account_active
 @require_POST
 @login_required
 def roll_delete(request, pk):
@@ -1559,6 +1570,7 @@ def roll_journal_detail(request, roll_pk, entry_pk):
     )
 
 
+@user_account_active
 @login_required
 def roll_journal_add(request, roll_pk):
     roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
@@ -1612,6 +1624,7 @@ def roll_journal_add(request, roll_pk):
         )
 
 
+@user_account_active
 @login_required
 def roll_journal_edit(request, roll_pk, entry_pk):
     owner = request.user
@@ -1659,6 +1672,7 @@ def roll_journal_edit(request, roll_pk, entry_pk):
         )
 
 
+@user_account_active
 @require_POST
 @login_required
 def roll_journal_delete(request, roll_pk, entry_pk):
@@ -1676,6 +1690,7 @@ def roll_journal_delete(request, roll_pk, entry_pk):
     return redirect(reverse('roll-detail', args=(roll.id,)))
 
 
+@user_account_active
 @waffle_flag('frames')
 @login_required
 def roll_frame_add(request, roll_pk):
@@ -1811,6 +1826,7 @@ def roll_frame_detail(request, roll_pk, number):
     )
 
 
+@user_account_active
 @waffle_flag('frames')
 @login_required
 def roll_frame_edit(request, roll_pk, number):
@@ -1889,6 +1905,7 @@ def roll_frame_edit(request, roll_pk, number):
         )
 
 
+@user_account_active
 @waffle_flag('frames')
 @require_POST
 @login_required
@@ -1921,6 +1938,7 @@ def cameras(request):
     return render(request, 'inventory/cameras.html', context)
 
 
+@user_account_active
 @login_required
 def camera_or_back_load(request, pk, back_pk=None):
     owner = request.user
@@ -2123,6 +2141,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
             )
 
 
+@user_account_active
 @login_required
 def camera_add(request):
     if request.method == 'POST':
@@ -2157,6 +2176,7 @@ def camera_add(request):
         return render(request, 'inventory/camera_add.html', context)
 
 
+@user_account_active
 @login_required
 def camera_back_add(request, pk):
     owner = request.user
@@ -2202,6 +2222,7 @@ def camera_back_add(request, pk):
         return render(request, 'inventory/camera_back_add.html', context)
 
 
+@user_account_active
 @login_required
 def camera_edit(request, pk):
     camera = get_object_or_404(Camera, id=pk, owner=request.user)
@@ -2237,6 +2258,7 @@ def camera_edit(request, pk):
         return render(request, 'inventory/camera_edit.html', context)
 
 
+@user_account_active
 @login_required
 def camera_back_edit(request, pk, back_pk):
     owner = request.user
@@ -2279,6 +2301,7 @@ def camera_back_edit(request, pk, back_pk):
         return render(request, 'inventory/camera_back_edit.html', context)
 
 
+@user_account_active
 @require_POST
 @login_required
 def camera_delete(request, pk):
@@ -2295,6 +2318,7 @@ def camera_delete(request, pk):
     return redirect(reverse('index'))
 
 
+@user_account_active
 @require_POST
 @login_required
 def camera_back_delete(request, pk, back_pk):
@@ -2388,6 +2412,7 @@ class ExportRollsView(WriteCSVMixin, View):
 
 
 @method_decorator(login_required, name='dispatch')
+@method_decorator(user_account_active, name='dispatch')
 class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
         reader = self.read_csv(request)
@@ -2485,6 +2510,7 @@ class ExportCamerasView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
@@ -2556,6 +2582,7 @@ class ExportCameraBacksView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
@@ -2643,6 +2670,7 @@ class ExportProjectsView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
@@ -2725,6 +2753,7 @@ class ExportJournalsView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportJournalsView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
