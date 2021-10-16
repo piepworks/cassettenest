@@ -1,6 +1,7 @@
 import datetime
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
+from django.conf import settings
 from unittest import mock
 from model_bakery import baker
 from freezegun import freeze_time
@@ -28,6 +29,8 @@ class ProfileTests(TestCase):
             username=cls.username,
             password=cls.password,
         )
+        trial_duration = datetime.timedelta(days=int(settings.SUBSCRIPTION_TRIAL_DURATION))
+        cls.trial_duration_offset = datetime.date.today() - trial_duration
 
     def test_model_str(self):
         self.assertEqual(str(self.user.profile), f'Settings for {self.username}')
@@ -102,6 +105,58 @@ class ProfileTests(TestCase):
         user.profile.save()
 
         self.assertFalse(user.profile.has_active_subscription)
+
+    def test_profile_superuser_account_active(self):
+        super_user = User.objects.create_superuser(
+            'admin',
+            'test',
+            'secret',
+        )
+        self.client.force_login(user=super_user)
+        self.assertTrue(super_user.profile.account_active)
+
+    def test_profile_trial_account_active(self):
+        trial_user = User.objects.create_user('trial')
+        self.client.force_login(user=trial_user)
+        self.assertTrue(trial_user.profile.account_active)
+
+    def test_profile_active_account_active(self):
+        with freeze_time(self.trial_duration_offset):
+            active_user = User.objects.create_user('active')
+        active_user.profile.subscription_status = 'active'
+        active_user.profile.save()
+        self.client.force_login(user=active_user)
+        self.assertTrue(active_user.profile.account_active)
+
+    def test_profile_pending_cancelled_account_active(self):
+        with freeze_time(self.trial_duration_offset):
+            pending_cancelled_user = User.objects.create_user('pending_cancelled')
+        pending_cancelled_user.profile.subscription_status = 'deleted'
+        pending_cancelled_user.profile.paddle_cancellation_date = datetime.date.today() + datetime.timedelta(days=1)
+        pending_cancelled_user.profile.save()
+        self.client.force_login(user=pending_cancelled_user)
+        self.assertTrue(pending_cancelled_user.profile.account_active)
+
+    def test_profile_cancelled_account_inactive(self):
+        with freeze_time(self.trial_duration_offset):
+            pending_cancelled_user = User.objects.create_user('pending_cancelled')
+        pending_cancelled_user.profile.subscription_status = 'deleted'
+        pending_cancelled_user.profile.paddle_cancellation_date = datetime.date.today()
+        pending_cancelled_user.profile.save()
+        self.client.force_login(user=pending_cancelled_user)
+        self.assertFalse(pending_cancelled_user.profile.account_active)
+
+    def test_profile_active_fallback_case(self):
+        '''
+        This is just to test that final `else` in `utils.is_active`
+        '''
+        with freeze_time(self.trial_duration_offset):
+            paused_user = User.objects.create_user('paused')
+        paused_user.profile.subscription_status = 'paused'
+        paused_user.profile.paddle_cancellation_date = datetime.date.today()
+        paused_user.profile.save()
+        self.client.force_login(user=paused_user)
+        self.assertFalse(paused_user.profile.account_active)
 
 
 class FilmTests(TestCase):

@@ -2135,6 +2135,10 @@ class SubscriptionRequirementTests(TestCase):
         with freeze_time(datetime.date.today() - trial_duration):
             cls.inactive_user = User.objects.create_user('inactive')
 
+        film = baker.make(Film, stock=baker.make(Stock))
+        cls.roll1 = baker.make(Roll, owner=cls.active_user, film=film)
+        cls.roll2 = baker.make(Roll, owner=cls.inactive_user, film=film)
+
     def test_account_inactive_page(self):
         self.client.force_login(self.inactive_user)
         response = self.client.get(reverse('account-inactive'))
@@ -2144,3 +2148,15 @@ class SubscriptionRequirementTests(TestCase):
         self.client.force_login(self.active_user)
         response = self.client.get(reverse('account-inactive'))
         self.assertEqual(response.status_code, 302)
+
+    def test_hidden_edit_controls(self):
+        self.client.force_login(self.inactive_user)
+        response = self.client.get(reverse('roll-detail', args=(self.roll2.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'class="action"')
+
+    def test_visible_edit_controls(self):
+        self.client.force_login(self.active_user)
+        response = self.client.get(reverse('roll-detail', args=(self.roll1.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'class="action"')
