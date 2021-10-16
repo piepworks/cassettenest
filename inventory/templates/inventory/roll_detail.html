@@ -24,7 +24,9 @@
             <h1>{{ roll }}</h1>
             {% endif %}
 
-            {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
+            {% if user.profile.account_active %}
+                {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
+            {% endif %}
         </div>
 
         <h2>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{% if not roll.film.stock %}{{ roll.film.name }}{% else %}{{ roll.film }}{% endif %}</a> </h2>

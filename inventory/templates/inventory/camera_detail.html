@@ -9,7 +9,9 @@
         <div class="flex">
             {% include 'inventory/_heading-back.html' with url='cameras' name='cameras' %}
             <h1>{{ camera.name }}</h1>
-            {% include 'inventory/_heading-buttons.html' with item=camera url='camera' name='camera' prevent_delete=True %}
+            {% if user.profile.account_active %}
+                {% include 'inventory/_heading-buttons.html' with item=camera url='camera' name='camera' prevent_delete=True %}
+            {% endif %}
         </div>
     </div>
 

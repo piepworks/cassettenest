@@ -8,7 +8,9 @@
     <div class="c-heading">
         <div class="flex">
             <h1>Journal entry for <a href="{% url 'roll-detail' roll.id %}">{{ roll.code }} / {{ roll.started_on|date:'Y' }}</a></h1>
-            {% include 'inventory/_heading-buttons.html' with item=entry parent_item=roll url='roll-journal' name='journal entry' %}
+            {% if user.profile.account_active %}
+                {% include 'inventory/_heading-buttons.html' with item=entry parent_item=roll url='roll-journal' name='journal entry' %}
+            {% endif %}
         </div>
     </div>
 

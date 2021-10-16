@@ -9,7 +9,9 @@
     <div class="flex">
         {% include 'inventory/_heading-back.html' with url='projects' name='projects' %}
         <h1>{{ project.name }}</h1>
-        {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
+        {% if user.profile.account_active %}
+            {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
+        {% endif %}
     </div>
 </header>
 
