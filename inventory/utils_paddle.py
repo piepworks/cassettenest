@@ -34,8 +34,9 @@ supported_webhooks = (
 )
 
 valid_plans = {
-    settings.PADDLE_STANDARD_ANNUAL: 'Standard (annual)',
     settings.PADDLE_STANDARD_MONTHLY: 'Standard (monthly)',
+    settings.PADDLE_STANDARD_ANNUAL: 'Standard (annual)',
+    settings.PADDLE_AWESOME_ANNUAL: 'Awesome (annual)',
 }
 
 

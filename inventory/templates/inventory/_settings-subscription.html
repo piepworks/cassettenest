@@ -8,8 +8,8 @@
             {% if not user.profile.has_active_subscription %}
                 <h3>You’re not currently subscribed. Please choose a plan.</h3>
 
-                {% if trial.enabled %}
-                    <p>Try it free for <strong>{{ trial.duration }} days!</strong></p>
+                {% if user.profile.trial_period %}
+                    <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
                 {% endif %}
 
                 <p class="policies">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
@@ -17,10 +17,6 @@
                 {% include 'inventory/_settings-subscription-plans.html' %}
             {% else %}
                 <p>You’re currently subscribed to the <b>{{ paddle.plan_name }}</b> plan.</p>
-
-                {% if user.profile.subscription_status == 'trialing' %}
-                    <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
-                {% endif %}
 
                 {% if user.profile.subscription_status == 'deleted' and user.profile.paddle_cancellation_date %}
                     <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ user.profile.paddle_cancellation_date }}</b>.</p>
@@ -36,7 +32,7 @@
             {% endif %}
         </div>
         <div class="no-js">
-            <p>Sorry, subscription management requires JavaScript to work. :(</p>
+            <p>😢 Sorry, subscription management requires JavaScript to work.</p>
         </div>
         <p class="subscription-note">Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
     {% endif %}

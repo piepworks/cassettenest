@@ -213,8 +213,10 @@ def settings(request):
             'vendor_id': dj_settings.PADDLE_VENDOR_ID,
             'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
             'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
+            'awesome_annual_id': int(dj_settings.PADDLE_AWESOME_ANNUAL),
             'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
             'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
+            'awesome_annual_name': paddle_plan_name(dj_settings.PADDLE_AWESOME_ANNUAL),
             'plan_name': plan_name,
         }
 

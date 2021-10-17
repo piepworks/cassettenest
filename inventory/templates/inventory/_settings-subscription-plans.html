@@ -1,4 +1,7 @@
 <div class="subscription-plans">
-    <button class="paddle-subscribe" data-product="{{ paddle.standard_monthly_id }}"><span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span> per month</button>
-    <button class="paddle-subscribe" data-product="{{ paddle.standard_annual_id }}"><span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span> per year</button>
+    <ul>
+        <li><button class="paddle-subscribe" data-product="{{ paddle.standard_monthly_id }}"><span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span> per month</button> <span>{{ paddle.standard_monthly_name }}</span></li>
+        <li><button class="paddle-subscribe" data-product="{{ paddle.standard_annual_id }}"><span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span> per year</button> <span>{{ paddle.standard_annual_name }}</span></li>
+        <li><button class="paddle-subscribe" data-product="{{ paddle.awesome_annual_id }}"><span class="paddle-gross" data-product="{{ paddle.awesome_annual_id }}">$100</span> per year</button> <span>{{ paddle.awesome_annual_name }}</span></li>
+    </ul>
 </div>

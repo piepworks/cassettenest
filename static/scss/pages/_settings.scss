@@ -23,8 +23,25 @@ $lighter-text: rgba(0, 0, 0, 0.6);
 .subscription-plans {
     margin: 2rem -0.5rem;
 
-    button,
     .help { margin: 0.5rem; }
+
+    ul {
+        list-style: none;
+        padding: 0;
+
+        li {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+
+            button,
+            > span { margin-bottom: 0.5rem; }
+
+            button { margin-right: 1rem; }
+        }
+
+        li + li { margin-top: 1rem; }
+    }
 }
 
 .subscription-note {
