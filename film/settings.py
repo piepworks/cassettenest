@@ -221,6 +221,7 @@ CORS_URLS_REGEX = r"^/marketing-site$"
 # Django Database Backup
 DBBACKUP_STORAGE = os.environ.get('DBBACKUP_STORAGE')
 DBBACKUP_STORAGE_OPTIONS = {'location': os.environ.get('DBBACKUP_STORAGE_OPTIONS')}
+DBBACKUP_FILENAME_TEMPLATE = 'cassettenest_{datetime}.{extension}'
 
 # Django Debug Toolbar w/ Docker
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
