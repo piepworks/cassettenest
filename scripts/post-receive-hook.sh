@@ -7,10 +7,7 @@
 GIT_WORK_TREE=/home/trey/apps/cassettenest git checkout -f
 
 # Set variables
-now=$(date +"%F_%H-%M-%s")
-backup_path="${HOME}/backups"
-backup_file="cassettenest_${now}.dump"
-file_w_path="${backup_path}/${backup_file}"
+backup_path="${HOME}/apps/cassettenest/backups"
 
 # BACKUP THE DATABASE AND UPDATE THINGS
 # -------------------------------------
@@ -21,12 +18,20 @@ docker-compose exec -T web pipenv install --system
 # Run a database migration if it's needed.
 docker-compose exec -T web python manage.py migrate --noinput
 # Actually backup the database.
-docker-compose exec -T db pg_dump --format=custom -U cassette_nest cassette_nest > $file_w_path
+docker-compose exec -T web python manage.py dbbackup -z
 # Process static files (including Sass).
 mkdir -p staticfiles
 docker-compose exec -T web python manage.py collectstatic --noinput
 docker-compose exec -T web python manage.py compress --force
 # -------------------------------------
+
+# Find the backup file we just created.
+unset -v latest
+for file in "$backup_path"/*; do
+  [[ $file -nt $latest ]] && latest=$file
+done
+backup_file=$latest
+file_w_path="${backup_path}/${backup_file}"
 
 # Send backup file to DigitalOcean Space.
 s3cmd put $file_w_path s3://cassettenest/backups-code-push/${backup_file}.enc -e
