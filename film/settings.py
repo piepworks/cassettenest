@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'waffle',
     'corsheaders',
+    'dbbackup',
 ]
 
 MIDDLEWARE = [
@@ -216,6 +217,10 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_METHODS = ['GET']
 CORS_ALLOW_CREDENTIALS = True
 CORS_URLS_REGEX = r"^/marketing-site$"
+
+# Django Database Backup
+DBBACKUP_STORAGE = os.environ.get('DBBACKUP_STORAGE')
+DBBACKUP_STORAGE_OPTIONS = {'location': os.environ.get('DBBACKUP_STORAGE_OPTIONS')}
 
 # Django Debug Toolbar w/ Docker
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
