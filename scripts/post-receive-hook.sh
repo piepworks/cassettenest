@@ -31,12 +31,12 @@ for file in "$backup_path"/*; do
   [[ $file -nt $latest ]] && latest=$file
 done
 backup_file=$latest
-file_w_path="${backup_path}/${backup_file}"
+file_without_path="$(basename ${backup_file})"
 
 # Send backup file to DigitalOcean Space.
-s3cmd put $file_w_path s3://cassettenest/backups-code-push/${backup_file}.enc -e
+s3cmd put $backup_file s3://cassettenest/backups-code-push/${file_without_path}.enc -e
 # Delete the backup file from the server when we’re done.
-rm $file_w_path
+rm $backup_file
 
 # Make sure daily backup script is executable.
 chmod +x scripts/daily-backup.sh

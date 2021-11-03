@@ -4,7 +4,7 @@
 backup_path="${HOME}/apps/cassettenest/backups"
 
 # Delete any older backups.
-rm ${backup_path}/*.dump 2> /dev/null
+rm ${backup_path}/*.psql.gz 2> /dev/null
 
 # Backup the database.
 cd $HOME/apps/cassettenest
@@ -16,7 +16,7 @@ for file in "$backup_path"/*; do
   [[ $file -nt $latest ]] && latest=$file
 done
 backup_file=$latest
-file_w_path="${backup_path}/${backup_file}"
+file_without_path="$(basename ${backup_file})"
 
 # Send backup file to DigitalOcean Space.
-s3cmd put $file_w_path s3://cassettenest/backups-daily/${backup_file}.enc -e
+s3cmd put $backup_file s3://cassettenest/backups-daily/${file_without_path}.enc -e
