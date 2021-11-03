@@ -4,11 +4,9 @@
 
 # Set variables
 temp_folder="${HOME}/Code/cassettenest/backups"
-now=$(date +"%F")
-latest_backup="cassettenest_${now}"
 
 # Reload local database.
-docker-compose exec -T db pg_restore -U cassette_nest -d cassette_nest --clean < ${temp_folder}/local.dump
+docker-compose exec -T web python manage.py dbrestore -q --noinput -z -i local.psql.gz
 
 # Delete the production backup we verified from the local machine.
-rm ${temp_folder}/${latest_backup}.dump
+rm ${temp_folder}/cassettenest_*.psql.gz
