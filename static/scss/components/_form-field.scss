@@ -59,3 +59,8 @@
         label { margin-right: 1rem; }
     }
 }
+
+.progressive-field-wrapper {
+    @include divider-solid;
+    border-bottom-width: $divider-width;
+}

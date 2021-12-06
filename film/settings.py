@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'waffle',
     'corsheaders',
     'dbbackup',
+    'widget_tweaks',
 ]
 
 MIDDLEWARE = [
