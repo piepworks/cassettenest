@@ -24,5 +24,16 @@ html.has-js {
     .js-link,
     .js-required { display: block; }
 
-    .c-field--progressive__top { border-top: 0; }
+    .c-field--progressive,
+    .c-field--progressive:last-child { border: 0; }
+
+    .progressive-field-wrapper {
+        @include divider-solid;
+        border-top-width: $divider-width;
+        border-bottom-width: $divider-width;
+
+        &__top { border-top: 0; }
+    }
+
+    .progressive-field-wrapper + .progressive-field-wrapper { border-top: 0; }
 }

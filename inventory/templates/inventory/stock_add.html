@@ -15,7 +15,7 @@
 
     <form method="post">
         {% csrf_token %}
-        <div x-data="{ primary: true }" class="progressive-field-wrapper">
+        <div x-data="{ primary: true }" class="progressive-field-wrapper progressive-field-wrapper__top">
             {% include 'inventory/_form-field.html' with field=form.manufacturer progressive=True primary=True progressive_text='…or add a new manufacturer.' %}
             {% include 'inventory/_form-field.html' with field=form.new_manufacturer progressive=True progressive_text='…or choose an existing manufacturer.' label_override='New Manufacturer' top_field=True %}
         </div>

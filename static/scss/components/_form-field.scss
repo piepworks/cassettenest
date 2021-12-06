@@ -60,7 +60,16 @@
     }
 }
 
+.progressive-field-wrapper .c-field:last-child {
+    @include divider-solid;
+    border-top-width: $divider-width;
+}
+
 .progressive-field-wrapper {
     @include divider-solid;
+    border-top-width: $divider-width;
     border-bottom-width: $divider-width;
 }
+
+.progressive-field-wrapper__top,
+.progressive-field-wrapper + .progressive-field-wrapper { border-top: 0; }
