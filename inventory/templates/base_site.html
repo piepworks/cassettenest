@@ -13,6 +13,7 @@
     {% include '_meta-tags.html' %}
     {% if js_needed %}
     <script defer src="{% static 'js/vendor/alpine.min.js' %}"></script>
+    <script src="{% static 'js/vendor/htmx.min.js' %}"></script>
     <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
     {% endif %}
     {% if not user.is_authenticated %}
