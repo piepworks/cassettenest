@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'dbbackup',
     'widget_tweaks',
+    'django_htmx',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +83,7 @@ MIDDLEWARE = [
     'inventory.middleware.TimezoneMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
 ]
 
 ROOT_URLCONF = 'film.urls'

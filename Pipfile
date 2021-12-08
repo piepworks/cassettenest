@@ -28,6 +28,7 @@ requests = "==2.26.0"
 django-cors-headers = "==3.10.1"
 django-dbbackup = "==3.3.0"
 django-widget-tweaks = "==1.4.9"
+django-htmx = "==1.6.0"
 
 [requires]
 python_version = "3.8"
