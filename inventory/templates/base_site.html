@@ -1,4 +1,4 @@
-{% load static %}{% load compress %}{% load tz %}{% get_current_timezone as TIME_ZONE %}{% load capture_tags %}{% load waffle_tags %}<!DOCTYPE html>
+{% load static compress tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
 <html lang="en">
 <head>
     {% url 'index' as index_url %}
@@ -78,7 +78,6 @@
 
     <!-- HTMX -->
     <script src="{% static 'js/vendor/htmx.min.js' %}"></script>
-    {% load django_htmx %}
     {% django_htmx_script %}
     <!-- **** -->
 
