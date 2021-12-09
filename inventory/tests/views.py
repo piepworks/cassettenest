@@ -1996,22 +1996,6 @@ class StockViewTests(TestCase):
         self.assertNotContains(response, 'Your inventory of this stock')
         self.assertIsNotNone(response.context['stock'])
 
-    def test_stocks_ajax_with_type(self):
-        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'all', 'type': 'c41'}))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Reset filters')
-
-    def test_stocks_ajax_with_manufacturer(self):
-        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'kodak', 'type': 'c41'}))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Reset filters')
-
-    def test_stocks_ajax_logged_out(self):
-        self.client.logout()
-        response = self.client.get(reverse('stocks-ajax', kwargs={'manufacturer': 'kodak', 'type': 'c41'}))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Reset filters')
-
     def test_personal_stock_logged_in(self):
         response = self.client.get(
             reverse('stock', args=(self.personal_stock.manufacturer.slug, self.personal_stock.slug))

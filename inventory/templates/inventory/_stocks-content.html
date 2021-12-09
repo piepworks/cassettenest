@@ -1,0 +1,90 @@
+
+<h1>
+    <span id="page-name">
+        {% if manufacturer %}<a hx-push-url="true" hx-get="{% url 'stocks' %}?manufacturer=all&type=all" hx-target=".raw" href="{% url 'stocks' %}">{% endif %}
+        Film Stocks
+        {% if manufacturer %}</a>{% endif %}
+    </span>
+    <span id="manufacturer-name">
+        {% if manufacturer %} &gt; {{ manufacturer }}{% endif %}
+    </span>
+</h1>
+
+<form
+    id="stock_filter"
+    method="get"
+    action="{% url 'stocks' %}"
+    hx-get="{% url 'stocks' %}"
+    hx-trigger="change"
+    hx-push-url="true"
+    hx-target=".raw">
+    <div class="c-field--filter">
+        <div class="inner">
+            <label for="id_manufacturer">
+                Manufacturer:
+                <select name="manufacturer" id="id_manufacturer">
+                    <option value="all">All manufacturers</option>
+                    {% for m in manufacturers %}
+                    <option value={{ m.slug }}{% if manufacturer.slug == m.slug %} selected{% endif %}>
+                        {{ m }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label for="id_type">
+                Type:
+                <select name="type" id="id_type"{% if type_choices.items|length == 1 %} disabled{% endif %}>
+                    {% if type_choices.items|length > 1 %}
+                        <option value="all">All types</option>
+                    {% endif %}
+                    {% for key, value in type_choices.items %}
+                    <option value="{{ key }}"{% if filters.type == key %} selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+        <button class="no-js">Filter</button>
+    </div>
+</form>
+
+<div id="stocks-list-wrapper">
+    {% comment %} <div class="htmx-indicator">
+        <div class="loader"></div>
+    </div> {% endcomment %}
+
+    {% if filters.type != 'all' %}
+        <h2>{{ type_name }}</h2>
+    {% endif %}
+    {% if filters.manufacturer != 'all' or filters.type != 'all' %}
+        <p><a hx-push-url="true" hx-get="{% url 'stocks' %}?manufacturer=all&type=all" hx-target=".raw" href="{% url 'stocks' %}">Reset filters</a></p>
+    {% endif %}
+
+    <section class="cards">
+        {% for stock in stocks %}
+            {% include 'inventory/_card.html' with name=stock location=stock.get_absolute_url type='film' sub_type='stock' film_type=stock.type %}
+        {% endfor %}
+    </section>
+</div>
+
+<script>
+    // Reset the document <title> with the current info.
+
+    manufacturerName = '{{ manufacturer }}';
+    typeName = '{{ type_name }}';
+
+    document.title = document.title.replace(/^[^/]+/, 'Film Stocks ');
+
+    if (manufacturerName !== 'None') {
+        const titlePrefix = `Film Stocks: ${manufacturerName} `;
+
+        document.title = document.title.replace('Film Stocks ', titlePrefix);
+
+        if (typeName !== 'all') {
+            document.title = document.title.replace(titlePrefix, `${titlePrefix} (${typeName}) `);
+        }
+    } else {
+        if (typeName !== 'all') {
+            document.title = document.title.replace('Film Stocks', `Film Stocks: ${typeName} `);
+        }
+    }
+</script>

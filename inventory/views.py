@@ -377,56 +377,10 @@ def stocks(request, manufacturer='all'):
         'js_needed': True,
     }
 
-    return render(request, 'inventory/stocks.html', context)
-
-
-def stocks_ajax(request, manufacturer, type):
-    filters = {
-        'manufacturer': manufacturer,
-        'type': type,
-    }
-    m = None
-    type_name = 'all'
-
-    if request.user.is_authenticated:
-        stocks = Stock.objects.exclude(
-            Q(personal=True) & ~Q(added_by=request.user)
-        ).order_by(
-            'type',
-            'manufacturer__name',
-            'name',
-        )
+    if request.htmx:
+        return render(request, 'inventory/_stocks-content.html', context)
     else:
-        stocks = Stock.objects.exclude(
-            Q(personal=True)
-        ).order_by(
-            'type',
-            'manufacturer__name',
-            'name',
-        )
-
-    type_names = dict(Film._meta.get_field('type').flatchoices)
-    type_choices = {}
-
-    if manufacturer != 'all':
-        m = get_object_or_404(Manufacturer, slug=manufacturer)
-        stocks = stocks.filter(manufacturer=m)
-        type_choices = available_types(request, Stock, type_names, type_choices, m)
-    else:
-        type_choices = type_names
-    if type != 'all' and type != 'null':
-        stocks = stocks.filter(type=type)
-        type_name = type_names[type]
-
-    context = {
-        'stocks': stocks,
-        'filters': filters,
-        'manufacturer': m,
-        'type_name': type_name,
-        'type_choices': type_choices,
-    }
-
-    return render(request, 'inventory/_stocks-list.html', context)
+        return render(request, 'inventory/stocks.html', context)
 
 
 def stock(request, manufacturer, slug):
