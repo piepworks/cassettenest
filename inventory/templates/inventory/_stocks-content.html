@@ -1,7 +1,6 @@
-
 <h1>
     <span id="page-name">
-        {% if manufacturer %}<a hx-push-url="true" hx-get="{% url 'stocks' %}?manufacturer=all&type=all" hx-target=".raw" href="{% url 'stocks' %}">{% endif %}
+        {% if manufacturer %}<a hx-push-url="true" hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">{% endif %}
         Film Stocks
         {% if manufacturer %}</a>{% endif %}
     </span>
@@ -17,6 +16,7 @@
     hx-get="{% url 'stocks' %}"
     hx-trigger="change"
     hx-push-url="true"
+    hx-indicator="#spinner"
     hx-target=".raw">
     <div class="c-field--filter">
         <div class="inner">
@@ -48,15 +48,11 @@
 </form>
 
 <div id="stocks-list-wrapper">
-    {% comment %} <div class="htmx-indicator">
-        <div class="loader"></div>
-    </div> {% endcomment %}
-
     {% if filters.type != 'all' %}
         <h2>{{ type_name }}</h2>
     {% endif %}
     {% if filters.manufacturer != 'all' or filters.type != 'all' %}
-        <p><a hx-push-url="true" hx-get="{% url 'stocks' %}?manufacturer=all&type=all" hx-target=".raw" href="{% url 'stocks' %}">Reset filters</a></p>
+        <p><a hx-push-url="true" hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">Reset filters</a></p>
     {% endif %}
 
     <section class="cards">
@@ -66,6 +62,7 @@
     </section>
 </div>
 
+{% if request.htmx %}
 <script>
     // Reset the document <title> with the current info.
 
@@ -88,3 +85,4 @@
         }
     }
 </script>
+{% endif %}

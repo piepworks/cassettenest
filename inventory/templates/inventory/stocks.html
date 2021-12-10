@@ -15,6 +15,9 @@
 {% endblock %}
 
 {% block content %}
+<div id="spinner" class="htmx-indicator">
+    <div class="loader"></div>
+</div>
 <div class="raw">
     {% include 'inventory/_stocks-content.html' %}
 </div>
@@ -28,5 +31,16 @@
     if (typeof(typeName) === 'undefined') {
         let typeName;
     }
+
+    // Fade the list when it's loading.
+    document.getElementById('stocks-list-wrapper').style.opacity = 1.0;
+
+    document.body.addEventListener('htmx:beforeRequest', () => {
+        document.getElementById('stocks-list-wrapper').style.opacity = 0.25;
+    });
+
+    document.body.addEventListener('htmx:afterRequest', () => {
+        document.getElementById('stocks-list-wrapper').style.opacity = 1.0;
+    });
 </script>
 {% endblock %}
