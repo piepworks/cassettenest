@@ -308,7 +308,7 @@ def subscription_update(request):
 
 def stocks(request, manufacturer='all'):
     filters = {
-        'manufacturer': 'all',
+        'manufacturer': manufacturer,
         'type': 'all',
     }
     m = None
@@ -317,14 +317,14 @@ def stocks(request, manufacturer='all'):
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
+        type_passthrough = f'?type={filters["type"]}'
 
     if request.GET.get('manufacturer') and request.GET.get('manufacturer') != 'all':
         filters['manufacturer'] = request.GET.get('manufacturer')
 
-        if filters['type'] != 'all':
-            type_passthrough = '?type=' + filters['type']
-
-        return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
+        # If this request wasn't sent by JS, redirect to the canonical URL.
+        if not request.htmx:
+            return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
 
     if request.user.is_authenticated:
         # Exclude stocks that are flagged as `personal` and not created by the current user.
@@ -351,9 +351,8 @@ def stocks(request, manufacturer='all'):
     type_names = dict(Stock._meta.get_field('type').flatchoices)
     type_choices = {}
 
-    if manufacturer != 'all':
-        filters['manufacturer'] = manufacturer
-        m = get_object_or_404(Manufacturer, slug=manufacturer)
+    if filters['manufacturer'] != 'all':
+        m = get_object_or_404(Manufacturer, slug=filters['manufacturer'])
         stocks = stocks.filter(manufacturer=m)
         type_choices = available_types(request, Stock, type_names, type_choices, m)
     else:
@@ -378,7 +377,16 @@ def stocks(request, manufacturer='all'):
     }
 
     if request.htmx:
-        return render(request, 'inventory/_stocks-content.html', context)
+        # Tell HTMX to use our proper URLs rather than querystrings…
+        if filters['manufacturer'] != 'all':
+            clean_url = reverse('stocks-manufacturer', args=(filters['manufacturer'],))
+        else:
+            clean_url = reverse('stocks')
+
+        response = render(request, 'inventory/_stocks-content.html', context)
+        response['HX-Push'] = clean_url + type_passthrough
+
+        return response
     else:
         return render(request, 'inventory/stocks.html', context)
 

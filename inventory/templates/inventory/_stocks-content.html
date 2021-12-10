@@ -15,7 +15,6 @@
     action="{% url 'stocks' %}"
     hx-get="{% url 'stocks' %}"
     hx-trigger="change"
-    hx-push-url="true"
     hx-indicator="#spinner"
     hx-target=".raw">
     <div class="c-field--filter">
@@ -65,7 +64,6 @@
 {% if request.htmx %}
 <script>
     // Reset the document <title> with the current info.
-
     manufacturerName = '{{ manufacturer }}';
     typeName = '{{ type_name }}';
 
