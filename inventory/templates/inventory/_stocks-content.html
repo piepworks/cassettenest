@@ -1,6 +1,6 @@
 <h1>
     <span id="page-name">
-        {% if manufacturer %}<a hx-push-url="true" hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">{% endif %}
+        {% if manufacturer %}<a hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">{% endif %}
         Film Stocks
         {% if manufacturer %}</a>{% endif %}
     </span>
@@ -51,7 +51,7 @@
         <h2>{{ type_name }}</h2>
     {% endif %}
     {% if filters.manufacturer != 'all' or filters.type != 'all' %}
-        <p><a hx-push-url="true" hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">Reset filters</a></p>
+        <p><a hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">Reset filters</a></p>
     {% endif %}
 
     <section class="cards">
