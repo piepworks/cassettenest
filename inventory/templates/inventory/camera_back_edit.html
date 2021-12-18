@@ -21,7 +21,7 @@
     </form>
 
     {% if not camera_back.roll_set.all %}
-    <form onsubmit="return confirmDelete('camera back')"  action="{% url 'camera-back-delete' camera.id camera_back.id %}" method="post">
+    <form x-data @submit.prevent="if (confirmDelete('camera back')) $el.submit()" action="{% url 'camera-back-delete' camera.id camera_back.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="camera_back" value="{{ camera_back.id }}" />
         <div class="action">Since you’ve never used this, you can <input type="submit" class="destructive" value="delete this camera back" /></div>
@@ -32,6 +32,7 @@
 
 {% block page_js %}
 <script>
+    {% include 'js/confirmation.js' %}
     {% include 'js/markdown-autocomplete.js' %}
 </script>
 {% endblock %}
