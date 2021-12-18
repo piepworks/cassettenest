@@ -3,9 +3,9 @@ import io
 import csv
 import pytz
 from unittest import mock
-from django.test import TestCase, override_settings
+from django.test import TestCase, override_settings, RequestFactory
 from django.urls import reverse
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
@@ -13,11 +13,28 @@ from django.conf import settings
 from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
+from django_htmx.middleware import HtmxDetails
+from inventory.views import stocks
 from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame, Stock, Manufacturer
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
 
 staticfiles_storage = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+
+# A little utility to help test HTMX requests.
+# https://github.com/bigskysoftware/htmx/discussions/680#discussioncomment-1682364
+def htmx_request(user=None, get_url=None, post_url=None, post_data={}, trigger=None, **kwargs):
+    headers = dict(HTTP_HX_Request="true", HTTP_HX_Trigger_Name=trigger)
+    if get_url is not None:
+        request = RequestFactory().get(
+            get_url, {x: y for x, y in kwargs.items() if y is not None}, **headers)
+    if post_url is not None:
+        kwargs.update(headers)
+        request = RequestFactory().post(post_url, data=post_data, **kwargs)
+    request.htmx = HtmxDetails(request)
+    request.user = user if user else AnonymousUser()
+    return request
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -1940,6 +1957,7 @@ class StockViewTests(TestCase):
             added_by=cls.user,
             manufacturer=baker.make(Manufacturer, name='FPP', slug='fpp')
         )
+        cls.stocks_url = reverse('stocks')
 
     def setUp(self):
         self.client.login(
@@ -1995,6 +2013,23 @@ class StockViewTests(TestCase):
         self.assertContains(response, f'{self.public_stock.name}')
         self.assertNotContains(response, 'Your inventory of this stock')
         self.assertIsNotNone(response.context['stock'])
+
+    # HTMX / Ajax
+    def test_stocks_htmx_with_type(self):
+        response = stocks(htmx_request(get_url=f'{self.stocks_url}?manufacturer=all&type=c41'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
+
+    def test_stocks_htmx_with_manufacturer(self):
+        response = stocks(htmx_request(get_url=f'{self.stocks_url}?manufacturer=kodak&type=c41'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
+
+    def test_stocks_htmx_logged_out(self):
+        self.client.logout()
+        response = stocks(htmx_request(get_url=f'{self.stocks_url}?manufacturer=kodak&type=c41'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Reset filters')
 
     def test_personal_stock_logged_in(self):
         response = self.client.get(
