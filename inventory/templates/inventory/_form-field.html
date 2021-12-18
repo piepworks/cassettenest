@@ -59,7 +59,13 @@
         {% endif %}
 
         {% capture as xref silent %}{{ primary|yesno:'primary,secondary' }}{% endcapture %}
-        {% render_field field x-ref=xref %}
+
+        {% if not field.field.widget.input_type %}
+            {# Set autocomplete on Markdown textareas. #}
+            {% render_field field x-ref=xref x-data='' x-on::keyup.enter="checkAutocomplete($el)" %}
+        {% else %}
+            {% render_field field x-ref=xref %}
+        {% endif %}
 
         {% if enhanced_label.after %}
             <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
