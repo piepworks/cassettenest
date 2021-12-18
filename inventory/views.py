@@ -428,12 +428,12 @@ def stock(request, manufacturer, slug):
             total_history = total_history + user_history_count
 
         films_list.append({
-          'name': film.get_format_display(),
-          'url': film.get_absolute_url(),
-          'type': film.stock.type,
-          'count': film.count,
-          'user_inventory_count': user_inventory_count,
-          'user_history_count': user_history_count,
+            'name': film.get_format_display(),
+            'url': film.get_absolute_url(),
+            'type': film.stock.type,
+            'count': film.count,
+            'user_inventory_count': user_inventory_count,
+            'user_history_count': user_history_count,
         })
         total_rolls = total_rolls + film.count
 
