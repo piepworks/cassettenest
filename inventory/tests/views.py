@@ -14,7 +14,7 @@ from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
 from django_htmx.middleware import HtmxDetails
-from inventory.views import stocks
+from inventory.views import stocks, inventory
 from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame, Stock, Manufacturer
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
@@ -255,6 +255,7 @@ class InventoryTests(TestCase):
             username=cls.username,
             password=cls.password,
         )
+        cls.inventory_url = reverse('inventory')
         baker.make(Roll, owner=cls.user, film=baker.make(Film, slug='slug', stock=baker.make(Stock)))
 
     def setUp(self):
@@ -277,13 +278,15 @@ class InventoryTests(TestCase):
         self.assertContains(response, '(35mm, C41 Color)')
         self.assertContains(response, '(filtered)')
 
-    def test_ajax_filter(self):
-        response = self.client.get(reverse('inventory-ajax', kwargs={'format': '135', 'type': 'c41'}))
+    # HTMX / Ajax
+    def test_filtered_with_htmx(self):
+        response = inventory(htmx_request(
+            get_url=f'{self.inventory_url}?format=135&type=c41',
+            user=self.user,
+        ))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '(filtered)')
-        self.assertEqual(response.context['filters']['type_name'], 'C41 Color')
-        self.assertEqual(response.context['filters']['format_name'], '35mm')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
