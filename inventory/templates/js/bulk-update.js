@@ -7,6 +7,11 @@ document.addEventListener('alpine:init', () => {
 
 const pluralize = itemCount => (itemCount !== 1) ? 's' : '';
 
+const updateCount = itemCount => {
+    Alpine.store('checkedCount', itemCount);
+    Alpine.store('itemPlural', pluralize(itemCount));
+};
+
 const bulkUpdate = function (selector) {
     return {
         selectAll: false,
@@ -16,8 +21,7 @@ const bulkUpdate = function (selector) {
             Alpine.store('checkedCount', this.selectAll ? this.allItems.length : 0);
         },
         checkboxChange() {
-            Alpine.store('checkedCount', document.querySelectorAll(`${selector}:checked`).length);
-            Alpine.store('itemPlural', pluralize(Alpine.store('checkedCount')));
+            updateCount(document.querySelectorAll(`${selector}:checked`).length);
             this.selectAll = (Alpine.store('checkedCount') === this.allItems.length) ? true : false;
         },
     };
