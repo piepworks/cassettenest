@@ -1,10 +1,13 @@
-<form method="get">
+<form method="get" x-data="{ open: false }">
     <div class="c-field">
         <label for="id_project_filter">Project filter: {{ current_project.name|default:'inactive' }}</label>
-        <button id="id_project_filter" class="toggle-button">Show</button>
+        <button id="id_project_filter" class="toggle-button" @click.prevent="open = !open">
+            <span x-show="!open">Show</span>
+            <span x-show="open">Hide</span>
+        </button>
     </div>
 
-    <div class="toggle">
+    <div class="toggle" x-show="open">
         <div class="c-field">
             <label for="id_project">Filter by Project</label>
             <select name="project" id="id_project">
@@ -17,6 +20,8 @@
             </select>
         </div>
 
-        <div class="action"><input type="submit" value="Filter" /></div>
+        <div class="action">
+            <button>Filter</button>
+        </div>
     </div>
 </form>
