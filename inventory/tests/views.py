@@ -2019,17 +2019,17 @@ class StockViewTests(TestCase):
 
     # HTMX / Ajax
     def test_stocks_htmx_with_type(self):
-        response = stocks(htmx_request(get_url=f'{self.stocks_url}?manufacturer=all&type=c41'))
+        response = stocks(htmx_request(get_url=f'{self.stocks_url}?manufacturer=all&type=c41', user=self.user))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Reset filters')
 
     def test_stocks_htmx_with_manufacturer(self):
-        response = stocks(htmx_request(get_url=f'{self.stocks_url}?manufacturer=kodak&type=c41'))
+        response = stocks(htmx_request(get_url=f'{self.stocks_url}?manufacturer=kodak&type=c41', user=self.user))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Reset filters')
 
     def test_stocks_htmx_logged_out(self):
-        self.client.logout()
+        # Not passing `user` to `htmx_request()`.
         response = stocks(htmx_request(get_url=f'{self.stocks_url}?manufacturer=kodak&type=c41'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Reset filters')
