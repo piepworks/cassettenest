@@ -1,11 +1,11 @@
 {# Make sure this partial is wrapped in a <form> if you need to perform an action with this data. #}
 <div class="overflow-x">
-    <table>
+    <table x-data="bulkUpdate('.roll-checkbox')">
         <thead>
             <tr>
                 {% if page != 'project' and status in bulk_status_keys %}
                 <th class="do-not-print">
-                    <input class="select-all" type="checkbox" title="Select or deselect all items" />
+                    <input @change="toggleAll" class="select-all" type="checkbox" title="Select or deselect all items" x-model="selectAll" />
                 </th>
                 {% endif %}
                 <th>Code</th>
@@ -26,7 +26,9 @@
         {% for roll in page_obj %}
         <tr>
             {% if page != 'project' and status in bulk_status_keys %}
-            <td class="do-not-print"><input type="checkbox" value="{{ roll.id }}" name="roll" /></td>
+            <td class="do-not-print">
+                <input @change="checkboxChange" type="checkbox" class="roll-checkbox" value="{{ roll.id }}" name="roll" />
+            </td>
             {% endif %}
             <td><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></td>
             <td>{{ roll.film }}</td>

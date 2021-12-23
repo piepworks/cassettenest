@@ -8,5 +8,14 @@
 
     {% include 'inventory/_logbook-table.html' with status='shot' %}
 
-    <div class="action"><input id="update-selected" type="submit" value="Update selected" /></div>
+    <div x-data class="action">
+        <div x-show="!$store.checkedCount" class="js-required">
+            <button disabled>Select rolls to update</button>
+        </div>
+        <div x-show="$store.checkedCount">
+            <button x-text="'Update ' + $store.checkedCount + ' selected roll' + $store.itemPlural">
+                Update selected
+            </button>
+        </div>
+    </div>
 </div>
