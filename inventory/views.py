@@ -547,44 +547,20 @@ def inventory(request):
         'js_needed': True,
     }
 
-    return render(request, 'inventory/inventory.html', context)
+    if request.htmx:
+        type = filters['type']
+        format = filters['format']
+        querystring = ''
 
+        if type != 'all' or format != 'all':
+            querystring = f'?type={type}&format={format}'
 
-@login_required
-def inventory_ajax(request, format, type):
-    total_film_count = Film.objects.filter(
-        roll__owner=request.user,
-        roll__status=status_number('storage'),
-    )
-    total_rolls = total_film_count.count()
-    type_names = dict(Stock._meta.get_field('type').flatchoices)
-    format_names = dict(Film._meta.get_field('format').flatchoices)
+        response = render(request, 'inventory/_inventory-content.html', context)
+        response['HX-Push'] = reverse('inventory') + querystring
 
-    filters = {
-        'format': format,
-        'type': type,
-        'format_name': 'all',
-        'type_name': 'all',
-    }
-
-    if format != 'all':
-        total_film_count = total_film_count.filter(format=format)
-        filters['format_name'] = format_names[format]
-
-    if type != 'all':
-        total_film_count = total_film_count.filter(stock__type=type)
-        filters['type_name'] = type_names[type]
-
-    film_counts = inventory_filter(request, Film, format, type)
-
-    context = {
-        'total_film_count': total_film_count,
-        'total_rolls': total_rolls,
-        'filters': filters,
-        'film_counts': film_counts,
-    }
-
-    return render(request, 'inventory/_unused-rolls.html', context)
+        return response
+    else:
+        return render(request, 'inventory/inventory.html', context)
 
 
 @login_required

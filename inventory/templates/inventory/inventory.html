@@ -1,68 +1,41 @@
 {% extends 'base_site.html' %}
 
 {% block title %}
-Inventory{% if filters.format_name != 'all' %} ({{ filters.format_name }}{% if filters.type_name != 'all' %}, {{ filters.type_name }}{% endif %}){% elif filters.type_name != 'all' %} ({{ filters.type_name }}){% endif %}
+{% spaceless %}
+    Inventory
+    {% if filters.format_name != 'all' %}
+        ({{ filters.format_name }}{% if filters.type_name != 'all' %}, {{ filters.type_name }}{% endif %})
+    {% elif filters.type_name != 'all' %}
+        ({{ filters.type_name }})
+    {% endif %}
+{% endspaceless %}
 {% endblock %}
 
 {% block content %}
-<div class="raw">
-<h1 id="page-name">Inventory{% if filters.format_name != 'all' %} <small>({{ filters.format_name }}{% if filters.type_name != 'all' %}, {{ filters.type_name }}{% endif %})</small>{% elif filters.type_name != 'all' %} <small>({{ filters.type_name }})</small>{% endif %}</h1>
-
-<p><a href="{% url 'stocks' %}">View all Film Stocks</a> <small><a href="https://cassettenest.com/docs/stocks">(What is this?)</a></small></p>
-
-<hr />
-
-<p><a href="{% url 'rolls-add' %}">Add rolls to storage.</a></p>
-<p><a href="{% url 'roll-add' %}">Add a roll to a non-storage status.</a></p>
-
-{% if total_rolls %}
-<hr />
-
-<form id="film_filter" method="get">
-    <div class="c-field--filter">
-        <div class="inner">
-            <label for="id_format">
-                Format:
-                <select name="format" id="id_format">
-                    <option value="all">All formats</option>
-                    {% for format in format_counts %}
-                    <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
-                        {{ format.format_display }}
-                    </option>
-                    {% endfor %}
-                </select>
-            </label>
-            <label for="id_type">
-                Type:
-                <select name="type" id="id_type">
-                    <option value="all">All types</option>
-                    {% for type in type_counts %}
-                        {# TODO: Remove this if statement. #}
-                        {% if type.stock__type != None %}
-                            <option value="{{ type.stock__type }}"{% if filters.type == type.stock__type %} selected{% endif %}>
-                                {{ type.type_display }}
-                            </option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-            </label>
-        </div>
-        <button class="no-js">Filter</button>
-    </div>
-</form>
-
-<div id="unused-rolls-wrapper">
-    {% include 'inventory/_unused-rolls.html' %}
+<div id="spinner" class="htmx-indicator">
+    <div class="loader"></div>
 </div>
-
-{% else %}
-<p>No film found.</p>
-{% endif %}
+<div class="raw">
+    {% include 'inventory/_inventory-content.html' %}
 </div>
 {% endblock %}
 
 {% block page_js %}
 <script>
-{% include 'js/inventory.js' %}
+    let titlePrefix;
+    let newSubtitle = '';
+    let formatName = '{{ filters.format_name }}';
+    let typeName = '{{ filters.type_name }}';
+
+    // Fade the list when it's loading.
+    document.getElementById('film-wrapper').style.opacity = 1.0;
+
+    document.body.addEventListener('htmx:beforeRequest', () => {
+        document.getElementById('film-wrapper').style.opacity = 0.25;
+    });
+
+    document.body.addEventListener('htmx:afterRequest', () => {
+        document.getElementById('film-wrapper').style.opacity = 1.0;
+    });
 </script>
 {% endblock %}

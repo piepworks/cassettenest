@@ -72,7 +72,6 @@ urlpatterns = [
 
     # Films
     path('film/', views.inventory, name='inventory'),
-    path('film/ajax/<slug:format>/<slug:type>', views.inventory_ajax, name='inventory-ajax'),
     path('film/<slug:stock>/<slug:format>/', views.film_rolls, name='film-rolls'),
     path('film/<slug:slug>/', views.film_rolls, name='film-slug-redirect'),
 
