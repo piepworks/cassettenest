@@ -3,7 +3,6 @@ module.exports = {
         es6: true,
         node: true,
         browser: true,
-        jquery: true,
     },
     globals: {
         Paddle: 'readonly',
