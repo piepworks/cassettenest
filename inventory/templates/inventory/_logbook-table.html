@@ -1,8 +1,10 @@
 {# Make sure this partial is wrapped in a <form> if you need to perform an action with this data. #}
 <div class="overflow-x">
     <table
+        {% if page != 'project' and status in bulk_status_keys %}
         x-init="$nextTick(() => updateCount(document.querySelectorAll('.roll-checkbox:checked').length))"
-        x-data="bulkUpdate('.roll-checkbox')">
+        x-data="bulkUpdate('.roll-checkbox')"
+        {% endif %}>
         <thead>
             <tr>
                 {% if page != 'project' and status in bulk_status_keys %}
