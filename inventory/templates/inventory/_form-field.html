@@ -1,3 +1,6 @@
+{% load widget_tweaks %}
+{% load capture_tags %}
+
 {% if field.field.widget.input_type == 'hidden' %}
     {{ field }}
 {% else %}
@@ -11,7 +14,8 @@
     {% if progressive_text %} data-progressive-text="{{ progressive_text }}"{% endif %}
     {% if label_override %} data-label-override="{{ label_override }}"{% endif %}
     {% if show_first %} data-show-first="self"{% endif %}
-    data-label="{{ field.field.label }}">
+    data-label="{{ field.field.label }}"
+    {% if progressive %} x-show="{{ primary|yesno:'primary,!primary' }}"{% endif %}>
     {% if field.field.widget.input_type == 'checkbox' %}
         {% if field|length > 1 %}
             <fieldset>
@@ -43,7 +47,7 @@
             {% endfor %}
         </fieldset>
     {% else %}
-        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <label for="{{ field.id_for_label }}"{% if label_override %} x-text="'{{ label_override }}'"{% endif %}>{{ field.label }}</label>
         {% if field.help_text and field.label != 'Username' %}
             <small class="c-field__help">{{ field.help_text }}</small>
         {% endif %}
@@ -54,14 +58,23 @@
             <span class="subdued"{% if enhanced_label.before_tooltip %} title="{{ enhanced_label.before_tooltip }}"{% endif %}>{{ enhanced_label.before }}</span>
         {% endif %}
 
-        {{ field }}
+        {% capture as xref silent %}{{ primary|yesno:'primary,secondary' }}{% endcapture %}
+
+        {% if not field.field.widget.input_type %}
+            {# Set autocomplete on Markdown textareas. #}
+            {% render_field field x-ref=xref x-data='' x-on::keyup.enter="checkAutocomplete($el)" %}
+        {% else %}
+            {% render_field field x-ref=xref %}
+        {% endif %}
 
         {% if enhanced_label.after %}
             <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
         {% endif %}
     {% endif %}
     {% if progressive %}
-        <div class="js-link"></div>
+        <div class="js-link">
+            <a @click="primary = !primary; $nextTick(() => $refs.{{ primary|yesno:'secondary,primary' }}.focus())" tabindex="0">{{ progressive_text }}</a>
+        </div>
     {% endif %}
 </div>
 {% endif %}

@@ -1,4 +1,4 @@
-{% load static %}{% load compress %}{% load tz %}{% get_current_timezone as TIME_ZONE %}{% load capture_tags %}{% load waffle_tags %}<!DOCTYPE html>
+{% load static compress tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
 <html lang="en">
 <head>
     {% url 'index' as index_url %}
@@ -11,9 +11,6 @@
     <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/main.scss' %}" />
     {% endcompress %}
     {% include '_meta-tags.html' %}
-    {% if js_needed %}
-    <script src="{% static 'js/vendor/jquery.min.js' %}"></script>
-    {% endif %}
     {% if not user.is_authenticated %}
     <script async defer data-domain="app.cassettenest.com" src="https://plausible.io/js/plausible.js"></script>
     {% endif %}
@@ -74,7 +71,14 @@
     </div>
 
     {% if js_needed %}
-    <script src="{% static 'js/main.js' %}"></script>
+    <script defer src="{% static 'js/vendor/alpine.min.js' %}"></script>
+
+    <!-- HTMX -->
+    <script src="{% static 'js/vendor/htmx.min.js' %}"></script>
+    {% django_htmx_script %}
+    <!-- **** -->
+
+    <script>document.documentElement.classList.add('has-js');</script>
     {% block page_js %}{% endblock %}
     {% endif %}
 </body>

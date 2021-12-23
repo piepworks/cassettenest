@@ -15,52 +15,33 @@
 {% endblock %}
 
 {% block content %}
+<div id="spinner" class="htmx-indicator">
+    <div class="loader"></div>
+</div>
 <div class="raw">
-    <h1>
-        <span id="page-name">{% if manufacturer %}<a href="{% url 'stocks' %}">{% endif %}Film Stocks{% if manufacturer %}</a>{% endif %}</span>
-        <span id="manufacturer-name">
-            {% if manufacturer %} &gt; {{ manufacturer }}{% endif %}
-        </span>
-    </h1>
-
-    <form id="stock_filter" method="get" action={% url 'stocks' %}>
-        <div class="c-field--filter">
-            <div class="inner">
-                <label for="id_manufacturer">
-                    Manufacturer:
-                    <select name="manufacturer" id="id_manufacturer">
-                        <option value="all">All manufacturers</option>
-                        {% for m in manufacturers %}
-                        <option value={{ m.slug }}{% if manufacturer.slug == m.slug %} selected{% endif %}>
-                            {{ m }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </label>
-                <label for="id_type">
-                    Type:
-                    <select name="type" id="id_type"{% if type_choices.items|length == 1 %} disabled{% endif %}>
-                        {% if type_choices.items|length > 1 %}
-                            <option value="all">All types</option>
-                        {% endif %}
-                        {% for key, value in type_choices.items %}
-                        <option value="{{ key }}"{% if filters.type == key %} selected{% endif %}>{{ value }}</option>
-                        {% endfor %}
-                    </select>
-                </label>
-            </div>
-            <button class="no-js">Filter</button>
-        </div>
-    </form>
-
-    <div id="stocks-list-wrapper">
-        {% include 'inventory/_stocks-list.html' %}
-    </div>
+    {% include 'inventory/_stocks-content.html' %}
 </div>
 {% endblock %}
 
 {% block page_js %}
 <script>
-{% include 'js/stocks.js' %}
+    // Set `manufacturer`` and `type` to be able to update dynamically as needed.
+    if (typeof(manufacturerName) === 'undefined') {
+        let manufacturerName;
+    }
+    if (typeof(typeName) === 'undefined') {
+        let typeName;
+    }
+
+    // Fade the list when it's loading.
+    document.getElementById('stocks-list-wrapper').style.opacity = 1.0;
+
+    document.body.addEventListener('htmx:beforeRequest', () => {
+        document.getElementById('stocks-list-wrapper').style.opacity = 0.25;
+    });
+
+    document.body.addEventListener('htmx:afterRequest', () => {
+        document.getElementById('stocks-list-wrapper').style.opacity = 1.0;
+    });
 </script>
 {% endblock %}

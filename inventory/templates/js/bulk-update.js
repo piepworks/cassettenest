@@ -1,37 +1,28 @@
-function updateButtonText() {
-    // This is especially crude because we’re assuming only one table on the page.
-    const $tbody = $('tbody');
-    const $updateButton = $('#update-selected');
-    const checkboxesTotal = $tbody.find('input[type=checkbox]').length;
-    const checkboxCount = $tbody.find('input[type=checkbox]:checked').length;
-    const plural = (checkboxCount !== 1) ? 's' : '';
-
-    if (checkboxCount) {
-        $updateButton.attr('disabled', false);
-        if (checkboxCount === checkboxesTotal) {
-            $('.select-all').prop('checked', true);
-        }
-        $updateButton.val(`Update ${checkboxCount} selected roll${plural}`);
-    } else {
-        $updateButton.val('Select rolls to update').attr('disabled', true);
-    }
-}
-
-$('.select-all').change((e) => {
-    const $selectAllToggle = $(e.target);
-    const $tbody = $selectAllToggle.closest('table').find('tbody');
-    const $checkboxes = $tbody.find('input[type=checkbox]');
-    let checked = $selectAllToggle.prop('checked');
-
-    $checkboxes.prop('checked', checked);
-
-    updateButtonText();
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
+document.addEventListener('alpine:init', () => {
+    Alpine.store('checkedCount', 0);
+    Alpine.store('itemPlural');
 });
 
-$('tbody input[type=checkbox]').change(() => {
-    $('.select-all').prop('checked', false);
-    updateButtonText();
-});
+const pluralize = itemCount => (itemCount !== 1) ? 's' : '';
 
-// Update the button text on page load.
-updateButtonText();
+const updateCount = itemCount => {
+    Alpine.store('checkedCount', itemCount);
+    Alpine.store('itemPlural', pluralize(itemCount));
+};
+
+const bulkUpdate = function (selector) {
+    return {
+        selectAll: false,
+        allItems: document.querySelectorAll(selector),
+        toggleAll() {
+            [...this.allItems].map(el => el.checked = this.selectAll);
+            Alpine.store('checkedCount', this.selectAll ? this.allItems.length : 0);
+        },
+        checkboxChange() {
+            updateCount(document.querySelectorAll(`${selector}:checked`).length);
+            this.selectAll = (Alpine.store('checkedCount') === this.allItems.length) ? true : false;
+        },
+    };
+};

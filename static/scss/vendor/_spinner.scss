@@ -13,6 +13,16 @@
     border: 0.5rem solid $light;
     border-left: 0.5rem solid $medium-dark;
     animation: load8 0.75s infinite linear;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -1.5rem;
+    margin-left: -1.5rem;
+
+    // Totally hide this unless JS is available.
+    display: none;
+    .has-js & { display: block; }
 }
 
 @keyframes load8 {

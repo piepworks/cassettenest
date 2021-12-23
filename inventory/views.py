@@ -308,7 +308,7 @@ def subscription_update(request):
 
 def stocks(request, manufacturer='all'):
     filters = {
-        'manufacturer': 'all',
+        'manufacturer': manufacturer,
         'type': 'all',
     }
     m = None
@@ -317,14 +317,14 @@ def stocks(request, manufacturer='all'):
 
     if request.GET.get('type') and request.GET.get('type') != 'all':
         filters['type'] = request.GET.get('type')
+        type_passthrough = f'?type={filters["type"]}'
 
     if request.GET.get('manufacturer') and request.GET.get('manufacturer') != 'all':
         filters['manufacturer'] = request.GET.get('manufacturer')
 
-        if filters['type'] != 'all':
-            type_passthrough = '?type=' + filters['type']
-
-        return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
+        # If this request wasn't sent by JS, redirect to the canonical URL.
+        if not request.htmx:
+            return redirect(reverse('stocks-manufacturer', args=(filters['manufacturer'],)) + type_passthrough)
 
     if request.user.is_authenticated:
         # Exclude stocks that are flagged as `personal` and not created by the current user.
@@ -351,9 +351,8 @@ def stocks(request, manufacturer='all'):
     type_names = dict(Stock._meta.get_field('type').flatchoices)
     type_choices = {}
 
-    if manufacturer != 'all':
-        filters['manufacturer'] = manufacturer
-        m = get_object_or_404(Manufacturer, slug=manufacturer)
+    if filters['manufacturer'] != 'all':
+        m = get_object_or_404(Manufacturer, slug=filters['manufacturer'])
         stocks = stocks.filter(manufacturer=m)
         type_choices = available_types(request, Stock, type_names, type_choices, m)
     else:
@@ -377,56 +376,19 @@ def stocks(request, manufacturer='all'):
         'js_needed': True,
     }
 
-    return render(request, 'inventory/stocks.html', context)
+    if request.htmx:
+        # Tell HTMX to use our proper URLs rather than querystrings…
+        if filters['manufacturer'] != 'all':
+            clean_url = reverse('stocks-manufacturer', args=(filters['manufacturer'],))
+        else:
+            clean_url = reverse('stocks')
 
+        response = render(request, 'inventory/_stocks-content.html', context)
+        response['HX-Push'] = clean_url + type_passthrough
 
-def stocks_ajax(request, manufacturer, type):
-    filters = {
-        'manufacturer': manufacturer,
-        'type': type,
-    }
-    m = None
-    type_name = 'all'
-
-    if request.user.is_authenticated:
-        stocks = Stock.objects.exclude(
-            Q(personal=True) & ~Q(added_by=request.user)
-        ).order_by(
-            'type',
-            'manufacturer__name',
-            'name',
-        )
+        return response
     else:
-        stocks = Stock.objects.exclude(
-            Q(personal=True)
-        ).order_by(
-            'type',
-            'manufacturer__name',
-            'name',
-        )
-
-    type_names = dict(Film._meta.get_field('type').flatchoices)
-    type_choices = {}
-
-    if manufacturer != 'all':
-        m = get_object_or_404(Manufacturer, slug=manufacturer)
-        stocks = stocks.filter(manufacturer=m)
-        type_choices = available_types(request, Stock, type_names, type_choices, m)
-    else:
-        type_choices = type_names
-    if type != 'all' and type != 'null':
-        stocks = stocks.filter(type=type)
-        type_name = type_names[type]
-
-    context = {
-        'stocks': stocks,
-        'filters': filters,
-        'manufacturer': m,
-        'type_name': type_name,
-        'type_choices': type_choices,
-    }
-
-    return render(request, 'inventory/_stocks-list.html', context)
+        return render(request, 'inventory/stocks.html', context)
 
 
 def stock(request, manufacturer, slug):
@@ -466,12 +428,12 @@ def stock(request, manufacturer, slug):
             total_history = total_history + user_history_count
 
         films_list.append({
-          'name': film.get_format_display(),
-          'url': film.get_absolute_url(),
-          'type': film.stock.type,
-          'count': film.count,
-          'user_inventory_count': user_inventory_count,
-          'user_history_count': user_history_count,
+            'name': film.get_format_display(),
+            'url': film.get_absolute_url(),
+            'type': film.stock.type,
+            'count': film.count,
+            'user_inventory_count': user_inventory_count,
+            'user_history_count': user_history_count,
         })
         total_rolls = total_rolls + film.count
 
@@ -585,44 +547,20 @@ def inventory(request):
         'js_needed': True,
     }
 
-    return render(request, 'inventory/inventory.html', context)
+    if request.htmx:
+        type = filters['type']
+        format = filters['format']
+        querystring = ''
 
+        if type != 'all' or format != 'all':
+            querystring = f'?type={type}&format={format}'
 
-@login_required
-def inventory_ajax(request, format, type):
-    total_film_count = Film.objects.filter(
-        roll__owner=request.user,
-        roll__status=status_number('storage'),
-    )
-    total_rolls = total_film_count.count()
-    type_names = dict(Stock._meta.get_field('type').flatchoices)
-    format_names = dict(Film._meta.get_field('format').flatchoices)
+        response = render(request, 'inventory/_inventory-content.html', context)
+        response['HX-Push'] = reverse('inventory') + querystring
 
-    filters = {
-        'format': format,
-        'type': type,
-        'format_name': 'all',
-        'type_name': 'all',
-    }
-
-    if format != 'all':
-        total_film_count = total_film_count.filter(format=format)
-        filters['format_name'] = format_names[format]
-
-    if type != 'all':
-        total_film_count = total_film_count.filter(stock__type=type)
-        filters['type_name'] = type_names[type]
-
-    film_counts = inventory_filter(request, Film, format, type)
-
-    context = {
-        'total_film_count': total_film_count,
-        'total_rolls': total_rolls,
-        'filters': filters,
-        'film_counts': film_counts,
-    }
-
-    return render(request, 'inventory/_unused-rolls.html', context)
+        return response
+    else:
+        return render(request, 'inventory/inventory.html', context)
 
 
 @login_required
