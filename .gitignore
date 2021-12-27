@@ -8,5 +8,4 @@ backups/
 paddle_public_key.txt
 
 # Tailwind CSS
-!theme/static/css/dist/styles.css
 !theme/static_src/src/styles.css
