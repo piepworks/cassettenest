@@ -35,14 +35,10 @@ Once everything's set up, the next time you want to run it:
 dev/server
 ```
 
-If you want to use [Browsersync](https://www.browsersync.io)…
-
-- `npm i -g browser-sync`
-
-Then you can just run…
+When you need to work on styles, you can just run…
 
 ```shell
-dev/browsersync
+dev/tailwind
 ```
 
 …or just…
@@ -51,4 +47,4 @@ dev/browsersync
 dev/start
 ```
 
-… to start the server as well as Browsersync.
+… to start the server as well as Tailwind + Browsersync.

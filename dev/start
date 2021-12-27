@@ -1,4 +1,4 @@
 #!/bin/sh
 
 $(dirname "$0")/server
-$(dirname "$0")/browsersync
+$(dirname "$0")/tailwind
