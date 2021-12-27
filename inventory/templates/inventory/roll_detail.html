@@ -194,6 +194,13 @@
             <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
         {% endif %}
     {% else %}
+        <div class="notes">
+            {% include 'inventory/_github-icon.html' with id='book' %}
+            <div class="inner">
+                <p><b>Note:</b> Journaling will be going away soon. It will be replaced by <a target="_blank" rel="noopener"href="https://cassettenest.com/changelog/2021-05-18/">Frames</a>.<br />
+                <small>(Don’t worry, <b>you’ll never lose lose access to your existing journal entries</b>, you just won't be able to create new entries on rolls that don't already have journal entries.)</small></p>
+            </div>
+        </div>
         <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
     {% endflag %}
 </div>
