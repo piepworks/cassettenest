@@ -11,6 +11,10 @@ RUN apt-get update \
     apt-get install --no-install-recommends --assume-yes \
       postgresql-client-12
 
+# Install Node for the sake of Tailwind CSS.
+RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
+  && apt-get install -y nodejs --no-install-recommends
+
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1

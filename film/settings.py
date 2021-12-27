@@ -68,6 +68,8 @@ INSTALLED_APPS = [
     'dbbackup',
     'widget_tweaks',
     'django_htmx',
+    'tailwind',
+    'theme',
 ]
 
 MIDDLEWARE = [
@@ -229,3 +231,6 @@ DBBACKUP_FILENAME_TEMPLATE = 'cassettenest_{datetime}.{extension}'
 # Django Debug Toolbar w/ Docker
 hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
+
+# Tailwind CSS
+TAILWIND_APP_NAME = 'theme'

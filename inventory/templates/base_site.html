@@ -1,4 +1,4 @@
-{% load static compress tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
+{% load static compress tz capture_tags waffle_tags django_htmx tailwind_tags %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
 <html lang="en">
 <head>
     {% url 'index' as index_url %}
@@ -17,6 +17,7 @@
     {% if wc_needed %}
     <script type="module" src="{% static 'js/vendor/wc/@github/markdown-toolbar-element/index.js' %}"></script>
     {% endif %}
+    {% tailwind_css %}
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 <body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
