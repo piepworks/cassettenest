@@ -1,3 +1,69 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply
+      bg-gray-100
+      dark:bg-gray-800
+      text-gray-900
+      dark:text-gray-200;
+
+    --folded-corner: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0% 80%);
+  }
+
+  a {
+    @apply
+      text-blue-600
+      dark:text-blue-400
+      underline
+      hover:text-blue-500
+      dark:hover:text-blue-300
+      hover:underline;
+  }
+}
+
+@layer components {
+  .button {
+    @apply
+      inline-flex
+      items-center
+      px-4
+      py-2
+      border
+      border-gray-300
+      dark:border-gray-500
+      rounded-md
+      shadow-sm
+      text-sm
+      font-medium
+      text-gray-700
+      dark:text-gray-200
+      hover:text-gray-700
+      dark:hover:text-gray-200
+      bg-white
+      dark:bg-gray-600
+      hover:bg-gray-50
+      dark:hover:bg-gray-900
+      dark:hover:border-gray-600
+      focus:outline-none
+      focus:ring-2
+      focus:ring-offset-2
+      focus:ring-offset-gray-100
+      dark:focus:ring-offset-gray-800
+      focus:ring-blue-500;
+
+    &.primary {
+      @apply
+        border-transparent
+        text-white
+        bg-blue-600
+        hover:bg-blue-700;
+    }
+  }
+}
+
+@layer utilities {
+  .js-only { @apply hidden; }
+}
