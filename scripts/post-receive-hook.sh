@@ -23,7 +23,6 @@ docker-compose exec -T web python manage.py dbbackup -z
 mkdir -p staticfiles
 docker-compose exec -T web python manage.py tailwind build --no-input
 docker-compose exec -T web python manage.py collectstatic --noinput
-docker-compose exec -T web python manage.py compress --force
 # -------------------------------------
 
 # Find the backup file we just created.

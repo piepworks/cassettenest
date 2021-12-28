@@ -1,4 +1,4 @@
-{% load static compress tz capture_tags waffle_tags django_htmx tailwind_tags %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
+{% load static tz capture_tags waffle_tags django_htmx tailwind_tags %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
 <html lang="en">
 <head>
     {% url 'index' as index_url %}
@@ -7,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
     <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" />
-    {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/main.scss' %}" />
-    {% endcompress %}
+    {% tailwind_css %}
     {% include '_meta-tags.html' %}
     {% if not user.is_authenticated %}
     <script async defer data-domain="app.cassettenest.com" src="https://plausible.io/js/plausible.js"></script>
@@ -17,7 +15,6 @@
     {% if wc_needed %}
     <script type="module" src="{% static 'js/vendor/wc/@github/markdown-toolbar-element/index.js' %}"></script>
     {% endif %}
-    {% tailwind_css %}
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 <body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
@@ -38,7 +35,6 @@
                 {% else %}
                 <a href="https://cassettenest.com">
                 {% endif %}
-                    <span title="We’re currently in Beta. Things are gonna be much fancier soon!" class="beta">Beta</span>
                 </a>
             </div>
             {% include 'inventory/_nav.html' %}

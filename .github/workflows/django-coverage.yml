@@ -10,8 +10,8 @@ jobs:
           docker network create web
           docker-compose up -d --build
           docker-compose exec -T web python manage.py migrate --noinput
+          docker-compose exec -T web python manage.py tailwind build --no-input
           docker-compose exec -T web python manage.py collectstatic --noinput
-          docker-compose exec -T web python manage.py compress --force
           docker-compose exec -T web coverage run manage.py test
           docker-compose exec -T web coverage xml
         env:
