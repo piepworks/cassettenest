@@ -15,13 +15,13 @@
 const tailwindConfig = require('./tailwind.config.js');
 
 module.exports = {
-    port: 8383,
-    ui: false,
-    logSnippet: false,
-    open: false,
-    reloadOnRestart: true,
-    files: [
-        '../static/css/dist/styles.css',
-        ...tailwindConfig.content
-    ]
+  port: 8383,
+  ui: false,
+  logSnippet: false,
+  open: false,
+  reloadOnRestart: true,
+  files: [
+    '../static/css/dist/styles.css',
+    ...tailwindConfig.content
+  ]
 };
