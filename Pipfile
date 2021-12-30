@@ -28,6 +28,7 @@ django-dbbackup = "==3.3.0"
 django-widget-tweaks = "==1.4.9"
 django-htmx = "==1.6.0"
 django-tailwind = "==3.0.1"
+pytailwindcss = "==0.1.2"
 
 [requires]
 python_version = "3.8"
