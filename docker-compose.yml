@@ -9,7 +9,7 @@ networks:
 services:
   web:
     build: .
-    command: gunicorn ${RELOAD} film.wsgi -b 0.0.0.0:8001
+    command: gunicorn film.wsgi -b 0.0.0.0:8001
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DEBUG=${DEBUG}
@@ -39,7 +39,6 @@ services:
       - .:/code
     ports:
       - '127.0.0.1:8001:8001'
-      - '8383:8383'
     networks:
       - internal
       - web

@@ -1,0 +1,19 @@
+services:
+  web:
+    # Let Django restart when we make changes.
+    command: gunicorn --reload film.wsgi -b 0.0.0.0:8001
+
+  tailwind:
+    build: .
+    command: python manage.py tailwind start
+    environment:
+      # Just enough so Django can start up.
+      - MARKETING_SITE_URL=${MARKETING_SITE_URL}
+      - DBBACKUP_STORAGE=${DBBACKUP_STORAGE}
+    tty: true
+    volumes:
+      - .:/code
+    ports:
+      - '8383:8383'
+    networks:
+      - web

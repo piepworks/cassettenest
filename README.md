@@ -32,18 +32,6 @@ Copyright &copy; 2016-2021 Trey Labs LLC. All rights reserved.
 Once everything's set up, the next time you want to run it:
 
 ```shell
-dev/server
-```
-
-When you need to work on styles, you can just run…
-
-```shell
-dev/tailwind
-```
-
-…or just…
-
-```shell
 dev/start
 ```
 
