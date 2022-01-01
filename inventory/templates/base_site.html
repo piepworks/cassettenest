@@ -4,7 +4,7 @@
     {% url 'index' as index_url %}
     <title>{% block title %}{% endblock %}{% if request.path != index_url %} / {% endif %}Cassette Nest</title>
     <meta name="description" content="An easy and fun way to build an lifelong archive of metadata about your film photography." />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
     <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" />
     {% tailwind_css %}
@@ -18,53 +18,61 @@
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 <body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
-    <div class="wrapper">
-        <header class="c-site-nav">
-            <div class="badge-wrapper">
-                <div class="film-icon">
-                    {% if user.is_authenticated %}
-                    <a href="/">
-                    {% else %}
-                    <a href="https://cassettenest.com">
-                    {% endif %}
-                        <img src="{% static 'img/icon.svg' %}" height="35" width="35" alt="Cassette Nest Icon" />
-                    </a>
-                </div>
+    <div class="wrapper md:h-screen md:overflow-hidden md:flex">
+        <div id="sidebar">
+            [sidebar]
+        </div>
+        <div id="main" class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">
+            <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none pt-2 md:pt-6 pb-16">
+                <div>[everything else]</div>
+                <header class="c-site-nav">
+                    <div class="badge-wrapper">
+                        <div class="film-icon">
+                            {% if user.is_authenticated %}
+                            <a href="/">
+                            {% else %}
+                            <a href="https://cassettenest.com">
+                            {% endif %}
+                                <img src="{% static 'img/icon.svg' %}" height="35" width="35" alt="Cassette Nest Icon" />
+                            </a>
+                        </div>
+                        {% if user.is_authenticated %}
+                        <a href="/">
+                        {% else %}
+                        <a href="https://cassettenest.com">
+                        {% endif %}
+                        </a>
+                    </div>
+                    {% include 'inventory/_nav.html' %}
+                </header>
+
                 {% if user.is_authenticated %}
-                <a href="/">
-                {% else %}
-                <a href="https://cassettenest.com">
+                    {% flag 'paddle' %}
+                        {% include 'inventory/_subscription-banner-wrapper.html' %}
+                    {% endflag %}
+
+                    {% include 'inventory/_nav-status.html' %}
                 {% endif %}
-                </a>
+
+                {% include 'inventory/_messages.html' %}
+
+                <main>
+                    {% block content %}
+                    {% endblock %}
+                </main>
+                <footer>
+                    <p>Copyright &copy; 2016–{% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
+                    <ul class="policies do-not-print">
+                        <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
+                        <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
+                        <li><a href="https://tools.cassettenest.com/cropfactor/">Crop Factor Calculator</a></li>
+                        <li><a href="https://cassettenest.com/changelog/">Changelog</a></li>
+                    </ul>
+                    <p class="shirt-promo do-not-print"><a href="https://cottonbureau.com/people/trey-labs">Buy a shirt!</a></p>
+                    <p class="timezone">Current timezone: {{ TIME_ZONE }}</p>
+                </footer>
             </div>
-            {% include 'inventory/_nav.html' %}
-        </header>
-
-        {% if user.is_authenticated %}
-            {% flag 'paddle' %}
-                {% include 'inventory/_subscription-banner-wrapper.html' %}
-            {% endflag %}
-
-            {% include 'inventory/_nav-status.html' %}
-        {% endif %}
-
-        {% include 'inventory/_messages.html' %}
-
-        <main>
-            {% block content %}
-            {% endblock %}
-        </main>
-        <footer>
-            <p>Copyright &copy; 2016–{% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
-            <ul class="policies do-not-print">
-                <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
-                <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
-                <li><a href="https://tools.cassettenest.com/cropfactor/">Crop Factor Calculator</a></li>
-                <li><a href="https://cassettenest.com/changelog/">Changelog</a></li>
-            </ul>
-            <p class="shirt-promo do-not-print"><a href="https://cottonbureau.com/people/trey-labs">Buy a shirt!</a></p>
-            <p class="timezone">Current timezone: {{ TIME_ZONE }}</p>
-        </footer>
+        </div>
     </div>
 
     {% if js_needed %}
