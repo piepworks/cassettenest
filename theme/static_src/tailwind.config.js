@@ -8,6 +8,7 @@ module.exports = {
 
     // (BASE_DIR/<any_app_name>/templates)
     '../../**/templates/**/*.html',
+    '../../**/templates/**/*.svg',
   ],
   theme: {
     extend: {

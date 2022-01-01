@@ -22,17 +22,6 @@
       dark:hover:text-blue-300
       hover:underline;
   }
-
-  .wrapper {
-    #sidebar {
-      @apply bg-violet-500;
-    }
-
-    #main {
-      @apply
-        bg-indigo-800;
-    }
-  }
 }
 
 @layer components {
@@ -72,6 +61,15 @@
         bg-blue-600
         hover:bg-blue-700;
     }
+  }
+
+  #navigation-menu svg {
+    @apply
+      text-gray-400
+      mr-3
+      flex-shrink-0
+      h-6
+      w-6;
   }
 }
 

@@ -3,12 +3,13 @@
 {% url 'ready' as ready_url %}
 {% url 'logbook' as logbook_url %}
 
-<ol class="c-status-nav do-not-print">
+<ul class="print:hidden">
     {% if 'camera' in request.path %}
     <li class="current">
     {% else %}
     <li>
     {% endif %}
+        {% include 'svg/heroicons/home.svg' %}
         {% if request.path != index_url %}
             <a href="{% url 'index' %}">Dashboard</a>
         {% else %}
@@ -20,6 +21,7 @@
     {% else %}
     <li>
     {% endif %}
+        {% include 'svg/heroicons/film.svg' %}
         {% if request.path != inventory_url %}
             <a href="{% url 'inventory' %}">Inventory</a>
         {% else %}
@@ -27,6 +29,7 @@
         {% endif %}
     </li>
     <li>
+        {% include 'svg/heroicons/clipboard-list.svg' %}
         {% if request.path != ready_url %}
             <a href="{% url 'ready' %}">Ready<span> to Process</span></a>
         {% else %}
@@ -38,6 +41,7 @@
     {% else %}
     <li>
     {% endif %}
+        {% include 'svg/heroicons/book.svg' %}
         {% if request.path != logbook_url %}
             <a href="{% url 'logbook' %}">Logbook</a>
         {% else %}
@@ -55,4 +59,4 @@
         </ol>
         {% endcomment %}
     </li>
-</ol>
+</ul>
