@@ -19,22 +19,8 @@
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 <body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
     <div class="wrapper md:h-screen md:overflow-hidden md:flex">
-        <div id="sidebar" class="md:translate-x-0 inset-0 flex z-40 md:z-auto md:static" role="dialog" aria-modal="true">
-            {# overlay here #}
-            <div id="sidebar-content" class="md:translate-x-0 relative flex-1 flex flex-col w-full transition ease-in-out duration-300 transform">
-                <div id="sidebar-inner" class="flex md:flex-col md:w-64 md:min-h-screen">
-                    {% if user.is_authenticated %}
-                    <a href="/">
-                    {% else %}
-                    <a href="https://cassettenest.com">
-                    {% endif %}
-                        <img src="{% static 'img/icon.svg' %}" alt="Cassette Nest Icon" class="h-12 w-12" />
-                    </a>
-                    {# include 'inventory/_nav.html' #}
-                    {% include 'inventory/_nav-status.html' %}
-                </div>
-            </div>
-        </div>
+        {% include '_sidebar.html' %}
+
         <div class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">
             <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none pt-2 md:pt-6 pb-16">
                 {% if user.is_authenticated %}
@@ -47,8 +33,7 @@
                 {% include 'inventory/_messages.html' %}
 
                 <main>
-                    {% block content %}
-                    {% endblock %}
+                    {% block content %}{% endblock %}
                 </main>
                 <footer>
                     <p>Copyright &copy; 2016–{% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
@@ -65,16 +50,14 @@
         </div>
     </div>
 
-    {% if js_needed %}
     <script defer src="{% static 'js/vendor/alpine.min.js' %}"></script>
-
-    <!-- HTMX -->
     <script src="{% static 'js/vendor/htmx.min.js' %}"></script>
     {% django_htmx_script %}
-    <!-- **** -->
 
-    <script>document.documentElement.classList.add('has-js');</script>
+    <script>
+        document.documentElement.classList.add('has-js');
+        {% include 'js/sidebar.js' %}
+    </script>
     {% block page_js %}{% endblock %}
-    {% endif %}
 </body>
 </html>
