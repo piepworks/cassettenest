@@ -63,7 +63,7 @@
     }
   }
 
-  #navigation-menu svg {
+  #sidebar svg {
     @apply
       text-gray-400
       mr-3
