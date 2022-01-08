@@ -63,7 +63,7 @@
     }
   }
 
-  #sidebar svg {
+  #menu svg {
     @apply
       text-gray-400
       mr-3
