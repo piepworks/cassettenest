@@ -31,11 +31,11 @@
         {% if request.path != ready_url %}
             <a href="{% url 'ready' %}">
                 {% include 'svg/heroicons/clipboard-list.svg' %}
-                Ready<span> to Process</span>
+                Ready to Process
             </a>
         {% else %}
             {% include 'svg/heroicons/clipboard-list.svg' %}
-            <span>Ready<span> to Process</span></span>
+            Ready to Process
         {% endif %}
     </li>
 
