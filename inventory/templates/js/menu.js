@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const menu = document.querySelector('#menu');
 const menuInner = document.querySelector('#menu-inner');
 const menuOverlay = document.querySelector('#menu-overlay');
