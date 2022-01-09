@@ -63,13 +63,21 @@
     }
   }
 
-  #menu svg {
-    @apply
-      text-gray-400
-      mr-3
-      flex-shrink-0
-      h-6
-      w-6;
+  #menu {
+    #menu-inner {
+      @apply
+        bg-gray-800
+        dark:bg-gray-900;
+    }
+
+    svg {
+      @apply
+        text-gray-400
+        mr-3
+        flex-shrink-0
+        h-6
+        w-6;
+    }
   }
 }
 
