@@ -68,15 +68,46 @@
       @apply
         bg-gray-800
         dark:bg-gray-900;
-    }
 
-    svg {
-      @apply
-        text-gray-400
-        mr-3
-        flex-shrink-0
-        h-6
-        w-6;
+      svg {
+        @apply
+          text-gray-400
+          mr-3
+          flex-shrink-0
+          h-6
+          w-6;
+      }
+
+      ul {
+        a {
+          @apply
+            no-underline
+            text-gray-300;
+        }
+
+        li {
+          @apply
+            text-gray-300
+            hover:bg-gray-700
+            dark:hover:bg-gray-800
+            hover:text-white
+            flex
+            items-center
+            p-2
+            text-sm
+            font-medium
+            rounded-md;
+
+          &.current {
+            @apply
+              bg-gray-900
+              dark:bg-black
+              text-white;
+
+            svg { @apply text-gray-300; }
+          }
+        }
+      }
     }
   }
 }

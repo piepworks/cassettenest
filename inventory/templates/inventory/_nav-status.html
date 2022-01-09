@@ -3,8 +3,8 @@
 {% url 'ready' as ready_url %}
 {% url 'logbook' as logbook_url %}
 
-<ul class="print:hidden">
-    {% if 'camera' in request.path %}
+<ul class="mt-5 flex-1 px-2 space-y-1 print:hidden">
+    {% if 'camera' in request.path or request.path == index_url %}
     <li class="current">
     {% else %}
     <li>
