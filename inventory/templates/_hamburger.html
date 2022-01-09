@@ -1,5 +1,5 @@
 <div id="menu-open-wrapper" class="md:hidden pl-1 pt-1 sm:pl-3 sm:pt-3">
-    <button id="menu-open" type="button" class="hidden -ml-0.5 -mt-0.5 h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+    <button x-data @click="openMenu()" id="menu-open" type="button" class="hidden -ml-0.5 -mt-0.5 h-12 w-12 items-center justify-center rounded-md text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
         <span class="sr-only">Open sidebar</span>
         {% include 'svg/heroicons/menu.svg' with class="h-6 w-6" %}
     </button>

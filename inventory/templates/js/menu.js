@@ -4,6 +4,7 @@ const menuOverlay = document.querySelector('#menu-overlay');
 const menuContent = document.querySelector('#menu-content');
 const openMenuButton = document.querySelector('#menu-open');
 const closeMenuButtonWrapper = document.querySelector('#menu-close');
+const closeMenuButton = closeMenuButtonWrapper.querySelector('button');
 
 const setupMenu = () => {
   menu.classList.add('-translate-x-full', 'fixed');
@@ -13,6 +14,30 @@ const setupMenu = () => {
   openMenuButton.classList.remove('hidden');
   openMenuButton.classList.add('inline-flex');
   closeMenuButtonWrapper.classList.remove('hidden');
+};
+const openMenu = () => {
+  document.body.classList.add('overflow-hidden');
+  menu.classList.remove('-translate-x-full');
+  menuOverlay.classList.remove('opacity-0');
+  menuOverlay.setAttribute('aria-hidden', 'false');
+  menu.setAttribute('aria-hidden', 'false');
+  menuContent.classList.remove('-translate-x-full');
+  setTimeout(() => {
+    closeMenuButton.classList.remove('hidden');
+  }, 100);
+};
+const closeMenu = () => {
+  document.body.classList.remove('overflow-hidden');
+  menuOverlay.classList.add('opacity-0');
+  menuOverlay.setAttribute('aria-hidden', 'true');
+  menu.setAttribute('aria-hidden', 'true');
+  menuContent.classList.add('-translate-x-full');
+  setTimeout(() => {
+    closeMenuButton.classList.add('hidden');
+  }, 100);
+  setTimeout(() => {
+    menu.classList.add('-translate-x-full');
+  }, 300);
 };
 
 setupMenu();

@@ -17,7 +17,7 @@
     {% endif %}
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
-<body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
+<body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart x-data @keyup.esc="closeMenu()">
     <div class="wrapper md:h-screen md:overflow-hidden md:flex">
         {% include '_menu.html' %}
 
