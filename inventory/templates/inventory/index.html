@@ -6,6 +6,8 @@
 {% include 'inventory/_onboarding.html' %}
 {% endif %}
 
+{% include 'partials/projects.html' with items=projects_current %}
+
 <section>
     <h2 class="c-heading c-heading--divider"><a href="{% url 'projects' %}">Projects</a></h2>
     {% if projects_current %}
