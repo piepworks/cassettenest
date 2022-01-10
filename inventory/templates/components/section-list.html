@@ -1,9 +1,0 @@
-{% if items %}
-    <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-        {% for item in items %}
-            {% include 'components/card.html' %}
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No items</p>
-{% endif %}
