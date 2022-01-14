@@ -81,7 +81,10 @@ def index(request):
     all_projects = Project.objects.filter(
         owner=owner,
     ).order_by('-updated_at',)
-    projects_current = all_projects.filter(status='current')
+    projects = {
+        'current': all_projects.filter(status='current'),
+        'archived': all_projects.filter(status='archived')
+    }
     projects_count = all_projects.count()
     rolls_outstanding_count = rolls.exclude(
         status=status_number('storage')
@@ -94,7 +97,7 @@ def index(request):
         'cameras_total': cameras_total,
         'cameras_empty': cameras_empty,
         'camera_backs_empty': camera_backs_empty,
-        'projects_current': projects_current,
+        'projects': projects,
         'projects_count': projects_count,
         'rolls': rolls,
         'rolls_loaded': rolls_loaded,

@@ -54,6 +54,11 @@
       dark:focus:ring-offset-gray-800
       focus:ring-blue-500;
 
+    &,
+    &:hover {
+      @apply no-underline;
+    }
+
     &.primary {
       @apply
         border-transparent

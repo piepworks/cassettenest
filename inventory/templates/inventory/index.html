@@ -6,19 +6,8 @@
 {% include 'inventory/_onboarding.html' %}
 {% endif %}
 
-{% include 'components/section.html' with title='Projects' items=projects_current %}
-
-<section>
-    <h2 class="c-heading c-heading--divider"><a href="{% url 'projects' %}">Projects</a></h2>
-    {% if projects_current %}
-        {% for project in projects_current %}
-            {% include 'inventory/_card.html' with name=project.name location=project.get_absolute_url slot='count' count=project.get_rolls_remaining %}
-        {% endfor %}
-    {% else %}
-        {% url 'project-add' as project_add_url %}
-        {% include 'inventory/_card.html' with name='No current projects. Add a new one.' location=project_add_url type='blank' %}
-    {% endif %}
-</section>
+{% url 'project-add' as project_add_url %}
+{% include 'components/section.html' with title='Projects' add_url=project_add_url items=projects.current %}
 
 {% if rolls_loaded %}
 <section>
