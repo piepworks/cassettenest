@@ -227,3 +227,4 @@ INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
 
 # Tailwind CSS
 TAILWIND_APP_NAME = 'theme'
+TAILWIND_DEV_MODE = int(os.environ.get('DEBUG', default=0))
