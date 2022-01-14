@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "803cb2f4736c8baf6468b3ec1023c71aa88ffecd7e36d0b43ce08d483cb801e8"
+            "sha256": "69a6784cad5535d1b27003f16e72b741727d81ba2bad879a6c0d630ad478c591"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -211,11 +211,11 @@
         },
         "django-widget-tweaks": {
             "hashes": [
-                "sha256:01b911a1b47629de0a3a3097774798dee4eb703b94d41666929f688d5f77c723",
-                "sha256:07674e32031eda81077f0b8e390ce78d1d415e700cedd0396ef0ce452e95b94d"
+                "sha256:9bfc5c705684754a83cc81da328b39ad1b80f32bd0f4340e2a810cbab4b0c00e",
+                "sha256:fe6b17d5d595c63331f300917980db2afcf71f240ab9341b954aea8f45d25b9a"
             ],
             "index": "pypi",
-            "version": "==1.4.11"
+            "version": "==1.4.12"
         },
         "freezegun": {
             "hashes": [
