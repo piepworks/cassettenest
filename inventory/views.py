@@ -73,6 +73,7 @@ def index(request):
         status='empty'
     ).exclude(multiple_backs=True)
     camera_backs_empty = camera_backs_total.filter(status='empty')
+    cameras_unavailable = cameras_total.filter(status='unavailable')
     rolls = Roll.objects.filter(owner=owner)
     rolls_loaded = rolls.filter(status=status_number('loaded'))
     rolls_ready_count = rolls.filter(status=status_number('shot')).count()
@@ -101,18 +102,21 @@ def index(request):
         [
             {
                 'name': 'Loaded',
-                'count': 1,
+                'count': rolls_loaded.count(),
                 'rows': rolls_loaded,
+                'action': 'roll'
             },
             {
                 'name': 'Ready to Load',
-                'count': 2,
+                'count': cameras_empty.count(),
                 'rows': cameras_empty,
+                'action': 'load',
             },
             {
                 'name': 'Unavailable',
-                'count': 3,
-                'rows': []
+                'count': cameras_unavailable.count(),
+                'rows': cameras_unavailable,
+                'action': 'view',
             },
         ],
     )
@@ -126,11 +130,13 @@ def index(request):
                 'name': 'Current',
                 'count': 1,
                 'rows': all_projects.filter(status='current'),
+                'action': 'view',
             },
             {
                 'name': 'Archived',
                 'count': 2,
                 'rows': all_projects.filter(status='archived'),
+                'action': 'view',
             }
         ]
     )

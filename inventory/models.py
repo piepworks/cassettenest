@@ -526,6 +526,9 @@ class Roll(models.Model):
 
         super().save(*args, **kwargs)
 
+    def get_absolute_url(self):
+        return reverse('roll-detail', args=(self.id,))
+
 
 class Journal(models.Model):
     roll = models.ForeignKey(Roll, on_delete=models.CASCADE)
