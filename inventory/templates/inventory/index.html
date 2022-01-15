@@ -6,8 +6,9 @@
 {% include 'inventory/_onboarding.html' %}
 {% endif %}
 
-{% url 'project-add' as project_add_url %}
-{% include 'components/section.html' with title='Projects' add_url=project_add_url items=projects.current %}
+{% include 'components/section.html' with items=cameras %}
+
+{% include 'components/section.html' with items=projects %}
 
 {% if rolls_loaded %}
 <section>

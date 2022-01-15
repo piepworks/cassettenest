@@ -51,6 +51,7 @@ from .utils import (
     preset_apertures,
     preset_shutter_speeds,
     available_types,
+    SectionTabs,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -81,10 +82,6 @@ def index(request):
     all_projects = Project.objects.filter(
         owner=owner,
     ).order_by('-updated_at',)
-    projects = {
-        'current': all_projects.filter(status='current'),
-        'archived': all_projects.filter(status='archived')
-    }
     projects_count = all_projects.count()
     rolls_outstanding_count = rolls.exclude(
         status=status_number('storage')
@@ -92,8 +89,66 @@ def index(request):
         status=status_number('archived')
     ).count()
 
+    current_tabs = {
+        'cameras': 0,
+        'projects': 0
+    }
+
+    cameras = SectionTabs(
+        'Cameras',
+        reverse('camera-add'),
+        current_tabs['cameras'],
+        [
+            {
+                'name': 'Loaded',
+                'count': 1,
+                'rows': rolls_loaded,
+            },
+            {
+                'name': 'Ready to Load',
+                'count': 2,
+                'rows': cameras_empty,
+            },
+            {
+                'name': 'Unavailable',
+                'count': 3,
+                'rows': []
+            },
+        ],
+    )
+
+    projects = SectionTabs(
+        'Projects!',
+        reverse('project-add'),
+        current_tabs['projects'],
+        [
+            {
+                'name': 'Current',
+                'count': 1,
+                'rows': all_projects.filter(status='current'),
+            },
+            {
+                'name': 'Archived',
+                'count': 2,
+                'rows': all_projects.filter(status='archived'),
+            }
+        ]
+    )
+
+    # Get the current tab of all the sections on the page if available
+    # as well as jumping to the current section's id. These jump links
+    # will serve as permalink pages for cameras and projects.
+    if request.GET.get('c'):
+        # Cameras
+        cameras.set_tab(request.GET.get('c'))
+
+    if request.GET.get('p'):
+        # Projects
+        projects.set_tab(request.GET.get('p'))
+
     context = {
         'email': owner.email,
+        'cameras': cameras,
         'cameras_total': cameras_total,
         'cameras_empty': cameras_empty,
         'camera_backs_empty': camera_backs_empty,
@@ -105,6 +160,11 @@ def index(request):
         'rolls_storage_count': rolls_storage_count,
         'rolls_outstanding_count': rolls_outstanding_count,
     }
+
+    # if request.htmx:
+    #   Just return the `section.html` with the data needed for the current tab!
+    # else:
+
     return render(request, 'inventory/index.html', context)
 
 
@@ -153,7 +213,7 @@ def marketing_site(request):
         return HttpResponseForbidden('You are not logged in.')
 
 
-@login_required
+@ login_required
 def settings(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)

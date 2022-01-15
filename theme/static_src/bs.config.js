@@ -23,6 +23,7 @@ module.exports = {
   files: [
     '../static/css/dist/styles.css',
     '../../**/*.js',
+    '../../**/*.py',
     ...tailwindConfig.content,
   ]
 };

@@ -225,3 +225,24 @@ film_formats = [
     ('135', '35mm'),
     ('120', '120'),
 ]
+
+
+class SectionTabs:
+    # TODO: write tests for this stuff.
+    def __init__(self, title, add_url, current_tab, tabs):
+        self.title = title
+        self.add_url = add_url
+        self.current_tab = current_tab
+        self.tabs = tabs
+
+    def current_rows(self):
+        return self.tabs[self.current_tab]['rows']
+
+    def set_tab(self, new_tab):
+        if new_tab.isdigit():
+            try:
+                tab = self.tabs[int(new_tab)]
+                self.current_tab = int(new_tab)
+            except IndexError:
+                # That tab doesn't exist.
+                pass
