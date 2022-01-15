@@ -1,4 +1,4 @@
-<section id="section_{{ slug }}" class="rounded-lg bg-white dark:bg-gray-600 shadow">
+<section id="section_{{ items.slug }}" class="rounded-lg bg-white dark:bg-gray-600 shadow">
     <div class="px-4 pt-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
         <div class="mb-5 -ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
             <div class="ml-4 mt-2">
@@ -13,18 +13,34 @@
                 </a>
             </div>
         </div>
+        {% if items.tabs %}
+            <div class="mt-4">
+                <div class="sm:hidden mb-5">
+                    <label for="{{ slug }}_current-tab" class="sr-only">Select a tab</label>
+                    <select value="{{ items.current_tab }}" name="current-tab" class="block dark:bg-gray-700 w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        {% for tab in items.tabs %}
+                        <option value="{{ forloop.counter0 }}">{{ tab.name }}</option>
+                        {% endfor %}
+                    </select>
+                    {# TODO: Add a "Go" button or something to make this work without JS. #}
+                </div>
+                <div class="hidden sm:block">
+                    <nav class="tabs -mb-px flex space-x-8">
+                        {% for tab in items.tabs %}
+                            <a href="?{{ items.slug }}={{ forloop.counter0 }}" class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
+                                {{ tab.name }}
+                                {% if tab.count > 0 %}
+                                    <span class="{% if forloop.counter0 == items.current_tab %}bg-blue-100 dark:bg-blue-400 text-blue-600 dark:text-blue-900 {% else %}bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 {% endif %}hidden ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">
+                                        {{ tab.count }}
+                                    </span>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </nav>
+                </div>
+            </div>
+        {% endif %}
     </div>
-
-
-    {% if items.tabs %}
-    <div class="mt-4">
-        <div class="sm:hidden mb-5">
-            <label for="{{ slug }}_current-tab" class="sr-only">Select a tab</label>
-            <select name="" id=""></select>
-        </div>
-    </div>
-    {% endif %}
-
 
     <div class="bg-white dark:bg-gray-600 overflow-hidden rounded-b-md mb-6">
         {% if items %}

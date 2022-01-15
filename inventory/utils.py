@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Count, Q
 from django.utils.encoding import force_str
+from django.utils.text import slugify
 
 
 def get_project_or_none(Project, owner, project_id):
@@ -231,6 +232,7 @@ class SectionTabs:
     # TODO: write tests for this stuff.
     def __init__(self, title, add_url, current_tab, tabs):
         self.title = title
+        self.slug = slugify(self.title)[:1]
         self.add_url = add_url
         self.current_tab = current_tab
         self.tabs = tabs
