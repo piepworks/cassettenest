@@ -4,7 +4,7 @@
 {% capture as roll_iso silent %}{% if item.film.stock %}{{ item.film.stock.iso }}{% else %}{{ item.film.iso }}{% endif %}{% endcapture %}
 {% if type != 'empty' %}
     {% capture as film_type_name silent %}{% for key, value in film_types %}{% if key == type %}{{ value }}{% endif %}{% endfor %}{% endcapture %}
-    {% capture as film_description silent %}Loaded with {{ film_type_name }} film,{% if item.push_pull %} effective{% endif %} ISO is {{ roll_iso }}{% endcapture %}
+    {% capture as film_description silent %}Loaded with {{ film_type_name }} film,{% if item.push_pull %} effective ISO is {{ item.effective_iso }}{% else %} ISO is {{ roll_iso }}{% endif %}{% endcapture %}
 {% endif %}
 
 <div title="{{ film_description }}" class="reminder-square type-{{ type }} type-{{ type }} flex-shrink-0 relative rounded flex items-center justify-center w-20 h-20 -my-1">
