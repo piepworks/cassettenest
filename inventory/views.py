@@ -123,7 +123,7 @@ def index(request):
     )
 
     projects = SectionTabs(
-        'Projects!',
+        'Projects',
         reverse('project-add'),
         current_tabs['projects'],
         [
@@ -173,7 +173,10 @@ def index(request):
 
     if request.htmx:
         response = render(request, 'components/section.html', {'items': items})
-        # response['HX-Push'] = …
+        # index_url = reverse('index')
+        # updated_querystring = f'?c={cameras.current_tab}&p={projects.current_tab}'
+        # response['HX-Push'] = index_url + updated_querystring
+
         return response
     else:
         return render(request, 'inventory/index.html', context)

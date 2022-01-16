@@ -24,6 +24,11 @@
                         hx-trigger="change"
                         hx-target="#section_{{ items.slug }}"
                         class="flex">
+                        {% comment %} {% if items.slug == 'c' and request.GET.p %}
+                        <input type="hidden" name="p" value="{{ request.GET.p }}" />
+                        {% elif request.GET.c %}
+                        <input type="hidden" name="c" value="{{ request.GET.c }}" />
+                        {% endif %} {% endcomment %}
                         <select
                             name="{{ items.slug }}"
                             class="block dark:bg-gray-700 w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
