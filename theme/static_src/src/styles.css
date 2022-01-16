@@ -111,6 +111,8 @@
             dark:bg-black
             text-white;
 
+          a { @apply -m-2; }
+
           svg { @apply text-gray-300; }
         }
       }
