@@ -27,7 +27,12 @@
                 <div class="hidden sm:block">
                     <nav class="tabs -mb-px flex space-x-8">
                         {% for tab in items.tabs %}
-                            <a href="?{{ items.slug }}={{ forloop.counter0 }}" class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
+                            <a
+                                hx-get="{% url 'index' %}?{{ items.slug }}={{ forloop.counter0 }}"
+                                hx-trigger="click"
+                                hx-target="#section_{{ items.slug }}"
+                                href="?{{ items.slug }}={{ forloop.counter0 }}"
+                                class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
                                 {{ tab.name }}
                                 {% if tab.count > 0 %}
                                     <span class="{% if forloop.counter0 == items.current_tab %}bg-blue-100 dark:bg-blue-400 text-blue-600 dark:text-blue-900 {% else %}bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 {% endif %}hidden ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">

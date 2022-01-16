@@ -95,6 +95,7 @@ def index(request):
         'cameras': 0,
         'projects': 0
     }
+    items = ''
 
     cameras = SectionTabs(
         'Cameras',
@@ -145,10 +146,14 @@ def index(request):
     if request.GET.get('c'):
         # Cameras
         cameras.set_tab(request.GET.get('c'))
+        if request.htmx:
+            items = cameras
 
     if request.GET.get('p'):
         # Projects
         projects.set_tab(request.GET.get('p'))
+        if request.htmx:
+            items = projects
 
     context = {
         'email': owner.email,
@@ -166,11 +171,12 @@ def index(request):
         'film_types': film_types,
     }
 
-    # if request.htmx:
-    #   Just return the `section.html` with the data needed for the current tab!
-    # else:
-
-    return render(request, 'inventory/index.html', context)
+    if request.htmx:
+        response = render(request, 'components/section.html', {'items': items})
+        # response['HX-Push'] = …
+        return response
+    else:
+        return render(request, 'inventory/index.html', context)
 
 
 def patterns(request):
