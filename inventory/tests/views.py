@@ -115,7 +115,7 @@ class ReminderCardTests(TestCase):
         roll.save()
 
         response = self.client.get(reverse('index'))
-        self.assertContains(response, '<li class="type">BW</li>')
+        self.assertContains(response, 'type-bw')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
