@@ -129,13 +129,13 @@ def index(request):
         [
             {
                 'name': 'Current',
-                'count': 1,
+                'count': all_projects.filter(status='current').count(),
                 'rows': all_projects.filter(status='current'),
                 'action': 'view',
             },
             {
                 'name': 'Archived',
-                'count': 2,
+                'count': all_projects.filter(status='archived').count(),
                 'rows': all_projects.filter(status='archived'),
                 'action': 'view',
             }
