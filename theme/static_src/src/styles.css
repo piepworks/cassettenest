@@ -136,8 +136,57 @@
         dark:text-blue-300;
     }
   }
-}
 
-@layer utilities {
-  .js-only { @apply hidden; }
+  .type {
+    @apply bg-indigo-700;
+
+    &-empty {
+      @apply bg-transparent border-gray-300 dark:border-gray-500;
+
+      .reminder-iso { @apply text-gray-300 dark:text-gray-500; }
+    }
+
+    &-c41 {
+      @apply bg-blue-500 dark:bg-blue-600;
+
+      .fold { @apply bg-blue-300 dark:bg-blue-400; }
+      .reminder-type { @apply text-blue-300 dark:text-blue-400; }
+      .reminder-iso { @apply text-white; }
+      .reminder-push-pull { @apply text-blue-300 dark:text-blue-400; }
+    }
+
+    &-bw {
+      @apply bg-gray-400 dark:bg-gray-500;
+
+      .fold { @apply bg-gray-300 dark:bg-gray-400; }
+      .reminder-type { @apply text-gray-300 dark:text-gray-400; }
+      .reminder-iso { @apply text-white; }
+      .reminder-push-pull { @apply text-gray-300 dark:text-gray-400; }
+    }
+
+    &-e6 {
+      @apply bg-purple-600;
+
+      .fold { @apply bg-purple-400; }
+      .reminder-type { @apply text-purple-400; }
+      .reminder-iso { @apply text-white; }
+      .reminder-push-pull { @apply text-purple-400; }
+    }
+  }
+
+  @layer utilities {
+    .js-only { @apply hidden; }
+
+    .folded .reminder-square {
+      clip-path: var(--folded-corner);
+
+      .fold { @apply block; }
+    }
+
+    .unfolded .reminder-square {
+      clip-path: none;
+
+      .fold { @apply hidden; }
+    }
+  }
 }

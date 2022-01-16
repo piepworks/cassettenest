@@ -1,5 +1,7 @@
 <li>
-    <a href="{% if items.current_tab_action == 'load' %}{% url 'camera-load' item.id %}{% else %}{{ item.get_absolute_url }}{% endif %}" class="flex justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline p-4 sm:px-6">
+    <a
+        href="{% if items.current_tab_action == 'load' %}{% url 'camera-load' item.id %}{% else %}{{ item.get_absolute_url }}{% endif %}"
+        class="folded hover:unfolded md:unfolded md:hover:folded flex justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline p-4 sm:px-6">
         <div>
             <div class="flex items-center font-medium text-sm text-gray-900 dark:text-white truncate">
                 {% if items.current_tab_action == 'roll' %}
@@ -22,5 +24,8 @@
                 </div>
             </div>
         </div>
+        {% if items.current_tab_action == 'roll' %}
+            {% include 'components/reminder.html' %}
+        {% endif %}
     </a>
 </li>
