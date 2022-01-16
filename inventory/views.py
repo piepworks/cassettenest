@@ -108,8 +108,8 @@ def index(request):
             },
             {
                 'name': 'Ready to Load',
-                'count': cameras_empty.count(),
-                'rows': cameras_empty,
+                'count': cameras_unavailable.count(),
+                'rows': cameras_unavailable,
                 'action': 'load',
             },
             {
