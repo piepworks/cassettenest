@@ -241,7 +241,10 @@ class SectionTabs:
         return self.tabs[self.current_tab]['rows']
 
     def current_tab_action(self):
-        return self.tabs[self.current_tab]['action']
+        try:
+            return self.tabs[self.current_tab]['action']
+        except KeyError:
+            return 'view'
 
     def set_tab(self, new_tab):
         if new_tab.isdigit():
