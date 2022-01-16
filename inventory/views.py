@@ -52,6 +52,7 @@ from .utils import (
     preset_shutter_speeds,
     available_types,
     SectionTabs,
+    film_types,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -165,6 +166,7 @@ def index(request):
         'rolls_ready_count': rolls_ready_count,
         'rolls_storage_count': rolls_storage_count,
         'rolls_outstanding_count': rolls_outstanding_count,
+        'film_types': film_types,
     }
 
     # if request.htmx:
