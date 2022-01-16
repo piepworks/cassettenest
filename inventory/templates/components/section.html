@@ -17,19 +17,29 @@
             <div class="mt-4">
                 <div class="sm:hidden mb-5">
                     <label for="{{ slug }}_current-tab" class="sr-only">Select a tab</label>
-                    <select value="{{ items.current_tab }}" name="current-tab" class="block dark:bg-gray-700 w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                        {% for tab in items.tabs %}
-                        <option value="{{ forloop.counter0 }}">{{ tab.name }}</option>
-                        {% endfor %}
-                    </select>
-                    {# TODO: Add a "Go" button or something to make this work without JS. #}
+                    <form
+                        method="get"
+                        hx-get="{% url 'index' %}"
+                        action="{% url 'index' %}"
+                        hx-trigger="change"
+                        hx-target="#section_{{ items.slug }}"
+                        class="flex">
+                        <select
+                            name="{{ items.slug }}"
+                            class="block dark:bg-gray-700 w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            {% for tab in items.tabs %}
+                                <option value="{{ forloop.counter0 }}"{% if items.current_tab == forloop.counter0 %} selected{% endif %}>{{ tab.name }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <button class="no-js button primary ml-4">Go</button>
+                    </form>
                 </div>
                 <div class="hidden sm:block">
                     <nav class="tabs -mb-px flex space-x-8">
                         {% for tab in items.tabs %}
                             <a
                                 hx-get="{% url 'index' %}?{{ items.slug }}={{ forloop.counter0 }}"
-                                hx-trigger="click"
                                 hx-target="#section_{{ items.slug }}"
                                 href="?{{ items.slug }}={{ forloop.counter0 }}"
                                 class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">

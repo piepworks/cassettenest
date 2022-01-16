@@ -175,7 +175,7 @@
   }
 
   @layer utilities {
-    .js-only { @apply hidden; }
+    .has-js .no-js { @apply hidden; }
 
     .folded .reminder-square:not(.type-empty) {
       clip-path: var(--folded-corner);
