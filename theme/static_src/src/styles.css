@@ -141,7 +141,7 @@
 
   .type {
     &-empty {
-      @apply bg-transparent border-gray-300 dark:border-gray-500;
+      @apply border-2 border-dashed rounded-lg bg-transparent border-gray-300 dark:border-gray-500;
 
       .reminder-iso { @apply text-gray-300 dark:text-gray-500; }
     }
@@ -177,13 +177,13 @@
   @layer utilities {
     .js-only { @apply hidden; }
 
-    .folded .reminder-square {
+    .folded .reminder-square:not(.type-empty) {
       clip-path: var(--folded-corner);
 
       .fold { @apply block; }
     }
 
-    .unfolded .reminder-square {
+    .unfolded .reminder-square:not(.type-empty) {
       clip-path: none;
 
       .fold { @apply hidden; }

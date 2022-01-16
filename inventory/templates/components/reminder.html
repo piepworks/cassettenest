@@ -12,7 +12,7 @@
         <div aria-hidden="true" class="absolute fold bottom-0 left-0 h-4 w-4 rounded-tr"></div>
         <div class="reminder-type absolute top-1 right-2 text-xs">{{ type|upper }}</div>
     {% endif %}
-    <div class="reminder-iso {% if type == 'empty' %}text-lg{% else %}text-xl {% endif %}">
+    <div class="reminder-iso{% if type == 'empty' %} text-lg{% else %} text-xl{% endif %}">
         {% if type == 'empty' %}
             Empty
         {% elif roll_iso %}

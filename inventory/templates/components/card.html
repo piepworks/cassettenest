@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        {% if items.current_tab_action == 'roll' %}
+        {% if items.current_tab_action == 'roll' or items.current_tab_action == 'load' %}
             {% include 'components/reminder.html' %}
         {% endif %}
     </a>
