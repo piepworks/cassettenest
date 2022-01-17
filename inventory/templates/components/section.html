@@ -74,7 +74,7 @@
     </div>
 
     <div class="bg-white dark:bg-gray-600 overflow-hidden rounded-b-md mb-6">
-        {% if items %}
+        {% if items.current_rows %}
             <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
                 {% for row in items.current_rows %}
                     {% include 'components/card.html' with item=row %}

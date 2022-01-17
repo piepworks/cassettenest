@@ -18,6 +18,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
+from itertools import chain
 from waffle.decorators import waffle_flag
 import requests
 from .models import Camera, CameraBack, Stock, Film, Manufacturer, Journal, Project, Roll, Frame
@@ -77,30 +78,14 @@ def index(request):
     cameras_unavailable = cameras_total.filter(status='unavailable')
     rolls = Roll.objects.filter(owner=owner)
     rolls_loaded = rolls.filter(status=status_number('loaded'))
-    rolls_ready_count = rolls.filter(status=status_number('shot')).count()
-    rolls_storage_count = rolls.filter(
-        status=status_number('storage')
-    ).count()
     all_projects = Project.objects.filter(
         owner=owner,
     ).order_by('-updated_at',)
-    projects_count = all_projects.count()
-    rolls_outstanding_count = rolls.exclude(
-        status=status_number('storage')
-    ).exclude(
-        status=status_number('archived')
-    ).count()
-
-    current_tabs = {
-        'cameras': 0,
-        'projects': 0
-    }
-    items = ''
 
     cameras = SectionTabs(
         'Cameras',
         reverse('camera-add'),
-        current_tabs['cameras'],
+        0,
         [
             {
                 'name': 'Loaded',
@@ -110,8 +95,8 @@ def index(request):
             },
             {
                 'name': 'Ready to Load',
-                'count': cameras_unavailable.count(),
-                'rows': cameras_unavailable,
+                'count': cameras_empty.count() + camera_backs_empty.count(),
+                'rows': list(chain(cameras_empty, camera_backs_empty)),
                 'action': 'load',
             },
             {
@@ -125,7 +110,7 @@ def index(request):
     projects = SectionTabs(
         'Projects',
         reverse('project-add'),
-        current_tabs['projects'],
+        0,
         [
             {
                 'name': 'Current',
@@ -159,15 +144,8 @@ def index(request):
         'email': owner.email,
         'cameras': cameras,
         'cameras_total': cameras_total,
-        'cameras_empty': cameras_empty,
-        'camera_backs_empty': camera_backs_empty,
         'projects': projects,
-        'projects_count': projects_count,
         'rolls': rolls,
-        'rolls_loaded': rolls_loaded,
-        'rolls_ready_count': rolls_ready_count,
-        'rolls_storage_count': rolls_storage_count,
-        'rolls_outstanding_count': rolls_outstanding_count,
         'film_types': film_types,
     }
 
