@@ -129,35 +129,42 @@ def index(request):
     # as well as jumping to the current section's id. These jump links
     # will serve as permalink pages for cameras and projects.
     if request.GET.get('c'):
-        # Cameras
         cameras.set_tab(request.GET.get('c'))
-        # if request.htmx:
-        #     items = cameras
 
     if request.GET.get('p'):
-        # Projects
         projects.set_tab(request.GET.get('p'))
-        # if request.htmx:
-        #     items = projects
 
-    context = {
-        'email': owner.email,
-        'cameras': cameras,
-        'cameras_total': cameras_total,
-        'projects': projects,
-        'rolls': rolls,
-        'film_types': film_types,
-    }
+    if request.htmx:
+        slug = request.GET.get('slug')
+        c = request.GET.get('c') if request.GET.get('c') else 0
+        p = request.GET.get('p') if request.GET.get('p') else 0
 
-    # if request.htmx:
-    #     response = render(request, 'components/section.html', {'items': items})
-    #     # index_url = reverse('index')
-    #     # updated_querystring = f'?c={cameras.current_tab}&p={projects.current_tab}'
-    #     # response['HX-Push'] = index_url + updated_querystring
+        if slug == 'c':
+            cameras.set_tab(c)
+        elif slug == 'p':
+            projects.set_tab(p)
 
-    #     return response
-    # else:
-    return render(request, 'inventory/index.html', context)
+        context = {
+            'cameras': cameras,
+            'projects': projects,
+        }
+
+        response = render(request, 'partials/homepage-sections.html', context)
+        response['HX-Push'] = reverse('index') + f'?c={c}&p={p}'
+
+        return response
+
+    else:
+        context = {
+            'email': owner.email,
+            'cameras': cameras,
+            'cameras_total': cameras_total,
+            'projects': projects,
+            'rolls': rolls,
+            'film_types': film_types,
+        }
+
+        return render(request, 'inventory/index.html', context)
 
 
 @require_POST

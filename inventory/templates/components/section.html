@@ -3,7 +3,6 @@
 {% if adjacent_section %}
     {% capture as adjacent_slug silent %}{% if items.slug == 'c' %}p{% else %}c{% endif %}{% endcapture %}
 {% endif %}
-<p>{{ adjacent_slug }}: {{ adjacent_section }}</p>
 <section id="section_{{ items.slug }}" class="rounded-lg bg-white dark:bg-gray-600 shadow">
     <div class="px-4 pt-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
         <div class="mb-5 -ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
@@ -26,12 +25,12 @@
                     <form
                         id="section_form_{{ items.slug }}"
                         method="get"
-                        hx-post="{% url 'hx-section' %}"
+                        hx-get="{% url 'index' %}"
                         action="{% url 'index' %}"
                         hx-trigger="change"
-                        hx-target="#section_{{ items.slug }}"
+                        hx-target="#homepage_sections"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                        hx-vals='{"slug": "{{ items.slug }}"}'
+                        hx-vals='{"slug": "{{ items.slug }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
                         class="flex">
                         {% if items.slug == 'c' and request.GET.p %}
                             <input type="hidden" name="p" value="{{ request.GET.p }}" />
@@ -53,10 +52,10 @@
                     <nav class="tabs -mb-px flex space-x-8">
                         {% for tab in items.tabs %}
                             <a
-                                hx-post="{% url 'hx-section' %}"
+                                hx-get="{% url 'index' %}"
                                 hx-vals='{"slug": "{{ items.slug }}", "{{ items.slug }}": "{{ forloop.counter0 }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
                                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                hx-target="#section_{{ items.slug }}"
+                                hx-target="#homepage_sections"
                                 href="?{{ items.slug }}={{ forloop.counter0 }}{% if adjacent_section %}&{{ adjacent_slug }}={{ adjacent_section }}{% endif %}"
                                 class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
                                 {{ tab.name }}

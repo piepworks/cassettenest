@@ -6,7 +6,8 @@
 {% include 'inventory/_onboarding.html' %}
 {% endif %}
 
-{% include 'components/section.html' with items=cameras %}
-{% include 'components/section.html' with items=projects %}
+<div id="homepage_sections">
+    {% include 'partials/homepage-sections.html' %}
+</div>
 
 {% endblock %}
