@@ -106,6 +106,9 @@ urlpatterns = [
     path('paddle-webhooks', views.paddle_webhooks, name='paddle-webhooks'),
     path('subscription-update', views.subscription_update, name='subscription-update'),
     path('subscription-created', views.subscription_created, name='subscription-created'),
+
+    # Ajax-only
+    path('hx-section', views.hx_section, name='hx-section'),
 ]
 
 if settings.DEBUG:

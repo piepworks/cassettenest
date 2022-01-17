@@ -146,14 +146,14 @@ def index(request):
     if request.GET.get('c'):
         # Cameras
         cameras.set_tab(request.GET.get('c'))
-        if request.htmx:
-            items = cameras
+        # if request.htmx:
+        #     items = cameras
 
     if request.GET.get('p'):
         # Projects
         projects.set_tab(request.GET.get('p'))
-        if request.htmx:
-            items = projects
+        # if request.htmx:
+        #     items = projects
 
     context = {
         'email': owner.email,
@@ -171,15 +171,24 @@ def index(request):
         'film_types': film_types,
     }
 
-    if request.htmx:
-        response = render(request, 'components/section.html', {'items': items})
-        # index_url = reverse('index')
-        # updated_querystring = f'?c={cameras.current_tab}&p={projects.current_tab}'
-        # response['HX-Push'] = index_url + updated_querystring
+    # if request.htmx:
+    #     response = render(request, 'components/section.html', {'items': items})
+    #     # index_url = reverse('index')
+    #     # updated_querystring = f'?c={cameras.current_tab}&p={projects.current_tab}'
+    #     # response['HX-Push'] = index_url + updated_querystring
 
-        return response
-    else:
-        return render(request, 'inventory/index.html', context)
+    #     return response
+    # else:
+    return render(request, 'inventory/index.html', context)
+
+
+@require_POST
+@login_required
+def hx_section(request):
+    print('slug: ' + request.POST.get('slug'))
+    print('c: ' + request.POST.get('c'))
+    print('p: ' + request.POST.get('p'))
+    return HttpResponse('Here’s some section content!')
 
 
 def patterns(request):
@@ -227,7 +236,7 @@ def marketing_site(request):
         return HttpResponseForbidden('You are not logged in.')
 
 
-@ login_required
+@login_required
 def settings(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
