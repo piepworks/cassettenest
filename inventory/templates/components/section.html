@@ -26,7 +26,7 @@
                         id="section_form_{{ items.slug }}"
                         method="get"
                         hx-get="{% url 'index' %}"
-                        action="{% url 'index' %}"
+                        action="{% url 'index' %}#section_{{ items.slug }}"
                         hx-trigger="change"
                         hx-target="#homepage_sections"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
@@ -56,7 +56,7 @@
                                 hx-vals='{"slug": "{{ items.slug }}", "{{ items.slug }}": "{{ forloop.counter0 }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
                                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                 hx-target="#homepage_sections"
-                                href="?{{ items.slug }}={{ forloop.counter0 }}{% if adjacent_section %}&{{ adjacent_slug }}={{ adjacent_section }}{% endif %}"
+                                href="?{{ items.slug }}={{ forloop.counter0 }}{% if adjacent_section %}&{{ adjacent_slug }}={{ adjacent_section }}{% endif %}#section_{{ items.slug }}"
                                 class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
                                 {{ tab.name }}
                                 {% if tab.count > 0 %}

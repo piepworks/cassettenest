@@ -125,9 +125,6 @@ def index(request):
         ]
     )
 
-    # Get the current tab of all the sections on the page if available
-    # as well as jumping to the current section's id. These jump links
-    # will serve as permalink pages for cameras and projects.
     if request.GET.get('c'):
         cameras.set_tab(request.GET.get('c'))
 
