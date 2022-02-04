@@ -1,18 +1,18 @@
 <div class="action" x-data>
     {% if parent_item %}
         {% if key or key is 0 %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id key %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button primary" href="{% url url|add:'-edit' parent_item.id key %}">
         {% else %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id item.id %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button primary" href="{% url url|add:'-edit' parent_item.id item.id %}">
         {% endif %}
     {% else %}
         {% if key %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' key %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button primary" href="{% url url|add:'-edit' key %}">
         {% else %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' item.id %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button primary" href="{% url url|add:'-edit' item.id %}">
         {% endif %}
     {% endif %}
-            {% include 'inventory/_github-icon.html' with id='pencil' title='Edit '|add:name %}
+            Edit
         </a>
     {% if not prevent_delete %}
         {% if parent_item %}
@@ -29,8 +29,8 @@
             {% endif %}
         {% endif %}
                 {% csrf_token %}
-                <button aria-label="Delete {{ name }}" class="icon icon-destructive">
-                    {% include 'inventory/_github-icon.html' with id='trashcan' title='Delete '|add:name %}
+                <button aria-label="Delete {{ name }}" class="button destructive">
+                    Delete
                 </button>
             </form>
     {% endif %}
