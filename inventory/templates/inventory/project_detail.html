@@ -4,14 +4,13 @@
 {% block title %}{{ project.name }}{% endblock %}
 
 {% block content %}
-<div class="raw">
-<header class="c-heading">
-    <div class="flex">
-        {% include 'inventory/_heading-back.html' with url='projects' name='projects' %}
+<div class="page-heading">
+    <div class="inner">
+        {# include 'inventory/_heading-back.html' with url='projects' name='projects' #}
         <h1>{{ project.name }}</h1>
         {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
     </div>
-</header>
+</div>
 
 <p>Status: {{ project.get_status_display }}</p>
 
@@ -50,8 +49,6 @@
     <hr />
     <p><i>This project is archived. You can add rolls and cameras to it if you <a href="{% url 'project-edit' project.id %}">change its status</a>.</i></p>
 {% endif %}
-</div>
-
 </div>
 {% endblock %}
 

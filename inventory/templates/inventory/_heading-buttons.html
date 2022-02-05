@@ -1,15 +1,15 @@
-<div class="action" x-data>
+<div class="actions mt-4 flex-shrink-0 flex md:mt-0 md:ml-4 space-x-3" x-data>
     {% if parent_item %}
         {% if key or key is 0 %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button primary" href="{% url url|add:'-edit' parent_item.id key %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' parent_item.id key %}">
         {% else %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button primary" href="{% url url|add:'-edit' parent_item.id item.id %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' parent_item.id item.id %}">
         {% endif %}
     {% else %}
         {% if key %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button primary" href="{% url url|add:'-edit' key %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' key %}">
         {% else %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button primary" href="{% url url|add:'-edit' item.id %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' item.id %}">
         {% endif %}
     {% endif %}
             Edit

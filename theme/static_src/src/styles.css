@@ -25,6 +25,28 @@
 }
 
 @layer components {
+  .page-heading {
+    @apply
+      md:flex
+      md:items-center
+      md:justify-between;
+
+    .inner {
+      @apply
+        flex-1
+        min-w-0;
+    }
+
+    h1 {
+      @apply
+        text-2xl
+        font-bold
+        leading-7
+        sm:text-3xl
+        sm:truncate;
+    }
+  }
+
   .button {
     @apply
       inline-flex

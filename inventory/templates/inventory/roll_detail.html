@@ -14,21 +14,19 @@
 {% else %}
     {% capture as film_url silent %}{% url 'film-slug-redirect' roll.film.slug %}{% endcapture %}
 {% endif %}
-<div class="raw">
-    <header class="c-heading">
-        <div class="flex">
-            {% if roll.code %}
-            <h1>{{ roll.code }}</h1>
-            <small class="year">{{ roll.started_on|date:'Y' }}</small>
-            {% else %}
-            <h1>{{ roll }}</h1>
-            {% endif %}
+<div class="page-heading">
+    <div class="inner">
+        {% if roll.code %}
+        <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">{{ roll.code }}</h1>
+        <small class="year">{{ roll.started_on|date:'Y' }}</small>
+        {% else %}
+        <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">{{ roll }}</h1>
+        {% endif %}
+    </div>
+    {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
+</div>
 
-            {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
-        </div>
-
-        <h2>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{% if not roll.film.stock %}{{ roll.film.name }}{% else %}{{ roll.film }}{% endif %}</a> </h2>
-    </header>
+<h2>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{% if not roll.film.stock %}{{ roll.film.name }}{% else %}{{ roll.film }}{% endif %}</a> </h2>
 
 <ul class="meta">
     <li><a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></li>
