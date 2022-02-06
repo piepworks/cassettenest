@@ -5,13 +5,13 @@ services:
 
   tailwind:
     build: .
-    command: bash -c 'npm --prefix ./theme/static_src install ./theme/static_src &&
-      python manage.py tailwind start'
+    command: bash -c 'npm --prefix ./theme/static_src install ./theme/static_src && python manage.py tailwind start'
     environment:
       # Just enough so Django can start up.
       - DEBUG=${DEBUG}
       - MARKETING_SITE_URL=${MARKETING_SITE_URL}
       - DBBACKUP_STORAGE=${DBBACKUP_STORAGE}
+      - CSRF_TRUSTED_ORIGINS=${CSRF_TRUSTED_ORIGINS}
     tty: true
     volumes:
       - .:/code
