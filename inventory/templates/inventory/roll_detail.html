@@ -1,5 +1,6 @@
 {% extends 'base_site.html' %}
-{% load markdown_deux_tags %}
+{% load markdown_extras %}
+
 {% load waffle_tags %}
 {% load capture_tags %}
 
@@ -85,7 +86,7 @@
             {% if roll.notes_on_development %}
             <li>Notes on Development:
                 <ul>
-                    <li>{{ roll.notes_on_development|markdown }}</li>
+                    <li>{{ roll.notes_on_development|markdown|safe }}</li>
                 </ul>
             </li>
             {% endif %}
@@ -178,7 +179,7 @@
                 </td>
                 <td>
                     <span class="do-not-print">{{ entry.notes }}</span>
-                    <div class="print-only">{{ entry.notes|markdown }}</div>
+                    <div class="print-only">{{ entry.notes|markdown|safe }}</div>
                 </td>
             </tr>
             {% endfor %}

@@ -1,5 +1,4 @@
 import os
-import markdown2
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Count, Q
@@ -110,15 +109,6 @@ def pluralize(noun, count):
     if count != 1:
         return noun + 's'
     return noun
-
-
-def render_markdown(file):
-    file_path = os.path.join(
-        settings.BASE_DIR,
-        'inventory/templates/',
-        file
-    )
-    return markdown2.markdown_path(file_path)
 
 
 def get_host(request):
