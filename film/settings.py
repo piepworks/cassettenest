@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import socket
+import bleach
 from pytz import common_timezones
 from django.core.management.utils import get_random_secret_key
 
@@ -46,6 +47,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
 DEBUG = int(os.environ.get('DEBUG', default=0))
 
 ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS')]
+CSRF_TRUSTED_ORIGINS = [os.environ.get('CSRF_TRUSTED_ORIGINS')]
 
 
 # Application definition
@@ -59,7 +61,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'markdown_deux',
+    'django_bleach',
     'capture_tag',
     'debug_toolbar',
     'waffle',
@@ -215,6 +217,8 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_METHODS = ['GET']
 CORS_ALLOW_CREDENTIALS = True
 CORS_URLS_REGEX = r"^/marketing-site$"
+
+BLEACH_ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.append('p')
 
 # Django Database Backup
 DBBACKUP_STORAGE = os.environ.get('DBBACKUP_STORAGE')

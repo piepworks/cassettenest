@@ -21,6 +21,7 @@ jobs:
           POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
           POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+          CSRF_TRUSTED_ORIGINS: ${{ secrets.CSRF_TRUSTED_ORIGINS }}
           MARKETING_SITE_URL: ${{ secrets.MARKETING_SITE_URL }}
           EMAIL_BACKEND: ${{ secrets.EMAIL_BACKEND }}
           EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
