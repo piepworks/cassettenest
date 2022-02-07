@@ -9,4 +9,4 @@ temp_folder="${HOME}/Code/cassettenest/backups"
 docker-compose exec -T web python manage.py dbrestore -q --noinput -z -i local.psql.gz
 
 # Delete the production backup we verified from the local machine.
-rm ${temp_folder}/cassettenest_*.psql.gz
+rm ${temp_folder}/cassettenest_*.psql.bin.gz
