@@ -1,9 +1,9 @@
 <li>
     <a
         href="{% if items.current_tab_action == 'load' %}{% url 'camera-load' item.id %}{% else %}{{ item.get_absolute_url }}{% endif %}"
-        class="folded hover:unfolded md:unfolded md:hover:folded flex justify-between hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors no-underline hover:no-underline p-4 sm:px-6">
+        class="folded hover:unfolded md:unfolded md:hover:folded flex justify-between hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors no-underline hover:no-underline p-4 sm:px-6">
         <div>
-            <div class="flex items-center font-medium text-sm text-gray-900 dark:text-white truncate">
+            <div class="flex items-center font-medium text-sm text-stone-900 dark:text-white truncate">
                 {% if items.current_tab_action == 'roll' %}
                     {% if item.camera_back %}
                         {{ item.camera_back }}
@@ -15,8 +15,8 @@
                 {% endif %}
             </div>
             <div class="mt-2 sm:flex sm:justify-between">
-                <div class="mt-2 flex items-center text-sm text-gray-300 dark:text-gray-500 sm:mt-0">
-                    {% include 'svg/heroicons/calendar.svg' with class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-300 dark:text-gray-500" %}
+                <div class="mt-2 flex items-center text-sm text-stone-300 dark:text-stone-500 sm:mt-0">
+                    {% include 'svg/heroicons/calendar.svg' with class="flex-shrink-0 mr-1.5 h-5 w-5 text-stone-300 dark:text-stone-500" %}
                     <p>
                         {% if items.current_tab_action == 'roll' %}Loaded on {% endif %}
                         <time datetime="{{ item.created_at }}">{{ item.created_at|date:'F j, Y' }}</time>

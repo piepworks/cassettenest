@@ -3,11 +3,11 @@
 {% if adjacent_section %}
     {% capture as adjacent_slug silent %}{% if items.slug == 'c' %}p{% else %}c{% endif %}{% endcapture %}
 {% endif %}
-<section id="section_{{ items.slug }}" class="rounded-lg bg-white dark:bg-gray-600 shadow">
-    <div class="px-4 pt-5 sm:px-6 border-b border-gray-200 dark:border-gray-700">
+<section id="section_{{ items.slug }}" class="rounded-lg bg-white dark:bg-stone-600 shadow">
+    <div class="px-4 pt-5 sm:px-6 border-b border-stone-200 dark:border-stone-700">
         <div class="mb-5 -ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
             <div class="ml-4 mt-2">
-                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                <h3 class="text-lg leading-6 font-medium text-stone-900 dark:text-white">
                     {{ items.title }}
                 </h3>
             </div>
@@ -39,7 +39,7 @@
                         {% endif %}
                         <select
                             name="{{ items.slug }}"
-                            class="block dark:bg-gray-700 w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            class="block dark:bg-stone-700 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                             {% for tab in items.tabs %}
                                 <option value="{{ forloop.counter0 }}"{% if items.current_tab == forloop.counter0 %} selected{% endif %}>{{ tab.name }}</option>
                             {% endfor %}
@@ -60,7 +60,7 @@
                                 class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
                                 {{ tab.name }}
                                 {% if tab.count > 0 %}
-                                    <span class="{% if forloop.counter0 == items.current_tab %}bg-blue-100 dark:bg-blue-400 text-blue-600 dark:text-blue-900 {% else %}bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 {% endif %}hidden ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">
+                                    <span class="{% if forloop.counter0 == items.current_tab %}bg-blue-100 dark:bg-blue-400 text-blue-600 dark:text-blue-900 {% else %}bg-stone-100 dark:bg-stone-700 text-stone-900 dark:text-stone-300 {% endif %}hidden ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">
                                         {{ tab.count }}
                                     </span>
                                 {% endif %}
@@ -72,15 +72,15 @@
         {% endif %}
     </div>
 
-    <div class="bg-white dark:bg-gray-600 overflow-hidden rounded-b-md mb-6">
+    <div class="bg-white dark:bg-stone-600 overflow-hidden rounded-b-md mb-6">
         {% if items.current_rows %}
-            <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+            <ul role="list" class="divide-y divide-stone-200 dark:divide-stone-700">
                 {% for row in items.current_rows %}
                     {% include 'components/card.html' with item=row %}
                 {% endfor %}
             </ul>
         {% else %}
-            <div class="flex items-center p-7 text-2xl text-gray-400">Nothing here…</div>
+            <div class="flex items-center p-7 text-2xl text-stone-400">Nothing here…</div>
         {% endif %}
     </div>
 </section>

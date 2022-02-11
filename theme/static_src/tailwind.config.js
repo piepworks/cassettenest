@@ -1,5 +1,3 @@
-const colors = require('tailwindcss/colors');
-
 module.exports = {
   // darkMode: 'class',
   content: [
@@ -11,13 +9,6 @@ module.exports = {
     '../../**/templates/**/*.js',
     '../../**/templates/**/*.svg',
   ],
-  theme: {
-    extend: {
-      colors: {
-        gray: colors.stone,
-      }
-    },
-  },
   plugins: [
     require('@tailwindcss/forms'),
     require('@tailwindcss/typography'),

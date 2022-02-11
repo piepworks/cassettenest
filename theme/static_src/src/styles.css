@@ -5,10 +5,10 @@
 @layer base {
   body {
     @apply
-      bg-gray-100
-      dark:bg-gray-800
-      text-gray-900
-      dark:text-gray-200;
+      bg-stone-100
+      dark:bg-stone-800
+      text-stone-900
+      dark:text-stone-200;
 
     --folded-corner: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0% 80%);
   }
@@ -25,13 +25,13 @@
 
   .text-subdued {
     @apply
-      text-gray-500
-      dark:text-gray-400;
+      text-stone-500
+      dark:text-stone-400;
 
     a& {
       @apply
-        hover:text-gray-700
-        dark:hover:text-gray-100;
+        hover:text-stone-700
+        dark:hover:text-stone-100;
     }
   }
 }
@@ -66,26 +66,26 @@
       px-4
       py-2
       border
-      border-gray-300
-      dark:border-gray-500
+      border-stone-300
+      dark:border-stone-500
       rounded-md
       shadow-sm
       text-sm
       font-medium
-      text-gray-700
-      dark:text-gray-200
-      hover:text-gray-700
-      dark:hover:text-gray-200
+      text-stone-700
+      dark:text-stone-200
+      hover:text-stone-700
+      dark:hover:text-stone-200
       bg-white
-      dark:bg-gray-600
-      hover:bg-gray-50
-      dark:hover:bg-gray-900
-      dark:hover:border-gray-600
+      dark:bg-stone-600
+      hover:bg-stone-50
+      dark:hover:bg-stone-900
+      dark:hover:border-stone-600
       focus:outline-none
       focus:ring-2
       focus:ring-offset-2
-      focus:ring-offset-gray-100
-      dark:focus:ring-offset-gray-800
+      focus:ring-offset-stone-100
+      dark:focus:ring-offset-stone-800
       focus:ring-blue-500;
 
     &,
@@ -115,12 +115,12 @@
 
   #menu-inner {
     @apply
-      bg-gray-800
-      dark:bg-gray-900;
+      bg-stone-800
+      dark:bg-stone-900;
 
     svg {
       @apply
-        text-gray-400
+        text-stone-400
         mr-3
         flex-shrink-0
         h-6
@@ -132,16 +132,16 @@
         @apply
           p-2
           no-underline
-          text-gray-300
+          text-stone-300
           flex-grow;
       }
 
       li,
       a {
         @apply
-          text-gray-300
-          hover:bg-gray-700
-          dark:hover:bg-gray-800
+          text-stone-300
+          hover:bg-stone-700
+          dark:hover:bg-stone-800
           hover:text-white
           flex
           items-center
@@ -152,13 +152,13 @@
         &.current {
           @apply
             p-2
-            bg-gray-900
+            bg-stone-900
             dark:bg-black
             text-white;
 
           a { @apply -m-2; }
 
-          svg { @apply text-gray-300; }
+          svg { @apply text-stone-300; }
         }
       }
     }
@@ -168,11 +168,11 @@
     a {
       @apply
         border-transparent
-        text-gray-500
-        dark:text-gray-400
-        hover:text-gray-700
-        dark:hover:text-gray-200
-        hover:border-gray-300
+        text-stone-500
+        dark:text-stone-400
+        hover:text-stone-700
+        dark:hover:text-stone-200
+        hover:border-stone-300
         no-underline;
     }
 
@@ -186,9 +186,9 @@
 
   .type {
     &-empty {
-      @apply border-2 border-dashed rounded-lg bg-transparent border-gray-300 dark:border-gray-500;
+      @apply border-2 border-dashed rounded-lg bg-transparent border-stone-300 dark:border-stone-500;
 
-      .reminder-iso { @apply text-gray-300 dark:text-gray-500; }
+      .reminder-iso { @apply text-stone-300 dark:text-stone-500; }
     }
 
     &-c41 {
@@ -201,12 +201,12 @@
     }
 
     &-bw {
-      @apply bg-gray-400 dark:bg-gray-500;
+      @apply bg-stone-400 dark:bg-stone-500;
 
-      .fold { @apply bg-gray-300 dark:bg-gray-400; }
-      .reminder-type { @apply text-gray-300 dark:text-gray-400; }
+      .fold { @apply bg-stone-300 dark:bg-stone-400; }
+      .reminder-type { @apply text-stone-300 dark:text-stone-400; }
       .reminder-iso { @apply text-white; }
-      .reminder-push-pull { @apply text-gray-300 dark:text-gray-400; }
+      .reminder-push-pull { @apply text-stone-300 dark:text-stone-400; }
     }
 
     &-e6 {
@@ -231,7 +231,7 @@
         px-4
         py-5
         bg-white
-        dark:bg-gray-600
+        dark:bg-stone-600
         shadow
         rounded-lg
         overflow-hidden
@@ -243,8 +243,8 @@
         text-sm
         font-medium
         truncate
-        text-gray-500
-        dark:text-gray-300;
+        text-stone-500
+        dark:text-stone-300;
     }
 
     dd {
@@ -252,7 +252,7 @@
         mt-1
         text-3xl
         font-semibold
-        text-gray-900
+        text-stone-900
         dark:text-white;
     }
   }
