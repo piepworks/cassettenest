@@ -207,6 +207,44 @@
     }
   }
 
+  .stats {
+    @apply
+      grid
+      grid-cols-1
+      gap-5
+      sm:grid-cols-2;
+
+    > div {
+      @apply
+        px-4
+        py-5
+        bg-white
+        dark:bg-gray-600
+        shadow
+        rounded-lg
+        overflow-hidden
+        sm:p-6;
+    }
+
+    dt {
+      @apply
+        text-sm
+        font-medium
+        truncate
+        text-gray-500
+        dark:text-gray-300;
+    }
+
+    dd {
+      @apply
+        mt-1
+        text-3xl
+        font-semibold
+        text-gray-900
+        dark:text-white;
+    }
+  }
+
   @layer utilities {
     .has-js .no-js { @apply hidden; }
 

@@ -15,30 +15,20 @@
 
 {% block content %}
 {% if not camera.multiple_backs %}
-{% comment %}Don’t show status for a camera with backs.{% endcomment %}
-<div>
-    <dl class="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div class="px-4 py-5 bg-white dark:bg-gray-600 shadow rounded-lg overflow-hidden sm:p-6">
-            <dt class="text-sm font-medium truncate text-gray-500 dark:text-gray-300">
-                Status
-            </dt>
-            <dd class="mt-1 text-3xl font-semibold text-gray-900 dark:text-white">
-                {{ camera.get_status_display }}
-            </dd>
-        </div>
+{# Don’t show status for a camera with backs. #}
+<dl class="stats">
+    <div>
+        <dt>Status</dt>
+        <dd>{{ camera.get_status_display }}</dd>
+    </div>
 
-        {% if rolls_history %}
-        <div class="px-4 py-5 bg-white dark:bg-gray-600 shadow rounded-lg overflow-hidden sm:p-6">
-            <dt class="text-sm font-medium truncate text-gray-500 dark:text-gray-300">
-                 Roll{{ rolls_history.count|pluralize }} finished
-            </dt>
-            <dd class="mt-1 text-3xl font-semibold text-gray-900 dark:text-white">
-                {{ rolls_history.count }}
-            </dd>
-        </div>
-        {% endif %}
-    </dl>
-</div>
+    {% if rolls_history %}
+    <div>
+        <dt>Roll{{ rolls_history.count|pluralize }} finished</dt>
+        <dd>{{ rolls_history.count }}</dd>
+    </div>
+    {% endif %}
+</dl>
 {% endif %}
 
 <p>Format: {{ camera.get_format_display }}</p>
