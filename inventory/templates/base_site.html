@@ -24,21 +24,20 @@
         <div class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">
             {% include '_hamburger.html' %}
 
-            <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none pt-2 md:pt-6 pb-16">
+            <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
                 <div class="pt-2 md:pt-6 pb-16">
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+                    <div class="max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8">
                         {% if user.is_authenticated %}
                             {% flag 'paddle' %}
                                 {% include 'inventory/_subscription-banner-wrapper.html' %}
                             {% endflag %}
-
                         {% endif %}
-
                         {% include 'inventory/_messages.html' %}
 
-                        <main>
-                            {% block content %}{% endblock %}
-                        </main>
+                        {% block header %}{% endblock %}
+                    </div>
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+                        {% block content %}{% endblock %}
                     </div>
                 </div>
 
