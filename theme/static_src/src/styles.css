@@ -23,42 +23,8 @@
       hover:underline;
   }
 
-  .text-subdued {
-    @apply
-      text-stone-500
-      dark:text-stone-400;
-
-    a& {
-      @apply
-        hover:text-stone-700
-        dark:hover:text-stone-100;
-    }
-  }
-}
-
-@layer components {
-  .page-heading {
-    @apply
-      md:flex
-      md:items-center
-      md:justify-between;
-
-    .inner {
-      @apply
-        flex-1
-        min-w-0;
-    }
-
-    h1 {
-      @apply
-        text-2xl
-        font-bold
-        leading-7
-        sm:text-3xl
-        sm:truncate;
-    }
-  }
-
+  button,
+  input[type='submit'],
   .button {
     @apply
       inline-flex
@@ -110,6 +76,30 @@
       @apply
         bg-red-600
         hover:bg-red-700;
+    }
+  }
+}
+
+@layer components {
+  .page-heading {
+    @apply
+      md:flex
+      md:items-center
+      md:justify-between;
+
+    .inner {
+      @apply
+        flex-1
+        min-w-0;
+    }
+
+    h1 {
+      @apply
+        text-2xl
+        font-bold
+        leading-7
+        sm:text-3xl
+        sm:truncate;
     }
   }
 
@@ -164,7 +154,7 @@
     }
   }
 
-  section .tabs {
+  .tabs {
     a {
       @apply
         border-transparent
@@ -271,5 +261,17 @@
     clip-path: none;
 
     .fold { @apply hidden; }
+  }
+
+  .text-subdued {
+    @apply
+      text-stone-500
+      dark:text-stone-400;
+
+    a& {
+      @apply
+        hover:text-stone-700
+        dark:hover:text-stone-100;
+    }
   }
 }
