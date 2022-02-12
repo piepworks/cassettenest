@@ -31,23 +31,23 @@
 </dl>
 {% endif %}
 
-<div class="mt-10">
-    <div class="mt-5 border-stone-200 dark:border-stone-600">
-        <dl class="sm:divide-y sm:divide-stone-200 sm:dark:divide-stone-600">
-            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                <dt class="text-sm font-medium text-subdued">
+<div class="metadata">
+    <div>
+        <dl>
+            <div>
+                <dt>
                     Format
                 </dt>
-                <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2">
+                <dd>
                     {{ camera.get_format_display }}
                 </dd>
             </div>
             {% if camera.notes %}
-            <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4">
-                <dt class="text-sm font-medium text-subdued">
+            <div>
+                <dt>
                     Notes
                 </dt>
-                <dd class="mt-1 text-sm sm:mt-0 sm:col-span-2 prose prose-stone dark:prose-invert">
+                <dd>
                     {{ camera.notes|markdown }}
                 </dd>
             </div>
