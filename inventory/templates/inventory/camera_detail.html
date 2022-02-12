@@ -1,5 +1,5 @@
 {% extends 'base_site.html' %}
-{% load markdown_extras %}
+{% load markdown_extras capture_tags %}
 
 {% block title %}{{ camera.name }}{% endblock %}
 
@@ -9,7 +9,16 @@
     <div class="inner">
         <h1>{{ camera.name }}</h1>
     </div>
-    {% include 'inventory/_heading-buttons.html' with item=camera url='camera' name='camera' prevent_delete=True %}
+
+    {% capture as additional_buttons silent %}
+        {% if not camera.multiple_backs and camera.status == 'loaded' %}
+            {% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}
+        {% elif camera.status != 'unavailable' %}
+            <a class="button primary" href="{% url 'camera-load' camera.id %}">Load this camera</a>
+        {% endif %}
+    {% endcapture %}
+
+    {% include 'inventory/_heading-buttons.html' with item=camera url='camera' name='camera' prevent_delete=True additional_buttons=additional_buttons %}
 </div>
 {% endblock %}
 
