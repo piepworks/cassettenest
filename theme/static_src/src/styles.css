@@ -256,20 +256,20 @@
         dark:text-white;
     }
   }
+}
 
-  @layer utilities {
-    .has-js .no-js { @apply hidden; }
+@layer utilities {
+  .has-js .no-js { @apply hidden; }
 
-    .folded .reminder-square:not(.type-empty) {
-      clip-path: var(--folded-corner);
+  .folded .reminder-square:not(.type-empty) {
+    clip-path: var(--folded-corner);
 
-      .fold { @apply block; }
-    }
+    .fold { @apply block; }
+  }
 
-    .unfolded .reminder-square:not(.type-empty) {
-      clip-path: none;
+  .unfolded .reminder-square:not(.type-empty) {
+    clip-path: none;
 
-      .fold { @apply hidden; }
-    }
+    .fold { @apply hidden; }
   }
 }
