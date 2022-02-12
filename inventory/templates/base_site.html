@@ -25,8 +25,8 @@
             {% include '_hamburger.html' %}
 
             <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
-                <div class="pt-2 md:pt-6 pb-16">
-                    <div class="max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8">
+                <main class="pt-2 md:pt-6 pb-16">
+                    <div class="main-header max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8">
                         {% if user.is_authenticated %}
                             {% flag 'paddle' %}
                                 {% include 'inventory/_subscription-banner-wrapper.html' %}
@@ -36,10 +36,10 @@
 
                         {% block header %}{% endblock %}
                     </div>
-                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+                    <div class="main-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
                         {% block content %}{% endblock %}
                     </div>
-                </div>
+                </main>
 
                 {% comment %}
                 <footer>
