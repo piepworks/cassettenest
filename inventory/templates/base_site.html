@@ -26,6 +26,7 @@
 
             <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
                 <main class="pt-2 md:pt-6 pb-16">
+                    {% spaceless %}
                     <div class="main-header max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8">
                         {% if user.is_authenticated %}
                             {% flag 'paddle' %}
@@ -36,6 +37,7 @@
 
                         {% block header %}{% endblock %}
                     </div>
+                    {% endspaceless %}
                     <div class="main-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
                         {% block content %}{% endblock %}
                     </div>

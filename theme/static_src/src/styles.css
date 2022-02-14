@@ -24,6 +24,8 @@
   }
 
   main {
+    .main-header:empty { display: none; }
+
     button,
     input[type='submit'],
     .button {
