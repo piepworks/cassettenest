@@ -14,7 +14,7 @@
         {% if not camera.multiple_backs and camera.status == 'loaded' %}
             {% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}
         {% elif camera.status != 'unavailable' %}
-            <a class="button primary" href="{% url 'camera-load' camera.id %}">Load this camera</a>
+            <a class="button primary" href="{% url 'camera-load' camera.id %}">Load</a>
         {% endif %}
     {% endcapture %}
 
@@ -67,7 +67,6 @@
 
 {% if not camera.multiple_backs and camera.status == 'loaded' %}
     {% include 'inventory/_camera-loaded.html' %}
-    <div class="action">{% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}</div>
 {% elif camera.status != 'unavailable' %}
     {% if camera.multiple_backs %}
         <p>You can load this camera via one of its backs.</p>
