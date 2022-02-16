@@ -294,6 +294,40 @@
       }
     }
   }
+
+  .logbook {
+    table {
+      thead {
+        th {
+          @apply
+            px-6
+            py-3
+            text-left
+            text-xs
+            font-medium
+            text-gray-500
+            uppercase
+            tracking-wider;
+        }
+      }
+
+      tbody {
+        tr {
+          &:nth-child(odd) {
+            @apply
+              bg-white
+              dark:bg-stone-900;
+          }
+
+          &:nth-child(even) {
+            @apply
+              bg-stone-50
+              dark:bg-transparent;
+          }
+        }
+      }
+    }
+  }
 }
 
 @layer utilities {
