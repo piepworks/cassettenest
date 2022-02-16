@@ -256,7 +256,6 @@
 
     > div {
       @apply
-        mt-5
         border-stone-200
         dark:border-stone-600;
 
@@ -322,5 +321,15 @@
         hover:text-stone-700
         dark:hover:text-stone-100;
     }
+  }
+
+  .fix-this {
+    @apply
+      p-6
+      border-pink-400
+      dark:border-pink-600
+      border-4
+      border-dashed
+      rounded-xl;
   }
 }

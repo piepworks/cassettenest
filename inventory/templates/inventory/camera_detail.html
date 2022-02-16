@@ -65,15 +65,17 @@
     </div>
 </div>
 
-{% if not camera.multiple_backs and camera.status == 'loaded' %}
-    {% include 'inventory/_camera-loaded.html' %}
-{% elif camera.status != 'unavailable' %}
-    {% if camera.multiple_backs %}
-        <p>You can load this camera via one of its backs.</p>
-    {% else %}
-        <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
+<div class="fix-this">
+    {% if not camera.multiple_backs and camera.status == 'loaded' %}
+        {% include 'inventory/_camera-loaded.html' %}
+    {% elif camera.status != 'unavailable' %}
+        {% if camera.multiple_backs %}
+            <p>You can load this camera via one of its backs.</p>
+        {% else %}
+            <p><a href="{% url 'camera-load' camera.id %}">Load this camera</a></p>
+        {% endif %}
     {% endif %}
-{% endif %}
+</div>
 
 {% if camera.multiple_backs %}
     <section class="backs">
@@ -97,16 +99,15 @@
 {% endif %}
 
 {% if rolls_history %}
-    <hr />
-
-    <section class="history">
-        <h3 id="previous-rolls">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
-
+    <div class="pb-5 my-10 border-b border-gray-200 dark:border-gray-600">
+        <h3 id="previous-rolls" class="text-lg leading-6 font-medium">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
+    </div>
+    <div class="fix-this">
         {% if camera.multiple_backs %}
             {% include 'inventory/_logbook-table.html' with rolls=rolls_history page='camera_with_backs' %}
         {% else %}
             {% include 'inventory/_logbook-table.html' with rolls=rolls_history %}
         {% endif %}
-    </section>
+    </div>
 {% endif %}
 {% endblock %}
