@@ -23,9 +23,9 @@
 {% endblock %}
 
 {% block content %}
-{% if not camera.multiple_backs %}
-{# Don’t show status for a camera with backs. #}
 <dl class="stats">
+    {% if not camera.multiple_backs %}
+    {# Don’t show status for a camera with backs. #}
     <div class="flex justify-between">
         <div>
             <dt>Status</dt>
@@ -39,6 +39,7 @@
             </a>
         {% endif %}
     </div>
+    {% endif %}
 
     {% if rolls_history %}
     <div>
@@ -47,7 +48,6 @@
     </div>
     {% endif %}
 </dl>
-{% endif %}
 
 <div class="metadata">
     <div>
