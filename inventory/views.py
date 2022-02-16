@@ -2108,6 +2108,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
             'roll': roll,
             'rolls_history': rolls_history,
             'page_obj': page_obj,
+            'film_types': film_types,
         }
 
         if camera_back:
