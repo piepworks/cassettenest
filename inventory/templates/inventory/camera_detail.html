@@ -26,9 +26,16 @@
 {% if not camera.multiple_backs %}
 {# Don’t show status for a camera with backs. #}
 <dl class="stats">
-    <div>
-        <dt>Status</dt>
-        <dd>{{ camera.get_status_display }}</dd>
+    <div class="flex justify-between folded hover:unfolded md:unfolded md:hover:folded">
+        <div>
+            <dt>Status</dt>
+            <dd class="flex">
+                {{ camera.get_status_display }}
+            </dd>
+        </div>
+        {% if not camera.multiple_backs and camera.status == 'loaded' %}
+            {% include 'components/reminder.html' with item=roll %}
+        {% endif %}
     </div>
 
     {% if rolls_history %}
