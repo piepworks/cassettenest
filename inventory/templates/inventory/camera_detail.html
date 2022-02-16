@@ -26,7 +26,7 @@
 {% if not camera.multiple_backs %}
 {# Don’t show status for a camera with backs. #}
 <dl class="stats">
-    <div class="flex justify-between folded hover:unfolded md:unfolded md:hover:folded">
+    <div class="flex justify-between">
         <div>
             <dt>Status</dt>
             <dd class="flex">
@@ -34,7 +34,9 @@
             </dd>
         </div>
         {% if not camera.multiple_backs and camera.status == 'loaded' %}
-            {% include 'components/reminder.html' with item=roll %}
+            <a href="{% url 'roll-detail' roll.id %}" class="no-underline hover:no-underline folded hover:unfolded md:unfolded md:hover:folded">
+                {% include 'components/reminder.html' with item=roll %}
+            </a>
         {% endif %}
     </div>
 
@@ -74,7 +76,7 @@
 
 <div class="fix-this">
     {% if not camera.multiple_backs and camera.status == 'loaded' %}
-        {% include 'inventory/_camera-loaded.html' %}
+        {# include 'inventory/_camera-loaded.html' #}
     {% elif camera.status != 'unavailable' %}
         {% if camera.multiple_backs %}
             <p>You can load this camera via one of its backs.</p>
