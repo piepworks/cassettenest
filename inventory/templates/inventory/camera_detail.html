@@ -111,12 +111,10 @@
     <div class="pb-5 my-10 border-b border-gray-200 dark:border-gray-600">
         <h3 id="previous-rolls" class="text-lg leading-6 font-medium">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
     </div>
-    <div class="fix-this">
-        {% if camera.multiple_backs %}
-            {% include 'inventory/_logbook-table.html' with rolls=rolls_history page='camera_with_backs' %}
-        {% else %}
-            {% include 'inventory/_logbook-table.html' with rolls=rolls_history %}
-        {% endif %}
-    </div>
+    {% if camera.multiple_backs %}
+        {% include 'inventory/_logbook-table.html' with rolls=rolls_history page='camera_with_backs' %}
+    {% else %}
+        {% include 'inventory/_logbook-table.html' with rolls=rolls_history %}
+    {% endif %}
 {% endif %}
 {% endblock %}
