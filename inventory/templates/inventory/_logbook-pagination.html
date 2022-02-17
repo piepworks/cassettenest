@@ -1,5 +1,34 @@
-<div class="pagination">
 {% if page_obj.has_previous or page_obj.has_next %}
+<div class="pagination py-3 flex items-center justify-between">
+    <div class="flex-1 flex justify-between align-center sm:hidden">
+        {% if page_obj.has_previous %}
+            <div>
+                <a title="First page" href="?page=1{{ pagination_querystring }}">«</a>
+                <a title="Previous page" href="?page={{ page_obj.previous_page_number }}{{ pagination_querystring }}">‹</a>
+            </div>
+        {% else %}
+            <div>
+                <span title="No previous page" class="placeholder">«</span>
+                <span title="No previous page" class="placeholder">‹</span>
+            </div>
+        {% endif %}
+
+        <div>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+
+        {% if page_obj.has_next %}
+            <div>
+                <a title="Next page" href="?page={{ page_obj.next_page_number }}{{ pagination_querystring }}">›</a>
+                <a title="Last page" href="?page={{ page_obj.paginator.num_pages }}{{ pagination_querystring }}">»</a>
+            </div>
+        {% else %}
+            <div>
+                <span title="No next page" class="placeholder">›</span>
+                <span title="No next page" class="placeholder">»</span>
+            </div>
+        {% endif %}
+    </div>
+
+    {% comment %}
     <span class="step-links">
         {% if page_obj.has_previous %}
             <a title="First page" href="?page=1{{ pagination_querystring }}">«</a>
@@ -21,5 +50,6 @@
             <span title="No next page" class="placeholder">»</span>
         {% endif %}
     </span>
-{% endif %}
+    {% endcomment %}
 </div>
+{% endif %}
