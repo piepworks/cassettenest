@@ -62,6 +62,10 @@
         @apply no-underline;
       }
 
+      &[disabled] {
+        @apply border-dashed dark:border-stone-600 dark:text-stone-500 dark:bg-stone-800;
+      }
+
       &.primary,
       &.destructive {
         @apply

@@ -3,27 +3,29 @@
     <div class="flex-1 flex justify-between align-center sm:hidden">
         {% if page_obj.has_previous %}
             <div>
-                <a title="First page" href="?page=1{{ pagination_querystring }}">«</a>
-                <a title="Previous page" href="?page={{ page_obj.previous_page_number }}{{ pagination_querystring }}">‹</a>
+                {# <a class="button" title="First page" href="?page=1{{ pagination_querystring }}">First</a> #}
+                <a class="button" title="Previous page" href="?page={{ page_obj.previous_page_number }}{{ pagination_querystring }}">Previous</a>
             </div>
         {% else %}
             <div>
-                <span title="No previous page" class="placeholder">«</span>
-                <span title="No previous page" class="placeholder">‹</span>
+                {# <span title="No previous page" class="placeholder">«</span> #}
+                <button disabled aria-disabled="true" title="No previous page" class="placeholder">Previous</button>
             </div>
         {% endif %}
 
-        <div>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</div>
+        <div class="flex items-center">
+            <p class="text-sm text-subdued">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</p>
+        </div>
 
         {% if page_obj.has_next %}
             <div>
-                <a title="Next page" href="?page={{ page_obj.next_page_number }}{{ pagination_querystring }}">›</a>
-                <a title="Last page" href="?page={{ page_obj.paginator.num_pages }}{{ pagination_querystring }}">»</a>
+                <a class="button" title="Next page" href="?page={{ page_obj.next_page_number }}{{ pagination_querystring }}">Next</a>
+                {# <a class="button" title="Last page" href="?page={{ page_obj.paginator.num_pages }}{{ pagination_querystring }}">»</a> #}
             </div>
         {% else %}
             <div>
-                <span title="No next page" class="placeholder">›</span>
-                <span title="No next page" class="placeholder">»</span>
+                <button disabled aria-disabled="true" title="No next page" class="placeholder">Next</button>
+                {# <span title="No next page" class="placeholder">»</span> #}
             </div>
         {% endif %}
     </div>
