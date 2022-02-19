@@ -11,7 +11,7 @@
 
 {% if rolls %}
 <form method="post" action="{% url 'rolls-update' %}">
-    {% include 'inventory/_logbook-table.html' with page='logbook' %}
+    {% include 'components/logbook-table.html' with page='logbook' %}
 
     {% if status in bulk_status_keys %}
         {% csrf_token %}
