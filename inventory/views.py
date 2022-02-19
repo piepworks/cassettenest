@@ -677,7 +677,7 @@ def logbook(request):
         rolls = rolls.filter(started_on__year=year)
 
     # Pagination / 20 per page
-    paginator = Paginator(rolls, 20)
+    paginator = Paginator(rolls, 10)
     page_number = request.GET.get('page') if request.GET.get('page') else 1
     page_obj = paginator.get_page(page_number)
     bulk_status_next = ''
@@ -702,7 +702,12 @@ def logbook(request):
     }
 
     if request.htmx:
-        return render(request, 'components/logbook-table.html', {'page_obj': page_obj})
+        return render(request, 'components/logbook-table.html', {
+            'status': status,
+            'pagination_querystring': pagination_querystring,
+            'page_obj': page_obj,
+            'bulk_status_keys': bulk_status_keys,
+        })
     else:
         return render(request, 'inventory/logbook.html', context)
 
@@ -834,7 +839,11 @@ def ready(request):
     }
 
     if request.htmx:
-        return render(request, 'components/logbook-table.html', {'page_obj': page_obj})
+        return render(request, 'components/logbook-table.html', {
+            'status': 'shot',
+            'bulk_status_keys': bulk_status_keys,
+            'page_obj': page_obj,
+        })
     else:
         return render(request, 'inventory/ready.html', context)
 

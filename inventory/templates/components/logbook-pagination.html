@@ -34,7 +34,7 @@
         {# Desktop #}
         <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
             {% if page_obj.has_previous %}
-                <a hx-get="?page={{ page_obj.previous_page_number }}" href="?page={{ page_obj.previous_page_number }}">{% include 'svg/heroicons/chevron-left.svg' %}</a></li>
+                <a hx-get="?page={{ page_obj.previous_page_number }}{{ pagination_querystring }}" href="?page={{ page_obj.previous_page_number }}{{ pagination_querystring }}">{% include 'svg/heroicons/chevron-left.svg' %}</a></li>
             {% else %}
                 <button title="No previous page" disabled aria-disabled="true">{% include 'svg/heroicons/chevron-left.svg' %}</button>
             {% endif %}
@@ -45,13 +45,12 @@
                     {% if i == page_obj.paginator.ELLIPSIS %}
                         <span class="ellipsis">{{ i }}</span>
                     {% else %}
-                        {# I don't know what this is. #}
-                        <a class="page-link" hx-get="?page={{ i }}" href="?page={{ i }}">{{ i }}</a>
+                        <a hx-get="?page={{ i }}{{ pagination_querystring }}" href="?page={{ i }}{{ pagination_querystring }}">{{ i }}</a>
                     {% endif %}
                 {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
-                <a class="page-link" hx-get="?page={{ page_obj.next_page_number }}" href="?page={{ page_obj.next_page_number }}">{% include 'svg/heroicons/chevron-right.svg' %}</a>
+                <a class="page-link" hx-get="?page={{ page_obj.next_page_number }}{{ pagination_querystring }}" href="?page={{ page_obj.next_page_number }}{{ pagination_querystring }}">{% include 'svg/heroicons/chevron-right.svg' %}</a>
             {% else %}
                 <button title="No next page" disabled aria-disabled="true">{% include 'svg/heroicons/chevron-right.svg' %}</button>
             {% endif %}
