@@ -2097,8 +2097,9 @@ def camera_or_back_detail(request, pk, back_pk=None):
 
         # Pagination / 20 per page
         paginator = Paginator(rolls_history, 20)
-        page_number = request.GET.get('page')
+        page_number = request.GET.get('page') if request.GET.get('page') else 1
         page_obj = paginator.get_page(page_number)
+        page_range = paginator.get_elided_page_range(number=page_number)
 
         context = {
             'owner': request.user,
@@ -2108,6 +2109,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
             'roll': roll,
             'rolls_history': rolls_history,
             'page_obj': page_obj,
+            'page_range': page_range,
             'film_types': film_types,
         }
 
