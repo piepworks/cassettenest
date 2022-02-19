@@ -678,7 +678,7 @@ def logbook(request):
 
     # Pagination / 20 per page
     paginator = Paginator(rolls, 20)
-    page_number = request.GET.get('page')
+    page_number = request.GET.get('page') if request.GET.get('page') else 1
     page_obj = paginator.get_page(page_number)
     bulk_status_next = ''
 
@@ -701,7 +701,10 @@ def logbook(request):
         'js_needed': True,
     }
 
-    return render(request, 'inventory/logbook.html', context)
+    if request.htmx:
+        return render(request, 'components/logbook-table.html', {'page_obj': page_obj})
+    else:
+        return render(request, 'inventory/logbook.html', context)
 
 
 @login_required
@@ -816,7 +819,7 @@ def ready(request):
     }
 
     # Pagination / 20 per page
-    paginator = Paginator(rolls, 20)
+    paginator = Paginator(rolls, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -830,7 +833,10 @@ def ready(request):
         'wc_needed': True,
     }
 
-    return render(request, 'inventory/ready.html', context)
+    if request.htmx:
+        return render(request, 'components/logbook-table.html', {'page_obj': page_obj})
+    else:
+        return render(request, 'inventory/ready.html', context)
 
 
 @require_POST
@@ -1077,8 +1083,8 @@ def project_detail(request, pk):
     )
 
     # Pagination / 20 per page
-    paginator = Paginator(roll_logbook, 20)
-    page_number = request.GET.get('page')
+    paginator = Paginator(roll_logbook, 10)
+    page_number = request.GET.get('page') if request.GET.get('page') else 1
     page_obj = paginator.get_page(page_number)
 
     context = {
@@ -1099,7 +1105,10 @@ def project_detail(request, pk):
         'js_needed': True,
     }
 
-    return render(request, 'inventory/project_detail.html', context)
+    if request.htmx:
+        return render(request, 'components/logbook-table.html', {'page_obj': page_obj})
+    else:
+        return render(request, 'inventory/project_detail.html', context)
 
 
 @require_POST
@@ -2099,7 +2108,6 @@ def camera_or_back_detail(request, pk, back_pk=None):
         paginator = Paginator(rolls_history, 10)
         page_number = request.GET.get('page') if request.GET.get('page') else 1
         page_obj = paginator.get_page(page_number)
-        page_range = paginator.get_elided_page_range(number=page_number)
 
         context = {
             'owner': request.user,
@@ -2109,21 +2117,13 @@ def camera_or_back_detail(request, pk, back_pk=None):
             'roll': roll,
             'rolls_history': rolls_history,
             'page_obj': page_obj,
-            'page_range': page_range,
             'film_types': film_types,
         }
-
-        if camera_back:
-            return render(
-                request, 'inventory/camera_back_detail.html', context
-            )
+        if request.htmx:
+            return render(request, 'components/logbook-table.html', {'page_obj': page_obj})
         else:
-            if request.htmx:
-                return render(request, 'components/logbook-table.html', {
-                    'page_obj': page_obj,
-                    'page_range': page_range,
-                    'rolls_history': rolls_history,
-                })
+            if camera_back:
+                return render(request, 'inventory/camera_back_detail.html', context)
             else:
                 return render(request, 'inventory/camera_detail.html', context)
 
