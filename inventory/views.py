@@ -2095,8 +2095,8 @@ def camera_or_back_detail(request, pk, back_pk=None):
                     status=status_number('loaded')
                 )[0]
 
-        # Pagination / 20 per page
-        paginator = Paginator(rolls_history, 20)
+        # Pagination / 10 per page
+        paginator = Paginator(rolls_history, 10)
         page_number = request.GET.get('page') if request.GET.get('page') else 1
         page_obj = paginator.get_page(page_number)
         page_range = paginator.get_elided_page_range(number=page_number)
@@ -2118,9 +2118,14 @@ def camera_or_back_detail(request, pk, back_pk=None):
                 request, 'inventory/camera_back_detail.html', context
             )
         else:
-            return render(
-                request, 'inventory/camera_detail.html', context
-            )
+            if request.htmx:
+                return render(request, 'components/logbook-table.html', {
+                    'page_obj': page_obj,
+                    'page_range': page_range,
+                    'rolls_history': rolls_history,
+                })
+            else:
+                return render(request, 'inventory/camera_detail.html', context)
 
 
 @login_required

@@ -1,5 +1,5 @@
 {% if page_obj.has_previous or page_obj.has_next %}
-<div class="pagination py-3 flex items-center justify-between">
+<div class="pagination mt-6 py-3 flex items-center justify-between">
     <div class="flex-1 flex justify-between align-center sm:hidden">
         {# Mobile #}
         {% if page_obj.has_previous %}
@@ -34,7 +34,7 @@
         {# Desktop #}
         <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}">{% include 'svg/heroicons/chevron-left.svg' %}</a></li>
+                <a hx-get="?page={{ page_obj.previous_page_number }}" hx-push-url="true" hx-target=".logbook-wrapper" href="?page={{ page_obj.previous_page_number }}">{% include 'svg/heroicons/chevron-left.svg' %}</a></li>
             {% else %}
                 <button title="No previous page" disabled aria-disabled="true">{% include 'svg/heroicons/chevron-left.svg' %}</button>
             {% endif %}
@@ -46,12 +46,12 @@
                         <span class="ellipsis">{{ i }}</span>
                     {% else %}
                         {# I don't know what this is. #}
-                        <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                        <a class="page-link" hx-get="?page={{ i }}" hx-push-url="true" hx-target=".logbook-wrapper" href="?page={{ i }}">{{ i }}</a>
                     {% endif %}
                 {% endif %}
             {% endfor %}
             {% if page_obj.has_next %}
-                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% include 'svg/heroicons/chevron-right.svg' %}</a>
+                <a class="page-link" hx-get="?page={{ page_obj.next_page_number }}" hx-push-url="true" hx-target=".logbook-wrapper" href="?page={{ page_obj.next_page_number }}">{% include 'svg/heroicons/chevron-right.svg' %}</a>
             {% else %}
                 <button title="No next page" disabled aria-disabled="true">{% include 'svg/heroicons/chevron-right.svg' %}</button>
             {% endif %}
