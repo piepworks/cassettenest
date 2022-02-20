@@ -26,9 +26,7 @@
                             {% if page == 'logbook' or page == 'project' %}
                             <th scope="col">Status</th>
                             {% endif %}
-                            {% if page == 'camera_with_backs' %}
                             <th scope="col">Back</th>
-                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -49,9 +47,7 @@
                             {% if page == 'logbook' or page == 'project' %}
                             <td>{{ roll.get_status_display }}</td>
                             {% endif %}
-                            {% if page == 'camera_with_backs' %}
                             <td>{{ roll.camera_back.name }}</td>
-                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
