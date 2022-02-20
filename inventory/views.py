@@ -164,15 +164,6 @@ def index(request):
         return render(request, 'inventory/index.html', context)
 
 
-@require_POST
-@login_required
-def hx_section(request):
-    print('slug: ' + request.POST.get('slug'))
-    print('c: ' + request.POST.get('c'))
-    print('p: ' + request.POST.get('p'))
-    return HttpResponse('Here’s some section content!')
-
-
 def patterns(request):
     roll1 = {
         'film': {
@@ -2054,6 +2045,12 @@ def camera_or_back_load(request, pk, back_pk=None):
 @login_required
 def camera_or_back_detail(request, pk, back_pk=None):
     camera = get_object_or_404(Camera, id=pk, owner=request.user)
+    b = request.GET.get('b') if request.GET.get('b') else 0
+    pagination_querystring = ''
+    page = request.GET.get('page')
+    if page:
+        pagination_querystring += f'&page={page}'
+
     if back_pk:
         camera_back = get_object_or_404(
             CameraBack,
@@ -2127,9 +2124,63 @@ def camera_or_back_detail(request, pk, back_pk=None):
             'rolls_history': rolls_history,
             'page_obj': page_obj,
             'film_types': film_types,
+            'pagination_querystring': pagination_querystring,
+            'b': b,
         }
+
+        if camera.multiple_backs:
+            all_camera_backs = CameraBack.objects.filter(
+                camera__owner=request.user,
+                camera=camera,
+            )
+            loaded_rolls = Roll.objects.filter(
+                owner=request.user,
+                camera=camera,
+                status=status_number('loaded'),
+            )
+
+            camera_backs = SectionTabs(
+                'Backs',
+                reverse('camera-back-add', args=(camera.id,)),
+                0,
+                [
+                    {
+                        'name': 'Loaded',
+                        'count': all_camera_backs.filter(status='loaded').count(),
+                        'rows': loaded_rolls,
+                        'action': 'roll',
+                    },
+                    {
+                        'name': 'Ready to Load',
+                        'count': all_camera_backs.filter(status='empty').count(),
+                        'rows': all_camera_backs.filter(status='empty'),
+                        'action': 'load',
+                    },
+                    {
+                        'name': 'Unavailable',
+                        'count': all_camera_backs.filter(status='unavailable').count(),
+                        'rows': all_camera_backs.filter(status='unavailable'),
+                    },
+                ],
+            )
+            camera_backs.set_tab(b)
+            context['camera_backs'] = camera_backs
+
         if request.htmx:
-            return render(request, 'components/logbook-table.html', {'page_obj': page_obj})
+            if request.htmx.trigger.startswith('section'):
+                # Camera backs
+                response = render(request, 'components/section.html', {
+                    'items': camera_backs,
+                    'pagination_querystring': pagination_querystring,
+                })
+                response['HX-Push'] = reverse('camera-detail', args=(camera.id,)) + f'?b={b}{pagination_querystring}'
+                return response
+            else:
+                return render(request, 'components/logbook-table.html', {
+                    'page_obj': page_obj,
+                    'pagination_querystring': f'&b={b}',
+                })
+
         else:
             if camera_back:
                 return render(request, 'inventory/camera_back_detail.html', context)

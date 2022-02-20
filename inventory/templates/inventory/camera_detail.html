@@ -75,24 +75,9 @@
 </div>
 
 {% if camera.multiple_backs %}
-    <section class="backs">
-        <h3>Camera Backs</h3>
-        {% if camera.camera_backs.all %}
-        <ul>
-            {% for back in camera.camera_backs.all %}
-            <li>
-                <a href="{% url 'camera-back-detail' camera.id back.id %}">Back {{ back.name }}</a>
-                ({{ back.get_status_display }})
-            </li>
-            {% endfor %}
-        </ul>
-        {% else %}
-        <p>No camera backs found.</p>
-        {% endif %}
-        <div class="do-not-print">
-            <p><a href="{% url 'camera-back-add' camera.id %}">Add a camera back</a></p>
-        </div>
-    </section>
+<div id="camera_backs_section">
+    {% include 'components/section.html' with items=camera_backs page='camera' %}
+</div>
 {% endif %}
 
 {% if rolls_history %}
@@ -100,7 +85,8 @@
         <h3 id="previous-rolls" class="text-lg leading-6 font-medium">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
     </div>
     {% if camera.multiple_backs %}
-        {% include 'components/logbook-table.html' with rolls=rolls_history page='camera_with_backs' %}
+        {% capture as querystring silent %}&b={{ b }}{% endcapture %}
+        {% include 'components/logbook-table.html' with rolls=rolls_history page='camera_with_backs' pagination_querystring=querystring %}
     {% else %}
         {% include 'components/logbook-table.html' with rolls=rolls_history %}
     {% endif %}

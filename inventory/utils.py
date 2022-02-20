@@ -237,7 +237,7 @@ class SectionTabs:
             return 'view'
 
     def set_tab(self, new_tab):
-        if new_tab.isdigit():
+        if (str(new_tab).isdigit()):
             try:
                 tab = self.tabs[int(new_tab)]
                 self.current_tab = int(new_tab)
