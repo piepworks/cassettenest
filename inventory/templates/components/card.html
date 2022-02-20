@@ -1,6 +1,19 @@
+{% load capture_tags %}
+{% capture as action_url silent %}
+{% if items.current_tab_action == 'load' %}
+    {% if item.camera %}
+        {# This is a camera back. #}
+        {% url 'camera-back-load' item.camera.id item.id %}
+    {% else %}
+        {% url 'camera-load' item.id %}
+    {% endif %}
+{% else %}
+    {{ item.get_absolute_url }}
+{% endif %}
+{% endcapture %}
 <li>
     <a
-        href="{% if items.current_tab_action == 'load' %}{% url 'camera-load' item.id %}{% else %}{{ item.get_absolute_url }}{% endif %}"
+        href="{{ action_url }}"
         class="folded hover:unfolded md:unfolded md:hover:folded flex justify-between hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors no-underline hover:no-underline p-4 sm:px-6">
         <div>
             <div class="flex items-center font-medium text-sm text-stone-900 dark:text-white truncate">
