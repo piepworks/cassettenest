@@ -75,13 +75,13 @@
 </div>
 
 {% if camera.multiple_backs %}
-<div id="camera_backs_section">
-    {% include 'components/section.html' with items=camera_backs page='camera' %}
-</div>
+    <div id="camera_backs_section">
+        {% include 'components/section.html' with items=camera_backs page='camera' %}
+    </div>
 {% endif %}
 
 {% if rolls_history %}
-    <div class="pb-5 my-10 border-b border-gray-200 dark:border-gray-600">
+    <div class="pb-5 border-b border-gray-200 dark:border-gray-600">
         <h3 id="previous-rolls" class="text-lg leading-6 font-medium">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
     </div>
     {% if camera.multiple_backs %}
