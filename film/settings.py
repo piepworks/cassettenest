@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import socket
 import bleach
+import dotenv
+import sys
 from pytz import common_timezones
 from django.core.management.utils import get_random_secret_key
 
@@ -36,6 +38,13 @@ ADMINS = [('Trey', 'trey@treypiepmeier.com'), ]
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Load env vars from .env file if not testing
+try:
+    command = sys.argv[1]
+except IndexError:
+    command = 'help'
+if command != 'test':
+    dotenv.load_dotenv(dotenv_path=BASE_DIR + '/.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -119,7 +128,7 @@ DATABASES = {
         'NAME': os.environ.get('POSTGRES_DB'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': 5432
     }
 }
