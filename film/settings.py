@@ -80,6 +80,7 @@ INSTALLED_APPS = [
     'django_htmx',
     'tailwind',
     'theme',
+    'django_browser_reload',
 ]
 
 MIDDLEWARE = [
@@ -96,6 +97,7 @@ MIDDLEWARE = [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'film.urls'
@@ -240,4 +242,3 @@ INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
 
 # Tailwind CSS
 TAILWIND_APP_NAME = 'theme'
-TAILWIND_DEV_MODE = int(os.environ.get('DEBUG', default=0))
