@@ -1,6 +1,5 @@
 *.css
-staticfiles/*
-!staticfiles/.gitkeep
+staticfiles/
 node_modules/
 .env*
 .coverage
