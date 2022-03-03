@@ -1,4 +1,5 @@
 *.css
+!tailwind.css
 staticfiles/
 node_modules/
 .env*

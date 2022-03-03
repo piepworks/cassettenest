@@ -1,4 +1,4 @@
-{% load static tz capture_tags waffle_tags django_htmx tailwind_tags %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
+{% load static tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
 <html lang="en">
 <head>
     {% url 'index' as index_url %}
@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
     <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" />
-    {% tailwind_css %}
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}" />
     {% include '_meta-tags.html' %}
     {% if not user.is_authenticated %}
     <script async defer data-domain="app.cassettenest.com" src="https://plausible.io/js/plausible.js"></script>
@@ -20,6 +20,8 @@
 <body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart x-data @keyup.esc="closeMenu()">
     <div class="wrapper md:h-screen md:overflow-hidden md:flex">
         {% include '_menu.html' %}
+
+        <div class="p-5 bg-indigo-400">Hello, world.</div>
 
         <div class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">
             {% include '_hamburger.html' %}

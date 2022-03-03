@@ -1,9 +1,10 @@
 {
   "name": "cassettenest",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A way for analog photographers to track their film use from box to binder.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "postcss static/tailwind.css -o staticfiles/css/tailwind.css --watch --verbose",
+    "build": "NODE_ENV=production postcss static/tailwind.css -o staticfiles/css/tailwind.css"
   },
   "repository": {
     "type": "git",
@@ -18,12 +19,20 @@
   },
   "homepage": "https://github.com/trey/cassettenest#readme",
   "devDependencies": {
+    "cssnano": "^5.1.0",
     "eslint": "^8.4.1",
     "stylelint": "^14.1.0",
-    "stylelint-config-standard": "^24.0.0"
+    "stylelint-config-standard": "^24.0.0",
+    "@tailwindcss/aspect-ratio": "^0.4.0",
+    "@tailwindcss/forms": "^0.5.0",
+    "@tailwindcss/line-clamp": "^0.3.1",
+    "@tailwindcss/typography": "^0.5.2",
+    "autoprefixer": "^10.4.2",
+    "postcss-cli": "^9.1.0",
+    "tailwindcss": "^3.0.23"
   },
   "engines": {
-    "node": "14.17.0",
+    "node": "16.14.0",
     "npm": "8.3.1"
   }
 }
