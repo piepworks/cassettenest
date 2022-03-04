@@ -7,13 +7,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build the stack, run tests, generate report
         run: |
-          docker network create web
-          docker-compose up -d --build
-          docker-compose exec -T web python manage.py migrate --noinput
-          docker-compose exec -T web python manage.py tailwind build --no-input
-          docker-compose exec -T web python manage.py collectstatic --noinput
-          docker-compose exec -T web coverage run manage.py test
-          docker-compose exec -T web coverage xml
+          python manage.py migrate --noinput
+          npm run build
+          python manage.py collectstatic --noinput
+          coverage run manage.py test
+          coverage xml
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
