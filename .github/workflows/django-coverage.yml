@@ -5,11 +5,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build the stack, run tests, generate report
+      - name: Install dependencies, run tests, generate report
         run: |
-          python manage.py migrate --noinput
+          python3 -m venv --prompt . venv
+          venv/bin/pip install -U pip setuptools wheel
+          venv/bin/python -m pip install -r requirements.txt
+          venv/bin/python manage.py migrate --noinput
+          npm install
           npm run build
-          python manage.py collectstatic --noinput
+          venv/bin/python manage.py collectstatic --noinput
           coverage run manage.py test
           coverage xml
         env:
