@@ -1,4 +1,0 @@
-#!/bin/sh
-
-$(dirname "$0")/run pipenv install
-$(dirname "$0")/run pipenv update --outdated

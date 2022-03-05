@@ -1,0 +1,4 @@
+#!/bin/sh
+
+pip-compile -P $@
+venv/bin/python -m pip install -r requirements.txt
