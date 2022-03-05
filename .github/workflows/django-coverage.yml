@@ -23,7 +23,7 @@ jobs:
           --health-retries 5
         ports:
           # Maps tcp port 5432 on service container to the host
-          - ${{ secrets.DB_PORT }}:${{ secrets.DB_PORT }}
+          - 5432:5432
 
     # Set things up and run the tests.
     steps:
