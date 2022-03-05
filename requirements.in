@@ -15,6 +15,7 @@ gunicorn
 markdown
 model-bakery
 phpserialize
+pip-lock
 pip-tools
 psycopg2-binary
 pycodestyle

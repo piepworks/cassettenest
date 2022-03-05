@@ -64,6 +64,8 @@ pep517==0.12.0
     # via pip-tools
 phpserialize==1.3
     # via -r requirements.in
+pip-lock==2.8.1
+    # via -r requirements.in
 pip-tools==6.5.1
     # via -r requirements.in
 psycopg2-binary==2.9.3
