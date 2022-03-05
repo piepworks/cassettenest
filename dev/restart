@@ -1,4 +1,0 @@
-#!/bin/sh
-
-$(dirname "$0")/stop
-$(dirname "$0")/start

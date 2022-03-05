@@ -12,7 +12,7 @@ mkdir -p $temp_folder
 rm ${temp_folder}/local.psql.gz
 
 # Backup local database.
-docker-compose exec -T web python manage.py dbbackup -q -z -o local.psql.gz
+venv/bin/python manage.py dbbackup -q -z -o local.psql.gz
 
 # Get the latest daily production database backup.
 s3_file=$(s3cmd ls s3://cassettenest/backups-daily/ | sed -rn 's!^.*(s3://)!\1!p' | tail -n1)
@@ -22,4 +22,4 @@ s3cmd get ${s3_file} ${temp_folder}/$(basename ${s3_file} | sed -e 's/\.[^.]*$//
 backup_file=$(basename $(find ${temp_folder} -name "cassettenest_*"))
 
 # Load the production backup into our local Docker.
-docker-compose exec -T web python manage.py dbrestore -q --noinput -z -i ${backup_file}
+venv/bin/python manage.py dbrestore -q --noinput -z -i ${backup_file}
