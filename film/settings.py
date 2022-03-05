@@ -38,13 +38,7 @@ ADMINS = [('Trey', 'trey@treypiepmeier.com'), ]
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# Load env vars from .env file if not testing
-try:
-    command = sys.argv[1]
-except IndexError:
-    command = 'help'
-if command != 'test':
-    dotenv.load_dotenv(dotenv_path=BASE_DIR + '/.env')
+dotenv.load_dotenv(dotenv_path=BASE_DIR + '/.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
