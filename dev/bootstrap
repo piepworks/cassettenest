@@ -3,3 +3,4 @@
 $(dirname "$0")/setup-venv
 venv/bin/python manage.py migrate
 venv/bin/python manage.py createsuperuser
+brew install watchman

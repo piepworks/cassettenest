@@ -1,3 +1,4 @@
 #!/bin/sh
 
 PADDLE_PUBLIC_KEY=$(cat paddle_public_key.txt) venv/bin/python manage.py runserver
+watchman shutdown-server

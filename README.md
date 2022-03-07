@@ -12,10 +12,9 @@ Copyright &copy; 2016-2021 Trey Labs LLC. All rights reserved.
 
 1. Create a new a `.env` file based on [the example](example-local.env).
     - Adjust as needed, but you shouldn't need to do anything.
-2. `dev/build`
-3. `dev/run python manage.py migrate`
+2. `dev/bootstrap`
+3. `python manage.py migrate`
 4. Import a database dump if you want.
-    - If not, run `dev/run python manage.py createsuperuser`.
 
 ## Development
 
