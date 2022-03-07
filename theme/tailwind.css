@@ -401,6 +401,26 @@
         dark:hover:bg-stone-900;
     }
   }
+
+  .field {
+    &-text input {
+      @apply
+        appearance-none
+        block
+        w-full
+        px-3
+        py-2
+        border
+        border-stone-300
+        rounded-md
+        shadow-sm
+        placeholder-stone-400
+        focus:outline-none
+        focus:ring-blue-500
+        focus:border-blue-500
+        sm:text-sm;
+    }
+  }
 }
 
 @layer utilities {
