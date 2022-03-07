@@ -12,6 +12,7 @@ django-waffle
 django-widget-tweaks
 freezegun
 gunicorn
+ipython
 markdown
 model-bakery
 phpserialize
