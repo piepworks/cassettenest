@@ -18,7 +18,7 @@
 
     <form method="post">
         {% csrf_token %}
-        {% include 'inventory/_form-field.html' with field=form.code %}
+        {% include 'components/form-field.html' with field=form.code %}
         {% include 'inventory/_form-roll.html' %}
 
         <div class="action">

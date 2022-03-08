@@ -10,25 +10,25 @@
     <form method="post">
         {% csrf_token %}
 
-        {% include 'inventory/_form-field.html' with field=form.number %}
+        {% include 'components/form-field.html' with field=form.number %}
         {% if action == 'Add' %}
-        {% include 'inventory/_form-field.html' with field=form.ending_number %}
+        {% include 'components/form-field.html' with field=form.ending_number %}
         {% endif %}
-        {% include 'inventory/_form-field.html' with field=form.date %}
+        {% include 'components/form-field.html' with field=form.date %}
 
         {% capture as first_aperture silent %}{% if show_input.aperture %}True{% endif %}{% endcapture %}
         <div class="progressive-field-wrapper" x-data="{ primary: true }">
-            {% include 'inventory/_form-field.html' with field=form.aperture_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_aperture %}
-            {% include 'inventory/_form-field.html' with field=form.aperture progressive=True show_first=first_aperture progressive_text='…or choose a preset.' label_override=form.aperture_preset.label enhanced_label=enhanced_label_aperture %}
+            {% include 'components/form-field.html' with field=form.aperture_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_aperture %}
+            {% include 'components/form-field.html' with field=form.aperture progressive=True show_first=first_aperture progressive_text='…or choose a preset.' label_override=form.aperture_preset.label enhanced_label=enhanced_label_aperture %}
         </div>
 
         {% capture as first_shutter silent %}{% if show_input.shutter_speed %}True{% endif %}{% endcapture %}
         <div class="progressive-field-wrapper" x-data="{ primary: true }">
-            {% include 'inventory/_form-field.html' with field=form.shutter_speed_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_shutter_speed %}
-            {% include 'inventory/_form-field.html' with field=form.shutter_speed progressive=True show_first=first_shutter progressive_text='…or choose a preset.' label_override=form.shutter_speed_preset.label enhanced_label=enhanced_label_shutter_speed %}
+            {% include 'components/form-field.html' with field=form.shutter_speed_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_shutter_speed %}
+            {% include 'components/form-field.html' with field=form.shutter_speed progressive=True show_first=first_shutter progressive_text='…or choose a preset.' label_override=form.shutter_speed_preset.label enhanced_label=enhanced_label_shutter_speed %}
         </div>
 
-        {% include 'inventory/_form-field.html' with field=form.notes %}
+        {% include 'components/form-field.html' with field=form.notes %}
 
         <div class="action">
             <p>

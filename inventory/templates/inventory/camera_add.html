@@ -8,11 +8,11 @@
 
 <form method="post">
     {% csrf_token %}
-    {% include 'inventory/_form-field.html' with field=form.name %}
-    {% include 'inventory/_form-field.html' with field=form.format %}
-    {% include 'inventory/_form-field.html' with field=form.multiple_backs %}
-    {% include 'inventory/_form-field.html' with field=form.notes %}
-    {% include 'inventory/_form-field.html' with field=form.unavailable %}
+    {% include 'components/form-field.html' with field=form.name %}
+    {% include 'components/form-field.html' with field=form.format %}
+    {% include 'components/form-field.html' with field=form.multiple_backs %}
+    {% include 'components/form-field.html' with field=form.notes %}
+    {% include 'components/form-field.html' with field=form.unavailable %}
 
     <div class="action">
         <p><input type="submit" value="Save camera" /></p>

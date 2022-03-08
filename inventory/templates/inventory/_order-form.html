@@ -2,9 +2,9 @@
     <input type="hidden" name="current_status" value="shot" />
     <input type="hidden" name="updated_status" value="processing" />
 
-    {% include 'inventory/_form-field.html' with field=form.lab %}
-    {% include 'inventory/_form-field.html' with field=form.scanner %}
-    {% include 'inventory/_form-field.html' with field=form.notes_on_development %}
+    {% include 'components/form-field.html' with field=form.lab %}
+    {% include 'components/form-field.html' with field=form.scanner %}
+    {% include 'components/form-field.html' with field=form.notes_on_development %}
 
     {% include 'components/logbook-table.html' with status='shot' %}
 

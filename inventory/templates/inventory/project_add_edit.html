@@ -8,9 +8,9 @@
 
 <form method="post">
     {% csrf_token %}
-    {% include 'inventory/_form-field.html' with field=form.name %}
-    {% include 'inventory/_form-field.html' with field=form.status %}
-    {% include 'inventory/_form-field.html' with field=form.notes %}
+    {% include 'components/form-field.html' with field=form.name %}
+    {% include 'components/form-field.html' with field=form.status %}
+    {% include 'components/form-field.html' with field=form.notes %}
 
     <div class="action">
         <input type="submit" value="Save project" />
