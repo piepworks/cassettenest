@@ -1,23 +1,28 @@
 {% extends 'base_site.html' %}
+{% load static %}
 
 {% block title %}Create an account{% endblock %}
 
-{% block bodytag %}class="register"{% endblock %}
-
 {% block content %}
-<div class="raw">
-    <h1>Create an account to continue.</h1>
+<div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <img class="mx-auto h-20 w-auto" src="{% static 'img/icon.svg' %}" alt="Cassette Nest" title="Cassette Nest" />
+        <h2 class="mt-6 text-center text-3xl font-extrabold">Create an account</h2>
+    </div>
 
-    <form method="post">
-        {% csrf_token %}
-        {% for field in form %}
-            {% include 'inventory/_form-field.html' with field=field %}
-        {% endfor %}
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <form class="space-y-6" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                {% include 'components/form-field.html' with field=field %}
+            {% endfor %}
 
+            <p class="policies">By creating an account, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
 
-        <p class="policies">By creating an account, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
-
-        <div class="action"><input type="submit" value="Create your account" /></div>
-    </form>
+            <div>
+                <button class="w-full flex justify-center button primary">Create your account</button>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}

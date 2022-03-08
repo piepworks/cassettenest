@@ -15,7 +15,7 @@
     </div>
 
     <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <form class="space-y-6" method="POST">
+        <form class="space-y-6" method="post">
             {% csrf_token %}
             {% for field in form %}
                 {% include 'components/form-field.html' with field=field %}

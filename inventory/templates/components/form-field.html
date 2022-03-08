@@ -21,7 +21,7 @@
             <fieldset>
                 <legend>{{ field.label }}</legend>
                 {% if field.help_text %}
-                    <small class="c-field__help">{{ field.help_text }}</small>
+                    <small class="prose dark:prose-invert">{{ field.help_text }}</small>
                 {% endif %}
                 {% for f in field %}
                     <div>{{ f }}</div>
@@ -29,7 +29,7 @@
             </fieldset>
         {% else %}
             {% if field.help_text %}
-                <small class="c-field__help">{{ field.help_text }}</small>
+                <small class="prose dark:prose-invert">{{ field.help_text }}</small>
             {% endif %}
             <label for="{{ field.id_for_label }}">
                 {{ field }}
@@ -40,7 +40,7 @@
         <fieldset>
             <legend>{{ field.label }}</legend>
             {% if field.help_text %}
-                <small class="c-field__help">{{ field.help_text }}</small>
+                <small class="prose dark:prose-invert">{{ field.help_text }}</small>
             {% endif %}
             {% for f in field %}
                 <div>{{ f }}</div>
@@ -49,7 +49,7 @@
     {% else %}
         <label class="block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} x-text="'{{ label_override }}'"{% endif %}>{{ field.label }}</label>
         {% if field.help_text and field.label != 'Username' %}
-            <small class="c-field__help">{{ field.help_text }}</small>
+            <small class="prose dark:prose-invert">{{ field.help_text }}</small>
         {% endif %}
         {% if not field.field.widget.input_type %}
             {% include 'inventory/_form-markdown-toolbar.html' with id=field.id_for_label %}
