@@ -47,7 +47,7 @@
             {% endfor %}
         </fieldset>
     {% else %}
-        <label for="{{ field.id_for_label }}"{% if label_override %} x-text="'{{ label_override }}'"{% endif %}>{{ field.label }}</label>
+        <label class="block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} x-text="'{{ label_override }}'"{% endif %}>{{ field.label }}</label>
         {% if field.help_text and field.label != 'Username' %}
             <small class="c-field__help">{{ field.help_text }}</small>
         {% endif %}
@@ -60,12 +60,14 @@
 
         {% capture as xref silent %}{{ primary|yesno:'primary,secondary' }}{% endcapture %}
 
-        {% if not field.field.widget.input_type %}
-            {# Set autocomplete on Markdown textareas. #}
-            {% render_field field x-ref=xref x-data='' x-on::keyup.enter="checkAutocomplete($el)" %}
-        {% else %}
-            {% render_field field x-ref=xref %}
-        {% endif %}
+        <div class="mt-1">
+            {% if not field.field.widget.input_type %}
+                {# Set autocomplete on Markdown textareas. #}
+                {% render_field field x-ref=xref x-data='' x-on::keyup.enter="checkAutocomplete($el)" %}
+            {% else %}
+                {% render_field field x-ref=xref %}
+            {% endif %}
+        </div>
 
         {% if enhanced_label.after %}
             <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
