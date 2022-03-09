@@ -1,0 +1,14 @@
+{% extends 'base_site.html' %}
+{% load static %}
+
+{% block content %}
+<div class="registration min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <img class="mx-auto h-20 w-auto" src="{% static 'img/icon.svg' %}" alt="Cassette Nest" title="Cassette Nest" />
+        {% block heading %}{% endblock %}
+    </div>
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        {% block form %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

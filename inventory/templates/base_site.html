@@ -65,7 +65,9 @@
 
     <script>
         document.documentElement.classList.add('has-js');
+        {% if user.is_authenticated %}
         {% include 'js/menu.js' %}
+        {% endif %}
     </script>
     {% block page_js %}{% endblock %}
 </body>

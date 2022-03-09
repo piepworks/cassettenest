@@ -427,6 +427,38 @@
         dark:hover:bg-stone-900;
     }
   }
+
+  .registration {
+    h2 {
+      @apply
+        mt-6
+        text-center
+        text-3xl
+        font-extrabold;
+    }
+
+    p { @apply mt-2 text-sm; }
+
+    p:only-of-type { @apply text-center; }
+
+    form { @apply space-y-6; }
+
+    a {
+      @apply
+        font-medium
+        text-blue-600
+        dark:text-blue-400
+        hover:text-blue-500
+        dark:hover:text-blue-300;
+    }
+
+    .action button {
+      @apply
+        w-full
+        flex
+        justify-center;
+    }
+  }
 }
 
 @layer utilities {
