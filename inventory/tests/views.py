@@ -199,7 +199,7 @@ class RegisterTests(TestCase):
         response = self.client.get(reverse('register'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Create an account to continue.', html=True)
+        self.assertContains(response, 'Create an account', html=True)
 
     def test_registering_new_user(self):
         username = 'testtest'
