@@ -432,14 +432,19 @@
     h2 {
       @apply
         mt-6
+        mb-4
         text-center
         text-3xl
         font-extrabold;
     }
 
-    p { @apply mt-2 text-sm; }
+    p {
+      @apply mt-4 text-sm;
 
-    p:only-of-type { @apply text-center; }
+      &:only-of-type { @apply text-center; }
+
+      &.policies { @apply text-left pt-6; }
+    }
 
     form { @apply space-y-6; }
 
