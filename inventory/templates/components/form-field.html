@@ -48,9 +48,6 @@
         </fieldset>
     {% else %}
         <label class="block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} x-text="'{{ label_override }}'"{% endif %}>{{ field.label }}</label>
-        {% if field.help_text and field.label != 'Username' %}
-            <small class="prose dark:prose-invert">{{ field.help_text }}</small>
-        {% endif %}
         {% if not field.field.widget.input_type %}
             {% include 'inventory/_form-markdown-toolbar.html' with id=field.id_for_label %}
         {% endif %}
@@ -68,6 +65,9 @@
                 {% render_field field x-ref=xref %}
             {% endif %}
         </div>
+        {% if field.help_text and field.label != 'Username' %}
+            <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
+        {% endif %}
 
         {% if enhanced_label.after %}
             <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
