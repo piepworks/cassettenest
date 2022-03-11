@@ -466,10 +466,22 @@
   }
 
   .messages {
+    svg { display: none; }
+
+    .success {
+      @apply
+        bg-green-50
+        text-green-800;
+
+      &-icon { display: block; }
+    }
+
     .error {
       @apply
         bg-red-50
         text-red-400;
+
+      &-icon { display: block; }
     }
   }
 }

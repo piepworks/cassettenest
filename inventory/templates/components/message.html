@@ -4,7 +4,8 @@
     <div class="rounded-md p-4{% if message.tags %} {{ message.tags }}{% endif %}">
         <div class="flex">
             <div class="flex-shrink-0">
-                {% include 'svg/heroicons/x-circle.svg' with class='x-circle' %}
+                {% include 'svg/heroicons/x-circle.svg' with class='error-icon' %}
+                {% include 'svg/heroicons/check-circle.svg' with class='success-icon' %}
             </div>
             <div class="ml-3">
                 <div class="text-sm font-medium">
@@ -26,10 +27,10 @@
     <div class="rounded-md error p-4">
         <div class="flex">
             <div class="flex-shrink-0">
-                {% include 'svg/heroicons/x-circle.svg' with class='x-circle' %}
+                {% include 'svg/heroicons/x-circle.svg' with class='error-icon' %}
             </div>
             <div class="ml-3 text-sm">
-                <div class="font-medium">Whoops! There are some problems with this form:</div>
+                <div class="font-medium">Whoops! We had a problem with the form:</div>
                 <div class="mt-2">
                     <ul class="list-disc pl-5 space-y-1">
                         {% if form.non_field_errors %}
