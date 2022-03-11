@@ -464,6 +464,14 @@
         justify-center;
     }
   }
+
+  .messages {
+    .error {
+      @apply
+        bg-red-50
+        text-red-400;
+    }
+  }
 }
 
 @layer utilities {

@@ -1,28 +1,52 @@
 {% if messages %}
-<ul class="messages do-not-print">
+<div class="messages print:hidden">
     {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-        {% if 'safe' in message.tags %}
-            {{ message|safe }}
-        {% else %}
-            {{ message }}
-        {% endif %}
-    </li>
+    <div class="rounded-md p-4{% if message.tags %} {{ message.tags }}{% endif %}">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                {% include 'svg/heroicons/x-circle.svg' with class='x-circle' %}
+            </div>
+            <div class="ml-3">
+                <div class="text-sm font-medium">
+                    {% if 'safe' in message.tags %}
+                        {{ message|safe }}
+                    {% else %}
+                        {{ message }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
     {% endfor %}
-</ul>
+</div>
 {% endif %}
+
 {% if form.errors %}
-<ul class="messages errors do-not-print">
-    {% if form.non_field_errors %}
-        {% for error in form.non_field_errors  %}
-            <li class="error">{{ error|escape }}</li>
-        {% endfor %}
-    {% else %}
-        {% for field in form %}
-            {% for error in field.errors %}
-                <li class="error">{{ error|escape }}</li>
-            {% endfor %}
-        {% endfor %}
-    {% endif %}
-</ul>
+<div class="messages print:hidden">
+    <div class="rounded-md error p-4">
+        <div class="flex">
+            <div class="flex-shrink-0">
+                {% include 'svg/heroicons/x-circle.svg' with class='x-circle' %}
+            </div>
+            <div class="ml-3 text-sm">
+                <div class="font-medium">Whoops! There are some problems with this form:</div>
+                <div class="mt-2">
+                    <ul class="list-disc pl-5 space-y-1">
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors  %}
+                                <li>{{ error|escape }}</li>
+                            {% endfor %}
+                        {% else %}
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li>{{ error|escape }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endif %}
