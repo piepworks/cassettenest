@@ -519,7 +519,8 @@
   .markdown-toolbar {
     @apply
       justify-between
-      bg-stone-600
+      bg-stone-300
+      dark:bg-stone-600
       rounded-t-md
       p-3
       mt-1
@@ -529,8 +530,10 @@
       @apply
         h-4
         w-4
-        fill-stone-300
-        hover:fill-stone-100;
+        fill-stone-500
+        dark:fill-stone-300
+        hover:fill-stone-600
+        dark:hover:fill-stone-100;
     }
   }
 }
@@ -543,7 +546,7 @@
 
   .has-js .js-required.markdown-toolbar { @apply flex; }
 
-  .has-js .field--textarea textarea { @apply rounded-t-none; }
+  .has-js textarea { @apply rounded-t-none; }
 
   .folded .reminder-square:not(.type-empty) {
     clip-path: var(--folded-corner);
