@@ -11,12 +11,12 @@
 
     <form action="{% url 'roll-add' %}" method="post">
         {% csrf_token %}
-        <div class="c-field">
+        <div class="field">
             <label for="id_film">Film</label>
             {% include 'inventory/_film-selector.html' %}
         </div>
 
-        <div class="c-field">
+        <div class="field">
             <p>
                 Not seeing the film you need?
                 <a href="{% url 'stock-add' %}?destination=add-logbook">Add a new kind of film to the list.</a>

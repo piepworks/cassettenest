@@ -491,6 +491,20 @@
       }
     }
   }
+
+  .patterns {
+    h2 {
+      @apply
+        text-xl
+        font-bold
+        mb-6
+        pb-2
+        border-b-2
+        dark:border-b-stone-500;
+    }
+
+    .field { @apply my-6; }
+  }
 }
 
 @layer utilities {

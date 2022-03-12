@@ -2,7 +2,7 @@
     {% csrf_token %}
     {% regroup film_available_count by get_type_display as film_list %}
 
-    <div class="c-field">
+    <div class="field">
         <fieldset>
             <legend>Add rolls to this project</legend>
             <select id="id_film" name="film" required>

@@ -11,7 +11,7 @@
 
     <form x-data="{ plan: {{ user.profile.paddle_subscription_plan_id }}, planChange: {{ user.profile.paddle_subscription_plan_id }} }" @submit.prevent="if (confirm('Are you sure?')) $el.submit()" id="change-plan" action="{% url 'subscription-update' %}" method="post">
         {% csrf_token %}
-        <div class="c-field c-field--radio">
+        <div class="field field--radio">
             <fieldset>
                 <legend>Change your plan</legend>
                 <div>

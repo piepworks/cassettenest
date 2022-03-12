@@ -2,12 +2,12 @@
 {% load markdown_extras %}
 
 {% block entry %}
-<div class="c-field">
+<div class="field">
     <label>Date</label>
     <p>{{ entry.date|date:'l, F j, Y' }}</p>
 </div>
 
-<div class="c-field">
+<div class="field">
     <label>Frame{% if entry.starting_frame != entry.frame %}s{% endif %}</label>
     <p>
         {% if entry.starting_frame and entry.starting_frame != entry.frame %}
@@ -17,7 +17,7 @@
     </p>
 </div>
 
-<div class="c-field">
+<div class="field">
     <label>Notes</label>
     {{ entry.notes|markdown }}
 </div>

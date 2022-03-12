@@ -9,14 +9,14 @@
 
     <form method="post">
         {% csrf_token %}
-        <div class="c-field">
+        <div class="field">
             <fieldset>
                 {% include 'inventory/_film-selector.html' %}
                 <input type="number" min="1" value="1" name="quantity" required />
             </fieldset>
         </div>
 
-        <div class="c-field">
+        <div class="field">
             <p>
                 Not seeing what you need?
                 <a href="{% url 'stock-add' %}">Add a new kind of film to the list.</a>

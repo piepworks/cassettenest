@@ -1,5 +1,5 @@
 <form method="get" x-data="{ open: false }">
-    <div class="c-field">
+    <div class="field">
         <label for="id_project_filter">Project filter: {{ current_project.name|default:'inactive' }}</label>
         <button id="id_project_filter" class="toggle-button" @click.prevent="open = !open">
             <span x-show="!open">Show</span>
@@ -8,7 +8,7 @@
     </div>
 
     <div class="toggle" x-show="open">
-        <div class="c-field">
+        <div class="field">
             <label for="id_project">Filter by Project</label>
             <select name="project" id="id_project">
                 <option value="0">All available rolls</option>

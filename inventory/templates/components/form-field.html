@@ -5,12 +5,12 @@
     {{ field }}
 {% else %}
 <div
-    class="c-field {% if not field.field.widget.input_type %} c-field--textarea
-        {% else %} c-field--{{ field.field.widget.input_type }}{% endif %}
-        {% if progressive %} c-field--progressive
-            {% if primary %} c-field--progressive-primary{% endif %}
+    class="field {% if not field.field.widget.input_type %} field--textarea
+        {% else %} field--{{ field.field.widget.input_type }}{% endif %}
+        {% if progressive %} field--progressive
+            {% if primary %} field--progressive-primary{% endif %}
         {% endif %}
-        {% if top_field %} c-field--progressive__top{% endif %}"
+        {% if top_field %} field--progressive__top{% endif %}"
     {% if progressive_text %} data-progressive-text="{{ progressive_text }}"{% endif %}
     {% if label_override %} data-label-override="{{ label_override }}"{% endif %}
     {% if show_first %} data-show-first="self"{% endif %}
