@@ -27,12 +27,13 @@
   input[type='email'],
   input[type='password'],
   input[type='date'],
+  input[type='number'],
+  select,
   textarea {
     @apply
       text-stone-800
       appearance-none
       block
-      w-full
       px-3
       py-2
       border
@@ -51,9 +52,10 @@
       focus:placeholder-stone-400;
   }
 
-  input[type='date'] {
+  textarea { @apply w-full; }
+
+  input[type='date'], {
     @apply
-      w-auto
       /* To keep things vertically centered in Safari: */
       flex
       align-middle;
@@ -457,6 +459,8 @@
     }
 
     form { @apply space-y-6; }
+
+    input { @apply w-full; }
 
     a {
       @apply
