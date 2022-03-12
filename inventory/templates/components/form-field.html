@@ -49,7 +49,7 @@
     {% else %}
         <label class="block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} x-text="'{{ label_override }}'"{% endif %}>{{ field.label }}</label>
         {% if not field.field.widget.input_type %}
-            {% include 'inventory/_form-markdown-toolbar.html' with id=field.id_for_label %}
+            {% include 'components/form-markdown-toolbar.html' with id=field.id_for_label %}
         {% endif %}
         {% if enhanced_label.before %}
             <span class="subdued"{% if enhanced_label.before_tooltip %} title="{{ enhanced_label.before_tooltip }}"{% endif %}>{{ enhanced_label.before }}</span>
