@@ -167,14 +167,10 @@ def index(request):
 def patterns(request):
     from django.contrib.messages.storage.base import Message
 
-    test_messages = {
-        'success': [
-            Message(0, 'Yay!', 'success')
-        ],
-        'error': [
-            Message(0, 'Whoops!', 'error')
-        ]
-    }
+    test_messages = [
+        Message(0, 'Yay!', 'success'),
+        Message(0, 'Whoops!', 'error')
+    ]
 
     roll1 = {
         'film': {

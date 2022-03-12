@@ -1,5 +1,5 @@
 {% if messages %}
-<div class="messages print:hidden">
+<div class="messages space-y-3 print:hidden">
     {% for message in messages %}
     <div class="rounded-md p-4{% if message.tags %} {{ message.tags }}{% endif %}">
         <div class="flex">
