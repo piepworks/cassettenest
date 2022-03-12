@@ -26,6 +26,7 @@
   input[type='text'],
   input[type='email'],
   input[type='password'],
+  input[type='date'],
   textarea {
     @apply
       text-stone-800
@@ -48,6 +49,14 @@
       focus:ring-blue-500
       focus:border-blue-500
       focus:placeholder-stone-400;
+  }
+
+  input[type='date'] {
+    @apply
+      w-auto
+      /* To keep things vertically centered in Safari: */
+      flex
+      align-middle;
   }
 
   main {
