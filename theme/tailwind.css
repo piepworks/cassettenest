@@ -484,10 +484,17 @@
 
     .success {
       @apply
-        bg-green-50
-        text-green-800;
+        bg-green-200
+        dark:bg-green-500
+        text-green-700
+        dark:text-green-800;
 
-      &-icon { @apply block; }
+      .success-icon {
+        @apply
+          block
+          text-green-500
+          dark:text-green-800;
+      }
     }
 
     .error {
@@ -497,7 +504,7 @@
         text-red-400
         dark:text-red-50;
 
-      &-icon {
+      .error-icon {
         @apply
           block
           text-red-400

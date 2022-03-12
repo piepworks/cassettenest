@@ -165,6 +165,17 @@ def index(request):
 
 
 def patterns(request):
+    from django.contrib.messages.storage.base import Message
+
+    test_messages = {
+        'success': [
+            Message(0, 'Yay!', 'success')
+        ],
+        'error': [
+            Message(0, 'Whoops!', 'error')
+        ]
+    }
+
     roll1 = {
         'film': {
             'type': 'e6',
@@ -191,6 +202,7 @@ def patterns(request):
     }
 
     context = {
+        'test_messages': test_messages,
         'form': PatternsForm,
         'roll1': roll1,
         'roll2': roll2,

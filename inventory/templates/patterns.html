@@ -6,7 +6,13 @@
 <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">Pattern Library</h1>
 <p>Very inspired by <a href="https://adamsilver.io">Adam Silver</a>’s <a href="http://nostyle.herokuapp.com">No Style Design System</a>.</p>
 
-<section class="pattern">
+<section>
+    <h2>Notifications</h2>
+
+    {% include 'components/message.html' with messages=test_messages.success %}
+</section>
+
+<section>
     <h2>Form Fields</h2>
     {% for field in form %}
     {% include 'components/form-field.html' with field=field %}
@@ -34,7 +40,7 @@
     <div><a class="button" href="#">Link Button</a></div>
 </section>
 
-<section class="pattern">
+<section>
     <h2>Icons (<a href="https://octicons.github.com">from GitHub</a> for now)</h2>
     <table>
         <tr>
@@ -167,7 +173,7 @@
     </div>
 </section>
 
-<section class="pattern">
+<section>
     <h2>Headings</h2>
 
     <h3>Homepage</h3>
@@ -188,7 +194,7 @@
     </header>
 </section>
 
-<section class="pattern">
+<section>
     <h2>Tables</h2>
     <p>&hellip;</p>
 </section>
