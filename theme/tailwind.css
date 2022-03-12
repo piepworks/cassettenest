@@ -25,7 +25,8 @@
 
   input[type='text'],
   input[type='email'],
-  input[type='password'] {
+  input[type='password'],
+  textarea {
     @apply
       text-stone-800
       appearance-none
@@ -505,6 +506,24 @@
 
     .field { @apply my-6; }
   }
+
+  .markdown-toolbar {
+    @apply
+      justify-between
+      bg-stone-600
+      rounded-t-md
+      p-3
+      mt-1
+      -mb-1;
+
+    svg {
+      @apply
+        h-4
+        w-4
+        fill-stone-300
+        hover:fill-stone-100;
+    }
+  }
 }
 
 @layer utilities {
@@ -512,6 +531,10 @@
   .has-js .no-js { @apply hidden; }
 
   .has-js .js-required { @apply block; }
+
+  .has-js .js-required.markdown-toolbar { @apply flex; }
+
+  .has-js .field--textarea textarea { @apply rounded-t-none; }
 
   .folded .reminder-square:not(.type-empty) {
     clip-path: var(--folded-corner);
