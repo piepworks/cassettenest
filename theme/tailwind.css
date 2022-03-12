@@ -501,14 +501,41 @@
       @apply
         bg-red-100
         dark:bg-red-400
-        text-red-400
-        dark:text-red-50;
+        text-red-700
+        dark:text-red-800;
 
       .error-icon {
         @apply
           block
           text-red-400
-          dark:text-red-100;
+          dark:text-red-700;
+      }
+    }
+
+    .warning {
+      @apply
+        bg-yellow-200
+        text-yellow-700;
+
+      .warning-icon {
+        @apply
+          block
+          text-yellow-500
+          dark:text-yellow-600;
+      }
+    }
+
+    .info {
+      @apply
+        bg-blue-100
+        dark:bg-blue-200
+        text-blue-700;
+
+      .info-icon {
+        @apply
+          block
+          text-blue-400
+          dark:text-blue-600;
       }
     }
   }

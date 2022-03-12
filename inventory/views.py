@@ -169,7 +169,9 @@ def patterns(request):
 
     test_messages = [
         Message(0, 'Yay!', 'success'),
-        Message(0, 'Whoops!', 'error')
+        Message(0, 'Whoops!', 'error'),
+        Message(0, 'Uh oh!', 'warning'),
+        Message(0, 'Ah!', 'info'),
     ]
 
     roll1 = {
