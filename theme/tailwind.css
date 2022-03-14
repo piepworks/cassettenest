@@ -586,6 +586,15 @@
     }
 
     .field { @apply my-6; }
+
+    .icon svg {
+      @apply h-4 w-4 ml-4 fill-stone-600 dark:fill-stone-400;
+    }
+
+    button.icon svg,
+    .button.icon svg {
+      @apply ml-0;
+    }
   }
 
   .markdown-toolbar {
