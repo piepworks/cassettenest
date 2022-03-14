@@ -28,6 +28,23 @@
   input[type='password'],
   input[type='date'],
   input[type='number'],
+  input[type='checkbox'],
+  select,
+  textarea {
+    @apply
+      border-stone-300
+      focus:ring-2
+      focus:ring-offset-2
+      focus:ring-blue-500
+      focus:ring-offset-stone-100
+      dark:focus:ring-offset-stone-800;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='date'],
+  input[type='number'],
   select,
   textarea {
     @apply
@@ -37,18 +54,11 @@
       px-3
       py-2
       border
-      border-stone-300
       rounded-md
       shadow-sm
       placeholder-stone-400
       focus:outline-none
       sm:text-sm
-      focus:ring-2
-      focus:ring-offset-2
-      focus:ring-offset-stone-100
-      dark:focus:ring-offset-stone-800
-      focus:ring-blue-500
-      focus:border-blue-500
       focus:placeholder-stone-400;
   }
 
@@ -59,6 +69,15 @@
       /* To keep things vertically centered in Safari: */
       flex
       align-middle;
+  }
+
+  input[type='checkbox'] {
+    @apply
+      h-4
+      w-4
+      mr-2
+      text-blue-600
+      rounded;
   }
 
   main {
@@ -549,6 +568,8 @@
         pb-2
         border-b-2
         dark:border-b-stone-500;
+
+      a { @apply no-underline; }
     }
 
     .field { @apply my-6; }

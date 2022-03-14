@@ -19,22 +19,30 @@
     {% if field.field.widget.input_type == 'checkbox' %}
         {% if field|length > 1 %}
             <fieldset>
-                <legend>{{ field.label }}</legend>
+                <legend class="font-bold">{{ field.label }}</legend>
                 {% if field.help_text %}
-                    <small class="prose dark:prose-invert">{{ field.help_text }}</small>
+                    <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
                 {% endif %}
-                {% for f in field %}
-                    <div>{{ f }}</div>
-                {% endfor %}
+                <div class="mt-3 space-y-2">
+                    {% for f in field %}
+                        <div class="flex items-center h-5">
+                            {{ f }}
+                        </div>
+                    {% endfor %}
+                </div>
             </fieldset>
         {% else %}
-            {% if field.help_text %}
-                <small class="prose dark:prose-invert">{{ field.help_text }}</small>
-            {% endif %}
-            <label for="{{ field.id_for_label }}">
-                {{ field }}
-                {{ field.label }}
-            </label>
+            <div class="relative flex items-start">
+                <div class="flex items-center h-5">
+                    {{ field }}
+                </div>
+                <div>
+                    <label for="{{ field.id_for_label }}" class="font-medium">{{ field.label }}</label>
+                    {% if field.help_text %}
+                        <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
+                    {% endif %}
+                </div>
+            </div>
         {% endif %}
     {% elif field.field.widget.input_type == 'radio' %}
         <fieldset>
