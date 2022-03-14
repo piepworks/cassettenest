@@ -29,6 +29,7 @@
   input[type='date'],
   input[type='number'],
   input[type='checkbox'],
+  input[type='radio'],
   select,
   textarea {
     @apply
@@ -71,11 +72,15 @@
       align-middle;
   }
 
+  input[type='checkbox'],
+  input[type='radio'] {
+    @apply mr-2;
+  }
+
   input[type='checkbox'] {
     @apply
       h-4
       w-4
-      mr-2
       text-blue-600
       rounded;
   }
