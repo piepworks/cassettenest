@@ -99,6 +99,7 @@
     input[type='submit'],
     .button {
       @apply
+        cursor-pointer
         inline-flex
         items-center
         px-4
