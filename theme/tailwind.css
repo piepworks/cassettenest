@@ -85,6 +85,8 @@
       rounded;
   }
 
+  input[type='number'] { @apply max-w-[6rem]; }
+
   fieldset {
     legend { @apply mb-2; }
 
