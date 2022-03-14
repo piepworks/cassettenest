@@ -85,6 +85,13 @@
       rounded;
   }
 
+  fieldset {
+    legend { @apply mb-2; }
+
+    select,
+    input[type='number'] { @apply inline; }
+  }
+
   main {
     .main-header:empty { display: none; }
 
