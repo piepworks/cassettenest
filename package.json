@@ -19,7 +19,7 @@
   "homepage": "https://github.com/trey/cassettenest#readme",
   "devDependencies": {
     "eslint": "^8.4.1",
-    "stylelint": "^14.1.0",
+    "stylelint": "^14.6.1",
     "stylelint-config-standard": "^24.0.0"
   }
 }
