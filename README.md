@@ -30,8 +30,11 @@ Copyright &copy; 2016-2021 Trey Labs LLC. All rights reserved.
 
 Once everything's set up, the next time you want to run it:
 
-```shell
-dev/start
-```
-
-… to start the server as well as Tailwind + Browsersync.
+- Open the Postgres macOS app and start the appropriate database.
+- Make sure the virtual environment is activated (usually happens automatically in VS Code).
+    `source venv/bin/activate`
+- In different Terminal tabs:
+    - One tab:
+        - `dev/start` (to run Django)
+    - Another tab:
+        - `run/tw` (to compile [Tailwind CSS](https://tailwindcss.com/))
