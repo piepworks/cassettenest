@@ -37,4 +37,4 @@ Once everything's set up, the next time you want to run it:
     - One tab:
         - `dev/start` (to run Django)
     - Another tab:
-        - `run/tw` (to compile [Tailwind CSS](https://tailwindcss.com/))
+        - `dev/tw` (to compile [Tailwind CSS](https://tailwindcss.com/))
