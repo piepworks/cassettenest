@@ -33,8 +33,7 @@ Once everything's set up, the next time you want to run it:
 - Open the Postgres macOS app and start the appropriate database.
 - Make sure the virtual environment is activated (usually happens automatically in VS Code).
     `source venv/bin/activate`
-- In different Terminal tabs:
-    - One tab:
-        - `dev/start` (to run Django)
-    - Another tab:
-        - `dev/tw` (to compile [Tailwind CSS](https://tailwindcss.com/))
+- To run the Django server:
+    - `dev/start`
+- To run both the Django server and compile Tailwind on demand:
+    - `npm run start`
