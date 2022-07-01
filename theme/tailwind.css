@@ -20,7 +20,8 @@
       underline
       hover:text-blue-500
       dark:hover:text-blue-300
-      hover:underline;
+      hover:underline
+      cursor-pointer;
   }
 
   input[type='text'],
