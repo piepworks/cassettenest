@@ -10,14 +10,13 @@
         {% if progressive %} field--progressive
             {% if primary %} field--progressive-primary{% endif %}
         {% endif %}
-        {% if top_field %} field--progressive__top{% endif %}
+        {% if top_field %} field--progressive__top{% endif %}"
     {% if progressive_text %} data-progressive-text="{{ progressive_text }}"{% endif %}
     {% if label_override %} data-label-override="{{ label_override }}"{% endif %}
     data-label="{{ field.field.label }}"
     {% if progressive and not primary %}
         {% if not show_first %} _="on load add .hidden to me"{% endif %}
-    {% endif %}"
->
+    {% endif %}">
     {% if field.field.widget.input_type == 'checkbox' %}
         {% if field|length > 1 %}
             <fieldset>
@@ -86,7 +85,7 @@
     {% if progressive %}
         <div class="js-required">
             <button
-                class="bg-transparent border-none text-blue-300 p-0 underline"
+                class="link"
                 _="on click halt the event
                    set thisField to the closest .field
                    set nextField to the next .field
