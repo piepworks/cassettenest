@@ -10,12 +10,14 @@
         {% if progressive %} field--progressive
             {% if primary %} field--progressive-primary{% endif %}
         {% endif %}
-        {% if top_field %} field--progressive__top{% endif %}"
+        {% if top_field %} field--progressive__top{% endif %}
     {% if progressive_text %} data-progressive-text="{{ progressive_text }}"{% endif %}
     {% if label_override %} data-label-override="{{ label_override }}"{% endif %}
-    {% if show_first %} data-show-first="self"{% endif %}
     data-label="{{ field.field.label }}"
-    {% if progressive %} x-show="{{ primary|yesno:'primary,!primary' }}"{% endif %}>
+    {% if progressive and not primary %}
+        {% if not show_first %} _="on load add .hidden to me"{% endif %}
+    {% endif %}"
+>
     {% if field.field.widget.input_type == 'checkbox' %}
         {% if field|length > 1 %}
             <fieldset>
@@ -55,7 +57,7 @@
             </div>
         </fieldset>
     {% else %}
-        <label class="block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} x-text="'{{ label_override }}'"{% endif %}>{{ field.label }}</label>
+        <label class="block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} _="on load set my innerHTML to '{{ label_override }}'"{% endif %}">{{ field.label }}</label>
         {% if not field.field.widget.input_type %}
             {% include 'components/form-markdown-toolbar.html' with id=field.id_for_label %}
         {% endif %}
@@ -68,7 +70,7 @@
         <div class="mt-1">
             {% if not field.field.widget.input_type %}
                 {# Set autocomplete on Markdown textareas. #}
-                {% render_field field x-ref=xref x-data='' x-on::keyup.enter="checkAutocomplete($el)" %}
+                {% render_field field x-ref=xref x-on::keyup.enter="checkAutocomplete($el)" %}
             {% else %}
                 {% render_field field x-ref=xref %}
             {% endif %}
@@ -82,8 +84,22 @@
         {% endif %}
     {% endif %}
     {% if progressive %}
-        <div class="js-link">
-            <a @click="primary = !primary; $nextTick(() => $refs.{{ primary|yesno:'secondary,primary' }}.focus())" tabindex="0">{{ progressive_text }}</a>
+        <div class="js-required">
+            <button
+                class="bg-transparent border-none text-blue-300 p-0 underline"
+                _="on click halt the event
+                   set thisField to the closest .field
+                   set nextField to the next .field
+                       within the closest .progressive-field-wrapper
+                       with wrapping
+
+                   toggle .hidden on nextField
+                   toggle .hidden on thisField
+
+                   set nextInput to the first <[x-ref]/> in nextField
+                   call nextInput.focus()">
+                {{ progressive_text }}
+            </button>
         </div>
     {% endif %}
 </div>
