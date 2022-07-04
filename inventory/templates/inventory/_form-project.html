@@ -1,13 +1,13 @@
-<form method="get" x-data="{ open: false }">
+<form method="get">
     <div class="field">
         <label for="id_project_filter">Project filter: {{ current_project.name|default:'inactive' }}</label>
-        <button id="id_project_filter" class="toggle-button" @click.prevent="open = !open">
-            <span x-show="!open">Show</span>
-            <span x-show="open">Hide</span>
-        </button>
+        <button id="id_project_filter" class="toggle-button"
+            _="on click halt the event then toggle .hidden on .project-filter
+               if my innerHTML is 'Show' put 'Hide' into me
+               else put 'Show' into me">Show</button>
     </div>
 
-    <div class="toggle" x-show="open">
+    <div class="project-filter" _="on load add .hidden">
         <div class="field">
             <label for="id_project">Filter by Project</label>
             <select name="project" id="id_project">
