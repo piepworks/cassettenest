@@ -1,4 +1,4 @@
 <div class="subscription-plans" x-data>
-    <button @click="openCheckout({{ paddle.standard_monthly_id }})" class="paddle-subscribe"><span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span> per month</button>
-    <button @click="openCheckout({{ paddle.standard_annual_id }})" class="paddle-subscribe"><span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span> per year</button>
+    <button onclick="openCheckout({{ paddle.standard_monthly_id }})" class="paddle-subscribe"><span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span> per month</button>
+    <button onclick="openCheckout({{ paddle.standard_annual_id }})" class="paddle-subscribe"><span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span> per year</button>
 </div>
