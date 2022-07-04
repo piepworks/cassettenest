@@ -1,7 +1,7 @@
 {% load capture_tags %}
 <section x-data class="c-card c-card--{{ type|default:'default' }}{% if type == 'film' %} c-card--{{ type|default:'default' }}__{{ film_type|default:'c41' }}{% endif %}">
     {% if project and film %}
-        <form @submit.prevent="if (confirmRemove('film')) $el.submit()" action="{% url 'project-rolls-remove' project.id %}" method="post" class="do-not-print">
+        <form onsubmit="return confirmRemove('film')" action="{% url 'project-rolls-remove' project.id %}" method="post" class="do-not-print">
             {% csrf_token %}
             <input type="hidden" name="film" value="{{ film.id }}" />
             <button class="icon icon-destructive" title="Remove from project.">
@@ -10,7 +10,7 @@
         </form>
     {% endif %}
     {% if project and camera %}
-        <form @submit.prevent="if (confirmRemove('camera')) $el.submit()" action="{% url 'project-camera-update' project.id %}" method="post" class="do-not-print">
+        <form onsubmit="return confirmRemove('camera')" action="{% url 'project-camera-update' project.id %}" method="post" class="do-not-print">
             {% csrf_token %}
             <input type="hidden" name="camera" value="{{ camera.id }}" />
             <input type="hidden" name="action" value="remove" />
@@ -20,7 +20,7 @@
         </form>
     {% endif %}
     {% if project and back %}
-        <form @submit.prevent="if (confirmRemove('camera and all of its backs')) $el.submit()" action="{% url 'project-camera-update' project.id %}" method="post" class="do-not-print">
+        <form onsubmit="return confirmRemove('camera and all of its backs')" action="{% url 'project-camera-update' project.id %}" method="post" class="do-not-print">
             {% csrf_token %}
             <input type="hidden" name="camera" value="{{ back.camera.id }}" />
             <input type="hidden" name="action" value="remove" />
@@ -31,7 +31,7 @@
     {% endif %}
     {% if project and roll and roll in rolls_loaded_outside_project %}
         {% capture as remove_text silent %}{% if roll.camera_back %}camera and all of its backs{% else %}camera{% endif %}{% endcapture %}
-        <form @submit.prevent="if (confirmRemove('{{ remove_text }}')) $el.submit()" action="{% url 'project-camera-update' project.id %}" method="post" class="do-not-print">
+        <form onsubmit="return confirmRemove('{{ remove_text }}')" action="{% url 'project-camera-update' project.id %}" method="post" class="do-not-print">
             {% csrf_token %}
             <input type="hidden" name="camera" value="{{ roll.camera.id }}" />
             <input type="hidden" name="action" value="remove" />
