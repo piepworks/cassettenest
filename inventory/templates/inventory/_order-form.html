@@ -8,14 +8,32 @@
 
     {% include 'components/logbook-table.html' with status='shot' %}
 
-    <div x-data class="action">
-        <div x-show="!$store.checkedCount" class="js-required">
-            <button disabled>Select rolls to update</button>
-        </div>
-        <div x-show="$store.checkedCount">
-            <button x-text="'Update ' + $store.checkedCount + ' selected roll' + $store.itemPlural">
-                Update selected
-            </button>
-        </div>
+    <div class="action">
+        <button id="update-order-count-placeholder" class="hidden"
+            _="on load
+                   remove .hidden from me
+                   send updateCount(count: .roll-checkbox.checked.length) to me
+
+               on updateCount(count)
+                   if count > 0
+                       add .hidden to me
+                   else
+                       remove .hidden from me"
+            disabled>Select rolls to update</button>
+        <button id="update-order-count"
+            _="on load
+                   add .hidden to me
+                   send updateCount(count: .roll-checkbox.checked.length) to me
+
+               on updateCount(count)
+                   if count is 1 set plural to 'roll' else set plural to 'rolls' end
+                   if count > 0
+                       remove .hidden from me
+
+                       put `Update ${count} selected ${plural}` into me
+                   else
+                       add .hidden to me">
+            Update selected
+        </button>
     </div>
 </div>

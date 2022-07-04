@@ -7,12 +7,27 @@
                     <thead>
                         <tr>
                             {% if page != 'project' and status in bulk_status_keys %}
-                            <th scope="col">
-                                <input _="on change
-                                          if my.checked is true
-                                              set .roll-checkbox.checked to true
-                                          else
-                                              set .roll-checkbox.checked to false"
+                            <th scope="col" class="print:hidden">
+                                <input id="select-all-rolls" class="hidden"
+                                    _="on load
+                                           remove .hidden from me
+                                           send updateCount(count: .roll-checkbox.checked.length) to me
+
+                                       on change
+                                       if my.checked is true
+                                           set .roll-checkbox.checked to true
+                                       else
+                                           set .roll-checkbox.checked to false
+                                       end
+
+                                       send updateCount(count: .roll-checkbox.checked.length) to #update-order-count
+                                       send updateCount(count: .roll-checkbox.checked.length) to #update-order-count-placeholder
+
+                                       on updateCount(count)
+                                       if count < .roll-checkbox.length
+                                           set my.checked to false
+                                       else
+                                           set my.checked to true"
                                     class="select-all" type="checkbox" title="Select or deselect all items">
                             </th>
                             {% endif %}
@@ -33,8 +48,13 @@
                         {% for roll in page_obj %}
                         <tr>
                             {% if page != 'project' and status in bulk_status_keys %}
-                            <td class="do-not-print">
-                                <input _="on change log my value" type="checkbox" class="roll-checkbox" value="{{ roll.id }}" name="roll" />
+                            <td class="print:hidden">
+                                <input
+                                    _="on change
+                                       send updateCount(count: .roll-checkbox.checked.length) to #update-order-count
+                                       send updateCount(count: .roll-checkbox.checked.length) to #update-order-count-placeholder
+                                       send updateCount(count: .roll-checkbox.checked.length) to #select-all-rolls"
+                                    type="checkbox" class="roll-checkbox" value="{{ roll.id }}" name="roll">
                             </td>
                             {% endif %}
                             <td><a href="{% url 'roll-detail' roll.id %}">{{ roll.code }}</a></td>
