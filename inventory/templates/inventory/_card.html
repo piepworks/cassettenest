@@ -1,5 +1,5 @@
 {% load capture_tags %}
-<section x-data class="c-card c-card--{{ type|default:'default' }}{% if type == 'film' %} c-card--{{ type|default:'default' }}__{{ film_type|default:'c41' }}{% endif %}">
+<section class="c-card c-card--{{ type|default:'default' }}{% if type == 'film' %} c-card--{{ type|default:'default' }}__{{ film_type|default:'c41' }}{% endif %}">
     {% if project and film %}
         <form onsubmit="return confirmRemove('film')" action="{% url 'project-rolls-remove' project.id %}" method="post" class="do-not-print">
             {% csrf_token %}
