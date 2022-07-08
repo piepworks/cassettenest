@@ -37,3 +37,7 @@ Once everything's set up, the next time you want to run it:
     - `dev/start`
 - To run both the Django server and compile Tailwind on demand:
     - `npm run start`
+
+---
+
+Backup storage "lifecycle" is defined in `cassettenest.xml` (which is in iCloud /DigitalOcean Spaces Storage Lifecycle Definitions).
