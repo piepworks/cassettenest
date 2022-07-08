@@ -6,7 +6,7 @@
 #
 appnope==0.1.3
     # via ipython
-asgiref==3.5.1
+asgiref==3.5.2
     # via django
 asttokens==2.0.5
     # via stack-data
@@ -14,19 +14,21 @@ autopep8==1.6.0
     # via -r requirements.in
 backcall==0.2.0
     # via ipython
-bleach==4.1.0
+bleach[css]==5.0.1
     # via django-bleach
-certifi==2021.10.8
+build==0.8.0
+    # via pip-tools
+certifi==2022.6.15
     # via requests
-charset-normalizer==2.0.12
+charset-normalizer==2.1.0
     # via requests
 click==8.1.3
     # via pip-tools
-coverage==6.3.2
+coverage==6.4.1
     # via -r requirements.in
 decorator==5.1.1
     # via ipython
-django==4.0.4
+django==4.0.6
     # via
     #   -r requirements.in
     #   django-bleach
@@ -36,21 +38,21 @@ django==4.0.4
     #   django-debug-toolbar
     #   django-htmx
     #   model-bakery
-django-bleach==2.0.0
+django-bleach==3.0.0
     # via -r requirements.in
-django-browser-reload==1.3.0
+django-browser-reload==1.6.0
     # via -r requirements.in
 django-capture-tag==1.0
     # via -r requirements.in
-django-cors-headers==3.11.0
+django-cors-headers==3.13.0
     # via -r requirements.in
 django-dbbackup==4.0.0b0
     # via -r requirements.in
-django-debug-toolbar==3.2.4
+django-debug-toolbar==3.5.0
     # via -r requirements.in
-django-htmx==1.10.0
+django-htmx==1.12.0
     # via -r requirements.in
-django-waffle==2.4.1
+django-waffle==2.5.0
     # via -r requirements.in
 django-widget-tweaks==1.4.12
     # via -r requirements.in
@@ -62,9 +64,9 @@ gunicorn==20.1.0
     # via -r requirements.in
 idna==3.3
     # via requests
-importlib-metadata==4.11.3
+importlib-metadata==4.12.0
     # via markdown
-ipython==8.3.0
+ipython==8.4.0
     # via -r requirements.in
 jedi==0.18.1
     # via ipython
@@ -72,25 +74,25 @@ markdown==3.3.7
     # via -r requirements.in
 matplotlib-inline==0.1.3
     # via ipython
-model-bakery==1.5.0
+model-bakery==1.6.0
     # via -r requirements.in
 packaging==21.3
-    # via bleach
+    # via build
 parso==0.8.3
     # via jedi
 pep517==0.12.0
-    # via pip-tools
+    # via build
 pexpect==4.8.0
     # via ipython
 phpserialize==1.3
     # via -r requirements.in
 pickleshare==0.7.5
     # via ipython
-pip-lock==2.8.1
+pip-lock==2.9.0
     # via -r requirements.in
-pip-tools==6.6.0
+pip-tools==6.8.0
     # via -r requirements.in
-prompt-toolkit==3.0.29
+prompt-toolkit==3.0.30
     # via ipython
 psycopg2-binary==2.9.3
     # via -r requirements.in
@@ -102,11 +104,11 @@ pycodestyle==2.8.0
     # via
     #   -r requirements.in
     #   autopep8
-pycryptodome==3.14.1
+pycryptodome==3.15.0
     # via -r requirements.in
 pygments==2.12.0
     # via ipython
-pyparsing==3.0.8
+pyparsing==3.0.9
     # via packaging
 python-dateutil==2.8.2
     # via freezegun
@@ -118,7 +120,7 @@ pytz==2022.1
     #   django-dbbackup
 pywatchman==1.4.1
     # via -r requirements.in
-requests==2.27.1
+requests==2.28.1
     # via -r requirements.in
 six==1.16.0
     # via
@@ -129,25 +131,31 @@ sqlparse==0.4.2
     # via
     #   django
     #   django-debug-toolbar
-stack-data==0.2.0
+stack-data==0.3.0
     # via ipython
+tinycss2==1.1.1
+    # via bleach
 toml==0.10.2
     # via autopep8
 tomli==2.0.1
-    # via pep517
-traitlets==5.1.1
+    # via
+    #   build
+    #   pep517
+traitlets==5.3.0
     # via
     #   ipython
     #   matplotlib-inline
-urllib3==1.26.9
+urllib3==1.26.10
     # via requests
 wcwidth==0.2.5
     # via prompt-toolkit
 webencodings==0.5.1
-    # via bleach
+    # via
+    #   bleach
+    #   tinycss2
 wheel==0.37.1
     # via pip-tools
-whitenoise==6.0.0
+whitenoise==6.2.0
     # via -r requirements.in
 zipp==3.8.0
     # via importlib-metadata
