@@ -1,5 +1,5 @@
 {% load static tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
     {% url 'index' as index_url %}
     <title>{% block title %}{% endblock %}{% if request.path != index_url %} / {% endif %}Cassette Nest</title>
@@ -64,6 +64,7 @@
     {% django_htmx_script %}
 
     <script>
+        document.documentElement.classList.remove('no-js');
         document.documentElement.classList.add('has-js');
         {% if user.is_authenticated %}
         {% include 'js/menu.js' %}

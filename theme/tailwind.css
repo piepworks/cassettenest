@@ -96,13 +96,48 @@
       rounded;
   }
 
-  input[type='number'] { @apply max-w-[6rem]; }
+  input[type='number'] {
+    appearance: textfield;
+
+    @apply
+      max-w-[5rem]
+      rounded-none
+      text-center
+      font-bold
+      text-xl;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      @apply appearance-none;
+    }
+  }
+
+  .no-js input[type='number'] {
+    @apply font-normal text-base;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: auto;
+    }
+  }
 
   fieldset {
     legend { @apply mb-2; }
 
     select,
     input[type='number'] { @apply inline; }
+  }
+
+  .stepper {
+    @apply pt-1 pb-2 pr-4 font-black text-3xl;
+
+    &.left {
+      @apply rounded-l-full pl-6;
+    }
+
+    &.right {
+      @apply rounded-r-full pr-6;
+    }
   }
 
   main {

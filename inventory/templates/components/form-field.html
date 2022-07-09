@@ -71,7 +71,11 @@
                 {# Set autocomplete on Markdown textareas. #}
                 {% render_field field x-ref=xref x-on::keyup.enter="checkAutocomplete($el)" %}
             {% else %}
-                {% render_field field x-ref=xref %}
+                {% if field.field.widget.input_type == 'number' %}
+                    {% include 'components/form-stepper-field.html' %}
+                {% else %}
+                    {% render_field field x-ref=xref %}
+                {% endif %}
             {% endif %}
         </div>
         {% if field.help_text and field.label != 'Username' %}
