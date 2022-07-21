@@ -128,22 +128,6 @@
     input[type='number'] { @apply inline; }
   }
 
-  .stepper {
-    @apply pt-1 pb-2 pr-4 font-black text-3xl;
-
-    &[disabled] {
-      @apply bg-stone-700 text-stone-400;
-    }
-
-    &.left {
-      @apply rounded-l-full pl-6;
-    }
-
-    &.right {
-      @apply rounded-r-full pr-6;
-    }
-  }
-
   main {
     .main-header:empty { display: none; }
 
@@ -201,6 +185,31 @@
         @apply
           bg-red-600
           hover:bg-red-700;
+      }
+
+      &.stepper {
+        @apply
+          bg-stone-300
+          hover:bg-stone-400
+          dark:bg-stone-600
+          dark:hover:bg-stone-700
+          pt-1
+          pb-2
+          pr-4
+          font-black
+          text-3xl;
+
+        &[disabled] {
+          @apply
+            bg-white
+            text-stone-300
+            dark:bg-stone-900
+            dark:text-stone-500;
+        }
+
+        &.left { @apply rounded-l-full pl-6; }
+
+        &.right { @apply rounded-r-full pr-6; }
       }
     }
   }
