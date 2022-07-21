@@ -186,31 +186,6 @@
           bg-red-600
           hover:bg-red-700;
       }
-
-      &.stepper {
-        @apply
-          bg-stone-300
-          hover:bg-stone-400
-          dark:bg-stone-600
-          dark:hover:bg-stone-700
-          pt-1
-          pb-2
-          pr-4
-          font-black
-          text-3xl;
-
-        &[disabled] {
-          @apply
-            bg-white
-            text-stone-300
-            dark:bg-stone-900
-            dark:text-stone-500;
-        }
-
-        &.left { @apply rounded-l-full pl-6; }
-
-        &.right { @apply rounded-r-full pr-6; }
-      }
     }
   }
 }
@@ -677,6 +652,38 @@
         hover:fill-stone-600
         dark:hover:fill-stone-100;
     }
+  }
+
+  .stepper {
+    @apply flex;
+
+    button {
+      @apply
+        text-blue-100
+        hover:text-blue-50
+        focus:text-blue-50
+        bg-blue-600
+        hover:bg-blue-700
+        focus:bg-blue-700
+        border-transparent
+        hover:border-transparent
+        pt-1
+        pb-2
+        pr-4
+        text-3xl;
+
+      &[disabled] {
+        @apply
+          bg-stone-600
+          text-stone-400;
+      }
+
+      &.left { @apply rounded-l-full pl-6; }
+
+      &.right { @apply rounded-r-full pr-6; }
+    }
+
+    input { @apply border-0; }
   }
 }
 

@@ -2,7 +2,7 @@
 {% load capture_tags %}
 {% capture as f silent %}{{ field.id_for_label }}{% endcapture %}
 
-<div class="flex">
+<div class="stepper">
     {% capture as remove_hyperscript silent %}
       on load remove .hidden
         set minValue to #{{ f }}.min as Int or 0
@@ -22,7 +22,7 @@
           add [@disabled]
     {% endcapture %}
 
-    <button _="{{ remove_hyperscript }}" id="{{ f }}-remove" class="hidden stepper left" type="button" aria-label="Remove">&minus;</button>
+    <button _="{{ remove_hyperscript }}" id="{{ f }}-remove" class="hidden left" type="button" aria-label="Remove">&minus;</button>
 
     {% capture as input_hyperscript silent %}
       _:on change
@@ -70,5 +70,5 @@
           add [@disabled]
     {% endcapture %}
 
-    <button _="{{ add_hyperscript }}" id="{{ f }}-add" class="hidden stepper right" type="button" aria-label="Add">&plus;</button>
+    <button _="{{ add_hyperscript }}" id="{{ f }}-add" class="hidden right" type="button" aria-label="Add">&plus;</button>
 </div>
