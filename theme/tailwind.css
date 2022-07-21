@@ -131,6 +131,10 @@
   .stepper {
     @apply pt-1 pb-2 pr-4 font-black text-3xl;
 
+    &[disabled] {
+      @apply bg-stone-700 text-stone-400;
+    }
+
     &.left {
       @apply rounded-l-full pl-6;
     }

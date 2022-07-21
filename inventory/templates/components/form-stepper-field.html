@@ -1,16 +1,31 @@
 {% load widget_tweaks %}
 <div class="flex">
-    <button _="on load remove .hidden on click halt the event
-               set minValue to #{{ field.id_for_label }}.min or 0
-               if #{{ field.id_for_label }}.value as Int > minValue as Int
-                   decrement #{{ field.id_for_label }}.value by 1"
-        class="hidden stepper left" type="button" aria-label="Remove" aria-describedby="adults-label">−</button>
+    <button _="on load remove .hidden
+               set minValue to #{{ field.id_for_label }}.min as Int or 0
+               if #{{ field.id_for_label }}.value == minValue
+                 add [@disabled]
+               end
+               on click
+                 set minValue to #{{ field.id_for_label }}.min as Int or 0
+                   if #{{ field.id_for_label }}.value > minValue
+                     decrement #{{ field.id_for_label }}.value by 1
+                     remove [@disabled] from #{{ field.id_for_label }}-add
+                     if #{{ field.id_for_label }}.value == minValue
+                       add [@disabled]"
+      id="{{ field.id_for_label }}-remove" class="hidden stepper left" type="button" aria-label="Remove">&minus;</button>
 
     {# If both fields don't have a "max", Safari renders them as different sizes. #}
     {% render_field field x-ref=xref max='100' %}
 
-    <button _="on load remove .hidden on click halt the event
-               if #{{ field.id_for_label }}.value as Int < #{{ field.id_for_label }}.max as Int
-                   increment #{{ field.id_for_label }}.value by 1"
-        class="hidden stepper right" type="button" aria-label="Add" aria-describedby="adults-label">+</button>
+    <button _="on load remove .hidden
+               if #{{ field.id_for_label }}.value == #{{ field.id_for_label }}.max as Int
+                 add [@disabled]
+               end
+               on click
+                 if #{{ field.id_for_label }}.value as Int < #{{ field.id_for_label }}.max as Int
+                   increment #{{ field.id_for_label }}.value by 1
+                   remove [@disabled] from #{{ field.id_for_label }}-remove
+                   if #{{ field.id_for_label }}.value == #{{ field.id_for_label }}.max as Int
+                     add [@disabled]"
+        id="{{ field.id_for_label }}-add" class="hidden stepper right" type="button" aria-label="Add">&plus;</button>
 </div>
