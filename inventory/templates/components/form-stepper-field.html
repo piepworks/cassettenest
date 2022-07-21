@@ -22,24 +22,28 @@
 
     {% capture as input_hyperscript silent %}
       _:on change
+        set myValue to my.value as Int
+        set myMax to my.max as Int
+        set myMin to my.min as Int
+
         remove [@disabled] from #{{ f }}-remove
         remove [@disabled] from #{{ f }}-add
 
-        if my.value == my.min
+        if myValue == myMin
           add [@disabled] to #{{ f }}-remove
         end
 
-        if my.value == my.max
+        if myValue == myMax
           add [@disabled] to #{{ f }}-add
         end
 
-        if my.value > my.max
-          set my.value to my.max
+        if myValue > myMax
+          set my.value to myMax
           add [@disabled] to #{{ f }}-add
         end
 
-        if my.value < my.min
-          set my.value to my.min
+        if myValue < myMin
+          set my.value to myMin
           add [@disabled] to #{{ f }}-remove
         end
     {% endcapture %}
