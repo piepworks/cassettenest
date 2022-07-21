@@ -3,22 +3,26 @@
 {% capture as f silent %}{{ field.id_for_label }}{% endcapture %}
 
 <div class="flex">
-    <button _="on load remove .hidden
-               set minValue to #{{ f }}.min as Int or 0
-               if #{{ f }}.value == minValue
-                 add [@disabled]
-               end
+    {% capture as remove_hyperscript silent %}
+      on load remove .hidden
+        set minValue to #{{ f }}.min as Int or 0
 
-               on click
-                 set minValue to #{{ f }}.min as Int or 0
+        if #{{ f }}.value == minValue
+          add [@disabled]
+        end
 
-                 if #{{ f }}.value > minValue
-                   decrement #{{ f }}.value by 1
-                   remove [@disabled] from #{{ f }}-add
+      on click
+        set minValue to #{{ f }}.min as Int or 0
 
-                   if #{{ f }}.value == minValue
-                     add [@disabled]"
-      id="{{ f }}-remove" class="hidden stepper left" type="button" aria-label="Remove">&minus;</button>
+        if #{{ f }}.value > minValue
+          decrement #{{ f }}.value by 1
+          remove [@disabled] from #{{ f }}-add
+
+        if #{{ f }}.value == minValue
+          add [@disabled]
+    {% endcapture %}
+
+    <button _="{{ remove_hyperscript }}" id="{{ f }}-remove" class="hidden stepper left" type="button" aria-label="Remove">&minus;</button>
 
     {% capture as input_hyperscript silent %}
       _:on change
@@ -51,17 +55,20 @@
     {# If both fields don't have a "max", Safari renders them as different sizes. #}
     {{ field|attr:'max:100'|attr:input_hyperscript }}
 
-    <button _="on load remove .hidden
-               if #{{ f }}.value == #{{ f }}.max as Int
-                 add [@disabled]
-               end
+    {% capture as add_hyperscript silent %}
+      on load remove .hidden
+        if #{{ f }}.value == #{{ f }}.max as Int
+          add [@disabled]
+        end
 
-               on click
-                 if #{{ f }}.value as Int < #{{ f }}.max as Int
-                   increment #{{ f }}.value by 1
-                   remove [@disabled] from #{{ f }}-remove
+      on click
+        if #{{ f }}.value as Int < #{{ f }}.max as Int
+          increment #{{ f }}.value by 1
+          remove [@disabled] from #{{ f }}-remove
 
-                   if #{{ f }}.value == #{{ f }}.max as Int
-                     add [@disabled]"
-        id="{{ f }}-add" class="hidden stepper right" type="button" aria-label="Add">&plus;</button>
+        if #{{ f }}.value == #{{ f }}.max as Int
+          add [@disabled]
+    {% endcapture %}
+
+    <button _="{{ add_hyperscript }}" id="{{ f }}-add" class="hidden stepper right" type="button" aria-label="Add">&plus;</button>
 </div>
