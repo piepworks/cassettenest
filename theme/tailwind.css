@@ -134,6 +134,8 @@
     button,
     input[type='submit'],
     .button {
+      touch-action: manipulation;
+
       @apply
         cursor-pointer
         inline-flex
