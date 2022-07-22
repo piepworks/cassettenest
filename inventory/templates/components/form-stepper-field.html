@@ -28,7 +28,7 @@
       _:on change
         set myValue to my.value as Int
         set myMax to my.max as Int
-        set myMin to my.min as Int
+        set myMin to my.min as Int or 0
 
         remove [@disabled] from #{{ f }}-remove
         remove [@disabled] from #{{ f }}-add
@@ -52,9 +52,9 @@
         end
     {% endcapture %}
 
+    {# If both fields don't have a "max", Safari renders them as different sizes. So make it 100 if it’s not set. #}
     {% capture as max silent %}max:{% if field.field.max_value %}{{ field.field.max_value }}{% else %}100{% endif%}{% endcapture %}
 
-    {# If both fields don't have a "max", Safari renders them as different sizes. #}
     {{ field|attr:max|attr:input_hyperscript }}
 
     {% capture as add_hyperscript silent %}
