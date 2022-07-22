@@ -151,8 +151,8 @@
         font-medium
         text-stone-700
         dark:text-stone-200
-        hover:text-stone-700
-        dark:hover:text-stone-200
+        enabled:hover:text-stone-700
+        enabled:dark:hover:text-stone-200
         bg-white
         dark:bg-stone-600
         hover:bg-stone-50
@@ -163,7 +163,14 @@
         focus:ring-offset-2
         focus:ring-offset-stone-100
         dark:focus:ring-offset-stone-800
-        focus:ring-blue-500;
+        focus:ring-blue-500
+        disabled:bg-transparent
+        disabled:hover:bg-transparent
+        disabled:text-stone-400
+        dark:disabled:text-stone-600
+        disabled:border-stone-400
+        dark:disabled:border-stone-600
+        disabled:border-dashed;
 
       &,
       &:hover { @apply no-underline; }
@@ -661,32 +668,24 @@
       @apply
         text-stone-50
         dark:text-stone-100
-        hover:text-stone-50
+        enabled:hover:text-stone-50
         focus:text-stone-50
         bg-stone-400
         hover:bg-stone-500
-        focus:bg-stone-500
-        dark:bg-stone-600
-        dark:hover:bg-stone-700
-        dark:focus:bg-stone-700
-        border-transparent
-        hover:border-transparent
+        enabled:focus:bg-stone-500
+        dark:enabled:bg-stone-600
+        dark:enabled:hover:bg-stone-700
+        dark:enabled:focus:bg-stone-700
+        enabled:border-transparent
+        hover:enabled:border-transparent
+        hover:disabled:bg-transparent
         pt-1
         pb-2
-        pr-4
         text-3xl;
 
-      &[disabled] {
-        @apply
-          bg-stone-200
-          text-stone-400
-          dark:bg-stone-400
-          dark:text-stone-200;
-      }
+      &.left { @apply rounded-l-full pl-6 border-r-0; }
 
-      &.left { @apply rounded-l-full pl-6; }
-
-      &.right { @apply rounded-r-full pr-6; }
+      &.right { @apply rounded-r-full pr-6 border-l-0; }
     }
 
     input { @apply border-0; }
