@@ -52,8 +52,10 @@
         end
     {% endcapture %}
 
+    {% capture as max silent %}max:{% if field.field.max_value %}{{ field.field.max_value }}{% else %}100{% endif%}{% endcapture %}
+
     {# If both fields don't have a "max", Safari renders them as different sizes. #}
-    {{ field|attr:'max:100'|attr:input_hyperscript }}
+    {{ field|attr:max|attr:input_hyperscript }}
 
     {% capture as add_hyperscript silent %}
       on load remove .hidden

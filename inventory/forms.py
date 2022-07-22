@@ -217,7 +217,7 @@ class PatternsForm(forms.Form):
         help_text=help_text,
         widget=forms.Textarea
     )
-    number = forms.IntegerField(help_text=help_text)
+    number = forms.IntegerField(initial=1, max_value=5, help_text='Max value set to "5", minimum is the default "0".')
     choice = forms.ChoiceField(
         help_text=help_text,
         choices=[
