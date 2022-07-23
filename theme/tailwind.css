@@ -695,7 +695,6 @@
         @apply
           rounded-l-full
           pl-6
-          border-r-4
           dark:border-r-transparent;
       }
 
@@ -712,6 +711,7 @@
     input {
       @apply
         border-y-4
+        md:border-y-2
         border-x-0
         border-stone-400
         dark:border-transparent;

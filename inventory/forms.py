@@ -203,6 +203,7 @@ class PatternsForm(forms.Form):
 
     help_text = 'This is help text.'
 
+    number = forms.IntegerField(initial=1, max_value=5, help_text='Max value set to "5", minimum is the default "0".')
     text = forms.CharField()
     email = forms.EmailField(help_text=help_text)
     password = forms.CharField(
@@ -217,7 +218,6 @@ class PatternsForm(forms.Form):
         help_text=help_text,
         widget=forms.Textarea
     )
-    number = forms.IntegerField(initial=1, max_value=5, help_text='Max value set to "5", minimum is the default "0".')
     choice = forms.ChoiceField(
         help_text=help_text,
         choices=[
