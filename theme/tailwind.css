@@ -104,7 +104,9 @@
       rounded-none
       text-center
       font-bold
-      text-xl;
+      text-xl
+      md:text-base
+      md:font-normal;
 
     &::-webkit-outer-spin-button,
     &::-webkit-inner-spin-button {
@@ -683,7 +685,9 @@
         hover:disabled:bg-transparent
         pt-1
         pb-2
-        text-3xl;
+        text-3xl
+        md:text-xl
+        md:border-2;
 
       &.left {
         border-right-style: solid;
