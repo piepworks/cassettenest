@@ -142,7 +142,7 @@
         items-center
         px-4
         py-2
-        border
+        border-2
         border-stone-300
         dark:border-stone-500
         rounded-md
@@ -167,9 +167,9 @@
         disabled:bg-transparent
         disabled:hover:bg-transparent
         disabled:text-stone-400
-        dark:disabled:text-stone-600
+        dark:disabled:text-stone-500
         disabled:border-stone-400
-        dark:disabled:border-stone-600
+        dark:disabled:border-stone-500
         disabled:border-dashed;
 
       &,
@@ -179,7 +179,8 @@
       &.destructive {
         @apply
           border-transparent
-          text-white;
+          text-white
+          hover:text-white;
       }
 
       &.primary {
@@ -666,10 +667,11 @@
 
     button {
       @apply
+        border-4
         text-stone-50
         dark:text-stone-100
         enabled:hover:text-stone-50
-        focus:text-stone-50
+        enabled:focus:text-stone-50
         bg-stone-400
         hover:bg-stone-500
         enabled:focus:bg-stone-500
@@ -683,12 +685,33 @@
         pb-2
         text-3xl;
 
-      &.left { @apply rounded-l-full pl-6 border-r-0; }
+      &.left {
+        border-right-style: solid;
 
-      &.right { @apply rounded-r-full pr-6 border-l-0; }
+        @apply
+          rounded-l-full
+          pl-6
+          border-r-4
+          dark:border-r-transparent;
+      }
+
+      &.right {
+        border-left-style: solid;
+
+        @apply
+          rounded-r-full
+          pr-6
+          dark:border-l-transparent;
+      }
     }
 
-    input { @apply border-0; }
+    input {
+      @apply
+        border-y-4
+        border-x-0
+        border-stone-400
+        dark:border-transparent;
+    }
   }
 }
 
