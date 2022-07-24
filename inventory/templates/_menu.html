@@ -7,11 +7,14 @@
                 {% include 'svg/heroicons/x.svg' with class="h-6 w-6 text-white" %}
             </button>
         </div>
-        <div id="menu-inner" class="flex md:flex-col md:w-64 md:min-h-screen">
+        <div id="menu-inner" class="flex md:flex-col md:min-h-screen">
             <div class="flex-1 flex flex-col">
                 <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-                    <div class="flex-shrink-0 px-4">
+                    <div class="flex-shrink-0 px-4 relative">
                         {% include 'inventory/_logo.html' %}
+                        <div id="menu-desktop-toggle" class="hidden">
+                            <button onclick="desktopToggle()" type="button">&lt;</button>
+                        </div>
                     </div>
 
                     {# include 'inventory/_nav.html' #}

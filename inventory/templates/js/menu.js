@@ -6,6 +6,7 @@ const menuContent = document.querySelector('#menu-content');
 const openMenuButton = document.querySelector('#menu-open');
 const closeMenuButtonWrapper = document.querySelector('#menu-close');
 const closeMenuButton = closeMenuButtonWrapper.querySelector('button');
+const desktopToggleButton = document.querySelector('#menu-desktop-toggle');
 
 const setupMenu = () => {
   menu.classList.add('-translate-x-full', 'fixed');
@@ -15,6 +16,7 @@ const setupMenu = () => {
   openMenuButton.classList.remove('hidden');
   openMenuButton.classList.add('inline-flex');
   closeMenuButtonWrapper.classList.remove('hidden');
+  desktopToggleButton.classList.add('md:flex');
 };
 const openMenu = () => {
   document.body.classList.add('overflow-hidden');
@@ -39,6 +41,10 @@ const closeMenu = () => {
   setTimeout(() => {
     menu.classList.add('-translate-x-full');
   }, 300);
+};
+const desktopToggle = () => {
+  menuInner.classList.toggle('collapsed');
+  // Set a cookie / localStorage to remember preference.
 };
 
 setupMenu();

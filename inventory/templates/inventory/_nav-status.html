@@ -8,7 +8,7 @@
         {% if request.path != index_url %}
             <a href="{% url 'index' %}">
                 {% include 'svg/heroicons/home.svg' %}
-                Dashboard
+                <span>Dashboard</span>
             </a>
         {% else %}
             {% include 'svg/heroicons/home.svg' %}
@@ -20,7 +20,7 @@
         {% if request.path != inventory_url %}
             <a href="{% url 'inventory' %}">
                 {% include 'svg/heroicons/film.svg' %}
-                Inventory
+                <span>Inventory</span>
             </a>
         {% else %}
             {% include 'svg/heroicons/film.svg' %}
@@ -31,11 +31,11 @@
         {% if request.path != ready_url %}
             <a href="{% url 'ready' %}">
                 {% include 'svg/heroicons/clipboard-list.svg' %}
-                Ready to Process
+                <span>Ready to Process</span>
             </a>
         {% else %}
             {% include 'svg/heroicons/clipboard-list.svg' %}
-            Ready to Process
+            <span>Ready to Process</span>
         {% endif %}
     </li>
 
@@ -43,11 +43,11 @@
         {% if request.path != logbook_url %}
             <a href="{% url 'logbook' %}">
                 {% include 'svg/heroicons/book.svg' %}
-                Logbook
+                <span>Logbook</span>
             </a>
         {% else %}
             {% include 'svg/heroicons/book.svg' %}
-            Logbook
+            <span>Logbook</span>
         {% endif %}
         {% comment %}
             <!-- This is for a dropdown that doesn’t exist and may never. -->

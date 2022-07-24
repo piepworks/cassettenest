@@ -225,8 +225,21 @@
 
   #menu-inner {
     @apply
+      md:w-64
       bg-stone-800
-      dark:bg-stone-900;
+      dark:bg-stone-900
+      transition-transform;
+
+    #menu-desktop-toggle {
+      @apply
+        align-middle
+        bg-stone-700
+        absolute
+        right-0
+        top-1/4;
+
+      button { @apply text-stone-400; }
+    }
 
     svg {
       @apply
@@ -270,6 +283,43 @@
 
           svg { @apply text-stone-300; }
         }
+      }
+    }
+
+    &.collapsed {
+      @apply w-auto;
+
+      #menu-desktop-toggle {
+        @apply rotate-180;
+      }
+
+      a,
+      li.current {
+        @apply md:px-0;
+      }
+
+      svg {
+        @apply
+          md:w-7
+          md:h-7
+          md:mr-0;
+      }
+
+      ul {
+        @apply
+          space-y-4
+          mx-1
+          mt-8;
+      }
+
+      li {
+        &,
+        a { @apply md:justify-center; }
+
+        span { @apply md:hidden; }
+
+        a,
+        &.current { @apply py-3; }
       }
     }
   }
