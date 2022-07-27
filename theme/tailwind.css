@@ -232,13 +232,31 @@
 
     #menu-desktop-toggle {
       @apply
+        hidden
         align-middle
-        bg-stone-700
         absolute
-        right-0
-        top-1/4;
+        bottom-10
+        left-0
+        w-full;
 
-      button { @apply text-stone-400; }
+      /* Don't show at all if the screen is too short. */
+      @media screen and (min-height: 450px) { @apply block; }
+
+      button {
+        @apply
+          text-center
+          w-full;
+
+        &:hover svg { @apply text-stone-300; }
+      }
+
+      svg {
+        @apply
+          inline
+          w-8
+          h-8
+          text-stone-600;
+      }
     }
 
     svg {
