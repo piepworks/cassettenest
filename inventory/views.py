@@ -2392,7 +2392,11 @@ def session_sidebar(request):
     if not request.htmx:
         return HttpResponseForbidden()
 
-    status = request.session['sidebar'] or 'open'
+    try:
+        status = request.session['sidebar']
+    except KeyError:
+        status = 'open'
+
     request.session['sidebar'] = 'open' if status == 'closed' else 'closed'
 
     return HttpResponse()
