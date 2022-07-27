@@ -2387,6 +2387,17 @@ def camera_back_delete(request, pk, back_pk):
     return redirect(reverse('camera-detail', args=(camera.id,)))
 
 
+@login_required
+def session_sidebar(request):
+    if not request.htmx:
+        return HttpResponseForbidden()
+
+    status = request.session['sidebar'] or 'open'
+    request.session['sidebar'] = 'open' if status == 'closed' else 'closed'
+
+    return HttpResponse()
+
+
 # EXPORT / IMPORT
 # ------
 @method_decorator(login_required, name='dispatch')

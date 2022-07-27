@@ -7,7 +7,7 @@
                 {% include 'svg/heroicons/x.svg' with class="h-6 w-6 text-white" %}
             </button>
         </div>
-        <div id="menu-inner" class="flex md:flex-col md:min-h-screen">
+        <div id="menu-inner" class="{% if request.session.sidebar == 'closed' %}collapsed {% endif %}flex md:flex-col md:min-h-screen">
             <div class="flex-1 flex flex-col">
                 <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
                     <div class="flex-shrink-0 px-4">

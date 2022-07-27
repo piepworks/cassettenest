@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* global htmx */
 const menu = document.querySelector('#menu');
 const menuInner = document.querySelector('#menu-inner');
 const menuOverlay = document.querySelector('#menu-overlay');
@@ -44,7 +45,7 @@ const closeMenu = () => {
 };
 const desktopToggle = () => {
   menuInner.classList.toggle('collapsed');
-  // Set a cookie / localStorage to remember preference.
+  htmx.ajax('GET', '{% url "session-sidebar" %}', { swap: 'none' });
 };
 
 setupMenu();
