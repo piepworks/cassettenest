@@ -232,15 +232,11 @@
 
     #menu-desktop-toggle {
       @apply
-        hidden
         align-middle
         absolute
         bottom-10
         left-0
         w-full;
-
-      /* Don't show at all if the screen is too short. */
-      @media screen and (min-height: 450px) { @apply block; }
 
       button {
         @apply

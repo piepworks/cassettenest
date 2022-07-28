@@ -17,7 +17,7 @@ const setupMenu = () => {
   openMenuButton.classList.remove('hidden');
   openMenuButton.classList.add('inline-flex');
   closeMenuButtonWrapper.classList.remove('hidden');
-  desktopToggleButton.classList.add('md:flex');
+  desktopToggleButton.classList.add('md:tall:flex');
 };
 const openMenu = () => {
   document.body.classList.add('overflow-hidden');
