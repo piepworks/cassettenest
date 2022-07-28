@@ -228,7 +228,7 @@
       md:w-64
       bg-stone-800
       dark:bg-stone-900
-      transition-transform;
+      transition-all;
 
     #menu-desktop-toggle {
       @apply
@@ -270,7 +270,8 @@
           p-2
           no-underline
           text-stone-300
-          flex-grow;
+          flex-grow
+          whitespace-nowrap;
       }
 
       li,
@@ -301,16 +302,12 @@
     }
 
     &.collapsed {
-      @apply w-auto;
+      @apply md:w-20;
 
-      #menu-desktop-toggle {
-        @apply rotate-180;
-      }
+      #menu-desktop-toggle { @apply rotate-180; }
 
       a,
-      li.current {
-        @apply md:px-0;
-      }
+      li.current { @apply md:px-0; }
 
       svg {
         @apply
