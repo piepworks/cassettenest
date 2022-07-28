@@ -45,7 +45,7 @@
                         {% endif %}
                         <select
                             name="{{ items.slug }}"
-                            class="block dark:bg-stone-700 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                            class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                             {% for tab in items.tabs %}
                                 <option value="{{ forloop.counter0 }}"{% if items.current_tab == forloop.counter0 %} selected{% endif %}>{{ tab.name }}</option>
                             {% endfor %}
