@@ -4,7 +4,7 @@
 {% url 'logbook' as logbook_url %}
 
 <ul class="mt-5 flex-1 px-2 space-y-1 print:hidden">
-    <li{% if 'camera' in request.path or request.path == index_url %} class="current"{% endif %}>
+    <li{% if 'camera' in request.path or request.path == index_url %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Dashboard"{% endif %}>
         {% if request.path != index_url %}
             <a href="{% url 'index' %}">
                 {% include 'svg/heroicons/home.svg' %}
@@ -16,7 +16,7 @@
         {% endif %}
     </li>
 
-    <li{% if inventory_url in request.path or 'rolls/' in request.path %} class="current"{% endif %}>
+    <li{% if inventory_url in request.path or 'rolls/' in request.path %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Inventory"{% endif %}>
         {% if request.path != inventory_url %}
             <a href="{% url 'inventory' %}">
                 {% include 'svg/heroicons/film.svg' %}
@@ -27,7 +27,7 @@
             <span>Inventory</span>
         {% endif %}
     </li>
-    <li{% if request.path == ready_url %} class="current"{% endif %}>
+    <li{% if request.path == ready_url %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Ready to Process"{% endif %}>
         {% if request.path != ready_url %}
             <a href="{% url 'ready' %}">
                 {% include 'svg/heroicons/clipboard-list.svg' %}
@@ -39,7 +39,7 @@
         {% endif %}
     </li>
 
-    <li{% if logbook_url in request.path or 'roll/' in request.path or 'project' in request.path %} class="current"{% endif %}>
+    <li{% if logbook_url in request.path or 'roll/' in request.path or 'project' in request.path %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Logbook"{% endif %}>
         {% if request.path != logbook_url %}
             <a href="{% url 'logbook' %}">
                 {% include 'svg/heroicons/book.svg' %}
