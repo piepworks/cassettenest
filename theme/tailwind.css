@@ -231,10 +231,10 @@
       transition-all;
 
     #menu-desktop-toggle {
+      margin-bottom: calc(env(safe-area-inset-bottom) * 3);
+
       @apply
-        align-middle
-        absolute
-        bottom-10
+        sticky
         left-0
         w-full;
 
@@ -837,4 +837,6 @@
       dark:bg-stone-800
       hover:dark:bg-stone-800;
   }
+
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
 }
