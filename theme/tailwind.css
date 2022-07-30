@@ -255,7 +255,7 @@
       }
     }
 
-    svg {
+    li svg {
       @apply
         text-stone-400
         mr-3
@@ -309,7 +309,7 @@
       a,
       li.current { @apply md:px-0; }
 
-      svg {
+      li svg {
         @apply
           md:w-7
           md:h-7
