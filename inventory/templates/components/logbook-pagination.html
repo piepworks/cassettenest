@@ -38,7 +38,7 @@
             {% else %}
                 <button title="No previous page" disabled aria-disabled="true">{% include 'svg/heroicons/chevron-left.svg' %}</button>
             {% endif %}
-            {% for i in page_obj.paginator.get_elided_page_range %}
+            {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
                 {% if page_obj.number == i %}
                     <span aria-current="page" class="current">{{ i }} <span class="sr-only">(current)</span></span>
                 {% else %}

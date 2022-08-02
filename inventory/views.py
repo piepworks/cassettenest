@@ -681,6 +681,7 @@ def logbook(request):
     paginator = Paginator(rolls, 10)
     page_number = request.GET.get('page') if request.GET.get('page') else 1
     page_obj = paginator.get_page(page_number)
+    page_range = paginator.get_elided_page_range(number=page_number)
     bulk_status_next = ''
 
     if status in bulk_status_keys:
@@ -691,6 +692,7 @@ def logbook(request):
         'rolls': rolls,
         'status': status,
         'page_obj': page_obj,
+        'page_range': page_range,
         'description': description,
         'year': year,
         'all_years': all_years,
@@ -707,6 +709,7 @@ def logbook(request):
             'status': status,
             'pagination_querystring': pagination_querystring,
             'page_obj': page_obj,
+            'page_range': page_range,
             'bulk_status_keys': bulk_status_keys,
         })
     else:
@@ -2124,6 +2127,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
         paginator = Paginator(rolls_history, 10)
         page_number = request.GET.get('page') if request.GET.get('page') else 1
         page_obj = paginator.get_page(page_number)
+        page_range = paginator.get_elided_page_range(number=page_number)
 
         context = {
             'owner': request.user,
@@ -2188,6 +2192,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
             else:
                 return render(request, 'components/logbook-table.html', {
                     'page_obj': page_obj,
+                    'page_range': page_range,
                     'pagination_querystring': f'&b={b}',
                 })
 
