@@ -1,8 +1,8 @@
 <div id="menu" class="md:translate-x-0 inset-0 flex z-40 md:z-auto md:static" role="dialog" aria-modal="true">
-    <div id="menu-overlay" onclick="closeMenu()" class="transition-opacity bg-stone-600 ease-linear duration-300"></div>
+    <div id="menu-overlay" onclick="cnMenu.closeMenu()" class="transition-opacity bg-stone-600 ease-linear duration-300"></div>
     <div id="menu-content" class="md:translate-x-0 relative flex-1 flex flex-col w-full transition ease-in-out duration-300 transform">
         <div id="menu-close" class="hidden md:hidden absolute top-0 right-0 -mr-12 pt-2">
-            <button onclick="closeMenu()" type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+            <button onclick="cnMenu.closeMenu()" type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                 <span class="sr-only">Close menu</span>
                 {% include 'svg/heroicons/x.svg' with class="h-6 w-6 text-white" %}
             </button>
@@ -18,7 +18,7 @@
                     {% include 'inventory/_nav-status.html' %}
 
                     <div id="menu-desktop-toggle" class="hidden">
-                        <button onclick="desktopToggle()" type="button" class="bg-transparent">
+                        <button onclick="cnMenu.desktopToggle()" type="button" class="bg-transparent">
                             {% include 'svg/bootstrap/arrow-bar-left.svg' %}
                         </button>
                     </div>
