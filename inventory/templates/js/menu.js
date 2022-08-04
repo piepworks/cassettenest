@@ -9,7 +9,7 @@ window.cnMenu = {
   get closeButton() { return this.closeButtonWrapper.querySelector('button'); },
   toggleButton: document.querySelector('#menu-desktop-toggle'),
 
-  setupMenu: function () {
+  setup: function () {
     this.base.classList.add('-translate-x-full', 'fixed');
     this.inner.classList.add('min-h-screen');
     this.overlay.classList.add('opacity-0', 'fixed', 'inset-0', 'bg-opacity-75');
@@ -20,7 +20,7 @@ window.cnMenu = {
     this.toggleButton.classList.add('md:tall:flex');
   },
 
-  openMenu: function () {
+  open: function () {
     document.body.classList.add('overflow-hidden');
     this.base.classList.remove('-translate-x-full');
     this.overlay.classList.remove('opacity-0');
@@ -32,7 +32,7 @@ window.cnMenu = {
     }, 100);
   },
 
-  closeMenu: function () {
+  close: function () {
     document.body.classList.remove('overflow-hidden');
     this.overlay.classList.add('opacity-0');
     this.overlay.setAttribute('aria-hidden', 'true');
@@ -52,4 +52,4 @@ window.cnMenu = {
   },
 };
 
-window.cnMenu.setupMenu();
+window.cnMenu.setup();

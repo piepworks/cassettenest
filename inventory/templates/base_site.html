@@ -17,7 +17,7 @@
     {% endif %}
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
-<body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart _="on keyup if event's key is 'Escape' js cnMenu.closeMenu()">
+<body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart _="on keyup if event's key is 'Escape' js cnMenu.close()">
     <div class="wrapper md:h-screen md:overflow-hidden md:flex">
         {% if user.is_authenticated %}{% include '_menu.html' %}{% endif %}
         <div class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">
