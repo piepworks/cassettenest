@@ -18,6 +18,25 @@ window.cnMenu = {
     this.openButton.classList.add('inline-flex');
     this.closeButtonWrapper.classList.remove('hidden');
     this.toggleButton.classList.add('md:tall:flex');
+
+    // This attempts to keep the desktop menu toggle consistent even when
+    // switching and then using htmx's pushstate to go back and forward without
+    // a full page reload. Hopefully most people won't see this, because there's
+    // a bit of a blip when it happens.
+    document.removeEventListener('htmx:historyRestore', window.desktopToggleSetup);
+    window.desktopToggleSetup = function() {
+      fetch('{% url "session-sidebar-status" %}').then(
+        (response) => response.text()).then(
+        (text) => {
+          if (text === 'closed') {
+            window.cnMenu.inner.classList.add('collapsed');
+          } else {
+            window.cnMenu.inner.classList.remove('collapsed');
+          }
+        }
+      );
+    };
+    document.addEventListener('htmx:historyRestore', window.desktopToggleSetup);
   },
 
   open: function () {

@@ -108,6 +108,7 @@ urlpatterns = [
     path('subscription-created', views.subscription_created, name='subscription-created'),
 
     # Session Goodies
+    path('session/sidebar-status', views.session_sidebar_status, name='session-sidebar-status'),
     path('session/sidebar', views.session_sidebar, name='session-sidebar'),
 ]
 

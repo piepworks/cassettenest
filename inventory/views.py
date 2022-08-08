@@ -2393,6 +2393,16 @@ def camera_back_delete(request, pk, back_pk):
 
 
 @login_required
+def session_sidebar_status(request):
+    try:
+        status = request.session['sidebar']
+    except KeyError:
+        status = 'open'
+
+    return HttpResponse(status)
+
+
+@login_required
 def session_sidebar(request):
     if not request.htmx:
         return HttpResponseForbidden()
