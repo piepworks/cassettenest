@@ -25,7 +25,9 @@ window.cnMenu = {
     // a bit of a blip when it happens.
     document.removeEventListener('htmx:historyRestore', window.desktopToggleSetup);
     window.desktopToggleSetup = function() {
-      fetch('{% url "session-sidebar-status" %}').then(
+      fetch('{% url "session-sidebar-status" %}', {
+        headers: {'X-Requested-With': 'XMLHttpRequest'}
+      }).then(
         (response) => response.text()).then(
         (text) => {
           if (text === 'closed') {

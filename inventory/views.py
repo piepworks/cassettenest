@@ -2394,6 +2394,9 @@ def camera_back_delete(request, pk, back_pk):
 
 @login_required
 def session_sidebar_status(request):
+    if request.headers.get('x-requested-with') != 'XMLHttpRequest':
+        return HttpResponseForbidden()
+
     try:
         status = request.session['sidebar']
     except KeyError:
