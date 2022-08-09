@@ -258,10 +258,13 @@
     li svg {
       @apply
         text-stone-400
-        mr-3
+        mr-4
+        md:mr-3
         flex-shrink-0
-        h-6
-        w-6;
+        h-8
+        w-8
+        md:h-6
+        md:w-6;
     }
 
     ul {
@@ -283,7 +286,8 @@
           hover:text-white
           flex
           items-center
-          text-sm
+          text-lg
+          md:text-sm
           font-medium
           rounded-md;
 
