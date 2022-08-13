@@ -9,7 +9,7 @@ autopep8 = "*"
 
 [packages]
 django-capture-tag = "==1.0"
-django-compressor = "==3.1"
+django-compressor = "==4.1"
 django-debug-toolbar = "~=3.2.1"
 django-libsass = "==0.9"
 model-bakery = "==1.4.0"
