@@ -208,12 +208,6 @@ PADDLE_PUBLIC_KEY = os.environ.get('PADDLE_PUBLIC_KEY')
 # Django Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1']
 
-# `source_comments` takes the value of DEBUG no matter what apparently and it’s
-# not happy with `0` or `1`
-# https://github.com/torchbox/django-libsass#settings
-LIBSASS_SOURCE_COMMENTS = env_var('DEBUG')
-LIBSASS_SOURCEMAPS = env_var('DEBUG')
-
 # Allow for checking if someone is logged on via the marketing site.
 CORS_ALLOWED_ORIGINS = [
     os.environ.get('MARKETING_SITE_URL')
@@ -228,7 +222,3 @@ BLEACH_ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.extend(['p', 'hr'])
 DBBACKUP_STORAGE = os.environ.get('DBBACKUP_STORAGE')
 DBBACKUP_STORAGE_OPTIONS = {'location': os.environ.get('DBBACKUP_STORAGE_OPTIONS')}
 DBBACKUP_FILENAME_TEMPLATE = 'cassettenest_{datetime}.{extension}'
-
-# Django Debug Toolbar w/ Docker
-hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]
