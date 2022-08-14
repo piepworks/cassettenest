@@ -1,5 +1,5 @@
 {% spaceless %}
-<ol class="year-filter">
+<ol class="year-filter flex space-x-8">
     {% if year %}
         <li><a href="{% url 'logbook' %}">All years <small>({{ all_years_count }})</small></a></li>
     {% else %}

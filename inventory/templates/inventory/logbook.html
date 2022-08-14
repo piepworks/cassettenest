@@ -4,10 +4,10 @@
 {% block bodytag %}class="logbook"{% endblock %}
 
 {% block content %}
-<div class="raw">
-<h1>Logbook</h1>
+<h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">Logbook</h1>
 
 {% include 'inventory/_logbook-status-filter-nav.html' with querystring=request.META.QUERY_STRING %}
+{# include 'components/logbook-filters.html' with querystring=request.META.QUERY_STRING #}
 
 {% if rolls %}
 <form method="post" action="{% url 'rolls-update' %}">
@@ -24,5 +24,4 @@
 {% else %}
 <p>No rolls found.</p>
 {% endif %}
-</div>
 {% endblock %}

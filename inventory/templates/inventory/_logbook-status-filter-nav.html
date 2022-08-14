@@ -1,65 +1,65 @@
-{% spaceless %}
-<ol class="status-filter">
-    <li>
-        {% if 'status' in querystring %}
-            <a href="{% url 'logbook' %}">All <small>({{ status_counts.all }})</small></a>
-        {% else %}
-            <span>All <small>({{ status_counts.all }})</small></span>
-        {% endif %}
-    </li>
-    <li>
-        {% if 'status=loaded' not in querystring %}
-            <a href="{% url 'logbook' %}?status=loaded">Loaded <small>({{ status_counts.loaded }})</small></a>
-        {% else %}
-            <span>Loaded <small>({{ status_counts.loaded }})</small></span>
-        {% endif %}
-    </li>
-    <li>
-        {% if 'status=shot' not in querystring %}
-            <a href="{% url 'logbook' %}?status=shot">Shot <small>({{ status_counts.shot }})</small></a>
-        {% else %}
-            <span>Shot <small>({{ status_counts.shot }})</small></span>
-        {% endif %}
-    </li>
-    <li>
-        {% if 'status=processing' not in querystring %}
-            <a href="{% url 'logbook' %}?status=processing">Processing <small>({{ status_counts.processing }})</small></a>
-        {% else %}
-            <span>Processing <small>({{ status_counts.processing }})</small></span>
-        {% endif %}
-    </li>
-    <li>
-        {% if 'status=processed' not in querystring %}
-            <a href="{% url 'logbook' %}?status=processed">Processed <small>({{ status_counts.processed }})</small></a>
-        {% else %}
-            <span>Processed <small>({{ status_counts.processed }})</small></span>
-        {% endif %}
-    </li>
-    <li>
-        {% if 'status=scanned' not in querystring %}
-            <a href="{% url 'logbook' %}?status=scanned">Scanned <small>({{ status_counts.scanned }})</small></a>
-        {% else %}
-            <span>Scanned <small>({{ status_counts.scanned }})</small></span>
-        {% endif %}
-    </li>
-    <li>
-        {% if 'status=archived' not in querystring %}
-            <a href="{% url 'logbook' %}?status=archived">Archived <small>({{ status_counts.archived }})</small></a>
-        {% else %}
-            <span>Archived <small>({{ status_counts.archived }})</small></span>
-        {% endif %}
-    </li>
-</ol>
-{% endspaceless %}
+<div class="p-6 bg-indigo-900 rounded-lg">
+    <ol class="status-filter flex space-x-8">
+        <li>
+            {% if 'status' in querystring %}
+                <a href="{% url 'logbook' %}">All <small>({{ status_counts.all }})</small></a>
+            {% else %}
+                <span>All <small>({{ status_counts.all }})</small></span>
+            {% endif %}
+        </li>
+        <li>
+            {% if 'status=loaded' not in querystring %}
+                <a href="{% url 'logbook' %}?status=loaded">Loaded <small>({{ status_counts.loaded }})</small></a>
+            {% else %}
+                <span>Loaded <small>({{ status_counts.loaded }})</small></span>
+            {% endif %}
+        </li>
+        <li>
+            {% if 'status=shot' not in querystring %}
+                <a href="{% url 'logbook' %}?status=shot">Shot <small>({{ status_counts.shot }})</small></a>
+            {% else %}
+                <span>Shot <small>({{ status_counts.shot }})</small></span>
+            {% endif %}
+        </li>
+        <li>
+            {% if 'status=processing' not in querystring %}
+                <a href="{% url 'logbook' %}?status=processing">Processing <small>({{ status_counts.processing }})</small></a>
+            {% else %}
+                <span>Processing <small>({{ status_counts.processing }})</small></span>
+            {% endif %}
+        </li>
+        <li>
+            {% if 'status=processed' not in querystring %}
+                <a href="{% url 'logbook' %}?status=processed">Processed <small>({{ status_counts.processed }})</small></a>
+            {% else %}
+                <span>Processed <small>({{ status_counts.processed }})</small></span>
+            {% endif %}
+        </li>
+        <li>
+            {% if 'status=scanned' not in querystring %}
+                <a href="{% url 'logbook' %}?status=scanned">Scanned <small>({{ status_counts.scanned }})</small></a>
+            {% else %}
+                <span>Scanned <small>({{ status_counts.scanned }})</small></span>
+            {% endif %}
+        </li>
+        <li>
+            {% if 'status=archived' not in querystring %}
+                <a href="{% url 'logbook' %}?status=archived">Archived <small>({{ status_counts.archived }})</small></a>
+            {% else %}
+                <span>Archived <small>({{ status_counts.archived }})</small></span>
+            {% endif %}
+        </li>
+    </ol>
 
-{% if description %}
-<div class="status-description">{{ description }}</div>
-{% endif %}
+    {% if description %}
+    <div class="status-description">{{ description }}</div>
+    {% endif %}
 
-{% if 'status' not in querystring %}
-    {% include 'inventory/_logbook-year-filter-nav.html' %}
-{% endif %}
+    {% if 'status' not in querystring %}
+        {% include 'inventory/_logbook-year-filter-nav.html' %}
+    {% endif %}
 
-{% if querystring == 'status=shot' and rolls %}
-<p>View <a href="{% url 'ready' %}">these rolls on your “Ready to Process” page</a> to easily add lab information.</p>
-{% endif %}
+    {% if querystring == 'status=shot' and rolls %}
+    <p>View <a href="{% url 'ready' %}">these rolls on your “Ready to Process” page</a> to easily add lab information.</p>
+    {% endif %}
+</div>
