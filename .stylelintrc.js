@@ -7,5 +7,5 @@ module.exports = {
     'declaration-empty-line-before': 'never',
     'no-descending-specificity': null,
   },
-  'ignoreFiles': ['static/scss/vendor/**', 'theme/static/css/dist/**'],
+  'ignoreFiles': ['static/tailwind.css'],
 };
