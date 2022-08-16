@@ -648,6 +648,7 @@ def logbook(request):
     year = ''
     all_years = {}
     all_years_count = rolls.count()
+    all_years.update({'all': all_years_count})
     pagination_querystring = ''
     status_counts = {
         'all': rolls.count(),
@@ -668,11 +669,18 @@ def logbook(request):
         pagination_querystring += f'&status={status}'
         if status == 'storage':
             return redirect(reverse('inventory'))
-        else:
-            description = status_description(status)
-            rolls = rolls.filter(status=status_number(status))
+
+        description = status_description(status)
+        rolls = rolls.filter(status=status_number(status))
+    elif request.GET.get('status') and request.GET.get('status') == 'all':
+        # This is for the sake of submitting the mobile filter/form so we don't
+        # leave `?status=all` on the URL.
+        return redirect(reverse('logbook'))
 
     if request.GET.get('year'):
+        if request.GET.get('year') == 'all':
+            return redirect(reverse('logbook'))
+
         year = request.GET.get('year')
         pagination_querystring += f'&year={year}'
         rolls = rolls.filter(started_on__year=year)
@@ -701,7 +709,6 @@ def logbook(request):
         'bulk_status_next': bulk_status_next,
         'status_counts': status_counts,
         'pagination_querystring': pagination_querystring,
-        'js_needed': True,
     }
 
     if request.htmx:

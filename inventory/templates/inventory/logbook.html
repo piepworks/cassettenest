@@ -1,4 +1,5 @@
 {% extends 'base_site.html' %}
+{% load capture_tags %}
 
 {% block title %}Logbook{% endblock %}
 {% block bodytag %}class="logbook"{% endblock %}
@@ -6,8 +7,18 @@
 {% block content %}
 <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">Logbook</h1>
 
-{% include 'inventory/_logbook-status-filter-nav.html' with querystring=request.META.QUERY_STRING %}
-{# include 'components/logbook-filters.html' with querystring=request.META.QUERY_STRING #}
+<h2 class="text-xl font-bold">Filters</h2>
+{# include 'inventory/_logbook-status-filter-nav.html' with querystring=request.META.QUERY_STRING #}
+<div class="filter-status">
+    {% capture as current_status silent %}{% if status %}{{ status }}{% else %}all{% endif %}{% endcapture %}
+    {% include 'components/tabs.html' with name='status' tabs=status_counts current_tab=current_status size='xl' title='Status' %}
+    {% if description %}<div class="status-description mt-6">{{ description }}</div>{% endif %}
+</div>
+
+{% if not status %}
+{% capture as current_year silent %}{% if year %}{{ year }}{% else %}all{% endif %}{% endcapture %}
+{% include 'components/tabs.html' with name='year' tabs=all_years current_tab=current_year size='xl' title='Years' %}
+{% endif %}
 
 {% if rolls %}
 <form method="post" action="{% url 'rolls-update' %}">

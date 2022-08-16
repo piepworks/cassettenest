@@ -27,9 +27,8 @@
         {% if items.tabs %}
             <div class="mt-4">
                 <div class="sm:hidden mb-5">
-                    <label for="{{ slug }}_current-tab" class="sr-only">Select a tab</label>
+                    <label for="id_{{ items.slug }}" class="sr-only">Select a tab</label>
                     <form
-                        id="section_form_{{ items.slug }}"
                         method="get"
                         hx-get="?{{ items.slug }}={{ forloop.counter0 }}{{ pagination_querystring }}"
                         action="{% if page == 'index' %}.#section_{{ items.slug }}{% endif %}"
@@ -44,6 +43,7 @@
                             <input type="hidden" name="c" value="{{ request.GET.c }}" />
                         {% endif %}
                         <select
+                            id="id_{{ items.slug }}"
                             name="{{ items.slug }}"
                             class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                             {% for tab in items.tabs %}
