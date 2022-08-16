@@ -348,11 +348,6 @@ class LogbookTests(TestCase):
         self.assertEqual(response.context['year'], str(self.today.year))
         self.assertEqual(len(response.context['rolls']), 1)
 
-    def test_js_needed(self):
-        response = self.client.get(reverse('logbook'))
-
-        self.assertEqual(response.context['js_needed'], True)
-
 
 class ExportTests(TestCase):
     @classmethod
@@ -843,11 +838,6 @@ class ReadyTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'You have 1 roll ready to process.', html=True)
-
-    def test_js_needed(self):
-        response = self.client.get(reverse('ready'))
-
-        self.assertEqual(response.context['js_needed'], True)
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
