@@ -2,6 +2,7 @@ import datetime
 import io
 import csv
 import pytz
+import logging
 from unittest import mock
 from django.test import TestCase, override_settings, RequestFactory
 from django.urls import reverse
@@ -73,6 +74,17 @@ class MarketingSiteCORSTests(TestCase):
             username=cls.username,
             password=cls.password,
         )
+
+    def setUp(self):
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
 
     def test_logged_out(self):
         response = self.client.get(reverse('marketing-site'))
@@ -1036,6 +1048,16 @@ class FilmRollsTests(TestCase):
             password=self.password,
         )
 
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
+
     def test_film_rolls_with_stock(self):
         response = self.client.get(reverse('film-rolls', args=(self.film.stock.slug, self.film.format,)))
         self.assertEqual(response.status_code, 200)
@@ -1083,6 +1105,16 @@ class SubscriptionTests(TestCase):
             username=self.username,
             password=self.password,
         )
+
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
 
     def test_subscription_success_page(self):
         plan = settings.PADDLE_STANDARD_MONTHLY
@@ -1957,6 +1989,15 @@ class StockViewTests(TestCase):
             username=self.username,
             password=self.password,
         )
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
 
     def test_stocks_page(self):
         response = self.client.get(reverse('stocks'))
