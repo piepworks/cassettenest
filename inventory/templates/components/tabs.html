@@ -11,13 +11,18 @@ sm:block  md:block  lg:block  xl:block
     {# Smaller screens #}
     <div class="{{ size }}:hidden mb-5">
         <label for="id_{{ items.slug }}" class="sr-only">Select a tab</label>
-        <form action="" class="flex" method="get">
+        <form
+            method="get"
+            hx-get="?{{ name }}={{ tab }}"
+            hx-trigger="change"
+            hx-target="{{ target }}"
+            class="flex">
             <select name="{{ name }}" id="id_{{ items.slug }}" class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                 {% for tab in tabs %}
                 <option value="{{ tab }}"{% if tab|stringformat:'s' == current_tab %} selected{% endif %}>{{ tab|title }} ({{ tabs|get_item:tab }})</option>
                 {% endfor %}
             </select>
-            <button class="button primary ml-4">Go</button>
+            <button class="no-js button primary ml-4">Go</button>
         </form>
     </div>
 
@@ -25,7 +30,12 @@ sm:block  md:block  lg:block  xl:block
     <div class="hidden {{ size }}:block">
         <nav class="tabs flex-wrap space-x-8">
             {% for tab in tabs %}
-                <a href="?{{ name }}={{ tab }}" class="whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm{% if tab|stringformat:'s' == current_tab %} current{% endif %}">
+                <a
+                    href="?{{ name }}={{ tab }}"
+                    hx-get="?{{ name }}={{ tab }}"
+                    hx-trigger="click"
+                    hx-target="{{ target }}"
+                    class="whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm{% if tab|stringformat:'s' == current_tab %} current{% endif %}">
                     {{ tab|title }}
                     {% if tabs|get_item:tab %}
                         <span class="ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">{{ tabs|get_item:tab }}</span>

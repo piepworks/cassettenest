@@ -1,0 +1,27 @@
+{% load capture_tags %}
+<div class="filter-status">
+    {% capture as current_status silent %}{% if status %}{{ status }}{% else %}all{% endif %}{% endcapture %}
+    {% include 'components/tabs.html' with name='status' target="#logbook_page_data" tabs=status_counts current_tab=current_status size='xl' title='Status' %}
+    {% if description %}<div class="status-description mt-6">{{ description }}</div>{% endif %}
+</div>
+
+{% if not status %}
+{% capture as current_year silent %}{% if year %}{{ year }}{% else %}all{% endif %}{% endcapture %}
+{% include 'components/tabs.html' with name='year' target="#logbook_page_data" tabs=all_years current_tab=current_year size='xl' title='Years' %}
+{% endif %}
+
+{% if rolls %}
+<form method="post" action="{% url 'rolls-update' %}">
+    {% include 'components/logbook-table.html' with page='logbook' %}
+
+    {% if status in bulk_status_keys %}
+        {% csrf_token %}
+        <div class="bulk-status do-not-print">
+            <p>Bulk update the status of these rolls.</p>
+            {% include 'inventory/_form-status.html' with page='logbook' current_status=status updated_status=bulk_status_next %}
+        </div>
+    {% endif %}
+</form>
+{% else %}
+<p>No rolls found.</p>
+{% endif %}

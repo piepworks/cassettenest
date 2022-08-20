@@ -712,13 +712,23 @@ def logbook(request):
     }
 
     if request.htmx:
-        return render(request, 'components/logbook-table.html', {
-            'status': status,
-            'pagination_querystring': pagination_querystring,
-            'page_obj': page_obj,
-            'page_range': page_range,
-            'bulk_status_keys': bulk_status_keys,
-        })
+        if request.htmx.trigger and request.htmx.trigger.startswith('logbook_pagination'):
+            return render(request, 'components/logbook-table.html', {
+                'status': status,
+                'pagination_querystring': pagination_querystring,
+                'page_obj': page_obj,
+                'page_range': page_range,
+                'bulk_status_keys': bulk_status_keys,
+            })
+        else:
+            response = render(request, 'partials/logbook-page-data.html', context)
+            querystring = ''
+            if status and not year:
+                querystring = f'?status={status}'
+            elif year:
+                querystring = f'?year={year}'
+            response['HX-Push'] = reverse('logbook') + querystring
+            return response
     else:
         return render(request, 'inventory/logbook.html', context)
 
