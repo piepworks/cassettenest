@@ -77,4 +77,8 @@
     </div>
 
     {% include 'components/logbook-pagination.html' %}
+
+    {% if page == 'ready' %}
+        {% include 'partials/logbook-ready-update-buttons.html' %}
+    {% endif %}
 </div>

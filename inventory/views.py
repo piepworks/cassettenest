@@ -864,6 +864,7 @@ def ready(request):
             'status': 'shot',
             'bulk_status_keys': bulk_status_keys,
             'page_obj': page_obj,
+            'page': 'ready',
         })
     else:
         return render(request, 'inventory/ready.html', context)
