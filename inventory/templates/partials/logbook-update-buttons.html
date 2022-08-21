@@ -1,5 +1,5 @@
 <div class="action">
-    <button id="update-order-count-placeholder" class="hidden"
+    <button id="update-count-placeholder" class="hidden"
         _="on load
                remove .hidden from me
                send updateCount(count: .roll-checkbox.checked.length) to me
@@ -10,7 +10,7 @@
                else
                    remove .hidden from me"
         disabled>Select rolls to update</button>
-    <button id="update-order-count"
+    <button id="update-count"
         _="on load
                add .hidden to me
                send updateCount(count: .roll-checkbox.checked.length) to me

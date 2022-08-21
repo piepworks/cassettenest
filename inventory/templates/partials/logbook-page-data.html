@@ -13,14 +13,6 @@
 {% if rolls %}
 <form method="post" action="{% url 'rolls-update' %}">
     {% include 'components/logbook-table.html' with page='logbook' %}
-
-    {% if status in bulk_status_keys %}
-        {% csrf_token %}
-        <div class="bulk-status do-not-print mt-10">
-            <p>Bulk update the status of these rolls.</p>
-            {% include 'inventory/_form-status.html' with page='logbook' current_status=status updated_status=bulk_status_next %}
-        </div>
-    {% endif %}
 </form>
 {% else %}
 <p>No rolls found.</p>

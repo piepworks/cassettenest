@@ -18,9 +18,6 @@
         <option value="archived" {% if updated_status == 'archived' %}selected{% endif %}>Archived</option>
         {% endif %}
     </select>
-    {% if page == 'logbook' %}
-    <input id="update-selected" type="submit" value="Update selected" />
-    {% else %}
-    <input type="submit" value="Update All" />
-    {% endif %}
+
+    {% include 'partials/logbook-update-buttons.html' %}
 </div>

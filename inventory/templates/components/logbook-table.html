@@ -20,8 +20,8 @@
                                            set .roll-checkbox.checked to false
                                        end
 
-                                       send updateCount(count: .roll-checkbox.checked.length) to #update-order-count
-                                       send updateCount(count: .roll-checkbox.checked.length) to #update-order-count-placeholder
+                                       send updateCount(count: .roll-checkbox.checked.length) to #update-count
+                                       send updateCount(count: .roll-checkbox.checked.length) to #update-count-placeholder
 
                                        on updateCount(count)
                                        if count < .roll-checkbox.length
@@ -51,8 +51,8 @@
                             <td class="print:hidden">
                                 <input
                                     _="on change
-                                       send updateCount(count: .roll-checkbox.checked.length) to #update-order-count
-                                       send updateCount(count: .roll-checkbox.checked.length) to #update-order-count-placeholder
+                                       send updateCount(count: .roll-checkbox.checked.length) to #update-count
+                                       send updateCount(count: .roll-checkbox.checked.length) to #update-count-placeholder
                                        send updateCount(count: .roll-checkbox.checked.length) to #select-all-rolls"
                                     type="checkbox" class="roll-checkbox" value="{{ roll.id }}" name="roll">
                             </td>
@@ -79,6 +79,16 @@
     {% include 'components/logbook-pagination.html' %}
 
     {% if page == 'ready' %}
-        {% include 'partials/logbook-ready-update-buttons.html' %}
+        {% include 'partials/logbook-update-buttons.html' %}
+    {% endif %}
+
+    {% if page == 'logbook' %}
+        {% if status in bulk_status_keys %}
+            {% csrf_token %}
+            <div class="bulk-status do-not-print mt-10">
+                <p>Update the status of these rolls.</p>
+                {% include 'components/logbook-update-form.html' with page='logbook' current_status=status updated_status=bulk_status_next %}
+            </div>
+        {% endif %}
     {% endif %}
 </div>

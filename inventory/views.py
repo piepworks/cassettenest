@@ -718,7 +718,9 @@ def logbook(request):
                 'pagination_querystring': pagination_querystring,
                 'page_obj': page_obj,
                 'page_range': page_range,
+                'bulk_status_next': bulk_status_next,
                 'bulk_status_keys': bulk_status_keys,
+                'page': 'logbook',
             })
         else:
             response = render(request, 'partials/logbook-page-data.html', context)
