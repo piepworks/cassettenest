@@ -1,12 +1,12 @@
 {% load capture_tags %}
 
-<div class="filter bg-stone-600 p-6 md:pb-0 rounded-lg">
+<div class="filter bg-white dark:bg-stone-600 p-6 md:pb-0 rounded-lg">
     <div class="filter-status">
         {% capture as current_status silent %}{% if status %}{{ status }}{% else %}all{% endif %}{% endcapture %}
         {% include 'components/tabs.html' with name='status' target="#logbook_page_data" tabs=status_counts current_tab=current_status size='md' %}
     </div>
 
-    {% if description %}<div class="status-description p-6 -mx-6 my-6 md:mb-6 md:mt-0 bg-stone-700 last:rounded-b-lg last:-mb-6 md:last:mb-0">{{ description }}</div>{% endif %}
+    {% if description %}<div class="status-description p-6 -mx-6 my-6 md:mb-6 md:mt-0 text-stone-500 dark:text-stone-400 bg-stone-200 dark:bg-stone-700 last:rounded-b-lg last:-mb-6 md:last:mb-0">{{ description }}</div>{% endif %}
 
     {% if not status %}
     {% capture as current_year silent %}{% if year %}{{ year }}{% else %}all{% endif %}{% endcapture %}
