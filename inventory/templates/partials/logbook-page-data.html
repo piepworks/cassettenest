@@ -6,7 +6,7 @@
         {% include 'components/tabs.html' with name='status' target="#logbook_page_data" tabs=status_counts current_tab=current_status size='md' %}
     </div>
 
-    {% if description %}<div class="status-description p-6 -mx-6 my-6 md:mt-0 bg-stone-700 last:rounded-b-lg">{{ description }}</div>{% endif %}
+    {% if description %}<div class="status-description p-6 -mx-6 my-6 md:mb-6 md:mt-0 bg-stone-700 last:rounded-b-lg last:-mb-6 md:last:mb-0">{{ description }}</div>{% endif %}
 
     {% if not status %}
     {% capture as current_year silent %}{% if year %}{{ year }}{% else %}all{% endif %}{% endcapture %}
