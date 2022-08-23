@@ -1,14 +1,18 @@
 {% load capture_tags %}
-<div class="filter-status">
-    {% capture as current_status silent %}{% if status %}{{ status }}{% else %}all{% endif %}{% endcapture %}
-    {% include 'components/tabs.html' with name='status' target="#logbook_page_data" tabs=status_counts current_tab=current_status size='xl' title='Status' %}
-    {% if description %}<div class="status-description mt-6">{{ description }}</div>{% endif %}
-</div>
 
-{% if not status %}
-{% capture as current_year silent %}{% if year %}{{ year }}{% else %}all{% endif %}{% endcapture %}
-{% include 'components/tabs.html' with name='year' target="#logbook_page_data" tabs=all_years current_tab=current_year size='xl' title='Years' %}
-{% endif %}
+<div class="filter bg-stone-600 p-6 md:pb-0 rounded-lg">
+    <div class="filter-status">
+        {% capture as current_status silent %}{% if status %}{{ status }}{% else %}all{% endif %}{% endcapture %}
+        {% include 'components/tabs.html' with name='status' target="#logbook_page_data" tabs=status_counts current_tab=current_status size='md' %}
+    </div>
+
+    {% if description %}<div class="status-description p-6 -mx-6 my-6 md:mt-0 bg-stone-700 last:rounded-b-lg">{{ description }}</div>{% endif %}
+
+    {% if not status %}
+    {% capture as current_year silent %}{% if year %}{{ year }}{% else %}all{% endif %}{% endcapture %}
+    {% include 'components/tabs.html' with name='year' plural='years' target='#logbook_page_data' tabs=all_years current_tab=current_year size='md' %}
+    {% endif %}
+</div>
 
 {% if rolls %}
 <form method="post" action="{% url 'rolls-update' %}">
