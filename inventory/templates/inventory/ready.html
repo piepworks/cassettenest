@@ -4,11 +4,10 @@
 {% block bodytag %}class="ready"{% endblock %}
 
 {% block content %}
-<div class="raw">
 {% if rolls.all %}
-<h2>You have {{ rolls.all }} roll{{ rolls.all|pluralize }} ready to process.</h2>
+<h1>You have {{ rolls.all }} roll{{ rolls.all|pluralize }} ready to process.</h1>
 
-<p>View <a href="{% url 'logbook' %}?status=shot">these rolls in your Logbook</a>.</p>
+<p class="my-6">View <a href="{% url 'logbook' %}?status=shot">these rolls in your Logbook</a>.</p>
 
 <div class="overflow-x">
     <table class="ready">
@@ -207,7 +206,6 @@
 
 <p>You’re all caught up!</p>
 {% endif %}
-</div>
 {% endblock %}
 
 {% block page_js %}

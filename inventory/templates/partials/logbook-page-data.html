@@ -1,5 +1,4 @@
 {% load capture_tags %}
-
 <div class="filter bg-white dark:bg-stone-600 p-6 md:pb-0 rounded-lg">
     <div class="filter-status">
         {% capture as current_status silent %}{% if status %}{{ status }}{% else %}all{% endif %}{% endcapture %}

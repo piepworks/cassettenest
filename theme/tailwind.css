@@ -33,6 +33,8 @@
       rounded-none;
   }
 
+  form { @apply space-y-6; }
+
   input[type='text'],
   input[type='email'],
   input[type='password'],
@@ -132,6 +134,15 @@
 
   main {
     .main-header:empty { display: none; }
+
+    h1 {
+      @apply
+        text-2xl
+        font-bold
+        leading-7
+        sm:text-3xl
+        sm:truncate;
+    }
 
     button,
     input[type='submit'],
