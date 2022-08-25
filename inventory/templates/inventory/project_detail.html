@@ -34,7 +34,7 @@
     {% include 'inventory/_project-logbook.html' %}
 {% endif %}
 
-<div class="do-not-print">
+<div class="print:hidden">
 {% if project.status != 'archived' %}
     {% if film_available_count %}
         <hr />

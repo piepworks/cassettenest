@@ -122,7 +122,7 @@
             <tr>
                 <td><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
                 <td title="{{ frame.date|date:'l, F j, Y' }}">
-                    <span class="do-not-print">{{ frame.date|date:'M j' }}</span>
+                    <span class="print:hidden">{{ frame.date|date:'M j' }}</span>
                     <span class="print-only">{{ frame.date|date:'M j, Y' }}</span>
                 </td>
                 <td>
@@ -161,7 +161,7 @@
             <tr>
                 <td>
                     <a href="{% url 'roll-journal-detail' roll.id entry.id %}" title="{{ entry.date|date:'l, F j, Y' }}">
-                        <span class="do-not-print">{{ entry.date|date:'M j' }}</span>
+                        <span class="print:hidden">{{ entry.date|date:'M j' }}</span>
                         <span class="print-only">{{ entry.date|date:'M j, Y' }}</span>
                     </a>
                 </td>
@@ -173,7 +173,7 @@
                     {% endif %}
                 </td>
                 <td>
-                    <span class="do-not-print">{{ entry.notes }}</span>
+                    <span class="print:hidden">{{ entry.notes }}</span>
                     <div class="print-only">{{ entry.notes|markdown }}</div>
                 </td>
             </tr>

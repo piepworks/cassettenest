@@ -45,13 +45,13 @@
                 {% comment %}
                 <footer>
                     <p>Copyright &copy; 2016–{% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
-                    <ul class="policies do-not-print">
+                    <ul class="policies print:hidden">
                         <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
                         <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
                         <li><a href="https://tools.cassettenest.com/cropfactor/">Crop Factor Calculator</a></li>
                         <li><a href="https://cassettenest.com/changelog/">Changelog</a></li>
                     </ul>
-                    <p class="shirt-promo do-not-print"><a href="https://cottonbureau.com/people/trey-labs">Buy a shirt!</a></p>
+                    <p class="shirt-promo print:hidden"><a href="https://cottonbureau.com/people/trey-labs">Buy a shirt!</a></p>
                     <p class="timezone">Current timezone: {{ TIME_ZONE }}</p>
                 </footer>
                 {% endcomment %}
