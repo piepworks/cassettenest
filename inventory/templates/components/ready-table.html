@@ -1,0 +1,186 @@
+<div class="overflow-x">
+    <table class="ready">
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>35mm</th>
+                <th>120</th>
+                <th class="totals">Totals</th>
+            </tr>
+        </thead>
+
+        {% if rolls.c41.all %}
+            <tr>
+                <th>C41 Color</th>
+                <td></td>
+                <td>{{ rolls.c41.135|default:'' }}</td>
+                <td>{{ rolls.c41.120|default:'' }}</td>
+                <td>{{ rolls.c41.all|default:'' }}</td>
+            </tr>
+            {% if rolls.c41.pull2.135 or rolls.c41.pull2.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Pull 2 stops</td>
+                    <td>{{ rolls.pull2.135|default:'' }}</td>
+                    <td>{{ rolls.pull2.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.c41.pull1.135 or rolls.c41.pull1.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Pull 1 stop</td>
+                    <td>{{ rolls.c41.pull1.135|default:'' }}</td>
+                    <td>{{ rolls.c41.pull1.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.c41.push1.135 or rolls.c41.push1.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 1 stop</td>
+                    <td>{{ rolls.c41.push1.135|default:'' }}</td>
+                    <td>{{ rolls.c41.push1.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.c41.push2.135 or rolls.c41.push2.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 2 stops</td>
+                    <td>{{ rolls.c41.push2.135|default:'' }}</td>
+                    <td>{{ rolls.c41.push2.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.c41.push3.135 or rolls.c41.push3.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 3 stops</td>
+                    <td>{{ rolls.c41.push3.135|default:'' }}</td>
+                    <td>{{ rolls.c41.push3.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+        {% endif %}
+
+        {% if rolls.bw.all %}
+            <tr>
+                <th>Black and White</th>
+                <td></td>
+                <td>{{ rolls.bw.135|default:'' }}</td>
+                <td>{{ rolls.bw.120|default:'' }}</td>
+                <td>{{ rolls.bw.all|default:'' }}</td>
+            </tr>
+            {% if rolls.bw.pull2.135 or rolls.bw.pull2.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Pull 2 stops</td>
+                    <td>{{ rolls.bw.pull2.135|default:'' }}</td>
+                    <td>{{ rolls.bw.pull2.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.bw.pull1.135 or rolls.bw.pull1.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Pull 1 stop</td>
+                    <td>{{ rolls.bw.pull1.135|default:'' }}</td>
+                    <td>{{ rolls.bw.pull1.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.bw.push1.135 or rolls.bw.push1.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 1 stop</td>
+                    <td>{{ rolls.bw.push1.135|default:'' }}</td>
+                    <td>{{ rolls.bw.push1.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.bw.push2.135 or rolls.bw.push2.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 2 stops</td>
+                    <td>{{ rolls.bw.push2.135|default:'' }}</td>
+                    <td>{{ rolls.bw.push2.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.bw.push3.135 or rolls.bw.push3.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 3 stops</td>
+                    <td>{{ rolls.bw.push3.135|default:'' }}</td>
+                    <td>{{ rolls.bw.push3.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+        {% endif %}
+
+        {% if rolls.e6.all %}
+            <tr>
+                <th>E6 Color Reversal</th>
+                <td></td>
+                <td>{{ rolls.e6.135|default:'' }}</td>
+                <td>{{ rolls.e6.120|default:'' }}</td>
+                <td>{{ rolls.e6.all|default:'' }}</td>
+            </tr>
+            {% if rolls.e6.pull2.135 or rolls.e6.pull2.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Pull 2 stops</td>
+                    <td>{{ rolls.e6.pull2.135|default:'' }}</td>
+                    <td>{{ rolls.e6.pull2.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.e6.pull1.135 or rolls.e6.pull1.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Pull 1 stop</td>
+                    <td>{{ rolls.e6.pull1.135|default:'' }}</td>
+                    <td>{{ rolls.e6.pull1.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.e6.push1.135 or rolls.e6.push1.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 1 stop</td>
+                    <td>{{ rolls.e6.push1.135|default:'' }}</td>
+                    <td>{{ rolls.e6.push1.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.e6.push2.135 or rolls.e6.push2.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 2 stops</td>
+                    <td>{{ rolls.e6.push2.135|default:'' }}</td>
+                    <td>{{ rolls.e6.push2.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+            {% if rolls.e6.push3.135 or rolls.e6.push3.120 %}
+                <tr class="push-pull">
+                    <td></td>
+                    <td>Push 3 stops</td>
+                    <td>{{ rolls.e6.push3.135|default:'' }}</td>
+                    <td>{{ rolls.e6.push3.120|default:'' }}</td>
+                    <td></td>
+                </tr>
+            {% endif %}
+        {% endif %}
+
+        <tr class="totals">
+            <th>Totals</th>
+            <td></td>
+            <td>{{ rolls.135|default:'' }}</td>
+            <td>{{ rolls.120|default:'' }}</td>
+            <td class="grand"><b>{{ rolls.all }}</b></td>
+        </tr>
+    </table>
+</div>
