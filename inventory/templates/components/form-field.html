@@ -66,10 +66,14 @@
 
         {% capture as xref silent %}{{ primary|yesno:'primary,secondary' }}{% endcapture %}
 
+        {% capture as textarea_hyperscript silent %}
+            _:on keyup[key is 'Enter'] js(me) checkAutocomplete(me)
+        {% endcapture %}
+
         <div class="mt-1">
             {% if not field.field.widget.input_type %}
                 {# Set autocomplete on Markdown textareas. #}
-                {% render_field field x-ref=xref x-on::keyup.enter="checkAutocomplete($el)" %}
+                {% render_field field|attr:textarea_hyperscript x-ref=xref  %}
             {% else %}
                 {% if field.field.widget.input_type == 'number' %}
                     {% include 'components/form-stepper-field.html' %}
