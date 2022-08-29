@@ -174,6 +174,39 @@ def patterns(request):
         Message(0, 'Ah!', 'info'),
     ]
 
+    test_rolls = {
+        'all': 123,
+        '135': 4,
+        '120': 119,
+        'c41': {
+            'all': 1,
+            '135': 5,
+            '120': 1,
+            'push2': {
+                '135': 77,
+                '120': 1,
+            }
+        },
+        'bw': {
+            'all': 500,
+            '135': 4,
+            '120': 75,
+            'push3': {
+                '135': 88,
+                '120': 8,
+            }
+        },
+        'e6': {
+            'all': 100,
+            '135': 1,
+            '120': 7000,
+            'pull1': {
+                '135': 84,
+                '120': 45,
+            }
+        },
+    }
+
     roll1 = {
         'film': {
             'type': 'e6',
@@ -200,6 +233,7 @@ def patterns(request):
     }
 
     context = {
+        'test_rolls': test_rolls,
         'test_messages': test_messages,
         'form': PatternsForm,
         'roll1': roll1,
