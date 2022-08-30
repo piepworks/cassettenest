@@ -1,5 +1,5 @@
-<div class="overflow-x">
-    <table class="ready">
+<div class="ready-summary">
+    <table>
         <thead>
             <tr>
                 <th></th>
@@ -12,7 +12,7 @@
 
         {% if rolls.c41.all %}
             <tr>
-                <th>C41 Color</th>
+                <th>C41 <span class="compact">Color</span></th>
                 <td></td>
                 <td>{{ rolls.c41.135|default:'' }}</td>
                 <td>{{ rolls.c41.120|default:'' }}</td>
@@ -21,7 +21,7 @@
             {% if rolls.c41.pull2.135 or rolls.c41.pull2.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Pull 2 stops</td>
+                    <td>Pull 2 <span class="compact">stops</span></td>
                     <td>{{ rolls.pull2.135|default:'' }}</td>
                     <td>{{ rolls.pull2.120|default:'' }}</td>
                     <td></td>
@@ -30,7 +30,7 @@
             {% if rolls.c41.pull1.135 or rolls.c41.pull1.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Pull 1 stop</td>
+                    <td>Pull 1 <span class="compact">stop</span></td>
                     <td>{{ rolls.c41.pull1.135|default:'' }}</td>
                     <td>{{ rolls.c41.pull1.120|default:'' }}</td>
                     <td></td>
@@ -39,7 +39,7 @@
             {% if rolls.c41.push1.135 or rolls.c41.push1.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 1 stop</td>
+                    <td>Push 1 <span class="compact">stop</span></td>
                     <td>{{ rolls.c41.push1.135|default:'' }}</td>
                     <td>{{ rolls.c41.push1.120|default:'' }}</td>
                     <td></td>
@@ -48,7 +48,7 @@
             {% if rolls.c41.push2.135 or rolls.c41.push2.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 2 stops</td>
+                    <td>Push 2 <span class="compact">stops</span></td>
                     <td>{{ rolls.c41.push2.135|default:'' }}</td>
                     <td>{{ rolls.c41.push2.120|default:'' }}</td>
                     <td></td>
@@ -57,7 +57,7 @@
             {% if rolls.c41.push3.135 or rolls.c41.push3.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 3 stops</td>
+                    <td>Push 3 <span class="compact">stops</span></td>
                     <td>{{ rolls.c41.push3.135|default:'' }}</td>
                     <td>{{ rolls.c41.push3.120|default:'' }}</td>
                     <td></td>
@@ -67,7 +67,7 @@
 
         {% if rolls.bw.all %}
             <tr>
-                <th>Black and White</th>
+                <th><span class="hidden md:inline">Black and White</span> <span class="md:hidden">B&W</span></th>
                 <td></td>
                 <td>{{ rolls.bw.135|default:'' }}</td>
                 <td>{{ rolls.bw.120|default:'' }}</td>
@@ -76,7 +76,7 @@
             {% if rolls.bw.pull2.135 or rolls.bw.pull2.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Pull 2 stops</td>
+                    <td>Pull 2 <span class="compact">stops</span></td>
                     <td>{{ rolls.bw.pull2.135|default:'' }}</td>
                     <td>{{ rolls.bw.pull2.120|default:'' }}</td>
                     <td></td>
@@ -85,7 +85,7 @@
             {% if rolls.bw.pull1.135 or rolls.bw.pull1.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Pull 1 stop</td>
+                    <td>Pull 1 <span class="compact">stop</span></td>
                     <td>{{ rolls.bw.pull1.135|default:'' }}</td>
                     <td>{{ rolls.bw.pull1.120|default:'' }}</td>
                     <td></td>
@@ -94,7 +94,7 @@
             {% if rolls.bw.push1.135 or rolls.bw.push1.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 1 stop</td>
+                    <td>Push 1 <span class="compact">stop</span></td>
                     <td>{{ rolls.bw.push1.135|default:'' }}</td>
                     <td>{{ rolls.bw.push1.120|default:'' }}</td>
                     <td></td>
@@ -103,7 +103,7 @@
             {% if rolls.bw.push2.135 or rolls.bw.push2.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 2 stops</td>
+                    <td>Push 2 <span class="compact">stops</span></td>
                     <td>{{ rolls.bw.push2.135|default:'' }}</td>
                     <td>{{ rolls.bw.push2.120|default:'' }}</td>
                     <td></td>
@@ -112,7 +112,7 @@
             {% if rolls.bw.push3.135 or rolls.bw.push3.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 3 stops</td>
+                    <td>Push 3 <span class="compact">stops</span></td>
                     <td>{{ rolls.bw.push3.135|default:'' }}</td>
                     <td>{{ rolls.bw.push3.120|default:'' }}</td>
                     <td></td>
@@ -122,7 +122,7 @@
 
         {% if rolls.e6.all %}
             <tr>
-                <th>E6 Color Reversal</th>
+                <th>E6 <span class="compact">Color Reversal</span></th>
                 <td></td>
                 <td>{{ rolls.e6.135|default:'' }}</td>
                 <td>{{ rolls.e6.120|default:'' }}</td>
@@ -131,7 +131,7 @@
             {% if rolls.e6.pull2.135 or rolls.e6.pull2.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Pull 2 stops</td>
+                    <td>Pull 2 <span class="compact">stops</span></td>
                     <td>{{ rolls.e6.pull2.135|default:'' }}</td>
                     <td>{{ rolls.e6.pull2.120|default:'' }}</td>
                     <td></td>
@@ -140,7 +140,7 @@
             {% if rolls.e6.pull1.135 or rolls.e6.pull1.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Pull 1 stop</td>
+                    <td>Pull 1 <span class="compact">stop</span></td>
                     <td>{{ rolls.e6.pull1.135|default:'' }}</td>
                     <td>{{ rolls.e6.pull1.120|default:'' }}</td>
                     <td></td>
@@ -149,7 +149,7 @@
             {% if rolls.e6.push1.135 or rolls.e6.push1.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 1 stop</td>
+                    <td>Push 1 <span class="compact">stop</span></td>
                     <td>{{ rolls.e6.push1.135|default:'' }}</td>
                     <td>{{ rolls.e6.push1.120|default:'' }}</td>
                     <td></td>
@@ -158,7 +158,7 @@
             {% if rolls.e6.push2.135 or rolls.e6.push2.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 2 stops</td>
+                    <td>Push 2 <span class="compact">stops</span></td>
                     <td>{{ rolls.e6.push2.135|default:'' }}</td>
                     <td>{{ rolls.e6.push2.120|default:'' }}</td>
                     <td></td>
@@ -167,7 +167,7 @@
             {% if rolls.e6.push3.135 or rolls.e6.push3.120 %}
                 <tr class="push-pull">
                     <td></td>
-                    <td>Push 3 stops</td>
+                    <td>Push 3 <span class="compact">stops</span></td>
                     <td>{{ rolls.e6.push3.135|default:'' }}</td>
                     <td>{{ rolls.e6.push3.120|default:'' }}</td>
                     <td></td>

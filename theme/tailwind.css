@@ -793,6 +793,64 @@
         dark:border-transparent;
     }
   }
+
+  .ready-summary {
+    @apply overflow-x-auto;
+
+    .compact {
+      @apply
+        hidden
+        md:inline;
+    }
+
+    table {
+      td {
+        @apply
+          text-right
+          px-4;
+      }
+
+      th,
+      td {
+        @apply
+          whitespace-nowrap
+          py-3
+          border-b
+          border-stone-300
+          dark:border-stone-600;
+
+        &:last-child {
+          @apply
+            border-l
+            pl-4
+            pr-0;
+        }
+      }
+
+      .push-pull {
+        @apply
+          text-stone-400
+          dark:text-stone-500;
+      }
+
+      thead th {
+        @apply
+          text-right
+          pr-4;
+
+        &:last-child { @apply pr-0; }
+      }
+
+      tbody {
+        th { @apply text-left; }
+
+        tr:last-child {
+          th,
+          td { @apply border-b-0; }
+        }
+      }
+    }
+  }
 }
 
 @layer utilities {
