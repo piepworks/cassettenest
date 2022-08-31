@@ -106,7 +106,7 @@
 
 {% if frames %}
 {% flag 'frames' %}
-<div class="frames overflow-x">
+<div class="frames">
     <h3>Frames</h3>
     <table>
         <thead>
@@ -123,7 +123,7 @@
                 <td><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
                 <td title="{{ frame.date|date:'l, F j, Y' }}">
                     <span class="print:hidden">{{ frame.date|date:'M j' }}</span>
-                    <span class="print-only">{{ frame.date|date:'M j, Y' }}</span>
+                    <span class="hidden print:inline">{{ frame.date|date:'M j, Y' }}</span>
                 </td>
                 <td>
                     {% if frame.aperture %}
@@ -146,7 +146,7 @@
 {% endif %}
 
 {% if journal_entries %}
-<div class="journal-entries overflow-x">
+<div class="journal-entries">
     <h3>Journal Entries</h3>
     <table>
         <thead>
@@ -162,7 +162,7 @@
                 <td>
                     <a href="{% url 'roll-journal-detail' roll.id entry.id %}" title="{{ entry.date|date:'l, F j, Y' }}">
                         <span class="print:hidden">{{ entry.date|date:'M j' }}</span>
-                        <span class="print-only">{{ entry.date|date:'M j, Y' }}</span>
+                        <span class="hidden print:inline">{{ entry.date|date:'M j, Y' }}</span>
                     </a>
                 </td>
                 <td>
@@ -174,7 +174,7 @@
                 </td>
                 <td>
                     <span class="print:hidden">{{ entry.notes }}</span>
-                    <div class="print-only">{{ entry.notes|markdown }}</div>
+                    <div class="hidden print:inline">{{ entry.notes|markdown }}</div>
                 </td>
             </tr>
             {% endfor %}
