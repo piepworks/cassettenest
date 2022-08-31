@@ -804,6 +804,8 @@
     }
 
     table {
+      @apply min-w-full;
+
       td {
         @apply
           text-right
