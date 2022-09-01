@@ -1,25 +1,43 @@
-{% extends 'inventory/roll_journal_entry.html' %}
+{% extends 'base_site.html' %}
 {% load markdown_extras %}
+{% block bodytag %}class="journal-entry"{% endblock %}
 
-{% block entry %}
-<div class="field">
-    <label>Date</label>
-    <p>{{ entry.date|date:'l, F j, Y' }}</p>
+{% block title %}Journal entry for {{ roll.code }} / {{ roll.started_on|date:'Y' }}{% endblock %}
+
+{% block header %}
+<div class="page-heading">
+    <div class="inner">
+        <h1>Journal entry for <a href="{% url 'roll-detail' roll.id %}">{{ roll.code }} / {{ roll.started_on|date:'Y' }}</a></h1>
+    </div>
+    {% include 'inventory/_heading-buttons.html' with item=entry parent_item=roll url='roll-journal' name='journal entry' %}
 </div>
+{% endblock %}
 
-<div class="field">
-    <label>Frame{% if entry.starting_frame != entry.frame %}s{% endif %}</label>
-    <p>
-        {% if entry.starting_frame and entry.starting_frame != entry.frame %}
-        <small>{{ entry.starting_frame}} &ndash; </small>
-        {% endif %}
-        {{ entry.frame }}
-    </p>
-</div>
-
-<div class="field">
-    <label>Notes</label>
-    {{ entry.notes|markdown }}
+{% block content %}
+<div class="metadata">
+    <div>
+        <dl>
+            <div>
+                <dt>Date</dt>
+                <dd>{{ entry.date|date:'l, F j, Y' }}</dd>
+            </div>
+            <div>
+                <dt>Frame{% if entry.starting_frame != entry.frame %}s{% endif %}</dt>
+                <dd>
+                    {% if entry.starting_frame and entry.starting_frame != entry.frame %}
+                    <small>{{ entry.starting_frame}} &ndash; </small>
+                    {% endif %}
+                    {{ entry.frame }}
+                </dd>
+            </div>
+            {% if entry.notes %}
+            <div>
+                <dt>Notes</dt>
+                <dd>{{ entry.notes|markdown }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
 </div>
 {% endblock %}
 
