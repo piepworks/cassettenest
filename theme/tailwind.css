@@ -244,6 +244,8 @@
         sm:text-3xl
         sm:truncate;
     }
+
+    form { @apply space-y-0; }
   }
 
   #menu-inner {
@@ -623,8 +625,6 @@
 
       &.policies { @apply text-left pt-6; }
     }
-
-    form { @apply space-y-6; }
 
     input { @apply w-full; }
 
