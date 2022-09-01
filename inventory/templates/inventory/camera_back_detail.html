@@ -32,8 +32,6 @@
 {% endif %}
 
 {% if rolls_history %}
-    <hr />
-
     <section class="history">
         <h3 id="previous-rolls">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }} for this back</h3>
         <p><a href="{% url 'camera-detail' camera.id %}#previous-rolls">View all previous rolls for this camera.</a></p>

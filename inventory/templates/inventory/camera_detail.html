@@ -81,9 +81,7 @@
 {% endif %}
 
 {% if rolls_history %}
-    <div class="pb-5 border-b border-gray-200 dark:border-gray-600">
-        <h3 id="previous-rolls" class="text-lg leading-6 font-medium">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
-    </div>
+    <h3 id="previous-rolls" class="text-lg leading-6 font-medium">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }}</h3>
     {% if camera.multiple_backs %}
         {% capture as querystring silent %}&b={{ b }}{% endcapture %}
         {% include 'components/logbook-table.html' with rolls=rolls_history page='camera_with_backs' pagination_querystring=querystring %}
