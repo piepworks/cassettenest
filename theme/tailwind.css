@@ -496,6 +496,8 @@
             prose
             prose-stone
             dark:prose-invert;
+
+          p:first-child { @apply mt-0; }
         }
       }
     }

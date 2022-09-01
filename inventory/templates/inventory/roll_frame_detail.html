@@ -16,39 +16,57 @@
 {% endblock %}
 
 {% block content %}
-    {% if previous_frame or next_frame %}
-    <ol class="nav">
-        {% if previous_frame %}
-            <li>
-                <a title="Previous frame: {{ previous_frame.date}}" href="{% url 'roll-frame-detail' frame.roll.id previous_frame.number %}" class="button icon">
-                    &larr;
-                </a>
-            </li>
-        {% endif %}
-        {% if next_frame %}
-            <li>
-                <a title="Next frame: {{ next_frame.date }}" href="{% url 'roll-frame-detail' frame.roll.id next_frame.number %}" class="button icon">
-                    &rarr;
-                </a>
-            </li>
-        {% endif %}
-    </ol>
+{% if previous_frame or next_frame %}
+<ol class="flex justify-between">
+    <li>
+    {% if previous_frame %}
+        <a title="Previous frame: {{ previous_frame.date}}" href="{% url 'roll-frame-detail' frame.roll.id previous_frame.number %}" class="button icon">
+            &larr;
+        </a>
+    {% else %}
+        <button disabled>&larr;</button>
     {% endif %}
-
-    <ul>
-        <li>Date: {{ frame.date }}</li>
-        {% if frame.aperture %}
-            <li>Aperture: <span class="subdued">ƒ/</span> {{ frame.aperture }}</li>
-        {% endif %}
-        {% if frame.shutter_speed %}
-            <li>Shutter speed: {{ frame.shutter_speed }} <span class="subdued" title="second(s)">s</span></li>
-        {% endif %}
-    </ul>
-
-    {% if frame.notes %}
-        <h2>Notes</h2>
-        <div>{{ frame.notes|markdown }}</div>
+    </li>
+    <li>
+    {% if next_frame %}
+        <a title="Next frame: {{ next_frame.date }}" href="{% url 'roll-frame-detail' frame.roll.id next_frame.number %}" class="button icon">
+            &rarr;
+        </a>
+    {% else %}
+        <button disabled>&rarr;</button>
     {% endif %}
+    </li>
+</ol>
+{% endif %}
+
+<div class="metadata">
+    <div>
+        <dl>
+            <div>
+                <dt>Date</dt>
+                <dd>{{ frame.date }}</dd>
+            </div>
+            {% if frame.aperture %}
+            <div>
+                <dt>Aperture</dt>
+                <dd><span class="subdued">ƒ/</span> {{ frame.aperture }}</dd>
+            </div>
+            {% endif %}
+            {% if frame.shutter_speed %}
+            <div>
+                <dt>Shutter speed</dt>
+                <dd>{{ frame.shutter_speed }} <span class="subdued" title="second(s)">s</span></dd>
+            </div>
+            {% endif %}
+            {% if frame.notes %}
+            <div>
+                <dt>Notes</dt>
+                <dd>{{ frame.notes|markdown }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+</div>
 {% endblock %}
 
 {% block page_js %}

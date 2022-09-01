@@ -53,21 +53,13 @@
     <div>
         <dl>
             <div>
-                <dt>
-                    Format
-                </dt>
-                <dd>
-                    {{ camera.get_format_display }}
-                </dd>
+                <dt>Format</dt>
+                <dd>{{ camera.get_format_display }}</dd>
             </div>
             {% if camera.notes %}
             <div>
-                <dt>
-                    Notes
-                </dt>
-                <dd>
-                    {{ camera.notes|markdown }}
-                </dd>
+                <dt>Notes</dt>
+                <dd>{{ camera.notes|markdown }}</dd>
             </div>
             {% endif %}
         </dl>
