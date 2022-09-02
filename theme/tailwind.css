@@ -451,9 +451,23 @@
       @apply
         mt-1
         text-3xl
-        font-semibold
-        text-stone-900
-        dark:text-white;
+        font-semibold;
+
+      &,
+      a {
+        @apply
+          text-stone-900
+          dark:text-white;
+      }
+
+      a {
+        @apply
+          hover:no-underline
+          hover:text-white
+          dark:hover:text-stone-900
+          hover:bg-stone-900
+          dark:hover:bg-white;
+      }
     }
   }
 

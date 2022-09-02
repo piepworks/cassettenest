@@ -15,8 +15,12 @@
 <div class="page-heading">
     <div class="inner">
         {% if roll.code %}
-        <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">{{ roll.code }}</h1>
-        <small class="year">{{ roll.started_on|date:'Y' }}</small>
+        <div class="flex items-center">
+            <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">
+                {{ roll.code }}
+            </h1>
+            <small class="year ml-3 inline-flex items-center rounded-full bg-stone-300 dark:bg-stone-600 px-3 py-0.5 text-sm font-medium text-stone-700 dark:text-stone-200">{{ roll.started_on|date:'Y' }}</small>
+        </div>
         {% else %}
         <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">{{ roll }}</h1>
         {% endif %}
@@ -24,71 +28,104 @@
     {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
 </div>
 
-<h2>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{% if not roll.film.stock %}{{ roll.film.name }}{% else %}{{ roll.film }}{% endif %}</a> </h2>
+<dl class="stats">
+    <div>
+        <dt>Film stock</dt>
+        <dd>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{% if not roll.film.stock %}{{ roll.film.name }}{% else %}{{ roll.film }}{% endif %}</a></dd>
+    </div>
+    <div>
+        <dt>Status</dt>
+        <dd><a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></dd>
+    </div>
+</dl>
 
-<ul class="meta">
-    <li><a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></li>
+<div class="metadata">
+    <div>
+        <dl>
+            {% if roll.started_on %}
+            <div>
+                <dt>Started</dt>
+                <dd>{{ roll.started_on }}</dd>
+            </div>
+            {% endif %}
+            {% if roll.ended_on %}
+            <div>
+                <dt>Finished</dt>
+                <dd>{{ roll.ended_on }}</dd>
+            </div>
+            {% endif %}
+            {% if roll.camera_back %}
+            <div>
+                <dt>Camera</dt>
+                <dd><a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a>, <a href="{% url 'camera-back-detail' roll.camera.id roll.camera_back.id %}">Back “{{ roll.camera_back.name }}”</a></dd>
+            </div>
+            {% elif roll.camera %}
+            <div>
+                <dt>Camera</dt>
+                <dd><a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></dd>
+            </div>
+            {% endif %}
+            {% if roll.lens %}
+            <div>
+                <dt>Lens(es)</dt>
+                <dd>{{roll.lens}}</dd>
+            </div>
+            {% endif %}
+            {% if roll.project %}
+            <div>
+                <dt>Project</dt>
+                <dd><a href="{% url 'project-detail' roll.project.id %}">{{ roll.project }}</a></dd>
+            </div>
+            {% endif %}
+            {% if roll.push_pull %}
+            <div>
+                <dt>Push/Pull</dt>
+                <dd>{{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }})</dd>
+            </div>
+            {% endif %}
+            {% if roll.location %}
+            <div>
+                <dt>Location(s)</dt>
+                <dd>{{ roll.location }}</dd>
+            </div>
+            {% endif %}
+            {% if roll.notes %}
+            <div>
+                <dt>Notes</dt>
+                <dd>{{ roll.notes|markdown }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+</div>
 
-    {% if roll.camera_back %}
-    <li>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a>, <a href="{% url 'camera-back-detail' roll.camera.id roll.camera_back.id %}">Back “{{ roll.camera_back.name }}”</a></li>
-    {% elif roll.camera %}
-    <li>Camera: <a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></li>
-    {% endif %}
-
-    {% if roll.lens %}
-    <li>Lens(es): {{roll.lens}}</li>
-    {% endif %}
-
-    {% if roll.project %}
-    <li>Project: <a href="{% url 'project-detail' roll.project.id %}">{{ roll.project }}</a></li>
-    {% endif %}
-
-    {% if roll.push_pull %}
-    <li>{{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }})</li>
-    {% endif %}
-
-    {% if roll.location %}
-    <li>Location(s): {{ roll.location }}</li>
-    {% endif %}
-
-    {% if roll.started_on %}
-    <li>Started: {{ roll.started_on }}</li>
-    {% endif %}
-
-    {% if roll.ended_on %}
-    <li>Finished: {{ roll.ended_on }}</li>
-    {% endif %}
-
-    {% if roll.notes %}
-    <li>Notes:
-        <ul>
-            <li>{{ roll.notes|markdown }}</li>
-        </ul>
-    </li>
-    {% endif %}
-
-    {% if roll.status in development_statuses %}
-    <li class="development">Development
-        <ul>
+{% if roll.status in development_statuses %}
+<h3>Development</h3>
+<div class="metadata secondary">
+    <div>
+        <dl>
             {% if roll.lab %}
-            <li>Lab: {{ roll.lab }}</li>
+            <div>
+                <dt>Lab</dt>
+                <dd>{{ roll.lab }}</dd>
+            </div>
             {% endif %}
-
             {% if roll.scanner %}
-            <li>Scanner: {{ roll.scanner }}</li>
+            <div>
+                <dt>Scanner</dt>
+                <dd>{{ roll.scanner }}</dd>
+            </div>
             {% endif %}
-
             {% if roll.notes_on_development %}
-            <li>Notes on Development:
-                <ul>
-                    <li>{{ roll.notes_on_development|markdown }}</li>
-                </ul>
-            </li>
+            <div>
+                <dt>Notes on Development</dt>
+                <dd>{{ roll.notes_on_development|markdown }}</dd>
+            </div>
             {% endif %}
-        </ul>
-    </li>
-    {% endif %}
-</ul>
+        </dl>
+    </div>
+</div>
+{% endif %}
 
 {% if roll.status == '02_loaded' %}
 <div class="action">
@@ -96,7 +133,6 @@
 </div>
 {% endif %}
 
-<hr />
 <div class="action">
     <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
     <p><small><a href="https://cassettenest.com/docs/frames">Learn more about frames.</a></small></p>
