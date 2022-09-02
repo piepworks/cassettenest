@@ -1749,7 +1749,6 @@ def roll_journal_delete(request, roll_pk, entry_pk):
     return redirect(reverse('roll-detail', args=(roll.id,)))
 
 
-@waffle_flag('frames')
 @login_required
 def roll_frame_add(request, roll_pk):
     roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
@@ -1863,7 +1862,6 @@ def roll_frame_add(request, roll_pk):
         )
 
 
-@waffle_flag('frames')
 @login_required
 def roll_frame_detail(request, roll_pk, number):
     frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
@@ -1884,7 +1882,6 @@ def roll_frame_detail(request, roll_pk, number):
     )
 
 
-@waffle_flag('frames')
 @login_required
 def roll_frame_edit(request, roll_pk, number):
     frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
@@ -1962,7 +1959,6 @@ def roll_frame_edit(request, roll_pk, number):
         )
 
 
-@waffle_flag('frames')
 @require_POST
 @login_required
 def roll_frame_delete(request, roll_pk, number):

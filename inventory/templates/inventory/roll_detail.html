@@ -1,5 +1,5 @@
 {% extends 'base_site.html' %}
-{% load markdown_extras waffle_tags capture_tags %}
+{% load markdown_extras capture_tags %}
 
 {% block title %}{{ roll }}{% endblock %}
 
@@ -96,16 +96,13 @@
 </div>
 {% endif %}
 
-{% flag 'frames' %}
 <hr />
 <div class="action">
     <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
     <p><small><a href="https://cassettenest.com/docs/frames">Learn more about frames.</a></small></p>
 </div>
-{% endflag %}
 
 {% if frames %}
-{% flag 'frames' %}
 <div class="frames">
     <h3>Frames</h3>
     <table>
@@ -142,7 +139,6 @@
         </tbody>
     </table>
 </div>
-{% endflag %}
 {% endif %}
 
 {% if journal_entries %}
@@ -185,20 +181,14 @@
 
 {% if roll.status != '01_storage' %}
 <div class="action">
-    {% flag 'frames' %}
-        {% if journal_entries %}
-            <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
-        {% endif %}
-    {% else %}
-        <div class="notes">
-            {% include 'inventory/_github-icon.html' with id='book' %}
-            <div class="inner">
-                <p><b>Note:</b> Journaling will be going away soon. It will be replaced by <a target="_blank" rel="noopener"href="https://cassettenest.com/changelog/2021-05-18/">Frames</a>.<br />
-                <small>(Don’t worry, <b>you’ll never lose lose access to your existing journal entries</b>, you just won't be able to create new entries on rolls that don't already have journal entries.)</small></p>
-            </div>
+    <div class="notes">
+        {# include 'inventory/_github-icon.html' with id='book' #}
+        <div class="inner">
+            <p><b>Note:</b> Journaling is no longer supported. It’s been replaced by <a target="_blank" rel="noopener"href="https://cassettenest.com/changelog/2021-05-18/">Frames</a>.<br />
+            <small>(Don’t worry, <b>you’ll never lose lose access to your existing journal entries</b>, you just won't be able to create new entries on rolls that don't already have journal entries.)</small></p>
         </div>
-        <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
-    {% endflag %}
+    </div>
+    <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
 </div>
 {% endif %}
 
