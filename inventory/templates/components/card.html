@@ -29,7 +29,6 @@
             </div>
             <div class="mt-2 sm:flex sm:justify-between">
                 <div class="mt-2 flex items-center text-sm text-stone-300 dark:text-stone-500 sm:mt-0">
-                    {% include 'svg/heroicons/calendar.svg' with class="flex-shrink-0 mr-1.5 h-5 w-5 text-stone-300 dark:text-stone-500" %}
                     <p>
                         {% if items.current_tab_action == 'roll' %}Loaded on {% endif %}
                         <time datetime="{{ item.created_at }}">{{ item.created_at|date:'F j, Y' }}</time>
