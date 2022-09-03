@@ -3,22 +3,34 @@
 
 {% block title %}{{ project.name }}{% endblock %}
 
-{% block content %}
+{% block header %}
 <div class="page-heading">
     <div class="inner">
         {# include 'inventory/_heading-back.html' with url='projects' name='projects' #}
         <h1>{{ project.name }}</h1>
-        {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
+    </div>
+
+    {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="metadata">
+    <div>
+        <dl>
+            <div>
+                <dt>Status</dt>
+                <dd>{{ project.get_status_display }}</dd>
+            </div>
+            {% if project.notes %}
+            <div>
+                <dt>Notes</dt>
+                <dd>{{ project.notes|markdown }}</dd>
+            </div>
+            {% endif %}
+        </dl>
     </div>
 </div>
-
-<p>Status: {{ project.get_status_display }}</p>
-
-{% if project.notes %}
-    <hr />
-    <h3>Notes</h3>
-    <div>{{ project.notes|markdown }}</div>
-{% endif %}
 
 {% if project.cameras.all %}
     {% include 'inventory/_project-cameras.html' %}
@@ -37,12 +49,10 @@
 <div class="print:hidden">
 {% if project.status != 'archived' %}
     {% if film_available_count %}
-        <hr />
         {% include 'inventory/_project-add-rolls.html' %}
     {% endif %}
 
     {% if cameras %}
-        <hr />
         {% include 'inventory/_project-add-camera.html' %}
     {% endif %}
 {% else %}
