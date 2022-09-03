@@ -299,51 +299,41 @@
           no-underline
           text-stone-300
           flex-grow
-          whitespace-nowrap;
+          whitespace-nowrap
+          hover:bg-stone-700
+          dark:hover:bg-stone-800
+          hover:text-white;
       }
 
       li,
       a {
         @apply
           text-stone-300
-          hover:bg-stone-700
-          dark:hover:bg-stone-800
-          hover:text-white
           flex
           items-center
           text-lg
           md:text-sm
           font-medium
           rounded-md;
-
-        &.current {
-          @apply
-            p-2
-            bg-stone-900
-            dark:bg-black
-            text-white;
-
-          a { @apply -m-2; }
-
-          svg { @apply text-stone-300; }
-        }
       }
+    }
+
+    li.current {
+      @apply
+        p-2
+        bg-stone-900
+        dark:bg-black
+        text-white;
+
+      a { @apply -m-2; }
+
+      svg { @apply text-stone-300; }
     }
 
     &.collapsed {
       @apply md:w-20;
 
       #menu-desktop-toggle { @apply rotate-180; }
-
-      a,
-      li.current { @apply md:px-0; }
-
-      li svg {
-        @apply
-          md:w-7
-          md:h-7
-          md:mr-0;
-      }
 
       ul {
         @apply
@@ -356,10 +346,27 @@
         &,
         a { @apply md:justify-center; }
 
+        svg {
+          @apply
+            md:w-7
+            md:h-7
+            md:mr-0;
+        }
+
         span { @apply md:hidden; }
 
+        &.current a {
+          @apply
+            mx-0
+            -my-3;
+        }
+
         a,
-        &.current { @apply py-3; }
+        &.current {
+          @apply
+            py-3
+            md:px-0;
+        }
       }
     }
   }
