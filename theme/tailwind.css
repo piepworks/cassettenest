@@ -359,7 +359,7 @@
 
         &.current a {
           @apply
-            mx-0
+            md:mx-0
             -my-3;
         }
 
