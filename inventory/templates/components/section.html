@@ -1,12 +1,12 @@
 {% load capture_tags %}
 {% if page == 'index' %}
-    {# Ignore all this for camera/backs. #}
+    {# Ignore all this for pages without multiple sections. #}
     {% capture as adjacent_section silent %}{% if items.slug == 'c' %}{{ request.GET.p }}{% else %}{{ request.GET.c }}{% endif %}{% endcapture %}
     {% if adjacent_section %}
         {% capture as adjacent_slug silent %}{% if items.slug == 'c' %}p{% else %}c{% endif %}{% endcapture %}
     {% endif %}
 {% endif %}
-<section id="section_{{ items.slug }}" class="rounded-lg bg-white dark:bg-stone-600 shadow">
+<section id="section_{{ items.slug }}" class="section-tabbed rounded-lg bg-white dark:bg-stone-600 shadow">
     <div class="px-4 pt-5 sm:px-6 border-b border-stone-200 dark:border-stone-700">
         <div class="mb-5 -ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
             <div class="ml-4 mt-2">
@@ -28,6 +28,7 @@
                 <div class="sm:hidden mb-5">
                     <label for="id_{{ items.slug }}" class="sr-only">Select a tab</label>
                     <form
+                        id="section_{{ items.slug }}_mobile"
                         method="get"
                         hx-get="?{{ items.slug }}={{ forloop.counter0 }}{{ pagination_querystring }}"
                         action="{% if page == 'index' %}.#section_{{ items.slug }}{% endif %}"

@@ -922,6 +922,10 @@
       }
     }
   }
+
+  .section-tabbed {
+    form { @apply space-y-0; }
+  }
 }
 
 @layer utilities {
