@@ -220,12 +220,13 @@ film_formats = [
 
 class SectionTabs:
     # TODO: write tests for this stuff.
-    def __init__(self, title, add_url, current_tab, tabs):
+    def __init__(self, title, target, current_tab, tabs, add_url=None):
         self.title = title
         self.slug = slugify(self.title)[:1]
-        self.add_url = add_url
         self.current_tab = current_tab
         self.tabs = tabs
+        self.target = target
+        self.add_url = add_url
 
     def current_rows(self):
         return self.tabs[self.current_tab]['rows']

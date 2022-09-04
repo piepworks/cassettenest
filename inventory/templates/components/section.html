@@ -1,13 +1,10 @@
 {% load capture_tags %}
 {% if page == 'index' %}
     {# Ignore all this for camera/backs. #}
-    {% capture as target silent %}#homepage_sections{% endcapture %}
     {% capture as adjacent_section silent %}{% if items.slug == 'c' %}{{ request.GET.p }}{% else %}{{ request.GET.c }}{% endif %}{% endcapture %}
     {% if adjacent_section %}
         {% capture as adjacent_slug silent %}{% if items.slug == 'c' %}p{% else %}c{% endif %}{% endcapture %}
     {% endif %}
-{% else %}
-    {% capture as target silent %}#camera_backs_section{% endcapture %}
 {% endif %}
 <section id="section_{{ items.slug }}" class="rounded-lg bg-white dark:bg-stone-600 shadow">
     <div class="px-4 pt-5 sm:px-6 border-b border-stone-200 dark:border-stone-700">
@@ -35,7 +32,7 @@
                         hx-get="?{{ items.slug }}={{ forloop.counter0 }}{{ pagination_querystring }}"
                         action="{% if page == 'index' %}.#section_{{ items.slug }}{% endif %}"
                         hx-trigger="change"
-                        hx-target="{{ target }}"
+                        hx-target="{{ items.target }}"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                         hx-vals='{"slug": "{{ items.slug }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
                         class="flex">
@@ -64,7 +61,7 @@
                                 hx-get="?{{ items.slug }}={{ forloop.counter0 }}{{ pagination_querystring }}"
                                 hx-vals='{"slug": "{{ items.slug }}", "{{ items.slug }}": "{{ forloop.counter0 }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
                                 hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-                                hx-target="{{ target }}"
+                                hx-target="{{ items.target }}"
                                 href="?{{ items.slug }}={{ forloop.counter0 }}{% if adjacent_section %}&{{ adjacent_slug }}={{ adjacent_section }}{% endif %}{% if page == 'index' %}#section_{{ items.slug }}{% endif %}"
                                 class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
                                 {{ tab.name }}

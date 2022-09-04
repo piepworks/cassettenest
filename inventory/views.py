@@ -84,7 +84,7 @@ def index(request):
 
     cameras = SectionTabs(
         'Cameras',
-        reverse('camera-add'),
+        '#homepage_sections',
         0,
         [
             {
@@ -105,11 +105,12 @@ def index(request):
                 'rows': cameras_unavailable,
             },
         ],
+        reverse('camera-add'),
     )
 
     projects = SectionTabs(
         'Projects',
-        reverse('project-add'),
+        '#homepage_sections',
         0,
         [
             {
@@ -122,7 +123,8 @@ def index(request):
                 'count': all_projects.filter(status='archived').count(),
                 'rows': all_projects.filter(status='archived'),
             }
-        ]
+        ],
+        reverse('project-add'),
     )
 
     if request.GET.get('c'):
@@ -1077,6 +1079,12 @@ def project_delete(request, pk):
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
+    c = request.GET.get('c') if request.GET.get('c') else 0
+    pagination_querystring = ''
+    page = request.GET.get('page')
+    if page:
+        pagination_querystring += f'&page={page}'
+
     # Get all of this user's cameras not already associated with this project.
     cameras_to_add = Camera.objects.filter(owner=owner).exclude(
         pk__in=project.cameras.values_list('pk', flat=True)
@@ -1175,8 +1183,8 @@ def project_detail(request, pk):
     # TODO: write logic to show either `Cameras` or `Cameras and Backs`.
     cameras = SectionTabs(
         'Cameras and Backs',
-        '',
-        2,
+        '#cameras_section',
+        0,
         [
             {
                 'name': 'Loaded',
@@ -1192,11 +1200,13 @@ def project_detail(request, pk):
             }
         ]
     )
+    cameras.set_tab(c)
 
-    # Pagination / 20 per page
+    # Pagination
     paginator = Paginator(roll_logbook, 10)
     page_number = request.GET.get('page') if request.GET.get('page') else 1
     page_obj = paginator.get_page(page_number)
+    page_range = paginator.get_elided_page_range(number=page_number)
 
     context = {
         'owner': owner,
@@ -1215,7 +1225,20 @@ def project_detail(request, pk):
     }
 
     if request.htmx:
-        return render(request, 'components/logbook-table.html', {'page_obj': page_obj})
+        if request.htmx.trigger.startswith('section'):
+            # Cameras
+            response = render(request, 'components/section.html', {
+                'items': cameras,
+                'pagination_querystring': pagination_querystring,
+            })
+            response['HX-Push'] = reverse('project-detail', args=(project.id,)) + f'?c={c}{pagination_querystring}'
+            return response
+        else:
+            return render(request, 'components/logbook-table.html', {
+                'page_obj': page_obj,
+                'page_range': page_range,
+                'pagination_querystring': f'&c={c}',
+            })
     else:
         return render(request, 'inventory/project_detail.html', context)
 
@@ -2215,7 +2238,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
                     status=status_number('loaded')
                 )[0]
 
-        # Pagination / 10 per page
+        # Pagination
         paginator = Paginator(rolls_history, 10)
         page_number = request.GET.get('page') if request.GET.get('page') else 1
         page_obj = paginator.get_page(page_number)
@@ -2247,7 +2270,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
 
             camera_backs = SectionTabs(
                 'Backs',
-                reverse('camera-back-add', args=(camera.id,)),
+                '#camera_backs_section',
                 0,
                 [
                     {
@@ -2268,6 +2291,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
                         'rows': all_camera_backs.filter(status='unavailable'),
                     },
                 ],
+                reverse('camera-back-add', args=(camera.id,)),
             )
             camera_backs.set_tab(b)
             context['camera_backs'] = camera_backs
