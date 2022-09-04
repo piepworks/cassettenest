@@ -1078,7 +1078,7 @@ def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
     # Get all of this user's cameras not already associated with this project.
-    cameras = Camera.objects.filter(owner=owner).exclude(
+    cameras_to_add = Camera.objects.filter(owner=owner).exclude(
         pk__in=project.cameras.values_list('pk', flat=True)
     ).exclude(
         status='unavailable'
@@ -1092,17 +1092,40 @@ def project_detail(request, pk):
                 if back.status == ('empty'):
                     camera_backs_empty.append(back)
 
+    ready_to_load = []
+    for camera in cameras_empty:
+        ready_to_load.append(camera)
+    for back in camera_backs_empty:
+        ready_to_load.append(back)
+
+    loaded = []
     loaded_roll_list = Roll.objects.filter(
         owner=owner,
         project=project,
         status=status_number('loaded'),
     )
+    for roll in loaded_roll_list:
+        camera_or_back = {}
 
-    rolls_loaded_outside_project = []
+        if roll.camera_back:
+            camera_or_back = roll.camera_back
+        else:
+            camera_or_back = roll.camera
+
+        loaded.append(camera_or_back)
+
+    loaded_outside_project = []
     for camera in project.cameras.all():
         for roll in camera.roll_set.all():
             if roll.status == status_number('loaded') and roll.project != project:
-                rolls_loaded_outside_project.append(roll)
+                camera_or_back = {}
+
+                if roll.camera_back:
+                    camera_or_back = roll.camera_back
+                else:
+                    camera_or_back = roll.camera
+
+                loaded_outside_project.append(camera_or_back)
 
     # Unused rolls already in this project
     total_film_count = Film.objects.filter(
@@ -1149,6 +1172,27 @@ def project_detail(request, pk):
         '-code'
     )
 
+    # TODO: write logic to show either `Cameras` or `Cameras and Backs`.
+    cameras = SectionTabs(
+        'Cameras and Backs',
+        '',
+        2,
+        [
+            {
+                'name': 'Loaded',
+                'rows': loaded,
+            },
+            {
+                'name': 'Ready to load',
+                'rows': ready_to_load,
+            },
+            {
+                'name': 'Loaded outside of project',
+                'rows': loaded_outside_project,
+            }
+        ]
+    )
+
     # Pagination / 20 per page
     paginator = Paginator(roll_logbook, 10)
     page_number = request.GET.get('page') if request.GET.get('page') else 1
@@ -1157,10 +1201,8 @@ def project_detail(request, pk):
     context = {
         'owner': owner,
         'project': project,
+        'cameras_to_add': cameras_to_add,
         'cameras': cameras,
-        'cameras_empty': cameras_empty,
-        'camera_backs_empty': camera_backs_empty,
-        'rolls_loaded_outside_project': rolls_loaded_outside_project,
         'total_film_count': total_film_count,
         'total_rolls': total_film_count.count(),
         'film_counts': film_counts,

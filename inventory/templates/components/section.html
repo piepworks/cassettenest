@@ -13,16 +13,18 @@
     <div class="px-4 pt-5 sm:px-6 border-b border-stone-200 dark:border-stone-700">
         <div class="mb-5 -ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
             <div class="ml-4 mt-2">
-                <h3 class="text-lg leading-6 font-medium text-stone-900 dark:text-white">
+                <h3 class="mb-0 text-lg leading-6 font-medium text-stone-900 dark:text-white">
                     {{ items.title }}
                 </h3>
             </div>
+            {% if items.add_url %}
             <div class="ml-4 mt-2 flex-shrink-0">
                 <a class="button primary" href="{{ items.add_url }}">
                     {% include 'svg/heroicons/plus.svg' with class='-ml-1 mr-2 h-5 w-5' %}
                     New
                 </a>
             </div>
+            {% endif %}
         </div>
         {% if items.tabs %}
             <div class="mt-4">

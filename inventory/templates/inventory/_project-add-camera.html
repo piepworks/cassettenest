@@ -6,7 +6,7 @@
         <label for="id_camera">Add a camera to this project</label>
         <select id="id_camera" name="camera" required>
             <option value="">Choose a camera</option>
-        {% for camera in cameras %}
+        {% for camera in cameras_to_add %}
             <option value="{{ camera.id }}">{{ camera.name }}</option>
         {% endfor %}
         </select>
