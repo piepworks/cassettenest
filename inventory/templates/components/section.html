@@ -30,7 +30,7 @@
                     <form
                         id="section_{{ items.slug }}_mobile"
                         method="get"
-                        hx-get="?{{ items.slug }}={{ forloop.counter0 }}{{ pagination_querystring }}"
+                        hx-get="?{{ items.slug }}={{ forloop.counter0 }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}"
                         action="{% if page == 'index' %}.#section_{{ items.slug }}{% endif %}"
                         hx-trigger="change"
                         hx-target="{{ items.target }}"
@@ -59,11 +59,10 @@
                         {% for tab in items.tabs %}
                             <a
                                 id="section_{{ items.slug }}_{{ forloop.counter0 }}"
-                                hx-get="?{{ items.slug }}={{ forloop.counter0 }}{{ pagination_querystring }}"
+                                hx-get="?{{ items.slug }}={{ forloop.counter0 }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}"
                                 hx-vals='{"slug": "{{ items.slug }}", "{{ items.slug }}": "{{ forloop.counter0 }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
-                                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                                 hx-target="{{ items.target }}"
-                                href="?{{ items.slug }}={{ forloop.counter0 }}{% if adjacent_section %}&{{ adjacent_slug }}={{ adjacent_section }}{% endif %}{% if page == 'index' %}#section_{{ items.slug }}{% endif %}"
+                                href="?{{ items.slug }}={{ forloop.counter0 }}{% if adjacent_section %}&{{ adjacent_slug }}={{ adjacent_section }}{% endif %}{% if page == 'index' %}#section_{{ items.slug }}{% endif %}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}"
                                 class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
                                 {{ tab.name }}
                                 {% if tab.count > 0 %}

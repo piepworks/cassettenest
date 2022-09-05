@@ -32,9 +32,8 @@
     </div>
 </div>
 
-{% if project.cameras.all %}
-    {% include 'inventory/_project-cameras.html' %}
-{% endif %}
+
+{% include 'partials/project-camera-logbook-wrapper.html' %}
 
 {% if film_counts %}
     {% include 'inventory/_unused-rolls.html' %}
@@ -42,9 +41,6 @@
     <h2>Film remaining: 0 rolls</h2>
 {% endif %}
 
-{% if roll_logbook %}
-    {% include 'inventory/_project-logbook.html' %}
-{% endif %}
 
 <div class="print:hidden">
 {% if project.status != 'archived' %}

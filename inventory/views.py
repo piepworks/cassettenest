@@ -1080,10 +1080,9 @@ def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
     c = request.GET.get('c') if request.GET.get('c') else 0
-    pagination_querystring = ''
-    page = request.GET.get('page')
-    if page:
-        pagination_querystring += f'&page={page}'
+    sectiontab_querystring = f'c={c}'
+    page = request.GET.get('page') or 1
+    pagination_querystring = f'page={page}'
 
     # Get all of this user's cameras not already associated with this project.
     cameras_to_add = Camera.objects.filter(owner=owner).exclude(
@@ -1183,7 +1182,7 @@ def project_detail(request, pk):
     # TODO: write logic to show either `Cameras` or `Cameras and Backs`.
     cameras = SectionTabs(
         'Cameras and Backs',
-        '#cameras_section',
+        '#project-camera-logbook-wrapper',
         0,
         [
             {
@@ -1221,24 +1220,26 @@ def project_detail(request, pk):
         'loaded_roll_list': loaded_roll_list,
         'roll_logbook': roll_logbook,
         'page_obj': page_obj,
-        'js_needed': True,
+        'pagination_querystring': pagination_querystring,
+        'sectiontab_querystring': sectiontab_querystring,
     }
 
     if request.htmx:
-        if request.htmx.trigger.startswith('section'):
-            # Cameras
-            response = render(request, 'components/section.html', {
-                'items': cameras,
-                'pagination_querystring': pagination_querystring,
-            })
-            response['HX-Push'] = reverse('project-detail', args=(project.id,)) + f'?c={c}{pagination_querystring}'
-            return response
-        else:
-            return render(request, 'components/logbook-table.html', {
-                'page_obj': page_obj,
-                'page_range': page_range,
-                'pagination_querystring': f'&c={c}',
-            })
+        response = render(request, 'partials/project-camera-logbook-wrapper.html', {
+            'project': project,
+            'cameras': cameras,
+            'roll_logbook': roll_logbook,
+            'items': cameras,
+            'page_obj': page_obj,
+            'page_range': page_range,
+            'pagination_querystring': pagination_querystring,
+            'sectiontab_querystring': sectiontab_querystring,
+        })
+
+        querystring = f'?{sectiontab_querystring}&{pagination_querystring}'
+        response['HX-Push'] = reverse('project-detail', args=(project.id,)) + querystring
+
+        return response
     else:
         return render(request, 'inventory/project_detail.html', context)
 
