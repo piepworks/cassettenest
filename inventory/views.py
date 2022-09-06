@@ -1112,27 +1112,13 @@ def project_detail(request, pk):
         status=status_number('loaded'),
     )
     for roll in loaded_roll_list:
-        camera_or_back = {}
-
-        if roll.camera_back:
-            camera_or_back = roll.camera_back
-        else:
-            camera_or_back = roll.camera
-
-        loaded.append(camera_or_back)
+        loaded.append(roll)
 
     loaded_outside_project = []
     for camera in project.cameras.all():
         for roll in camera.roll_set.all():
             if roll.status == status_number('loaded') and roll.project != project:
-                camera_or_back = {}
-
-                if roll.camera_back:
-                    camera_or_back = roll.camera_back
-                else:
-                    camera_or_back = roll.camera
-
-                loaded_outside_project.append(camera_or_back)
+                loaded_outside_project.append(roll)
 
     # Unused rolls already in this project
     total_film_count = Film.objects.filter(
@@ -1187,15 +1173,21 @@ def project_detail(request, pk):
         [
             {
                 'name': 'Loaded',
+                'count': len(loaded),
                 'rows': loaded,
+                'action': 'roll',
             },
             {
                 'name': 'Ready to load',
+                'count': len(ready_to_load),
                 'rows': ready_to_load,
+                'action': 'load'
             },
             {
                 'name': 'Loaded outside of project',
+                'count': len(loaded_outside_project),
                 'rows': loaded_outside_project,
+                'action': 'roll',
             }
         ]
     )

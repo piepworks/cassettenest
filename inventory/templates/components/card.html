@@ -1,5 +1,6 @@
 {% load capture_tags %}
 {% capture as action_url silent %}
+{% spaceless %}
 {% if items.current_tab_action == 'load' %}
     {% if item.camera %}
         {# This is a camera back. #}
@@ -10,10 +11,15 @@
 {% else %}
     {{ item.get_absolute_url }}
 {% endif %}
+{% endspaceless %}
+{% endcapture %}
+
+{% capture as querystring silent %}
+{% if project and items.current_tab_action == 'load' %}?project={{ project.id }}{% endif %}
 {% endcapture %}
 <li>
     <a
-        href="{{ action_url }}"
+        href="{{ action_url }}{{ querystring }}"
         class="folded hover:unfolded md:unfolded md:hover:folded flex justify-between hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors no-underline hover:no-underline p-4 sm:px-6">
         <div>
             <div class="flex items-center font-medium text-sm text-stone-900 dark:text-white truncate">
