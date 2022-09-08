@@ -103,6 +103,7 @@ def index(request):
                 'name': 'Unavailable',
                 'count': cameras_unavailable.count(),
                 'rows': cameras_unavailable,
+                'action': 'load',
             },
         ],
         reverse('camera-add'),
