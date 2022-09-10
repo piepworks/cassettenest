@@ -1,10 +1,19 @@
 <form method="get">
     <div class="field">
         <label for="id_project_filter">Project filter: {{ current_project.name|default:'inactive' }}</label>
-        <button id="id_project_filter" class="toggle-button"
-            _="on click halt the event then toggle .hidden on .project-filter
-               if my innerHTML is 'Show' put 'Hide' into me
-               else put 'Show' into me">Show</button>
+        <div class="hidden">
+            <button
+                id="id_project_filter"
+                type="button"
+                class="hidden"
+                    _="on load remove .hidden from the closest parent <div/>
+                       then add .inline-block to the closest parent <div/>
+                       on click toggle .hidden on .project-filter
+                       if my innerHTML is 'Show' put 'Hide' into me
+                       else put 'Show' into me">
+                Show
+            </button>
+        </div>
     </div>
 
     <div class="project-filter" _="on load add .hidden">

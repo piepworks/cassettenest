@@ -160,6 +160,7 @@
 
     button,
     input[type='submit'],
+    [type='button'],
     .button {
       touch-action: manipulation;
 
