@@ -17,10 +17,26 @@
 {% capture as querystring silent %}
 {% if project and items.current_tab_action == 'load' %}?project={{ project.id }}{% endif %}
 {% endcapture %}
-<li>
+<li class="flex items-center hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors">
+    {% if project and not item.camera_back and item|model_name != 'CameraBack' %}
+    {% capture as remove_text silent %}{% if item|model_name == 'Camera' %}{{ item }}{% else %}{{ item.camera }}{% endif %}{% endcapture %}
+    <form onsubmit="return confirmRemove('{{ remove_text }} from {{ project.name }}')" class="print:hidden ml-5" action="{% url 'project-camera-update' project.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="camera" value="{% if item|model_name == 'Camera' %}{{ item.id }}{% else %}{{ item.camera.id }}{% endif %}">
+        <input type="hidden" name="action" value="remove">
+        <button class="destructive">Remove</button>
+    </form>
+    {% elif project %}
+    <form onsubmit="return confirmRemove('{{ item.camera }} and all its backs from {{ project.name }}')" class="print:hidden ml-5" action="{% url 'project-camera-update' project.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="camera" value="{{ item.camera.id }}">
+        <input type="hidden" name="action" value="remove">
+        <button class="destructive">Remove</button>
+    </form>
+    {% endif %}
     <a
         href="{{ action_url }}{{ querystring }}"
-        class="folded hover:unfolded md:unfolded md:hover:folded flex justify-between hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors no-underline hover:no-underline p-4 sm:px-6">
+        class="folded hover:unfolded md:unfolded md:hover:folded flex flex-grow items-center justify-between no-underline hover:no-underline p-4 sm:px-6">
         <div>
             <div class="flex items-center font-medium text-sm text-stone-900 dark:text-white truncate">
                 {% if items.current_tab_action == 'roll' %}
