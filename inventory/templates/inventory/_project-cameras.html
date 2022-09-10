@@ -4,9 +4,7 @@
         <li><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></li>
         {% endfor %}
     </ul>
-
 {% else %}
-
 <div id="cameras_section">
     {% include 'components/section.html' with items=cameras %}
 </div>
