@@ -529,18 +529,22 @@
 
   .logbook {
     table {
-      thead {
-        th {
-          @apply
-            px-6
-            py-3
-            text-left
-            text-xs
-            font-medium
-            text-stone-500
-            uppercase
-            tracking-wider;
-        }
+      @apply
+        min-w-full
+        divide-y
+        divide-stone-200
+        dark:divide-stone-600;
+
+      thead th {
+        @apply
+          px-6
+          py-3
+          text-left
+          text-xs
+          font-medium
+          text-stone-500
+          uppercase
+          tracking-wider;
       }
 
       tbody {

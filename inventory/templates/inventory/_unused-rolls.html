@@ -1,6 +1,6 @@
 {% if not project %}
     {% if filters.format != 'all' or filters.type != 'all' %}
-        <a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'inventory' %}">Reset filter</a>
+        <a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target="#inventory-content-wrapper" href="{% url 'inventory' %}">Reset filter</a>
     {% endif %}
     <hr />
 {% endif %}
@@ -10,7 +10,7 @@
         {% if filters.format != 'all' or filters.type != 'all' %}
             {{ total_film_count.count }}
             roll{{ total_film_count.count|pluralize }} (filtered),
-            <small><a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'inventory' %}">
+            <small><a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target="#inventory-content-wrapper" href="{% url 'inventory' %}">
         {% endif %}
     {% endif %}
     {{ total_rolls }} roll{{ total_rolls|pluralize }}
@@ -23,13 +23,26 @@
     {% endif %}
 </h3>
 
-<section id="film-wrapper">
+<section id="film-wrapper" class="logbook">
     {% if film_counts %}
-        <section class="cards">
+        <table>
+            <thead>
+                <tr>
+                    <th class="text-left">Manufacturer</th>
+                    <th class="text-left">Film Stock</th>
+                    <th class="text-left">Type</th>
+                    <th class="text-left">Format</th>
+                    <th class="text-left">Count</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for film in film_counts %}
-                {% include 'inventory/_card.html' with name=film location=film.get_absolute_url slot='count' count=film.count type='film' film_type=film.type querystring='project' %}
+                <tr>
+                    {% include 'components/film.html' %}
+                </tr>
             {% endfor %}
-        </section>
+            </tbody>
+        </table>
     {% else %}
         <p>No rolls matching the current filter.</p>
     {% endif %}
