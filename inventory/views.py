@@ -32,6 +32,7 @@ from .forms import (
     ReadyForm,
     RegisterForm,
     RollForm,
+    StepperForm,
     StockForm,
     UserForm,
     UploadCSVForm,
@@ -1200,6 +1201,7 @@ def project_detail(request, pk):
         'page_obj': page_obj,
         'pagination_querystring': pagination_querystring,
         'sectiontab_querystring': sectiontab_querystring,
+        'stepper_form': StepperForm,
     }
 
     if request.htmx:

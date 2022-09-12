@@ -15,7 +15,7 @@
                 </optgroup>
                 {% endfor %}
             </select>
-            <input type="number" min="1" name="quantity" value="1" required />
+            {% include 'components/form-stepper-field.html' with field=stepper_form.quantity %}
         </fieldset>
     </div>
     <div class="action"><input type="submit" value="Add to project" /></div>
