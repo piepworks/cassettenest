@@ -15,6 +15,21 @@
 {% endblock %}
 
 {% block content %}
+<dl class="stats">
+    {% if roll_logbook %}
+    <div>
+        <dt>Roll{{ roll_logbook.count|pluralize}} Used</dt>
+        <dd>{{ roll_logbook.count }}</dd>
+    </div>
+    {% endif %}
+    {% if film_counts %}
+    <div>
+        <dt>Roll{{ total_rolls|pluralize }} Remaining</dt>
+        <dd>{{ total_rolls }}</dd>
+    </div>
+    {% endif %}
+</dl>
+
 <div class="metadata">
     <div>
         <dl>
@@ -37,7 +52,7 @@
 {% if film_counts %}
     {% include 'inventory/_unused-rolls.html' %}
 {% elif project.status != 'archived' %}
-    <h2>Film remaining: 0 rolls</h2>
+    <h3>Film remaining: 0 rolls</h3>
 {% endif %}
 
 <div class="print:hidden">
