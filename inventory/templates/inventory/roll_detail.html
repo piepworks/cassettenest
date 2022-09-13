@@ -213,8 +213,6 @@
         </tbody>
     </table>
 </div>
-{% endif %}
-
 {% if roll.status != '01_storage' %}
 <div class="action">
     <div class="notes">
@@ -226,6 +224,7 @@
     </div>
     <p><a class="button" href="{% url 'roll-journal-add' roll.id %}">Add a new journal entry</a></p>
 </div>
+{% endif %}
 {% endif %}
 
 {% endblock %}
