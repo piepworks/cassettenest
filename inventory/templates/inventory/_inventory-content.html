@@ -3,25 +3,24 @@
 
     <p><a href="{% url 'stocks' %}">View all Film Stocks</a> <small><a href="https://cassettenest.com/docs/stocks">(What is this?)</a></small></p>
 
-    <hr />
-
-    <p><a href="{% url 'rolls-add' %}">Add rolls to storage.</a></p>
-    <p><a href="{% url 'roll-add' %}">Add a roll to a non-storage status.</a></p>
+    <div class="flex flex-wrap gap-3 my-3">
+        <a class="button primary" href="{% url 'rolls-add' %}">Add rolls to storage</a>
+        <a class="button" href="{% url 'roll-add' %}">Add a roll to your logbook</a>
+    </div>
 
     {% if total_rolls %}
-    <hr />
-
     <form
         id="film_filter"
         method="get"
         hx-get="{% url 'inventory' %}"
         hx-trigger="change"
         hx-indicator="#spinner"
-        hx-target="#inventory-content-wrapper">
+        hx-target="#inventory-content-wrapper"
+        class="mb-10">
         <div class="field--filter">
-            <div class="inner">
+            <div class="flex flex-col gap-3">
                 <label for="id_format">
-                    Format:
+                    <div class="mb-2">Format:</div>
                     <select name="format" id="id_format">
                         <option value="all">All formats</option>
                         {% for format in format_counts %}
@@ -32,7 +31,7 @@
                     </select>
                 </label>
                 <label for="id_type">
-                    Type:
+                    <div class="mb-2">Type:</div>
                     <select name="type" id="id_type">
                         <option value="all">All types</option>
                         {% for type in type_counts %}
@@ -46,7 +45,7 @@
                     </select>
                 </label>
             </div>
-            <button class="no-js">Filter</button>
+            <button class="block mt-6 no-js">Filter</button>
         </div>
     </form>
 

@@ -1,16 +1,9 @@
-{% if not project %}
-    {% if filters.format != 'all' or filters.type != 'all' %}
-        <a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target="#inventory-content-wrapper" href="{% url 'inventory' %}">Reset filter</a>
-    {% endif %}
-    <hr />
-{% endif %}
-
 <h3 id="film-summary">
     {% if not project %}
         {% if filters.format != 'all' or filters.type != 'all' %}
             {{ total_film_count.count }}
             roll{{ total_film_count.count|pluralize }} (filtered),
-            <small><a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target="#inventory-content-wrapper" href="{% url 'inventory' %}">
+            <small>
         {% endif %}
     {% endif %}
     {{ total_rolls }} roll{{ total_rolls|pluralize }}
@@ -18,7 +11,7 @@
         remaining
     {% else %}
         {% if filters.format != 'all' or filters.type != 'all' %}
-            total</a></small>
+            total <a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target="#inventory-content-wrapper" href="{% url 'inventory' %}">(reset filters)</a></small>
         {% endif %}
     {% endif %}
 </h3>
