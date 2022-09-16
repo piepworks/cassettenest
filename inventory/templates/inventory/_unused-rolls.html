@@ -18,24 +18,28 @@
 
 <section id="film-wrapper" class="logbook">
     {% if film_counts %}
-        <table>
-            <thead>
-                <tr>
-                    <th class="text-left">Manufacturer</th>
-                    <th class="text-left">Film Stock</th>
-                    <th class="text-left">Type</th>
-                    <th class="text-left">Format</th>
-                    <th class="text-left">Count</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for film in film_counts %}
-                <tr>
-                    {% include 'components/film.html' %}
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-left">Manufacturer</th>
+                            <th class="text-left">Film Stock</th>
+                            <th class="text-left">Type</th>
+                            <th class="text-left">Format</th>
+                            <th class="text-left">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for film in film_counts %}
+                        <tr>
+                            {% include 'components/film.html' %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% else %}
         <p>No rolls matching the current filter.</p>
     {% endif %}
