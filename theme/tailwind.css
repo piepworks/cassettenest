@@ -343,6 +343,8 @@
           md:space-y-4
           md:mx-1
           md:mt-8;
+
+        &.secondary { @apply md:mt-14; }
       }
 
       li {
