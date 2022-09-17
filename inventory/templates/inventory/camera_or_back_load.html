@@ -19,7 +19,9 @@
 
 {% block content %}
 {% if camera_or_back.status != 'loaded' %}
-    <h2>Pick a film to load: {% if camera_or_back.format %}<small>(Format: {{ camera_or_back.get_format_display }})</small>{% endif %}</h2>
+    {% if camera_or_back.format %}
+    <h2 class="text-xl">Format: {{ camera_or_back.get_format_display }}</h2>
+    {% endif %}
 
     {% if projects %}
         {% include 'inventory/_form-project.html' %}

@@ -1,24 +1,9 @@
 <form method="get">
-    <div class="field">
-        <label for="id_project_filter">Project filter: {{ current_project.name|default:'inactive' }}</label>
-        <div class="hidden">
-            <button
-                id="id_project_filter"
-                type="button"
-                class="hidden"
-                    _="on load remove .hidden from the closest parent <div/>
-                       then add .inline-block to the closest parent <div/>
-                       on click toggle .hidden on .project-filter
-                       if my innerHTML is 'Show' put 'Hide' into me
-                       else put 'Show' into me">
-                Show
-            </button>
-        </div>
-    </div>
-
-    <div class="project-filter" _="on load add .hidden">
-        <div class="field">
-            <label for="id_project">Filter by Project</label>
+    <details class="open:bg-stone-200 open:dark:bg-stone-700 p-4 pt-2 -m-4 -mt-2">
+        <summary class="cursor-pointer text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300">
+            Project filter: {{ current_project.name|default:'All available rolls' }}
+        </summary>
+        <div class="flex gap-3 mt-3">
             <select name="project" id="id_project">
                 <option value="0">All available rolls</option>
                 {% for project in projects %}
@@ -27,10 +12,7 @@
                 </option>
                 {% endfor %}
             </select>
-        </div>
-
-        <div class="action">
             <button>Filter</button>
         </div>
-    </div>
+    </details>
 </form>
