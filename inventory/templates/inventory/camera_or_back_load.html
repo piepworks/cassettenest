@@ -4,34 +4,34 @@
 
 {% block bodytag %}class="camera-load"{% endblock %}
 
-{% block content %}
-<div class="raw">
-    <div class="c-heading">
-        <div class="flex">
-            <h1>Load <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>{% if camera_back %}, <a href="{% url 'camera-back-detail' camera.id camera_back.id %}">Back “{{ camera_back.name }}”</a> {% endif %}</h1>
-            {% if camera_back %}
-                {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True %}
-            {% else %}
-                {% include 'inventory/_heading-buttons.html' with item=camera url='camera' url='camera' name='camera' prevent_delete=True %}
-            {% endif %}
-        </div>
+{% block header %}
+<div class="page-heading">
+    <div class="inner">
+        <h1>Load <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>{% if camera_back %}, <a href="{% url 'camera-back-detail' camera.id camera_back.id %}">Back “{{ camera_back.name }}”</a> {% endif %}</h1>
     </div>
-
-    {% if camera_or_back.status != 'loaded' %}
-        <h2>Pick a film to load: {% if camera_or_back.format %}<small>(Format: {{ camera_or_back.get_format_display }})</small>{% endif %}</h2>
-
-        {% if projects %}
-            {% include 'inventory/_form-project.html' %}
-        {% endif %}
-
-        {% if film_counts %}
-            {% include 'inventory/_form-load-camera.html' %}
-        {% else %}
-            <p>No film to load. <a href="{% url 'rolls-add' %}">Add some!</a></p>
-        {% endif %}
-
+    {% if camera_back %}
+        {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True %}
     {% else %}
-        <p><a href="{% url 'camera-detail' camera.id %}">This camera</a> is already loaded.</p>
+        {% include 'inventory/_heading-buttons.html' with item=camera url='camera' url='camera' name='camera' prevent_delete=True %}
     {% endif %}
 </div>
+{% endblock %}
+
+{% block content %}
+{% if camera_or_back.status != 'loaded' %}
+    <h2>Pick a film to load: {% if camera_or_back.format %}<small>(Format: {{ camera_or_back.get_format_display }})</small>{% endif %}</h2>
+
+    {% if projects %}
+        {% include 'inventory/_form-project.html' %}
+    {% endif %}
+
+    {% if film_counts %}
+        {% include 'inventory/_form-load-camera.html' %}
+    {% else %}
+        <p>No film to load. <a href="{% url 'rolls-add' %}">Add some!</a></p>
+    {% endif %}
+
+{% else %}
+    <p><a href="{% url 'camera-detail' camera.id %}">This camera</a> is already loaded.</p>
+{% endif %}
 {% endblock %}
