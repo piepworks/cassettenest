@@ -344,17 +344,7 @@
           md:mx-1
           md:mt-8;
 
-        &.secondary {
-          @apply
-            md:mt-14
-            md:px-0
-            md:-mx-1;
-
-          a,
-          .current { @apply md:py-1; }
-
-          span { @apply md:inline; }
-        }
+        &.secondary { @apply md:mt-14; }
       }
 
       li {
