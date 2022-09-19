@@ -66,20 +66,20 @@
     </ul>
 
     <ul class="secondary mt-10 px-2 space-y-1">
-        <li{% if request.path == settings_url %} class="current"{% endif %}>
+        <li{% if request.path == settings_url %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Settings"{% endif %}>
             {% if request.path != settings_url %}
                 <a href="{{ settings_url }}">
-                    {% include 'svg/heroicons/cog-6-tooth.svg' %}
+                    {% include 'svg/heroicons/adjustments-horizontal.svg' %}
                     <span>Settings</span>
                 </a>
             {% else %}
-                {% include 'svg/heroicons/cog-6-tooth.svg' %}
+                {% include 'svg/heroicons/adjustments-horizontal.svg' %}
                 <span>Settings</span>
             {% endif %}
         </li>
-        <li>
+        <li{% if request.session.sidebar == 'closed' %} title="Log out"{% endif %}>
             <a href="{% url 'logout' %}">
-                {% include 'svg/heroicons/power.svg' %}
+                {% include 'svg/heroicons/hand.svg' %}
                 <span>Log out</span>
             </a>
         </li>
