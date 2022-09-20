@@ -10,23 +10,23 @@
                             <th scope="col" class="print:hidden">
                                 <input id="select-all-rolls" class="hidden"
                                     _="on load
-                                           remove .hidden from me
-                                           send updateCount(count: .roll-checkbox.checked.length) to me
+                                         remove .hidden from me
+                                         send updateCount(count: length of <.roll-checkbox:checked/>) to me
 
                                        on change
-                                       if my.checked is true
-                                           set .roll-checkbox.checked to true
-                                       else
-                                           set .roll-checkbox.checked to false
-                                       end
+                                         if my.checked is true
+                                             set .roll-checkbox.checked to true
+                                         else
+                                             set .roll-checkbox.checked to false
+                                         end
 
-                                       send updateCount(count: .roll-checkbox.checked.length) to #update-count
-                                       send updateCount(count: .roll-checkbox.checked.length) to #update-count-placeholder
+                                         send updateCount(count: length of <.roll-checkbox:checked/>) to #update-count
+                                         send updateCount(count: length of <.roll-checkbox:checked/>) to #update-count-placeholder
 
                                        on updateCount(count)
-                                       if count < .roll-checkbox.length
+                                         if count < length of <.roll-checkbox/>
                                            set my.checked to false
-                                       else
+                                         else
                                            set my.checked to true"
                                     class="select-all" type="checkbox" title="Select or deselect all items">
                             </th>
@@ -51,9 +51,9 @@
                             <td class="print:hidden">
                                 <input
                                     _="on change
-                                       send updateCount(count: .roll-checkbox.checked.length) to #update-count
-                                       send updateCount(count: .roll-checkbox.checked.length) to #update-count-placeholder
-                                       send updateCount(count: .roll-checkbox.checked.length) to #select-all-rolls"
+                                       send updateCount(count: length of <.roll-checkbox:checked/>) to #update-count
+                                       send updateCount(count: length of <.roll-checkbox:checked/>) to #update-count-placeholder
+                                       send updateCount(count: length of <.roll-checkbox:checked/>) to #select-all-rolls"
                                     type="checkbox" class="roll-checkbox" value="{{ roll.id }}" name="roll">
                             </td>
                             {% endif %}

@@ -1,28 +1,27 @@
 <div class="action">
     <button id="update-count-placeholder" class="hidden"
         _="on load
-               remove .hidden from me
-               send updateCount(count: .roll-checkbox.checked.length) to me
+             remove .hidden from me
+             send updateCount(count: length of <.roll-checkbox:checked/>) to me
 
            on updateCount(count)
-               if count > 0
-                   add .hidden to me
-               else
-                   remove .hidden from me"
+             if count > 0
+               add .hidden to me
+             else
+               remove .hidden from me"
         disabled>Select rolls to update</button>
     <button id="update-count"
         _="on load
-               add .hidden to me
-               send updateCount(count: .roll-checkbox.checked.length) to me
+             add .hidden to me
+             send updateCount(count: length of <.roll-checkbox:checked/>) to me
 
            on updateCount(count)
-               if count is 1 set plural to 'roll' else set plural to 'rolls' end
-               if count > 0
-                   remove .hidden from me
-
-                   put `Update ${count} selected ${plural}` into me
-               else
-                   add .hidden to me">
+             if count is 1 set plural to 'roll' else set plural to 'rolls' end
+             if count > 0
+               remove .hidden from me
+               put `Update ${count} selected ${plural}` into me
+             else
+               add .hidden to me">
         Update selected
     </button>
 </div>
