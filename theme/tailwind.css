@@ -934,6 +934,17 @@
     form { @apply space-y-0; }
   }
 
+  .field {
+    @apply
+      sm:grid
+      sm:grid-cols-3
+      sm:items-start
+      sm:gap-4
+      sm:border-b
+      sm:border-stone-600
+      sm:pb-5;
+  }
+
   .progressive-field-wrapper { @apply space-y-6; }
 }
 
