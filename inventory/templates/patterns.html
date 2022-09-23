@@ -19,19 +19,20 @@
 
 <section id="section-form-fields">
     <h2><a href="#section-form-fields">Form Fields</a></h2>
-    {% for field in form %}
-        {% include 'components/form-field.html' with field=field %}
-    {% endfor %}
-
-    <div class="field">
-        <fieldset>
-            <legend>Fieldset & Legend</legend>
-            <div class="space-y-2">
-                {{ form.choice }}
-                {{ form.number }}
-            </div>
-        </fieldset>
-    </div>
+    <form>
+        {% for field in form %}
+            {% include 'components/form-field.html' with field=field %}
+        {% endfor %}
+        <div>
+            <fieldset>
+                <legend>Fieldset & Legend</legend>
+                <div class="space-y-2">
+                    {{ form.choice }}
+                    {{ form.number }}
+                </div>
+            </fieldset>
+        </div>
+    </form>
 </section>
 
 <section id="section-buttons">

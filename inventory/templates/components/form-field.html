@@ -5,12 +5,7 @@
     {{ field }}
 {% else %}
 <div
-    class="field {% if not field.field.widget.input_type %} field--textarea
-        {% else %} field--{{ field.field.widget.input_type }}{% endif %}
-        {% if progressive %} field--progressive
-            {% if primary %} field--progressive-primary{% endif %}
-        {% endif %}
-        {% if top_field %} field--progressive__top{% endif %}"
+    class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-b sm:last:border-b-0 sm:border-stone-600 sm:pb-5"
     {% if progressive_text %} data-progressive-text="{{ progressive_text }}"{% endif %}
     {% if label_override %} data-label-override="{{ label_override }}"{% endif %}
     data-label="{{ field.field.label }}"
@@ -57,9 +52,6 @@
         </fieldset>
     {% else %}
         <label class="block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} _="on load set my innerHTML to '{{ label_override }}'"{% endif %}">{{ field.label }}</label>
-        {% if not field.field.widget.input_type %}
-            {% include 'components/form-markdown-toolbar.html' with id=field.id_for_label %}
-        {% endif %}
         {% if enhanced_label.before %}
             <span class="subdued"{% if enhanced_label.before_tooltip %} title="{{ enhanced_label.before_tooltip }}"{% endif %}>{{ enhanced_label.before }}</span>
         {% endif %}
@@ -70,8 +62,9 @@
             _:on keyup[key is 'Enter'] js(me) checkAutocomplete(me)
         {% endcapture %}
 
-        <div class="mt-1">
+        <div class="col-span-2">
             {% if not field.field.widget.input_type %}
+                {% include 'components/form-markdown-toolbar.html' with id=field.id_for_label %}
                 {# Set autocomplete on Markdown textareas. #}
                 {% render_field field|attr:textarea_hyperscript x-ref=xref  %}
             {% else %}
@@ -81,14 +74,14 @@
                     {% render_field field x-ref=xref %}
                 {% endif %}
             {% endif %}
-        </div>
-        {% if field.help_text and field.label != 'Username' %}
-            <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
-        {% endif %}
+            {% if field.help_text and field.label != 'Username' %}
+                <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
+            {% endif %}
 
-        {% if enhanced_label.after %}
-            <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
-        {% endif %}
+            {% if enhanced_label.after %}
+                <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
+            {% endif %}
+        </div>
     {% endif %}
     {% if progressive %}
         <div class="js-required">
