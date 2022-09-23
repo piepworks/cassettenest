@@ -49,7 +49,7 @@
             </div>
         </fieldset>
     {% else %}
-        <label class="block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} _="on load set my innerHTML to '{{ label_override }}'"{% endif %}">{{ field.label }}</label>
+        <label class="mb-2 sm:mb-0 block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} _="on load set my innerHTML to '{{ label_override }}'"{% endif %}">{{ field.label }}</label>
         {% if enhanced_label.before %}
             <span class="subdued"{% if enhanced_label.before_tooltip %} title="{{ enhanced_label.before_tooltip }}"{% endif %}>{{ enhanced_label.before }}</span>
         {% endif %}
@@ -82,7 +82,7 @@
         </div>
     {% endif %}
     {% if progressive %}
-        <div class="js-required">
+        <div class="js-required mt-2 sm:mt-0">
             <button
                 class="link"
                 type="button"
