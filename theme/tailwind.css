@@ -933,6 +933,8 @@
   .section-tabbed {
     form { @apply space-y-0; }
   }
+
+  .progressive-field-wrapper { @apply space-y-6; }
 }
 
 @layer utilities {

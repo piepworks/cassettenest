@@ -1,17 +1,15 @@
-{% load widget_tweaks %}
-{% load capture_tags %}
+{% load widget_tweaks capture_tags %}
 
 {% if field.field.widget.input_type == 'hidden' %}
     {{ field }}
 {% else %}
-<div
-    class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-b sm:last:border-b-0 sm:border-stone-600 sm:pb-5"
+<div class="field sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:border-b sm:border-stone-600 sm:pb-5{% if not field.field.widget.input_type %} field--textarea{% else %} field--{{ field.field.widget.input_type }}{% endif %}{% if progressive %} field--progressive {% if primary %} field--progressive-primary{% endif %}{% endif %}{% if top_field %} field--progressive__top{% endif %}"
     {% if progressive_text %} data-progressive-text="{{ progressive_text }}"{% endif %}
-    {% if label_override %} data-label-override="{{ label_override }}"{% endif %}
+    {% if label_oveqrride %} data-label-override="{{ label_override }}"{% endif %}
     data-label="{{ field.field.label }}"
     {% if progressive and not primary %}
-        {% if not show_first %} _="on load add .hidden to me"{% endif %}
-    {% endif %}">
+        {% if not show_first %} _="on load add .hidden remove .sm:grid from me"{% endif %}
+    {% endif %}>
     {% if field.field.widget.input_type == 'checkbox' %}
         {% if field|length > 1 %}
             <fieldset>
@@ -95,7 +93,9 @@
                        with wrapping
 
                    toggle .hidden on nextField
+                   toggle .sm:grid on nextField
                    toggle .hidden on thisField
+                   toggle .sm:grid on thisField
 
                    set nextInput to the first <[x-ref]/> in nextField
                    call nextInput.focus()">
