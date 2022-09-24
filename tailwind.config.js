@@ -5,6 +5,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        gold: {
+          light: '#f5d327',
+          DEFAULT: '#f3ba4c',
+        }
+      },
       screens: {
         'tall': { 'raw': '(min-height: 450px)' }
       }
