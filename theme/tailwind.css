@@ -963,6 +963,18 @@
       items-center
       gap-3;
   }
+
+  #subscription {
+    @apply
+      space-y-4
+      p-6
+      bg-stone-200
+      dark:bg-stone-700
+      rounded-lg
+      my-6;
+
+    h3 { @apply mb-0 pb-0; }
+  }
 }
 
 @layer utilities {

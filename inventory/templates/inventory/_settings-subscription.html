@@ -1,20 +1,20 @@
 <div id="subscription" class="subscription-settings">
-    <h2>Manage your subscription</h2>
+    <h2 class="text-xl mb-0 pb-0 font-bold">Manage your subscription</h2>
     {% if user.is_staff or user.profile.friend %}
         <p>You’re a friend of Trey Labs and you don’t need to subscribe! 🖤</p>
         <p class="subscription-note">Thank you for your help in creating Cassette Nest!</p>
     {% else %}
-        <div class="js-required">
+        <div class="js-required space-y-4">
             {% if not user.profile.has_active_subscription %}
-                <h3>You’re not currently subscribed. Please choose a plan.</h3>
+                <h3 class="border-b-0 mb-2">You’re not currently subscribed. Please choose a plan.</h3>
 
                 {% if trial.enabled %}
                     <p>Try it free for <strong>{{ trial.duration }} days!</strong></p>
                 {% endif %}
 
-                <p class="policies">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
-
                 {% include 'inventory/_settings-subscription-plans.html' %}
+
+                <p class="policies text-sm text-stone-500 dark:text-stone-400">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
             {% else %}
                 <p>You’re currently subscribed to the <b>{{ paddle.plan_name }}</b> plan.</p>
 
@@ -25,7 +25,7 @@
                 {% if user.profile.subscription_status == 'deleted' and user.profile.paddle_cancellation_date %}
                     <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ user.profile.paddle_cancellation_date }}</b>.</p>
 
-                    <hr />
+                    <hr>
 
                     <h3>Restore your subscription</h3>
 
@@ -38,6 +38,12 @@
         <div class="no-js">
             <p>Sorry, subscription management requires JavaScript to work. :(</p>
         </div>
-        <p class="subscription-note">Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
+        <div class="pt-4 flex gap-2 sm:gap-3 sm:items-center text-sm text-stone-500 dark:text-stone-400">
+            {% include 'svg/heroicons/shield-check.svg' with class='h-9 w-9 text-stone-400 dark:text-stone-500 flex-shrink-0' %}
+            <div class="space-y-2 sm:space-y-0">
+                <p>Easy and secure billing management with <a href="https://paddle.com" target="_blank" rel="noopener">Paddle</a>. Cancel any time.</p>
+                <p>Depending on your location, tax may be added to the price.</p>
+            </div>
+        </div>
     {% endif %}
 </div>

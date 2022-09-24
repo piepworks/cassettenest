@@ -12,7 +12,7 @@
     {% include 'inventory/_settings-subscription.html' %}
     {% endflag %}
 
-    <form method="post">
+    <form method="post" class="pt-3">
         {% csrf_token %}
         {% for field in user_form %}
             {% include 'components/form-field.html' with field=field %}
