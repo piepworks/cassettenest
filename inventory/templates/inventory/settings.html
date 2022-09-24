@@ -20,7 +20,7 @@
         {% for field in profile_form %}
             {% include 'components/form-field.html' with field=field %}
         {% endfor %}
-        <div class="action"><input type="submit" value="Save settings" /></div>
+        <div class="action"><button class="primary">Save settings</button></div>
     </form>
     <p><a href="{% url 'password_change' %}">Change your password</a></p>
 
