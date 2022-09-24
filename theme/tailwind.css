@@ -943,7 +943,8 @@
       sm:items-start
       sm:gap-4
       sm:border-b
-      sm:border-stone-600
+      sm:border-stone-300
+      sm:dark:border-stone-600
       sm:pb-5;
   }
 
