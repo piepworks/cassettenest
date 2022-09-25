@@ -38,7 +38,7 @@
                     <li>
                         <div class="flex w-0 flex-1 items-center">
                             {% include 'svg/heroicons/paper-clip.svg' with class='h-5 w-5 flex-shrink-0 text-stone-400 dark:text-stone-500' %}
-                            <span class="ml-2 w-0 flex-1 truncate">Your {{ k }}</span>
+                            <span class="ml-2 w-0 flex-1 truncate">Your {% if k == 'camera-backs' %}camera backs{% else %}{{ k }}{% endif %}</span>
                         </div>
                         <div class="ml-4 flex-shrink-0">
                             <a href="{% url 'export-'|add:k %}">Download</a>
