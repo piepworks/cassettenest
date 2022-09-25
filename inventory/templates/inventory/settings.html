@@ -30,22 +30,30 @@
 
     {% flag 'export-data' %}
     {% if exportable_data %}
-    <hr />
-
-    <h2 id="export">Export your data</h2>
-    <ul>
-        {% for k, v in exportable.items %}
-            {% if v %}
-                <li><a href="{% url 'export-'|add:k %}">Download your {{ k }} data.</a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+    <dl id="export" class="text-sm font-medium">
+        <dt>Export your data</dt>
+        <dd class="mt-2">
+            <ul class="divide-y divide-stone-300 dark:divide-stone-600 rounded-md border border-stone-300 dark:border-stone-600">
+                {% for k, v in exportable.items %}
+                    {% if v %}
+                        <li class="flex items-center justify-between py-3 pl-3 pr-4">
+                            <div class="flex w-0 flex-1 items-center">
+                                {% include 'svg/heroicons/paper-clip.svg' with class='h-5 w-5 flex-shrink-0 text-stone-400 dark:text-stone-500' %}
+                                <span class="ml-2 w-0 flex-1 truncate">Your {{ k }}</span>
+                            </div>
+                            <div class="ml-4 flex-shrink-0">
+                                <a href="{% url 'export-'|add:k %}">Download</a>
+                            </div>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </dd>
+    </dl>
     {% endif %}
     {% endflag %}
 
     {% flag 'import-data' %}
-    <hr />
-
     <h2 id="import">Import previously exported data</h2>
     <ul>
         {% for import in imports %}
