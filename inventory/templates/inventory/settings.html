@@ -12,7 +12,7 @@
     {% include 'inventory/_settings-subscription.html' %}
     {% endflag %}
 
-    <form method="post" class="pt-3">
+    <form method="post" class="pt-3 pb-20">
         {% csrf_token %}
         {% for field in user_form %}
             {% include 'components/form-field.html' with field=field %}
@@ -20,9 +20,13 @@
         {% for field in profile_form %}
             {% include 'components/form-field.html' with field=field %}
         {% endfor %}
+        <div class="field">
+            <label>Password</label>
+            <div><a href="{% url 'password_change' %}">Change your password</a></div>
+        </div>
         <div class="action"><button class="primary">Save settings</button></div>
     </form>
-    <p><a href="{% url 'password_change' %}">Change your password</a></p>
+
 
     {% flag 'export-data' %}
     {% if exportable_data %}
