@@ -77,6 +77,14 @@
                 <span>Settings</span>
             {% endif %}
         </li>
+        {% if user.is_superuser %}
+        <li{% if request.session.sidebar == 'closed' %} title="Admin"{% endif %}>
+            <a href="{% url 'admin:index' %}">
+                {% include 'svg/heroicons/bolt.svg' with class='admin' %}
+                <span class="text-gold">Admin</span>
+            </a>
+        </li>
+        {% endif %}
         <li{% if request.session.sidebar == 'closed' %} title="Log out"{% endif %}>
             <a href="{% url 'logout' %}">
                 {% include 'svg/heroicons/hand.svg' %}

@@ -299,6 +299,8 @@
         w-8
         md:h-6
         md:w-6;
+
+      &.admin { @apply text-gold; }
     }
 
     ul {
