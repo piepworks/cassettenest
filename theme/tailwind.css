@@ -975,6 +975,34 @@
 
     h3 { @apply mb-0 pb-0; }
   }
+
+  .data-import-export {
+    @apply
+      text-sm
+      font-medium
+      space-y-2;
+
+    ul {
+      @apply
+        divide-y
+        divide-stone-300
+        dark:divide-stone-600
+        rounded-md
+        border
+        border-stone-300
+        dark:border-stone-600;
+    }
+
+    li {
+      @apply
+        flex
+        items-center
+        justify-between
+        py-3
+        pl-3
+        pr-4;
+    }
+  }
 }
 
 @layer utilities {
