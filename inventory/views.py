@@ -245,17 +245,41 @@ def patterns(request):
         'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
     }
 
-    subscription1 = {
-        'friend': False,
-        'status': 'zippy',
+    subscription_never = {
         'active': False,
+        'trial': {'enabled': True, 'duration': 14},
+    }
+
+    subscription_monthly = {
+        'active': True,
+        'plan': paddle['standard_monthly_name'],
+        'plan_id': paddle['standard_monthly_id'],
+    }
+
+    subscription_annual = {
+        'active': True,
         'plan': paddle['standard_annual_name'],
         'plan_id': paddle['standard_annual_id'],
-        'trial': {'enabled': True, 'duration': 14},
-        'trial_days_remaining': None,
-        'cancellation_date': None,
-        'update_url': None,
-        'cancel_url': None,
+    }
+
+    subscription_friend = {
+        'friend': True,
+    }
+
+    subscription_scheduled = {
+        'active': True,
+        'status': 'deleted',
+        'plan': paddle['standard_monthly_name'],
+        'plan_id': paddle['standard_monthly_id'],
+        'cancellation_date': datetime.date.today() + datetime.timedelta(days=1),
+    }
+
+    subscription_trial = {
+        'active': True,
+        'status': 'trialing',
+        'plan': paddle['standard_monthly_name'],
+        'plan_id': paddle['standard_monthly_id'],
+        'trial_days_remaining': 2,
     }
 
     context = {
@@ -268,7 +292,12 @@ def patterns(request):
         'js_needed': True,
         'wc_needed': True,
         'paddle': paddle,
-        'subscription1': subscription1,
+        'subscription_never': subscription_never,
+        'subscription_monthly': subscription_monthly,
+        'subscription_annual': subscription_annual,
+        'subscription_friend': subscription_friend,
+        'subscription_scheduled': subscription_scheduled,
+        'subscription_trial': subscription_trial,
     }
 
     return render(request, 'patterns.html', context)
