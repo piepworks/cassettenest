@@ -202,7 +202,7 @@ class SettingsTests(TestCase):
         profile.save()
 
         response = self.client.get(reverse('settings'))
-        self.assertContains(response, 'You’re a friend of Trey Labs')
+        self.assertContains(response, 'You’re a friend of Piepworks')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
