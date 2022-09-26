@@ -254,12 +254,16 @@ def patterns(request):
         'active': True,
         'plan': paddle['standard_monthly_name'],
         'plan_id': paddle['standard_monthly_id'],
+        'update_url': 'https://example.com',
+        'cancel_url': 'https://example.com',
     }
 
     subscription_annual = {
         'active': True,
         'plan': paddle['standard_annual_name'],
         'plan_id': paddle['standard_annual_id'],
+        'update_url': 'https://example.com',
+        'cancel_url': 'https://example.com',
     }
 
     subscription_friend = {
@@ -280,6 +284,8 @@ def patterns(request):
         'plan': paddle['standard_monthly_name'],
         'plan_id': paddle['standard_monthly_id'],
         'trial_days_remaining': 2,
+        'update_url': 'https://example.com',
+        'cancel_url': 'https://example.com',
     }
 
     context = {

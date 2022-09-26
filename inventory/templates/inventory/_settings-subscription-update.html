@@ -1,11 +1,12 @@
 <div class="subscription-plans">
-    {% if subscription.update_url %}
-    <button onclick="openUpdate()" class="paddle-update">Update your payment method.</button>
-    {% endif %}
-
-    {% if subscription.cancel_url %}
-    <button onclick="openCancel()" class="secondary paddle-cancel">Cancel your subscription.</button>
-    {% endif %}
+    <div class="flex flex-wrap gap-3">
+        {% if subscription.update_url %}
+        <button onclick="openUpdate()" class="paddle-update">Update your payment method.</button>
+        {% endif %}
+        {% if subscription.cancel_url %}
+        <button onclick="openCancel()" class="destructive paddle-cancel">Cancel your subscription.</button>
+        {% endif %}
+    </div>
 
     <form onsubmit="return confirm('Are you sure?')" id="change-plan" action="{% url 'subscription-update' %}" method="post">
         {% csrf_token %}
