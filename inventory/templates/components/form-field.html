@@ -50,10 +50,6 @@
         </fieldset>
     {% else %}
         <label class="mb-2 sm:mb-0 block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} _="on load set my innerHTML to '{{ label_override }}'"{% endif %}">{{ field.label }}</label>
-        {% if enhanced_label.before %}
-            <span class="subdued"{% if enhanced_label.before_tooltip %} title="{{ enhanced_label.before_tooltip }}"{% endif %}>{{ enhanced_label.before }}</span>
-        {% endif %}
-
         {% capture as xref silent %}{{ primary|yesno:'primary,secondary' }}{% endcapture %}
 
         {% capture as textarea_hyperscript silent %}
@@ -69,15 +65,19 @@
                 {% if field.field.widget.input_type == 'number' %}
                     {% include 'components/form-stepper-field.html' %}
                 {% else %}
-                    {% render_field field x-ref=xref %}
+                    <div class="flex items-center space-x-1">
+                        {% if enhanced_label.before %}
+                            <span class="subdued"{% if enhanced_label.before_tooltip %} title="{{ enhanced_label.before_tooltip }}"{% endif %}>{{ enhanced_label.before }}</span>
+                        {% endif %}
+                        {% render_field field x-ref=xref %}
+                        {% if enhanced_label.after %}
+                            <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
+                        {% endif %}
+                    </div>
                 {% endif %}
             {% endif %}
             {% if field.help_text and field.label != 'Username' %}
                 <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
-            {% endif %}
-
-            {% if enhanced_label.after %}
-                <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
             {% endif %}
         </div>
     {% endif %}
