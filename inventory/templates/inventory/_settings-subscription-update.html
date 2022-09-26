@@ -9,7 +9,7 @@
 
     <form onsubmit="return confirm('Are you sure?')" id="change-plan" action="{% url 'subscription-update' %}" method="post">
         {% csrf_token %}
-        <div class="field field--radio">
+        <div class="field field--radio border-b-0">
             <fieldset class="col-span-3 space-y-2">
                 <legend>Change your plan</legend>
                 <div>
