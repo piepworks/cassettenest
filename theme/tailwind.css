@@ -747,7 +747,7 @@
   }
 
   .patterns {
-    h2 {
+    section > h2 {
       @apply
         text-xl
         font-bold
@@ -966,7 +966,7 @@
       gap-3;
   }
 
-  #subscription {
+  .subscription-settings {
     @apply
       space-y-4
       p-6

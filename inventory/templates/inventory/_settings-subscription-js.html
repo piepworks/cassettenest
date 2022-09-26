@@ -14,18 +14,18 @@
         });
     }
 
-    {% if user.profile.paddle_update_url %}
+    {% if subscription.update_url %}
     function openUpdate() {
         Paddle.Checkout.open({
-            override: '{{ user.profile.paddle_update_url|safe }}',
+            override: '{{ subscription.update_url|safe }}',
         });
     }
     {% endif %}
 
-    {% if user.profile.paddle_cancel_url %}
+    {% if subscription.cancel_url %}
     function openCancel() {
         Paddle.Checkout.open({
-            override: '{{ user.profile.paddle_cancel_url|safe }}',
+            override: '{{ subscription.cancel_url|safe }}',
             success: `${window.location.protocol}//${window.location.host}{% url 'settings' %}`,
         });
     }

@@ -1,13 +1,11 @@
 <div class="subscription-plans">
-    {% if user.profile.paddle_update_url %}
+    {% if subscription.update_url %}
     <button onclick="openUpdate()" class="paddle-update">Update your payment method.</button>
     {% endif %}
 
-    {% if user.profile.paddle_cancel_url %}
+    {% if subscription.cancel_url %}
     <button onclick="openCancel()" class="secondary paddle-cancel">Cancel your subscription.</button>
     {% endif %}
-
-    <hr>
 
     <form onsubmit="return confirm('Are you sure?')" id="change-plan" action="{% url 'subscription-update' %}" method="post">
         {% csrf_token %}
@@ -16,38 +14,38 @@
                 <legend>Change your plan</legend>
                 <div>
                     <label>
-                        <input _="on change send updateExplanation(plan: {{ paddle.standard_monthly_id }}) to #plan-change-explanation" type="radio" name="plan" value="{{ paddle.standard_monthly_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_monthly_id %} checked{% endif %}>
+                        <input _="on change send updateExplanation(plan: {{ paddle.standard_monthly_id }}) to (.plan-change-explanation in the closest .field)" type="radio" name="plan" value="{{ paddle.standard_monthly_id }}"{% if subscription.plan_id == paddle.standard_monthly_id %} checked{% endif %}>
                         {{ paddle.standard_monthly_name }}
                         &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span>&nbsp;per month)</small>
                     </label>
                 </div>
                 <div>
                     <label>
-                        <input _="on change send updateExplanation(plan: {{ paddle.standard_annual_id }}) to #plan-change-explanation" type="radio" name="plan" value="{{ paddle.standard_annual_id }}"{% if user.profile.paddle_subscription_plan_id == paddle.standard_annual_id %} checked{% endif %}>
+                        <input _="on change send updateExplanation(plan: {{ paddle.standard_annual_id }}) to (.plan-change-explanation in the closest .field)" type="radio" name="plan" value="{{ paddle.standard_annual_id }}"{% if subscription.plan_id == paddle.standard_annual_id %} checked{% endif %}>
                         {{ paddle.standard_annual_name }}
                         &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span>&nbsp;per year)</small>
                     </label>
                 </div>
-                <div data-plan="{{ user.profile.paddle_subscription_plan_id }}" id="plan-change-explanation" class="help"
+                <div data-plan="{{ subscription.plan_id }}" class="plan-change-explanation"
                     _="on updateExplanation(plan)
                        set existingPlan to my @data-plan
                        if plan is not existingPlan
-                           remove [@disabled] from #change-plan-button
+                           remove [@disabled] from (.change-plan-button in the closest .field)
                            if existingPlan is '{{ paddle.standard_annual_id }}'
-                               add .hidden to #change-plan-message-to-annual
-                               remove .hidden from #change-plan-message-to-monthly
+                               add .hidden to (.change-plan-message-to-annual in the closest .field)
+                               remove .hidden from (.change-plan-message-to-monthly in the closest .field)
                            else
-                               add .hidden to #change-plan-message-to-monthly
-                               remove .hidden from #change-plan-message-to-annual
+                               add .hidden to (.change-plan-message-to-monthly in the closest .field)
+                               remove .hidden from (.change-plan-message-to-annual in the closest .field)
                            end
                        else
-                           add [@disabled] to #change-plan-button
-                           add .hidden to #change-plan-message-to-monthly
-                           add .hidden to #change-plan-message-to-annual">
-                    <p class="hidden" id="change-plan-message-to-annual">If you change from <b>{{ paddle.standard_monthly_name }}</b> to <b>{{ paddle.standard_annual_name }}</b>, you will be charged immedately and your subscription will renew every year on this date. Any remaining pro-rated balance will be used towards this first payment.</p>
-                    <p class="hidden" id="change-plan-message-to-monthly">If you change from <b>{{ paddle.standard_annual_name }}</b> to <b>{{ paddle.standard_monthly_name }}</b>, your remaining pro-rated balance will be used until it runs out, at which point your subscription will renew on this day each month.</p>
+                           add [@disabled] to (.change-plan-button in the closest .field)
+                           add .hidden to (.change-plan-message-to-monthly in the closest .field)
+                           add .hidden to (.change-plan-message-to-annual in the closest .field)">
+                    <p class="hidden change-plan-message-to-annual">If you change from <b>{{ paddle.standard_monthly_name }}</b> to <b>{{ paddle.standard_annual_name }}</b>, you will be charged immedately and your subscription will renew every year on this date. Any remaining pro-rated balance will be used towards this first payment.</p>
+                    <p class="hidden change-plan-message-to-monthly">If you change from <b>{{ paddle.standard_annual_name }}</b> to <b>{{ paddle.standard_monthly_name }}</b>, your remaining pro-rated balance will be used until it runs out, at which point your subscription will renew on this day each month.</p>
                 </div>
-                <button id="change-plan-button" _="on load add [@disabled]">Change plan</button>
+                <button class="change-plan-button" _="on load add [@disabled]">Change plan</button>
             </fieldset>
         </div>
     </form>

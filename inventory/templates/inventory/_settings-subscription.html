@@ -1,31 +1,29 @@
-<div id="subscription" class="subscription-settings">
+<div class="subscription-settings">
     <h2 class="text-xl mb-0 pb-0 font-bold">Manage your subscription</h2>
-    {% if user.is_staff or user.profile.friend %}
-        <p>You’re a friend of Trey Labs and you don’t need to subscribe! 🖤</p>
+    {% if subscription.friend %}
+        <p>You’re a friend of Piepworks and you don’t need to subscribe! 🖤</p>
         <p class="subscription-note">Thank you for your help in creating Cassette Nest!</p>
     {% else %}
         <div class="js-required space-y-4">
-            {% if not user.profile.has_active_subscription %}
+            {% if not subscription.active %}
                 <h3 class="border-b-0 mb-2">You’re not currently subscribed. Please choose a plan.</h3>
 
-                {% if trial.enabled %}
-                    <p>Try it free for <strong>{{ trial.duration }} days!</strong></p>
+                {% if subscription.trial.enabled %}
+                    <p>Try it free for <strong>{{ subscription.trial.duration }} days!</strong></p>
                 {% endif %}
 
                 {% include 'inventory/_settings-subscription-plans.html' %}
 
                 <p class="policies text-sm text-stone-500 dark:text-stone-400">By subscribing, you agree to our <a href="https://cassettenest.com/policies/terms/" target="_blank" rel="noopener">Terms of Service</a> and <a href="https://cassettenest.com/policies/privacy/" target="_blank" rel="noopener">Privacy Policy</a>.</p>
             {% else %}
-                <p>You’re currently subscribed to the <b>{{ paddle.plan_name }}</b> plan.</p>
+                <p>You’re currently subscribed to the <b>{{ subscription.plan }}</b> plan.</p>
 
-                {% if user.profile.subscription_status == 'trialing' %}
-                    <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
+                {% if subscription.status == 'trialing' %}
+                    <p>Your free trial will end in <strong>{{ subscription.trial_days_remaining }} day{{ subscription.trial_days_remaining|pluralize }}</strong>.</p>
                 {% endif %}
 
-                {% if user.profile.subscription_status == 'deleted' and user.profile.paddle_cancellation_date %}
-                    <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ user.profile.paddle_cancellation_date }}</b>.</p>
-
-                    <hr>
+                {% if subscription.status == 'deleted' and subscription.cancellation_date %}
+                    <p>Your subscription is scheduled to be cancelled and will become inactive on <b>{{ subscription.cancellation_date }}</b>.</p>
 
                     <h3>Restore your subscription</h3>
 

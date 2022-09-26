@@ -236,6 +236,28 @@ def patterns(request):
         }
     }
 
+    paddle = {
+        'live_mode': dj_settings.PADDLE_LIVE_MODE,
+        'vendor_id': dj_settings.PADDLE_VENDOR_ID,
+        'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
+        'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
+        'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
+        'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
+    }
+
+    subscription1 = {
+        'friend': False,
+        'status': 'zippy',
+        'active': False,
+        'plan': paddle['standard_annual_name'],
+        'plan_id': paddle['standard_annual_id'],
+        'trial': {'enabled': True, 'duration': 14},
+        'trial_days_remaining': None,
+        'cancellation_date': None,
+        'update_url': None,
+        'cancel_url': None,
+    }
+
     context = {
         'test_rolls': test_rolls,
         'test_messages': test_messages,
@@ -245,6 +267,8 @@ def patterns(request):
         'roll3': roll3,
         'js_needed': True,
         'wc_needed': True,
+        'paddle': paddle,
+        'subscription1': subscription1,
     }
 
     return render(request, 'patterns.html', context)
@@ -302,10 +326,18 @@ def settings(request):
             'duration': dj_settings.SUBSCRIPTION_TRIAL_DURATION,
         }
 
+        plan_name = ''
         if request.user.profile.paddle_subscription_plan_id:
             plan_name = paddle_plan_name(request.user.profile.paddle_subscription_plan_id)
-        else:
-            plan_name = ''
+
+        cancellation_date = None
+        if request.user.profile.paddle_cancellation_date:
+            cancellation_date = request.user.profile.paddle_cancellation_date
+
+        try:
+            trial_days_remaining = request.user.profile.trial_days_remaining
+        except AttributeError:
+            trial_days_remaining = None
 
         paddle = {
             'live_mode': dj_settings.PADDLE_LIVE_MODE,
@@ -315,6 +347,21 @@ def settings(request):
             'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
             'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
             'plan_name': plan_name,
+        }
+
+        # All the bits about a subscription to be able to show the subscription
+        # section on this page.
+        subscription = {
+            'friend': request.user.is_staff or request.user.profile.friend,
+            'status': request.user.profile.subscription_status,
+            'active': request.user.profile.has_active_subscription,
+            'plan': plan_name,
+            'plan_id': request.user.profile.paddle_subscription_plan_id,
+            'trial': trial,
+            'trial_days_remaining': trial_days_remaining,
+            'cancellation_date': cancellation_date,
+            'update_url': request.user.profile.paddle_update_url,
+            'cancel_url': request.user.profile.paddle_cancel_url,
         }
 
         context = {
@@ -327,6 +374,7 @@ def settings(request):
             'js_needed': True,
             'trial': trial,
             'paddle': paddle,
+            'subscription': subscription,
         }
 
         return render(request, 'inventory/settings.html', context)
