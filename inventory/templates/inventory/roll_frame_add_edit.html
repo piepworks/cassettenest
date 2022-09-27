@@ -29,19 +29,17 @@
 
     {% include 'components/form-field.html' with field=form.notes %}
 
-    <div class="action">
-        <p>
-            <input type="submit" value="Save" />
+        <div class="flex gap-3 items-center">
+            <button class="primary">Save</button>
             {% if action == 'Add' %}
                 <a href="{% url 'roll-detail' roll.id %}">Cancel</a>
             {% elif action == 'Edit' %}
                 <a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">Cancel</a>
             {% endif %}
-        </p>
+        </div>
         {% if action == 'Add' %}
-        <p><input type="submit" class="secondary" name="another" value="Save and add another" /></p>
+            <div><input type="submit" class="secondary" name="another" value="Save and add another" /></div>
         {% endif %}
-    </div>
 </form>
 {% endblock %}
 
