@@ -1005,6 +1005,46 @@
         pr-4;
     }
   }
+
+  .subscription-banner {
+    @apply
+      text-blue-50
+      bg-blue-500;
+
+    a {
+      @apply
+        text-blue-50
+        px-1
+        hover:py-1
+        hover:no-underline
+        hover:bg-blue-600;
+    }
+
+    &.deleted {
+      @apply
+        text-stone-600
+        bg-yellow-400;
+
+      a {
+        @apply
+          text-stone-600
+          hover:bg-yellow-500;
+      }
+    }
+
+    &.paused,
+    &.past-due {
+      @apply
+        text-red-50
+        bg-red-500;
+
+      a {
+        @apply
+          text-red-50
+          hover:bg-red-600;
+      }
+    }
+  }
 }
 
 @layer utilities {
