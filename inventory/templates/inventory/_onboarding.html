@@ -1,10 +1,10 @@
 {% load tz %}
 {% get_current_timezone as TIME_ZONE %}
 
-<section class="onboarding bg-stone-900 rounded-xl p-5">
-    <h2 class="mb-5">Welcome! Let’s get started!</h2>
+<section class="onboarding bg-white shadow-lg dark:shadow-none dark:bg-stone-900 rounded-xl p-5">
+    <h1 class="text-2xl mb-5">Welcome to <span class="dark:text-gold">Cassette Nest</span>! Let’s get started:</h1>
 
-    <ol class="space-y-2">
+    <ol class="space-y-3">
         <li class="flex items-center">
             {% include 'inventory/_status-check.html' with check=True %}
             Register
