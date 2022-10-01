@@ -2353,6 +2353,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
                         'name': 'Unavailable',
                         'count': all_camera_backs.filter(status='unavailable').count(),
                         'rows': all_camera_backs.filter(status='unavailable'),
+                        'action': 'load',
                     },
                 ],
                 reverse('camera-back-add', args=(camera.id,)),
