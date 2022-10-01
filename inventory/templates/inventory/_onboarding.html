@@ -1,32 +1,28 @@
 {% load tz %}
 {% get_current_timezone as TIME_ZONE %}
 
-<section class="onboarding">
-    <h2>Welcome! Let&rsquo;s get started!</h2>
+<section class="onboarding bg-stone-900 rounded-xl p-5">
+    <h2 class="mb-5">Welcome! Let’s get started!</h2>
 
-    <p><a href="https://youtu.be/SeCkpV7DAlE">Watch an introductory video.</a></p>
-
-    <hr />
-
-    <ol>
-        <li>
+    <ol class="space-y-2">
+        <li class="flex items-center">
             {% include 'inventory/_status-check.html' with check=True %}
             Register
         </li>
-        <li>
+        <li class="flex items-center">
             {% include 'inventory/_status-check.html' with check=True %}
             Timezone set to&nbsp;<a href="{% url 'settings' %}">{{ TIME_ZONE }}</a>
         </li>
-        <li>
+        <li class="flex items-center">
             {% include 'inventory/_status-check.html' with check=cameras_total %}
             <a href="{% url 'camera-add' %}">Add a camera</a>
         </li>
-        <li>
+        <li class="flex items-center">
             {% include 'inventory/_status-check.html' with check=rolls %}
             <a href="{% url 'rolls-add' %}">Add rolls</a>
         </li>
         {% if not email %}
-        <li>
+        <li class="flex items-center">
             {% include 'inventory/_status-check.html' with check=email %}
             <a href="{% url 'settings' %}">Add your email address</a>
         </li>
