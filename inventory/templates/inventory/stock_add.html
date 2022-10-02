@@ -22,7 +22,11 @@
 
         {% for field in form %}
             {% if field.name != 'manufacturer' and field.name != 'new_manufacturer'%}
-                {% include 'components/form-field.html' with field=field %}
+                {% if forloop.last %}
+                    {% include 'components/form-field.html' with field=field class='last' %}
+                {% else %}
+                    {% include 'components/form-field.html' with field=field %}
+                {% endif %}
             {% endif %}
         {% endfor %}
 

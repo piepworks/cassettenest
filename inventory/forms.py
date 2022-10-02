@@ -100,7 +100,17 @@ class StockForm(ModelForm):
 
     class Meta:
         model = Stock
-        fields = ['manufacturer', 'new_manufacturer', 'name', 'type', 'formats', 'iso', 'url', 'description']
+        fields = [
+            'manufacturer',
+            'destination',
+            'new_manufacturer',
+            'name',
+            'type',
+            'formats',
+            'iso',
+            'url',
+            'description',
+        ]
 
     def clean(self):
         cleaned_data = super().clean()
