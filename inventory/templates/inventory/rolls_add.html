@@ -3,27 +3,27 @@
 {% block title %}Add rolls to storage{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <h1>Add rolls to storage</h1>
-    <p>Or <a href="{% url 'roll-add' %}">add a roll to your logbook</a>.</p>
+<h1>Add rolls to storage</h1>
 
-    <form method="post">
-        {% csrf_token %}
-        <div class="field block space-y-3">
-            {% include 'inventory/_film-selector.html' %}
-            {% include 'components/form-stepper-field.html' with field=stepper_form.quantity %}
-        </div>
+<form method="post">
+    {% csrf_token %}
+    <div class="field">
+        <p class="col-span-3">Or <a href="{% url 'roll-add' %}">add a roll to your logbook</a>.</p>
+    </div>
+    <div class="field block space-y-3">
+        {% include 'inventory/_film-selector.html' %}
+        {% include 'components/form-stepper-field.html' with field=stepper_form.quantity %}
+    </div>
 
-        <div class="field">
-            <p class="col-span-3">
-                Not seeing what you need?
-                <a href="{% url 'stock-add' %}">Add a new kind of film to the list.</a>
-            </p>
-        </div>
+    <div class="field">
+        <p class="col-span-3">
+            Not seeing what you need?
+            <a href="{% url 'stock-add' %}">Add a new kind of film to the list.</a>
+        </p>
+    </div>
 
-        <div class="action"><button class="primary">Add to storage</button></div>
-    </form>
-</div>
+    <div class="action"><button class="primary">Add to storage</button></div>
+</form>
 {% endblock %}
 
 {% block page_js %}
