@@ -83,6 +83,7 @@ class StockForm(ModelForm):
             queryset=Manufacturer.objects.all().exclude(Q(personal=True) & ~Q(added_by=self.user)),
             required=False,
         )
+        self.fields['iso'].max_value = 10000
 
     new_manufacturer = forms.CharField(
         label='Or add a new manufacturer',
