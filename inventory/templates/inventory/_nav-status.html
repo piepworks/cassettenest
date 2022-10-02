@@ -86,7 +86,7 @@
         </li>
         {% endif %}
         <li{% if request.session.sidebar == 'closed' %} title="Log out"{% endif %}>
-            <a href="{% url 'logout' %}">
+            <a href="{% url 'logout' %}" onClick="return confirm('Do you want to log out?')">
                 {% include 'svg/heroicons/hand.svg' %}
                 <span>Log out</span>
             </a>
