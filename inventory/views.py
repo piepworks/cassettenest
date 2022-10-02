@@ -1426,6 +1426,7 @@ def rolls_add(request):
         films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner)).order_by('stock')
         context = {
             'films': films,
+            'stepper_form': StepperForm,
             'js_needed': True,
         }
 

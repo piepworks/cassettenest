@@ -9,21 +9,19 @@
 
     <form method="post">
         {% csrf_token %}
-        <div class="field">
-            <fieldset>
-                {% include 'inventory/_film-selector.html' %}
-                <input type="number" min="1" value="1" name="quantity" required />
-            </fieldset>
+        <div class="field block space-y-3">
+            {% include 'inventory/_film-selector.html' %}
+            {% include 'components/form-stepper-field.html' with field=stepper_form.quantity %}
         </div>
 
         <div class="field">
-            <p>
+            <p class="col-span-3">
                 Not seeing what you need?
                 <a href="{% url 'stock-add' %}">Add a new kind of film to the list.</a>
             </p>
         </div>
 
-        <div class="action"><input type="submit" value="Add to storage" /></div>
+        <div class="action"><button class="primary">Add to storage</button></div>
     </form>
 </div>
 {% endblock %}
