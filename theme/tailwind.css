@@ -954,12 +954,19 @@
       sm:border-stone-300
       sm:dark:border-stone-600
       sm:pb-5;
+
+    &.last {
+      @apply
+        border-none
+        pb-0;
+    }
   }
 
   .progressive-field-wrapper { @apply space-y-6; }
 
   .action {
     @apply
+      pt-6
       flex
       flex-wrap
       items-center
