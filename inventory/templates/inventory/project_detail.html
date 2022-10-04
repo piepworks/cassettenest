@@ -65,7 +65,6 @@
         {% include 'inventory/_project-add-camera.html' %}
     {% endif %}
 {% else %}
-    <hr />
     <p><i>This project is archived. You can add rolls and cameras to it if you <a href="{% url 'project-edit' project.id %}">change its status</a>.</i></p>
 {% endif %}
 </div>

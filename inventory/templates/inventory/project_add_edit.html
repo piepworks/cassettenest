@@ -13,7 +13,7 @@
     {% include 'components/form-field.html' with field=form.notes %}
 
     <div class="action">
-        <input type="submit" value="Save project" />
+        <button class="primary">Save project</button>
         {% if action == 'Edit' %}
         <a href="{% url 'project-detail' project.id %}">Cancel</a>
         {% endif %}
