@@ -1,6 +1,6 @@
 <h1>
     <span id="page-name">
-        {% if manufacturer %}<a hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">{% endif %}
+        {% if manufacturer %}<a hx-get="{% url 'stocks' %}" hx-target=".main-content" href="{% url 'stocks' %}">{% endif %}
         Film Stocks
         {% if manufacturer %}</a>{% endif %}
     </span>
@@ -15,8 +15,7 @@
     action="{% url 'stocks' %}"
     hx-get="{% url 'stocks' %}"
     hx-trigger="change"
-    hx-indicator="#spinner"
-    hx-target=".raw">
+    hx-target=".main-content">
     <div class="field--filter">
         <div class="inner">
             <label for="id_manufacturer">
@@ -51,10 +50,11 @@
         <h2>{{ type_name }}</h2>
     {% endif %}
     {% if filters.manufacturer != 'all' or filters.type != 'all' %}
-        <p><a hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">Reset filters</a></p>
+        <p><a hx-get="{% url 'stocks' %}" hx-target=".main-content" href="{% url 'stocks' %}">Reset filters</a></p>
     {% endif %}
 
     <section class="cards">
+        <div class="htmx-indicator">…</div>
         {% for stock in stocks %}
             {% include 'inventory/_card.html' with name=stock location=stock.get_absolute_url type='film' sub_type='stock' film_type=stock.type %}
         {% endfor %}
