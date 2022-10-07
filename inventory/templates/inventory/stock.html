@@ -4,17 +4,14 @@
 {% block title %}Film Stock: {{ stock }}{% endblock %}
 
 {% block content %}
-<div class="raw">
     <h1><a href="{% url 'stocks' %}">Film Stocks</a> &gt; <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> {{ stock.name }}</h1>
 
     {% if stock.added_by %}
-        <div class="notes">
-            {% include 'inventory/_github-icon.html' with id='heart-fill' %}
-            <div class="inner">This stock was added by the Cassette Nest community!</div>
+        <div class="notes sm:flex gap-3 sm:items-center bg-white shadow-lg dark:shadow-none dark:bg-stone-900 rounded-xl py-4 px-6">
+            {% include 'svg/heroicons/heart.svg' with class='float-left sm:float-none mt-1 mr-4 mb-1 sm:m-0 h-8 w-8 sm:flex-shrink-0' %}
+            <p>This stock was added by the Cassette Nest community!</p>
         </div>
     {% endif %}
-
-    <hr />
 
     <p>Total rolls of this stock in Cassette Nest: <b>{{ total_rolls }}</b></p>
 
@@ -43,5 +40,4 @@
         {% endfor %}
     </section>
     {% endif %}
-</div>
 {% endblock %}
