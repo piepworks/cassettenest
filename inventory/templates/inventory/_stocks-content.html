@@ -45,16 +45,17 @@
     </div>
 </form>
 
-<div id="stocks-list-wrapper">
-    {% if filters.type != 'all' %}
-        <h2>{{ type_name }}</h2>
-    {% endif %}
-    {% if filters.manufacturer != 'all' or filters.type != 'all' %}
-        <p><a hx-get="{% url 'stocks' %}" hx-target=".main-content" href="{% url 'stocks' %}">Reset filters</a></p>
-    {% endif %}
+<div id="stocks-list-wrapper" class="space-y-6">
+    <div>
+        {% if filters.type != 'all' %}
+            <h2>{{ type_name }}</h2>
+        {% endif %}
+        {% if filters.manufacturer != 'all' or filters.type != 'all' %}
+            <p><a hx-get="{% url 'stocks' %}" hx-target=".main-content" href="{% url 'stocks' %}">Reset filters</a></p>
+        {% endif %}
+    </div>
 
     <section class="logbook">
-        <div class="htmx-indicator hidden" _="on load remove .hidden from me">…</div>
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <table>
@@ -75,6 +76,7 @@
                 </table>
             </div>
         </div>
+        <div class="htmx-indicator hidden" _="on load remove .hidden from me">…</div>
     </section>
 </div>
 
