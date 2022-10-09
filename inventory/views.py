@@ -627,14 +627,35 @@ def stock(request, manufacturer, slug):
         })
         total_rolls = total_rolls + film.count
 
+    headings = ['Format', 'Count']
+    total_rolls_table = {
+        'headings': headings,
+        'rows': [{'columns': [film.get_format_display(), film.count] for film in films}],
+    }
+    total_inventory_table = {
+        'headings': headings,
+        'rows': [{'columns': [film['name'], film['user_inventory_count']] for film in films_list}]
+    }
+    total_history_table = {
+        'headings': headings,
+        'rows': [{
+            'columns': [
+                {'title': film['name'], 'href': f'{film["url"]}#film_history_heading'},
+                film['user_history_count'],
+            ]
+        } for film in films_list]
+    }
+
     context = {
         'films': films,
-        'films_list': films_list,
         'total_rolls': total_rolls,
         'total_inventory': total_inventory,
         'total_history': total_history,
         'stock': stock,
         'manufacturer': manufacturer,
+        'total_rolls_table': total_rolls_table,
+        'total_inventory_table': total_inventory_table,
+        'total_history_table': total_history_table,
     }
 
     return render(request, 'inventory/stock.html', context)

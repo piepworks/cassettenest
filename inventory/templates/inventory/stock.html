@@ -15,80 +15,17 @@
 
     <p>Total rolls of this stock in Cassette Nest: <b>{{ total_rolls }}</b></p>
 
-    <section class="logbook">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="text-left">Format</th>
-                            <th class="text-left">Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for film in films %}
-                        <tr>
-                            <td>{{ film.get_format_display }}</td>
-                            <td>{{ film.count }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    {% include 'components/standard-table.html' with table=total_rolls_table %}
 
     {% if user.is_authenticated %}
 
     <h2>Your inventory of this stock ({{ total_inventory }})</h2>
 
-    <section class="logbook">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="text-left">Format</th>
-                            <th class="text-left">Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for film in films_list %}
-                            <tr>
-                                <td>{{ film.name }}</td>
-                                <td>{{ film.user_inventory_count }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+
+    {% include 'components/standard-table.html' with table=total_inventory_table %}
 
     <h2>Your history of this stock ({{ total_history }})</h2>
 
-    <section class="logbook">
-        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                <table>
-                    <thead>
-                        <tr>
-                            <th class="text-left">Format</th>
-                            <th class="text-left">Count</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for film in films_list %}
-                        <tr>
-                            {% capture as history_url silent %}{{ film.url }}#film_history_heading{% endcapture %}
-                            <td><a href="{{ history_url }}">{{ film.name }}</a></td>
-                            <td>{{ film.user_history_count }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </section>
+    {% include 'components/standard-table.html' with table=total_history_table %}
     {% endif %}
 {% endblock %}
