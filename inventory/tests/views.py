@@ -2010,7 +2010,7 @@ class StockViewTests(TestCase):
         self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
         self.assertContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
         self.assertIsNotNone(response.context['stocks'])
-        self.assertContains(response, '<h2>C41 Color</h2>', html=True)
+        self.assertContains(response, '<span>C41 Color</span>', html=True)
 
     def test_stocks_page_with_manufacturer_redirect(self):
         response = self.client.get(reverse('stocks') + '?manufacturer=kodak&type=c41')
