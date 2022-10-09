@@ -15,29 +15,80 @@
 
     <p>Total rolls of this stock in Cassette Nest: <b>{{ total_rolls }}</b></p>
 
-    <ul>
-    {% for film in films %}
-        <li>{{ film.get_format_display }}: {{ film.count }}</li>
-    {% endfor %}
-    </ul>
+    <section class="logbook">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-left">Format</th>
+                            <th class="text-left">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for film in films %}
+                        <tr>
+                            <td>{{ film.get_format_display }}</td>
+                            <td>{{ film.count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
 
     {% if user.is_authenticated %}
 
     <h2>Your inventory of this stock ({{ total_inventory }})</h2>
 
-    <section class="cards">
-        {% for film in films_list %}
-            {% include 'inventory/_card.html' with name=film.name location=film.url slot='count' count=film.user_inventory_count type='film' film_type=film.type %}
-        {% endfor %}
+    <section class="logbook">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-left">Format</th>
+                            <th class="text-left">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for film in films_list %}
+                            <tr>
+                                <td>{{ film.name }}</td>
+                                <td>{{ film.user_inventory_count }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
 
     <h2>Your history of this stock ({{ total_history }})</h2>
 
-    <section class="cards">
-        {% for film in films_list %}
-            {% capture as history_url silent %}{{ film.url }}#film_history_heading{% endcapture %}
-            {% include 'inventory/_card.html' with name=film.name location=history_url slot='count' count=film.user_history_count type='film' film_type=film.type %}
-        {% endfor %}
+    <section class="logbook">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-left">Format</th>
+                            <th class="text-left">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for film in films_list %}
+                        <tr>
+                            {% capture as history_url silent %}{{ film.url }}#film_history_heading{% endcapture %}
+                            <td><a href="{{ history_url }}">{{ film.name }}</a></td>
+                            <td>{{ film.user_history_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </section>
     {% endif %}
 {% endblock %}
