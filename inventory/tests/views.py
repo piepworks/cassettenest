@@ -15,7 +15,7 @@ from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
 from django_htmx.middleware import HtmxDetails
-from inventory.views import stocks, inventory, index
+from inventory.views import stocks, inventory, session_sidebar
 from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame, Stock, Manufacturer
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
@@ -2231,7 +2231,17 @@ class SidebarTests(TestCase):
         )
 
     def setUp(self):
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
         self.client.force_login(user=self.user)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
 
     def test_sidebar_status_ajax(self):
         headers = {'HTTP_X-Requested-With': 'XMLHttpRequest'}
@@ -2241,5 +2251,16 @@ class SidebarTests(TestCase):
 
     def test_sidebar_status_without_ajax(self):
         response = self.client.get(reverse('session-sidebar-status'))
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_sidebar_htmx(self):
+        headers = {'HTTP_HX-Request': 'true'}
+        response = self.client.get(reverse('session-sidebar'), **headers)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_sidebar_without_htmx(self):
+        response = self.client.get(reverse('session-sidebar'))
 
         self.assertEqual(response.status_code, 403)
