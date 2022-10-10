@@ -1737,6 +1737,21 @@ class CameraViewTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
 
+    def test_camera_or_back_detail_htmx(self):
+        camera = baker.make(Camera, owner=self.user)
+        headers1 = {'HTTP_HX-Request': 'true', 'HTTP_HX-Trigger': 'monkey'}
+        response1 = self.client.get(reverse('camera-detail', args=(camera.id,)), **headers1)
+
+        self.assertEqual(response1.status_code, 200)
+        self.assertTemplateUsed(response1, 'components/logbook-table.html')
+
+        camera2 = baker.make(Camera, owner=self.user, multiple_backs=True)
+        headers2 = {'HTTP_HX-Request': 'true', 'HTTP_HX-Trigger': 'section'}
+        response2 = self.client.get(reverse('camera-detail', args=(camera2.id,)), **headers2)
+
+        self.assertEqual(response2.status_code, 200)
+        self.assertTemplateUsed(response2, 'components/section.html')
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RollViewTests(TestCase):
