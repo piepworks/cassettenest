@@ -1558,12 +1558,64 @@ def film_rolls(request, stock=None, format=None, slug=None):
         rolls_storage = rolls_storage.filter(project=current_project)
         rolls_history = rolls_history.filter(project=current_project)
 
+    rolls_storage_table = {
+        'headings': ['Added on', 'Project'] if not current_project else ['Added on', ''],
+        'rows': [{
+            'columns': [
+                {
+                    'title': roll.created_at.strftime('%B %d, %Y'),
+                    'href': reverse('roll-detail', args=(roll.id,)),
+                },
+                {
+                    'title': roll.project.name if roll.project else None,
+                    'href': f'?project={roll.project.id}' if roll.project else None
+                },
+            ]
+        } if roll.project and not current_project else {
+            'columns': [
+                {
+                    'title': roll.created_at.strftime('%B %d, %Y'),
+                    'href': reverse('roll-detail', args=(roll.id,)),
+                },
+                '',
+            ],
+        } for roll in rolls_storage]
+    }
+
+    rolls_history_table = {
+        'headings': ['Year', 'Code', 'Project'] if not current_project else ['Code', ''],
+        'rows': [{
+            'columns': [
+                roll.started_on.strftime('%Y'),
+                {
+                    'title': roll.code,
+                    'href': reverse('roll-detail', args=(roll.id,)),
+                },
+                {
+                    'title': roll.project.name,
+                    'href': f'?project={roll.project.id}',
+                }
+            ],
+        } if roll.project and not current_project else {
+            'columns': [
+                roll.started_on.strftime('%Y'),
+                {
+                    'title': roll.code,
+                    'href': reverse('roll-detail', args=(roll.id,)),
+                },
+                '',
+            ],
+        } for roll in rolls_history]
+    }
+
     context = {
         'rolls_storage': rolls_storage,
         'rolls_history': rolls_history,
         'film': film,
         'owner': request.user,
         'current_project': current_project,
+        'rolls_storage_table': rolls_storage_table,
+        'rolls_history_table': rolls_history_table,
     }
 
     return render(request, 'inventory/film_rolls.html', context)
