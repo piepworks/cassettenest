@@ -2219,3 +2219,27 @@ class StockAddTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('New film stock “Kodak Tri-X 400” (in 35mm, 120) added!', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class SidebarTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username='test',
+            password='secret',
+        )
+
+    def setUp(self):
+        self.client.force_login(user=self.user)
+
+    def test_sidebar_status_ajax(self):
+        headers = {'HTTP_X-Requested-With': 'XMLHttpRequest'}
+        response = self.client.get(reverse('session-sidebar-status'), **headers)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_sidebar_status_without_ajax(self):
+        response = self.client.get(reverse('session-sidebar-status'))
+
+        self.assertEqual(response.status_code, 403)
