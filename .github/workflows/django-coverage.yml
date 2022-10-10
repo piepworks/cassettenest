@@ -27,8 +27,8 @@ jobs:
 
     # Set things up and run the tests.
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3.5.0
         with:
           node-version: 16.17.1
       - name: Install dependencies, run tests, generate report
@@ -72,7 +72,7 @@ jobs:
           DBBACKUP_STORAGE: ${{ secrets.DBBACKUP_STORAGE }}
           DBBACKUP_STORAGE_OPTIONS: ${{ secrets.DBBACKUP_STORAGE_OPTIONS }}
       - name: Upload Coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3.1.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
