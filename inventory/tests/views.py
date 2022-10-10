@@ -1516,15 +1516,28 @@ class ProjectTests(TestCase):
         project = baker.make(Project, owner=self.user)
         camera1 = baker.make(Camera, owner=self.user, multiple_backs=True)
         camera2 = baker.make(Camera, owner=self.user)
-        baker.make(Roll, film=film, status=status_number('loaded'), camera=camera2, owner=self.user)
+        camera3 = baker.make(Camera, owner=self.user)
+        camera4 = baker.make(Camera, owner=self.user)
+        baker.make(Roll, film=film, status=status_number('loaded'), camera=camera2, owner=self.user, project=project)
         baker.make(Roll, film=film, status=status_number('storage'), owner=self.user, project=project)
+        baker.make(Roll, film=film, status=status_number('loaded'), camera=camera4, owner=self.user)
         project.cameras.add(camera1)
         project.cameras.add(camera2)
+        project.cameras.add(camera3)
+        project.cameras.add(camera4)
         baker.make(CameraBack, camera=camera1)
 
         response = self.client.get(reverse('project-detail', args=(project.id,)))
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, '(filtered)')
+
+    def test_project_detail_htmx(self):
+        project = baker.make(Project, owner=self.user)
+        headers = {'HTTP_HX-Request': 'true'}
+        response = self.client.get(reverse('project-detail', args=(project.id,)), **headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'partials/project-camera-logbook-wrapper.html')
 
     def test_project_rolls_add(self):
         project = baker.make(Project, owner=self.user)
