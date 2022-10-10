@@ -15,7 +15,7 @@ from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
 from django_htmx.middleware import HtmxDetails
-from inventory.views import stocks, inventory
+from inventory.views import stocks, inventory, index
 from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame, Stock, Manufacturer
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
@@ -40,29 +40,42 @@ def htmx_request(user=None, get_url=None, post_url=None, post_data={}, trigger=N
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class IndexTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username='test',
+            password='secret',
+        )
+
     def setUp(self):
+        self.client.force_login(user=self.user)
         self.index_url = reverse('index')
         self.login_url = reverse('login')
-        self.username = 'test'
-        self.password = 'secret'
-
-    def test_logged_out(self):
-        response = self.client.get(self.index_url)
-
-        self.assertRedirects(response, f'{self.login_url}?next={self.index_url}')
 
     def test_logged_in(self):
-        user = User.objects.create_user(
-            username=self.username,
-            password=self.password,
-        )
-        self.client.login(
-            username=self.username,
-            password=self.password,
-        )
         response = self.client.get(self.index_url)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_logged_out(self):
+        self.client.logout()
+
+        response = self.client.get(self.index_url)
+        self.assertRedirects(response, f'{self.login_url}?next={self.index_url}')
+
+    def test_set_cameras_tab(self):
+        headers = {'HTTP_HX-Request': 'true'}
+        response = self.client.get(f'{self.index_url}?c=1&p=0&slug=c', **headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['cameras'].current_tab, 1)
+
+    def test_set_projects_tab(self):
+        headers = {'HTTP_HX-Request': 'true'}
+        response = self.client.get(f'{self.index_url}?c=0&p=1&slug=p', **headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['projects'].current_tab, 1)
 
 
 class MarketingSiteCORSTests(TestCase):
