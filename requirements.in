@@ -23,6 +23,5 @@ pycodestyle
 pycryptodome
 python-dotenv
 pytz
-pywatchman
 requests
 whitenoise
