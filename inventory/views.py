@@ -47,7 +47,6 @@ from .utils import (
     status_keys,
     status_number,
     bulk_status_next_keys,
-    get_host,
     send_email_to_trey,
     inventory_filter,
     preset_apertures,

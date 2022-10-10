@@ -112,13 +112,6 @@ def pluralize(noun, count):
     return noun
 
 
-def get_host(request):
-    if settings.DEBUG:
-        return f'http://{request.get_host()}'
-    else:
-        return 'https://app.cassettenest.com'
-
-
 def send_email_to_trey(subject, message):
     send_mail(
         subject=subject,
