@@ -8,9 +8,6 @@ node_modules/
 htmlcov/
 backups/
 paddle_public_key.txt
-
-# Tailwind CSS
-!theme/static_src/src/styles.css
 /test-results/
 /playwright-report/
 /playwright/.cache/
