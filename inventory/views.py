@@ -1289,6 +1289,21 @@ def project_detail(request, pk):
     page_obj = paginator.get_page(page_number)
     page_range = paginator.get_elided_page_range(number=page_number)
 
+    # Archived project cameras table
+    cameras_table = {}
+    if project.status == 'archived':
+        cameras_table = {
+            'headings': ['Camera'],
+            'rows': [{
+                'columns': [
+                    {
+                        'title': camera,
+                        'href': camera.get_absolute_url(),
+                    },
+                ]
+            } for camera in project.cameras.all()]
+        }
+
     context = {
         'owner': owner,
         'project': project,
@@ -1305,6 +1320,7 @@ def project_detail(request, pk):
         'pagination_querystring': pagination_querystring,
         'sectiontab_querystring': sectiontab_querystring,
         'stepper_form': StepperForm,
+        'cameras_table': cameras_table,
     }
 
     if request.htmx:
