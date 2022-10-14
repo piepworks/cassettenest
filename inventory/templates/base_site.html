@@ -43,22 +43,18 @@
                     {% endspaceless %}
                     <div class="main-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
                         {% block content %}{% endblock %}
+
+                        <footer>
+                            <div class="mt-28 border-t border-stone-300 dark:border-stone-700 pt-8 text-xs xl:text-center">
+                                <p class="text-stone-400 dark:text-stone-600 xl:text-center">Copyright &copy; 2016–{% now 'Y' %} <a href="https://piep.works">Piepworks LLC</a>. All rights reserved.</p>
+                                <ul class="policies print:hidden inline-flex gap-3">
+                                    <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
+                                    <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
+                                </ul>
+                            </div>
+                        </footer>
                     </div>
                 </main>
-
-                {% comment %}
-                <footer>
-                    <p>Copyright &copy; 2016–{% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
-                    <ul class="policies print:hidden">
-                        <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
-                        <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
-                        <li><a href="https://tools.cassettenest.com/cropfactor/">Crop Factor Calculator</a></li>
-                        <li><a href="https://cassettenest.com/changelog/">Changelog</a></li>
-                    </ul>
-                    <p class="shirt-promo print:hidden"><a href="https://cottonbureau.com/people/trey-labs">Buy a shirt!</a></p>
-                    <p class="timezone">Current timezone: {{ TIME_ZONE }}</p>
-                </footer>
-                {% endcomment %}
             </div>
         </div>
     </div>
