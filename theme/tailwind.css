@@ -30,6 +30,14 @@
       hover:underline;
   }
 
+  /* So Safari doesn't always highlight the logo on every page load.
+     I don't love this. Remove it as soon as we find a better solution. */
+  a {
+    @apply
+      focus:outline-none
+      focus-visible:outline-blue-500;
+  }
+
   button.link {
     @apply
       p-0
