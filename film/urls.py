@@ -106,10 +106,15 @@ urlpatterns = [
     path('paddle-webhooks', views.paddle_webhooks, name='paddle-webhooks'),
     path('subscription-update', views.subscription_update, name='subscription-update'),
     path('subscription-created', views.subscription_created, name='subscription-created'),
+
+    # Session Goodies
+    path('session/sidebar-status', views.session_sidebar_status, name='session-sidebar-status'),
+    path('session/sidebar', views.session_sidebar, name='session-sidebar'),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
+        path('__reload__/', include('django_browser_reload.urls')),
     ] + urlpatterns

@@ -1,10 +1,8 @@
-from django import template
+from django.template.defaulttags import register
 from django.template.defaultfilters import stringfilter
 from django.utils.safestring import mark_safe
 import markdown as md
 import bleach
-
-register = template.Library()
 
 
 @register.filter()

@@ -4,47 +4,43 @@
 {% block title %}{{ action }} frame for {{ roll }}{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <h1>{{ action }} frame for <a href="{% url 'roll-detail' roll.id %}">{{ roll }}</a></h1>
+<h1>{{ action }} frame for <a href="{% url 'roll-detail' roll.id %}">{{ roll }}</a></h1>
 
-    <form method="post">
-        {% csrf_token %}
+<form method="post">
+    {% csrf_token %}
 
-        {% include 'inventory/_form-field.html' with field=form.number %}
-        {% if action == 'Add' %}
-        {% include 'inventory/_form-field.html' with field=form.ending_number %}
-        {% endif %}
-        {% include 'inventory/_form-field.html' with field=form.date %}
+    {% include 'components/form-field.html' with field=form.number %}
+    {% if action == 'Add' %}
+    {% include 'components/form-field.html' with field=form.ending_number %}
+    {% endif %}
+    {% include 'components/form-field.html' with field=form.date %}
 
-        {% capture as first_aperture silent %}{% if show_input.aperture %}True{% endif %}{% endcapture %}
-        <div class="progressive-field-wrapper" x-data="{ primary: true }">
-            {% include 'inventory/_form-field.html' with field=form.aperture_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_aperture %}
-            {% include 'inventory/_form-field.html' with field=form.aperture progressive=True show_first=first_aperture progressive_text='…or choose a preset.' label_override=form.aperture_preset.label enhanced_label=enhanced_label_aperture %}
-        </div>
+    {% capture as first_aperture silent %}{% if show_input.aperture %}True{% endif %}{% endcapture %}
+    <div class="progressive-field-wrapper">
+        {% include 'components/form-field.html' with field=form.aperture_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_aperture %}
+        {% include 'components/form-field.html' with field=form.aperture progressive=True show_first=first_aperture progressive_text='…or choose a preset.' label_override=form.aperture_preset.label enhanced_label=enhanced_label_aperture %}
+    </div>
 
-        {% capture as first_shutter silent %}{% if show_input.shutter_speed %}True{% endif %}{% endcapture %}
-        <div class="progressive-field-wrapper" x-data="{ primary: true }">
-            {% include 'inventory/_form-field.html' with field=form.shutter_speed_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_shutter_speed %}
-            {% include 'inventory/_form-field.html' with field=form.shutter_speed progressive=True show_first=first_shutter progressive_text='…or choose a preset.' label_override=form.shutter_speed_preset.label enhanced_label=enhanced_label_shutter_speed %}
-        </div>
+    {% capture as first_shutter silent %}{% if show_input.shutter_speed %}True{% endif %}{% endcapture %}
+    <div class="progressive-field-wrapper">
+        {% include 'components/form-field.html' with field=form.shutter_speed_preset progressive=True primary=True progressive_text='…or enter a value.' enhanced_label=enhanced_label_shutter_speed %}
+        {% include 'components/form-field.html' with field=form.shutter_speed progressive=True show_first=first_shutter progressive_text='…or choose a preset.' label_override=form.shutter_speed_preset.label enhanced_label=enhanced_label_shutter_speed %}
+    </div>
 
-        {% include 'inventory/_form-field.html' with field=form.notes %}
+    {% include 'components/form-field.html' with field=form.notes %}
 
-        <div class="action">
-            <p>
-                <input type="submit" value="Save" />
-                {% if action == 'Add' %}
-                    <a href="{% url 'roll-detail' roll.id %}">Cancel</a>
-                {% elif action == 'Edit' %}
-                    <a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">Cancel</a>
-                {% endif %}
-            </p>
+        <div class="flex gap-3 items-center">
+            <button class="primary">Save</button>
             {% if action == 'Add' %}
-            <p><input type="submit" class="secondary" name="another" value="Save and add another" /></p>
+                <a href="{% url 'roll-detail' roll.id %}">Cancel</a>
+            {% elif action == 'Edit' %}
+                <a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">Cancel</a>
             {% endif %}
         </div>
-    </form>
-</div>
+        {% if action == 'Add' %}
+            <div><input type="submit" class="secondary" name="another" value="Save and add another" /></div>
+        {% endif %}
+</form>
 {% endblock %}
 
 {% block page_js %}

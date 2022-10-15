@@ -9,7 +9,7 @@
 
     {# Note: this no longer works with film types, only via film.stock. #}
     {% regroup film_counts by stock.get_type_display as film_list %}
-    <div class="c-field">
+    <div class="field">
         <label for="id_film">Select a film</label>
         <select id="id_film" name="film" required>
             <option value="">---------</option>
@@ -28,7 +28,7 @@
             {% endfor %}
         </select>
     </div>
-    <div class="c-field">
+    <div class="field">
         <label for="id_push_pull">Push/Pull</label>
         <select id="id_push_pull" name="push_pull">
             <option value="">---------</option>

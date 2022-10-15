@@ -1,3 +1,0 @@
-#!/bin/sh
-
-PADDLE_PUBLIC_KEY=$(cat paddle_public_key.txt) docker-compose up -d

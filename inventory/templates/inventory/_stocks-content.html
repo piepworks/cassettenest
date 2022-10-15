@@ -1,6 +1,6 @@
 <h1>
     <span id="page-name">
-        {% if manufacturer %}<a hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">{% endif %}
+        {% if manufacturer %}<a hx-get="{% url 'stocks' %}" hx-target=".main-content" href="{% url 'stocks' %}">{% endif %}
         Film Stocks
         {% if manufacturer %}</a>{% endif %}
     </span>
@@ -15,12 +15,11 @@
     action="{% url 'stocks' %}"
     hx-get="{% url 'stocks' %}"
     hx-trigger="change"
-    hx-indicator="#spinner"
-    hx-target=".raw">
-    <div class="c-field--filter">
-        <div class="inner">
+    hx-target=".main-content">
+    <div class="field--filter">
+        <div class="flex flex-col sm:flex-row gap-3">
             <label for="id_manufacturer">
-                Manufacturer:
+                <div class="mb-2">Manufacturer:</div>
                 <select name="manufacturer" id="id_manufacturer">
                     <option value="all">All manufacturers</option>
                     {% for m in manufacturers %}
@@ -31,7 +30,7 @@
                 </select>
             </label>
             <label for="id_type">
-                Type:
+                <div class="mb-2">Type:</div>
                 <select name="type" id="id_type"{% if type_choices.items|length == 1 %} disabled{% endif %}>
                     {% if type_choices.items|length > 1 %}
                         <option value="all">All types</option>
@@ -46,18 +45,39 @@
     </div>
 </form>
 
-<div id="stocks-list-wrapper">
-    {% if filters.type != 'all' %}
-        <h2>{{ type_name }}</h2>
-    {% endif %}
+<div id="stocks-list-wrapper" class="space-y-6">
     {% if filters.manufacturer != 'all' or filters.type != 'all' %}
-        <p><a hx-get="{% url 'stocks' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'stocks' %}">Reset filters</a></p>
+        <p class="space-x-1">
+            <span>
+                {% if manufacturer %}{{ manufacturer }}{% endif %}
+                {% if manufacturer and type_name != 'all' %}({% endif %}{% if type_name != 'all' %}{{ type_name }}{% endif %}{% if manufacturer and type_name != 'all' %}){% endif %}
+            </span>
+            <a class="text-xs" hx-get="{% url 'stocks' %}" hx-target=".main-content" href="{% url 'stocks' %}">Reset filters</a>
+        </p>
     {% endif %}
 
-    <section class="cards">
-        {% for stock in stocks %}
-            {% include 'inventory/_card.html' with name=stock location=stock.get_absolute_url type='film' sub_type='stock' film_type=stock.type %}
-        {% endfor %}
+    <section class="logbook">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-left">Name</th>
+                            <th class="text-left">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for stock in stocks %}
+                            <tr>
+                                <td><a href="{{ stock.get_absolute_url }}">{{ stock }}</a></td>
+                                <td>{{ stock.get_type_display }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="htmx-indicator hidden" _="on load remove .hidden from me">…</div>
     </section>
 </div>
 

@@ -8,14 +8,14 @@
 
     <form method="post">
         {% csrf_token %}
-        {% include 'inventory/_form-field.html' with field=form.name %}
-        {% include 'inventory/_form-field.html' with field=form.format %}
-        {% include 'inventory/_form-field.html' with field=form.notes %}
+        {% include 'components/form-field.html' with field=form.name %}
+        {% include 'components/form-field.html' with field=form.format %}
+        {% include 'components/form-field.html' with field=form.notes %}
         {% if camera.format == '120' %}
-        {% include 'inventory/_form-field.html' with field=form.multiple_backs %}
+        {% include 'components/form-field.html' with field=form.multiple_backs %}
         {% endif %}
         {% if camera.status != 'loaded' %}
-        {% include 'inventory/_form-field.html' with field=form.unavailable %}
+        {% include 'components/form-field.html' with field=form.unavailable %}
         {% endif %}
         <div class="action">
             <input type="submit" value="Update camera" />
@@ -24,7 +24,7 @@
     </form>
 
     {% if not camera.roll_set.all %}
-    <form x-data @submit.prevent="if (confirmDelete('camera')) $el.submit()" action="{% url 'camera-delete' camera.id %}" method="post">
+    <form onsubmit="return confirmDelete('camera')" action="{% url 'camera-delete' camera.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="camera" value="{{ camera.id }}" />
         <div class="action">Since you’ve never used this, you can <input type="submit" class="destructive" value="delete this camera" /></div>

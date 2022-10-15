@@ -1,21 +1,21 @@
 # Cassette Nest
 
-[![codecov](https://codecov.io/gh/trey/cassettenest/branch/main/graph/badge.svg?token=jRevCZkCfH)](https://codecov.io/gh/trey/cassettenest)
+[![codecov](https://codecov.io/gh/trey/cassettenest/branch/tailwind/graph/badge.svg?token=jRevCZkCfH)](https://codecov.io/gh/trey/cassettenest)
 
 A way for analog photographers to track their film use from box to binder.
 
 [cassettenest.com](http://cassettenest.com)
 
-Copyright &copy; 2016-2021 Trey Labs LLC. All rights reserved.
+Copyright &copy; 2016-2022 Piepworks LLC. All rights reserved.
 
 ## Local Setup
 
+0. Install [Postgres.app](https://postgresapp.com)
 1. Create a new a `.env` file based on [the example](example-local.env).
     - Adjust as needed, but you shouldn't need to do anything.
-2. `dev/build`
-3. `dev/run python manage.py migrate`
+2. `dev/bootstrap`
+3. `python manage.py migrate`
 4. Import a database dump if you want.
-    - If not, run `dev/run python manage.py createsuperuser`.
 
 ## Development
 
@@ -31,24 +31,14 @@ Copyright &copy; 2016-2021 Trey Labs LLC. All rights reserved.
 
 Once everything's set up, the next time you want to run it:
 
-```shell
-dev/server
-```
+- Open the Postgres macOS app and start the appropriate database.
+- Make sure the virtual environment is activated (usually happens automatically in VS Code).
+    `source venv/bin/activate`
+- To run the Django server:
+    - `dev/start`
+- To run both the Django server and compile Tailwind on demand:
+    - `npm run start`
 
-If you want to use [Browsersync](https://www.browsersync.io)…
+---
 
-- `npm i -g browser-sync`
-
-Then you can just run…
-
-```shell
-dev/browsersync
-```
-
-…or just…
-
-```shell
-dev/start
-```
-
-… to start the server as well as Browsersync.
+Backup storage "lifecycle" is defined in `cassettenest.xml` (which is in iCloud /Documents/DigitalOcean Spaces Storage Lifecycle Definitions).

@@ -83,6 +83,7 @@ class StockForm(ModelForm):
             queryset=Manufacturer.objects.all().exclude(Q(personal=True) & ~Q(added_by=self.user)),
             required=False,
         )
+        self.fields['iso'].max_value = 10000
 
     new_manufacturer = forms.CharField(
         label='Or add a new manufacturer',
@@ -99,7 +100,17 @@ class StockForm(ModelForm):
 
     class Meta:
         model = Stock
-        fields = ['manufacturer', 'new_manufacturer', 'name', 'type', 'formats', 'iso', 'url', 'description']
+        fields = [
+            'manufacturer',
+            'destination',
+            'new_manufacturer',
+            'name',
+            'type',
+            'formats',
+            'iso',
+            'url',
+            'description',
+        ]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -203,6 +214,7 @@ class PatternsForm(forms.Form):
 
     help_text = 'This is help text.'
 
+    number = forms.IntegerField(initial=1, max_value=5, help_text='Max value set to "5", minimum is the default "0".')
     text = forms.CharField()
     email = forms.EmailField(help_text=help_text)
     password = forms.CharField(
@@ -217,7 +229,6 @@ class PatternsForm(forms.Form):
         help_text=help_text,
         widget=forms.Textarea
     )
-    number = forms.IntegerField(help_text=help_text)
     choice = forms.ChoiceField(
         help_text=help_text,
         choices=[
@@ -269,3 +280,7 @@ class FilmForm(ModelForm):
             'name',
             'url',
         ]
+
+
+class StepperForm(forms.Form):
+    quantity = forms.IntegerField(initial=1, min_value=1)

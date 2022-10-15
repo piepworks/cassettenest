@@ -1,0 +1,5 @@
+{# Sort of based on Heroicon outline/minus-circle #}
+{# https://developer.mozilla.org/en-US/docs/Web/SVG/Element/circle #}
+<svg class="h-5 w-5{% if class %} {{ class }}{% endif %}" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+    <circle cx="12" cy="12" r="9" />
+</svg>

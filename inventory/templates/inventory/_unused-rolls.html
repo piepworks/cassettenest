@@ -1,16 +1,9 @@
-{% if not project %}
-    {% if filters.format != 'all' or filters.type != 'all' %}
-        <a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'inventory' %}">Reset filter</a>
-    {% endif %}
-    <hr />
-{% endif %}
-
-<h2 id="film-summary">
+<h3 id="film-summary">
     {% if not project %}
         {% if filters.format != 'all' or filters.type != 'all' %}
             {{ total_film_count.count }}
             roll{{ total_film_count.count|pluralize }} (filtered),
-            <small><a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target=".raw" href="{% url 'inventory' %}">
+            <small>
         {% endif %}
     {% endif %}
     {{ total_rolls }} roll{{ total_rolls|pluralize }}
@@ -18,22 +11,35 @@
         remaining
     {% else %}
         {% if filters.format != 'all' or filters.type != 'all' %}
-            total</a></small>
+            total <a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target="#inventory-content-wrapper" href="{% url 'inventory' %}">(reset filters)</a></small>
         {% endif %}
     {% endif %}
-</h2>
+</h3>
 
-<section id="film-wrapper">
-    {% if project %}
-    <h3 class="c-heading c-heading--divider">Ready to Load</h3>
-    {% endif %}
-
+<section id="film-wrapper" class="logbook">
     {% if film_counts %}
-        <section class="cards">
-            {% for film in film_counts %}
-                {% include 'inventory/_card.html' with name=film location=film.get_absolute_url slot='count' count=film.count type='film' film_type=film.type querystring='project' %}
-            {% endfor %}
-        </section>
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="text-left">Manufacturer</th>
+                            <th class="text-left">Film Stock</th>
+                            <th class="text-left">Type</th>
+                            <th class="text-left">Format</th>
+                            <th class="text-left">Count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for film in film_counts %}
+                        <tr>
+                            {% include 'components/film.html' %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     {% else %}
         <p>No rolls matching the current filter.</p>
     {% endif %}

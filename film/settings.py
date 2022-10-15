@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 import os
 import socket
 import bleach
+import dotenv
+import sys
 from pytz import common_timezones
 from django.core.management.utils import get_random_secret_key
 
@@ -36,6 +38,7 @@ ADMINS = [('Trey', 'trey@treypiepmeier.com'), ]
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+dotenv.load_dotenv(dotenv_path=BASE_DIR + '/.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
@@ -46,7 +49,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(os.environ.get('DEBUG', default=0))
 
-ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS')]
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
 CSRF_TRUSTED_ORIGINS = [os.environ.get('CSRF_TRUSTED_ORIGINS')]
 
 
@@ -61,7 +64,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'compressor',
     'django_bleach',
     'capture_tag',
     'debug_toolbar',
@@ -70,6 +72,7 @@ INSTALLED_APPS = [
     'dbbackup',
     'widget_tweaks',
     'django_htmx',
+    'django_browser_reload',
 ]
 
 MIDDLEWARE = [
@@ -82,10 +85,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'inventory.middleware.AppPlaformRedirectMiddleware',
     'inventory.middleware.TimezoneMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'film.urls'
@@ -118,8 +123,8 @@ DATABASES = {
         'NAME': os.environ.get('POSTGRES_DB'),
         'USER': os.environ.get('POSTGRES_USER'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': 'db',
-        'PORT': 5432
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('POSTGRES_PORT')
     }
 }
 
@@ -169,16 +174,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-COMPRESS_PRECOMPILERS = (
-    ('text/x-scss', 'django_libsass.SassCompiler'),
-)
-
-STATICFILES_FINDERS = (
+STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    # other finders..
-    'compressor.finders.CompressorFinder',
-)
+]
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -209,12 +208,6 @@ PADDLE_PUBLIC_KEY = os.environ.get('PADDLE_PUBLIC_KEY')
 # Django Debug Toolbar
 INTERNAL_IPS = ['127.0.0.1']
 
-# `source_comments` takes the value of DEBUG no matter what apparently and it’s
-# not happy with `0` or `1`
-# https://github.com/torchbox/django-libsass#settings
-LIBSASS_SOURCE_COMMENTS = env_var('DEBUG')
-LIBSASS_SOURCEMAPS = env_var('DEBUG')
-
 # Allow for checking if someone is logged on via the marketing site.
 CORS_ALLOWED_ORIGINS = [
     os.environ.get('MARKETING_SITE_URL')
@@ -229,7 +222,3 @@ BLEACH_ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.extend(['p', 'hr'])
 DBBACKUP_STORAGE = os.environ.get('DBBACKUP_STORAGE')
 DBBACKUP_STORAGE_OPTIONS = {'location': os.environ.get('DBBACKUP_STORAGE_OPTIONS')}
 DBBACKUP_FILENAME_TEMPLATE = 'cassettenest_{datetime}.{extension}'
-
-# Django Debug Toolbar w/ Docker
-hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
-INTERNAL_IPS = [ip[:-1] + "1" for ip in ips]

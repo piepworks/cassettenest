@@ -1,0 +1,28 @@
+<div id="menu" class="md:translate-x-0 inset-0 flex z-40 md:z-auto md:static" role="dialog" aria-modal="true">
+    <div id="menu-overlay" onclick="cnMenu.close()" class="transition-opacity bg-stone-600 ease-linear duration-300"></div>
+    <div id="menu-content" class="md:translate-x-0 relative flex-1 flex flex-col w-full transition ease-in-out duration-300 transform">
+        <div id="menu-close" class="hidden md:hidden absolute top-0 right-0 -mr-12 pt-2">
+            <button onclick="cnMenu.close()" type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+                <span class="sr-only">Close menu</span>
+                {% include 'svg/heroicons/x.svg' with class="h-6 w-6 text-white" %}
+            </button>
+        </div>
+        <div id="menu-inner" class="{% if request.session.sidebar == 'closed' %}collapsed {% endif %}flex md:flex-col md:min-h-screen pb-safe">
+            <div class="flex-1 flex flex-col">
+                <div class="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
+                    <div class="flex-shrink-0 px-4">
+                        {% include 'inventory/_logo.html' %}
+                    </div>
+
+                    {% include 'inventory/_nav-status.html' %}
+
+                    <div id="menu-desktop-toggle" class="hidden">
+                        <button onclick="cnMenu.desktopToggle()" type="button" class="bg-transparent" title="You can just press \">
+                            {% include 'svg/bootstrap/arrow-bar-left.svg' %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

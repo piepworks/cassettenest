@@ -1,3 +1,0 @@
-#!/bin/sh
-
-browser-sync start --no-open --no-notify --proxy "localhost:8001" --files "**/*.scss" "**/*.html" "**/*.py" "**/*.js"

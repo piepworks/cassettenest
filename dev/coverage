@@ -1,5 +1,5 @@
 #!/bin/sh
 
-$(dirname "$0")/run coverage run manage.py test --keepdb $@
-$(dirname "$0")/run coverage report
-$(dirname "$0")/run coverage html
+venv/bin/coverage run manage.py test --keepdb $@
+venv/bin/coverage report
+venv/bin/coverage html

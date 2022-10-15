@@ -1,0 +1,47 @@
+{% comment %}
+For Tailwind to generate these styles no matter what:
+
+sm:hidden md:hidden lg:hidden xl:hidden
+sm:block  md:block  lg:block  xl:block
+{% endcomment %}
+
+<div hx-push-url="true">
+    {% if title %}<h2 class="mb-3 text-sm uppercase font-semibold">{{ title }}</h2>{% endif %}
+
+    {# Smaller screens #}
+    <div class="{{ size }}:hidden">
+        <label for="id_{{ items.slug }}" class="sr-only">Select a tab</label>
+        <form
+            method="get"
+            hx-get="?{{ name }}={{ tab }}"
+            hx-trigger="change"
+            hx-target="{{ target }}"
+            class="flex">
+            <select name="{{ name }}" id="id_{{ items.slug }}" class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                {% for tab in tabs %}
+                <option value="{{ tab }}"{% if tab|stringformat:'s' == current_tab %} selected{% endif %}>{{ tab|title }}{% if tab|stringformat:'s' == 'all' %} {{ plural|title }}{% endif %} ({{ tabs|get_item:tab }})</option>
+                {% endfor %}
+            </select>
+            <button class="no-js button primary ml-4">Go</button>
+        </form>
+    </div>
+
+    {# Larger screens #}
+    <div class="hidden {{ size }}:block">
+        <nav class="tabs flex flex-wrap gap-x-8 gap-y-4">
+            {% for tab in tabs %}
+                <a
+                    href="?{{ name }}={{ tab }}"
+                    hx-get="?{{ name }}={{ tab }}"
+                    hx-trigger="click"
+                    hx-target="{{ target }}"
+                    class="whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm{% if tab|stringformat:'s' == current_tab %} current{% endif %}">
+                    {{ tab|title }}{% if tab|stringformat:'s' == 'all' %} {{ plural|title }}{% endif %}
+                    {% if tabs|get_item:tab %}
+                        <span class="{% if tab|stringformat:'s' == current_tab %}bg-blue-100 dark:bg-blue-400 text-blue-600 dark:text-blue-900 {% else %}bg-stone-100 dark:bg-stone-700 text-stone-900 dark:text-stone-300 {% endif %}ml-3 py-0.5 px-2.5 rounded-full text-xs font-medium md:inline-block">{{ tabs|get_item:tab }}</span>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </nav>
+    </div>
+</div>

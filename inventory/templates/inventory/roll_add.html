@@ -3,33 +3,38 @@
 {% block title %}Add a roll to your logbook{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <h1>Add a roll to your&nbsp;logbook</h1>
-    <p>Or <a href="{% url 'rolls-add' %}">add rolls to storage</a>.</p>
+<h1>Add a roll to your&nbsp;logbook</h1>
+
+<div class="space-y-3">
     <p>For best results with the auto-generated code/label, be sure to add things in strict chronological order from oldest to newest.</p>
     <p><i>To mark a roll as "Loaded," go to <a href="{% url 'index' %}">the home page</a> and choose a "Ready to Load" camera.</i></p>
-
-    <form action="{% url 'roll-add' %}" method="post">
-        {% csrf_token %}
-        <div class="c-field">
-            <label for="id_film">Film</label>
-            {% include 'inventory/_film-selector.html' %}
-        </div>
-
-        <div class="c-field">
-            <p>
-                Not seeing the film you need?
-                <a href="{% url 'stock-add' %}?destination=add-logbook">Add a new kind of film to the list.</a>
-            </p>
-        </div>
-
-        {% include 'inventory/_form-roll.html' with method='add' %}
-        <div class="action">
-            <p><input type="submit" name="" value="Save roll to logbook" /></p>
-            <p><input type="submit" class="secondary" name="another" value="Save roll to logbook and add another" /></p>
-        </div>
-    </form>
 </div>
+
+<form action="{% url 'roll-add' %}" method="post">
+    {% csrf_token %}
+
+    <div class="field">
+        <p class="col-span-3">Or <a href="{% url 'rolls-add' %}">add rolls to storage</a>.</p>
+    </div>
+
+    <div class="field">
+        <label for="id_film">Film</label>
+        {% include 'inventory/_film-selector.html' %}
+    </div>
+
+    <div class="field">
+        <p class="col-span-3">
+            Not seeing the film you need?
+            <a href="{% url 'stock-add' %}?destination=add-logbook">Add a new kind of film to the list.</a>
+        </p>
+    </div>
+
+    {% include 'inventory/_form-roll.html' with method='add' %}
+    <div class="action">
+        <button class="primary">Save roll to logbook</button>
+        <button name="another">Save roll to logbook and add another</button>
+    </div>
+</form>
 {% endblock %}
 
 {% block page_js %}

@@ -1,61 +1,8 @@
-<h2>Camera{{ project.cameras.count|pluralize }}</h2>
-
 {% if project.status == 'archived' %}
-    <ul>
-        {% for camera in project.cameras.all %}
-        <li><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></li>
-        {% endfor %}
-    </ul>
+    <h3>Cameras</h3>
+    <div class="mb-10">{% include 'components/standard-table.html' with table=cameras_table %}</div>
 {% else %}
-    {% if loaded_roll_list %}
-    <section>
-        <h3 class="c-heading c-heading--divider">Loaded</h3>
-        <section class="cards">
-            {% for roll in loaded_roll_list %}
-                {% url 'roll-detail' roll.id as roll_detail %}
-                {% if roll.camera_back %}
-                    {% include 'inventory/_card.html' with name=roll.camera_back location=roll_detail slot='reminder' roll=roll %}
-                {% else %}
-                    {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
-                {% endif %}
-            {% endfor %}
-        </section>
-    </section>
-    {% endif %}
-
-    {% if cameras_empty or camera_backs_empty %}
-    <section>
-        <h3 class="c-heading c-heading--divider">Ready to Load</h3>
-        <section class="cards">
-            {% if cameras_empty %}
-            {% for camera in cameras_empty %}
-                {% url 'camera-load' camera.id as camera_load %}
-                {% include 'inventory/_card.html' with name=camera.name location=camera_load slot='reminder' querystring='project' %}
-            {% endfor %}
-            {% endif %}
-            {% if camera_backs_empty %}
-            {% for back in camera_backs_empty %}
-                {% url 'camera-back-load' back.camera.id back.id as camera_back_load %}
-                {% include 'inventory/_card.html' with name=back location=camera_back_load slot='reminder' querystring='project' %}
-            {% endfor %}
-            {% endif %}
-        </section>
-    </section>
-    {% endif %}
-
-    {% if rolls_loaded_outside_project %}
-    <section>
-        <h3 class="c-heading c-heading--divider">Loaded outside of project</h3>
-        <section class="cards">
-            {% for roll in rolls_loaded_outside_project %}
-                {% url 'roll-detail' roll.id as roll_detail %}
-                {% if roll.camera_back %}
-                    {% include 'inventory/_card.html' with name=roll.camera_back location=roll_detail slot='reminder' roll=roll %}
-                {% else %}
-                    {% include 'inventory/_card.html' with name=roll.camera.name location=roll_detail slot='reminder' roll=roll %}
-                {% endif %}
-            {% endfor %}
-        </section>
-    </section>
-    {% endif %}
+    <div id="cameras_section">
+        {% include 'components/section.html' with items=cameras %}
+    </div>
 {% endif %}

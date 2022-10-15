@@ -1,0 +1,18 @@
+{% load widget_tweaks capture_tags %}
+
+{% if field.field.widget.input_type == 'hidden' %}
+    {{ field }}
+{% else %}
+<div data-label="{{ field.field.label }}">
+    <label class="mb-2 sm:mb-0 block text-sm font-medium" for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+    <div class="mt-1">
+        <div class="flex items-center space-x-1">
+            {{ field }}
+        </div>
+        {% if field.help_text and field.label != 'Username' %}
+            <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}

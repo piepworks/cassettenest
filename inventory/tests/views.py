@@ -2,6 +2,7 @@ import datetime
 import io
 import csv
 import pytz
+import logging
 from unittest import mock
 from django.test import TestCase, override_settings, RequestFactory
 from django.urls import reverse
@@ -14,7 +15,7 @@ from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
 from django_htmx.middleware import HtmxDetails
-from inventory.views import stocks, inventory
+from inventory.views import stocks, inventory, session_sidebar
 from inventory.models import Roll, Camera, CameraBack, Project, Journal, Profile, Film, Frame, Stock, Manufacturer
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
@@ -39,29 +40,42 @@ def htmx_request(user=None, get_url=None, post_url=None, post_data={}, trigger=N
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class IndexTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username='test',
+            password='secret',
+        )
+
     def setUp(self):
+        self.client.force_login(user=self.user)
         self.index_url = reverse('index')
         self.login_url = reverse('login')
-        self.username = 'test'
-        self.password = 'secret'
-
-    def test_logged_out(self):
-        response = self.client.get(self.index_url)
-
-        self.assertRedirects(response, f'{self.login_url}?next={self.index_url}')
 
     def test_logged_in(self):
-        user = User.objects.create_user(
-            username=self.username,
-            password=self.password,
-        )
-        self.client.login(
-            username=self.username,
-            password=self.password,
-        )
         response = self.client.get(self.index_url)
 
         self.assertEqual(response.status_code, 200)
+
+    def test_logged_out(self):
+        self.client.logout()
+
+        response = self.client.get(self.index_url)
+        self.assertRedirects(response, f'{self.login_url}?next={self.index_url}')
+
+    def test_set_cameras_tab(self):
+        headers = {'HTTP_HX-Request': 'true'}
+        response = self.client.get(f'{self.index_url}?c=1&p=0&slug=c', **headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['cameras'].current_tab, 1)
+
+    def test_set_projects_tab(self):
+        headers = {'HTTP_HX-Request': 'true'}
+        response = self.client.get(f'{self.index_url}?c=0&p=1&slug=p', **headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['projects'].current_tab, 1)
 
 
 class MarketingSiteCORSTests(TestCase):
@@ -73,6 +87,17 @@ class MarketingSiteCORSTests(TestCase):
             username=cls.username,
             password=cls.password,
         )
+
+    def setUp(self):
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
 
     def test_logged_out(self):
         response = self.client.get(reverse('marketing-site'))
@@ -115,7 +140,7 @@ class ReminderCardTests(TestCase):
         roll.save()
 
         response = self.client.get(reverse('index'))
-        self.assertContains(response, '<li class="type">BW</li>')
+        self.assertContains(response, 'type-bw')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -190,7 +215,7 @@ class SettingsTests(TestCase):
         profile.save()
 
         response = self.client.get(reverse('settings'))
-        self.assertContains(response, 'You’re a friend of Trey Labs')
+        self.assertContains(response, 'You’re a friend of Piepworks')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -199,7 +224,7 @@ class RegisterTests(TestCase):
         response = self.client.get(reverse('register'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'Create an account to continue.', html=True)
+        self.assertContains(response, 'Create an account', html=True)
 
     def test_registering_new_user(self):
         username = 'testtest'
@@ -347,11 +372,6 @@ class LogbookTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['year'], str(self.today.year))
         self.assertEqual(len(response.context['rolls']), 1)
-
-    def test_js_needed(self):
-        response = self.client.get(reverse('logbook'))
-
-        self.assertEqual(response.context['js_needed'], True)
 
 
 class ExportTests(TestCase):
@@ -844,11 +864,6 @@ class ReadyTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'You have 1 roll ready to process.', html=True)
 
-    def test_js_needed(self):
-        response = self.client.get(reverse('ready'))
-
-        self.assertEqual(response.context['js_needed'], True)
-
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RollsAddTests(TestCase):
@@ -1046,6 +1061,16 @@ class FilmRollsTests(TestCase):
             password=self.password,
         )
 
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
+
     def test_film_rolls_with_stock(self):
         response = self.client.get(reverse('film-rolls', args=(self.film.stock.slug, self.film.format,)))
         self.assertEqual(response.status_code, 200)
@@ -1093,6 +1118,16 @@ class SubscriptionTests(TestCase):
             username=self.username,
             password=self.password,
         )
+
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
 
     def test_subscription_success_page(self):
         plan = settings.PADDLE_STANDARD_MONTHLY
@@ -1481,15 +1516,28 @@ class ProjectTests(TestCase):
         project = baker.make(Project, owner=self.user)
         camera1 = baker.make(Camera, owner=self.user, multiple_backs=True)
         camera2 = baker.make(Camera, owner=self.user)
-        baker.make(Roll, film=film, status=status_number('loaded'), camera=camera2, owner=self.user)
+        camera3 = baker.make(Camera, owner=self.user)
+        camera4 = baker.make(Camera, owner=self.user)
+        baker.make(Roll, film=film, status=status_number('loaded'), camera=camera2, owner=self.user, project=project)
         baker.make(Roll, film=film, status=status_number('storage'), owner=self.user, project=project)
+        baker.make(Roll, film=film, status=status_number('loaded'), camera=camera4, owner=self.user)
         project.cameras.add(camera1)
         project.cameras.add(camera2)
+        project.cameras.add(camera3)
+        project.cameras.add(camera4)
         baker.make(CameraBack, camera=camera1)
 
         response = self.client.get(reverse('project-detail', args=(project.id,)))
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, '(filtered)')
+
+    def test_project_detail_htmx(self):
+        project = baker.make(Project, owner=self.user)
+        headers = {'HTTP_HX-Request': 'true'}
+        response = self.client.get(reverse('project-detail', args=(project.id,)), **headers)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'partials/project-camera-logbook-wrapper.html')
 
     def test_project_rolls_add(self):
         project = baker.make(Project, owner=self.user)
@@ -1688,6 +1736,21 @@ class CameraViewTests(TestCase):
             reverse('camera-back-detail', args=(camera_back.camera.id, camera_back.id))
         )
         self.assertEqual(response.status_code, 200)
+
+    def test_camera_or_back_detail_htmx(self):
+        camera = baker.make(Camera, owner=self.user)
+        headers1 = {'HTTP_HX-Request': 'true', 'HTTP_HX-Trigger': 'monkey'}
+        response1 = self.client.get(reverse('camera-detail', args=(camera.id,)), **headers1)
+
+        self.assertEqual(response1.status_code, 200)
+        self.assertTemplateUsed(response1, 'components/logbook-table.html')
+
+        camera2 = baker.make(Camera, owner=self.user, multiple_backs=True)
+        headers2 = {'HTTP_HX-Request': 'true', 'HTTP_HX-Trigger': 'section'}
+        response2 = self.client.get(reverse('camera-detail', args=(camera2.id,)), **headers2)
+
+        self.assertEqual(response2.status_code, 200)
+        self.assertTemplateUsed(response2, 'components/section.html')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
@@ -1967,6 +2030,15 @@ class StockViewTests(TestCase):
             username=self.username,
             password=self.password,
         )
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
 
     def test_stocks_page(self):
         response = self.client.get(reverse('stocks'))
@@ -1979,7 +2051,7 @@ class StockViewTests(TestCase):
         self.assertContains(response, f'{self.public_stock.manufacturer.name} {self.public_stock.name}')
         self.assertContains(response, f'{self.personal_stock.manufacturer.name} {self.personal_stock.name}')
         self.assertIsNotNone(response.context['stocks'])
-        self.assertContains(response, '<h2>C41 Color</h2>', html=True)
+        self.assertContains(response, '<span>C41 Color</span>', html=True)
 
     def test_stocks_page_with_manufacturer_redirect(self):
         response = self.client.get(reverse('stocks') + '?manufacturer=kodak&type=c41')
@@ -2162,3 +2234,48 @@ class StockAddTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('New film stock “Kodak Tri-X 400” (in 35mm, 120) added!', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class SidebarTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.user = User.objects.create_user(
+            username='test',
+            password='secret',
+        )
+
+    def setUp(self):
+        # Reduce the log level to avoid errors like "not found."
+        logger = logging.getLogger('django.request')
+        self.previous_level = logger.getEffectiveLevel()
+        logger.setLevel(logging.ERROR)
+
+        self.client.force_login(user=self.user)
+
+    def tearDown(self):
+        # Reset the log level back to normal.
+        logger = logging.getLogger('django.request')
+        logger.setLevel(self.previous_level)
+
+    def test_sidebar_status_ajax(self):
+        headers = {'HTTP_X-Requested-With': 'XMLHttpRequest'}
+        response = self.client.get(reverse('session-sidebar-status'), **headers)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_sidebar_status_without_ajax(self):
+        response = self.client.get(reverse('session-sidebar-status'))
+
+        self.assertEqual(response.status_code, 403)
+
+    def test_sidebar_htmx(self):
+        headers = {'HTTP_HX-Request': 'true'}
+        response = self.client.get(reverse('session-sidebar'), **headers)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_sidebar_without_htmx(self):
+        response = self.client.get(reverse('session-sidebar'))
+
+        self.assertEqual(response.status_code, 403)

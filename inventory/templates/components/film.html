@@ -1,0 +1,7 @@
+<td>{{ film.stock.manufacturer|default:film.manufacturer }}</td>
+<td>
+    <a href="{{ film.get_absolute_url }}?project={{ project.id }}">{{ film.name }}</a>
+</td>
+<td>{{ film.get_type_display }}</td>
+<td>{{ film.get_format_display }}</td>
+<td>{{ film.count }}</td>

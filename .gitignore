@@ -1,5 +1,6 @@
-*.sqlite3
+venv/
 *.css
+!/theme/tailwind.css
 staticfiles/
 node_modules/
 .env*
@@ -7,3 +8,6 @@ node_modules/
 htmlcov/
 backups/
 paddle_public_key.txt
+/test-results/
+/playwright-report/
+/playwright/.cache/

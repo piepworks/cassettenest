@@ -1,4 +1,4 @@
 #!/bin/sh
 
-docker-compose exec -T web python manage.py collectstatic --noinput
-docker-compose exec -T web python manage.py compress --force
+venv/bin/python manage.py tailwind build
+venv/bin/python manage.py collectstatic --noinput

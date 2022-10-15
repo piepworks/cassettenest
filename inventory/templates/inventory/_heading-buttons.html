@@ -1,37 +1,38 @@
-<div class="action" x-data>
+<div class="actions mt-4 flex-shrink-0 flex items-end md:mt-0 md:ml-4 space-x-3">
     {% if parent_item %}
         {% if key or key is 0 %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id key %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' parent_item.id key %}">
         {% else %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' parent_item.id item.id %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' parent_item.id item.id %}">
         {% endif %}
     {% else %}
         {% if key %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' key %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' key %}">
         {% else %}
-            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button icon icon-edit" href="{% url url|add:'-edit' item.id %}">
+            <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' item.id %}">
         {% endif %}
     {% endif %}
-            {% include 'inventory/_github-icon.html' with id='pencil' title='Edit '|add:name %}
+            Edit
         </a>
     {% if not prevent_delete %}
         {% if parent_item %}
             {% if key %}
-                <form action="{% url url|add:'-delete' parent_item.id key %}" @submit.prevent="if (confirmDelete('{{ title|default:name }}')) $el.submit()" method="post">
+                <form action="{% url url|add:'-delete' parent_item.id key %}" onsubmit="return confirmDelete('{{ title|default:name }}')" method="post">
             {% else %}
-                <form action="{% url url|add:'-delete' parent_item.id item.id %}" @submit.prevent="if (confirmDelete('{{ title|default:name }}')) $el.submit()" method="post">
+                <form action="{% url url|add:'-delete' parent_item.id item.id %}" onsubmit="return confirmDelete('{{ title|default:name }}')" method="post">
             {% endif %}
         {% else %}
             {% if key %}
-                <form action="{% url url|add:'-delete' key %}" @submit.prevent="if (confirmDelete('{{ name }}')) $el.submit()" method="post">
+                <form action="{% url url|add:'-delete' key %}" onsubmit="return confirmDelete('{{ name }}')" method="post">
             {% else %}
-                <form action="{% url url|add:'-delete' item.id %}" @submit.prevent="if (confirmDelete('{{ name }}')) $el.submit()" method="post">
+                <form action="{% url url|add:'-delete' item.id %}" onsubmit="return confirmDelete('{{ name }}')" method="post">
             {% endif %}
         {% endif %}
                 {% csrf_token %}
-                <button aria-label="Delete {{ name }}" class="icon icon-destructive">
-                    {% include 'inventory/_github-icon.html' with id='trashcan' title='Delete '|add:name %}
+                <button aria-label="Delete {{ name }}" class="button destructive">
+                    Delete
                 </button>
             </form>
     {% endif %}
+    {{ additional_buttons }}
 </div>

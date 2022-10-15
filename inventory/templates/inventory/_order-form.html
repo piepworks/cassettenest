@@ -1,21 +1,8 @@
-<div class="order">
-    <input type="hidden" name="current_status" value="shot" />
-    <input type="hidden" name="updated_status" value="processing" />
+<input type="hidden" name="current_status" value="shot" />
+<input type="hidden" name="updated_status" value="processing" />
 
-    {% include 'inventory/_form-field.html' with field=form.lab %}
-    {% include 'inventory/_form-field.html' with field=form.scanner %}
-    {% include 'inventory/_form-field.html' with field=form.notes_on_development %}
+{% include 'components/form-field.html' with field=form.lab %}
+{% include 'components/form-field.html' with field=form.scanner %}
+{% include 'components/form-field.html' with field=form.notes_on_development class='last' %}
 
-    {% include 'inventory/_logbook-table.html' with status='shot' %}
-
-    <div x-data class="action">
-        <div x-show="!$store.checkedCount" class="js-required">
-            <button disabled>Select rolls to update</button>
-        </div>
-        <div x-show="$store.checkedCount">
-            <button x-text="'Update ' + $store.checkedCount + ' selected roll' + $store.itemPlural">
-                Update selected
-            </button>
-        </div>
-    </div>
-</div>
+{% include 'components/logbook-table.html' with status='shot' page='ready' %}

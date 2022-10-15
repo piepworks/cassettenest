@@ -1,17 +1,15 @@
-{% load static compress tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
-<html lang="en">
+{% load static tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
+<html lang="en" class="no-js">
 <head>
     {% url 'index' as index_url %}
     <title>{% block title %}{% endblock %}{% if request.path != index_url %} / {% endif %}Cassette Nest</title>
     <meta name="description" content="An easy and fun way to build an lifelong archive of metadata about your film photography." />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
     <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}" />
-    {% compress css %}
-    <link rel="stylesheet" type="text/x-scss" href="{% static 'scss/main.scss' %}" />
-    {% endcompress %}
+    <link rel="stylesheet" href="{% static 'tailwind.css' %}" />
     {% include '_meta-tags.html' %}
-    {% if not user.is_authenticated %}
+    {% if not user.is_authenticated and not debug %}
     <script async defer data-domain="app.cassettenest.com" src="https://plausible.io/js/plausible.js"></script>
     {% endif %}
     {% if wc_needed %}
@@ -19,67 +17,59 @@
     {% endif %}
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
-<body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
-    <div class="wrapper">
-        <header class="c-site-nav">
-            <div class="badge-wrapper">
-                <div class="film-icon">
-                    {% if user.is_authenticated %}
-                    <a href="/">
-                    {% else %}
-                    <a href="https://cassettenest.com">
-                    {% endif %}
-                        <img src="{% static 'img/icon.svg' %}" height="35" width="35" alt="Cassette Nest Icon" />
-                    </a>
-                </div>
+{% url 'patterns' as patterns_url %}
+<body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart
+    _="on keyup[key is 'Escape']
+         call cnMenu.close()
+       on keyup[key is '\\']
+         call cnMenu.desktopToggle()">
+    <div class="wrapper md:h-screen md:overflow-hidden md:flex">
+        {% if user.is_authenticated and request.path != patterns_url %}{% include '_menu.html' %}{% endif %}
+        <div class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">
+            {% if user.is_authenticated %}{% include '_hamburger.html' %}{% endif %}
+            <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
                 {% if user.is_authenticated %}
-                <a href="/">
-                {% else %}
-                <a href="https://cassettenest.com">
+                    {% flag 'paddle' %}
+                        {% include 'inventory/_subscription-banner-wrapper.html' %}
+                    {% endflag %}
                 {% endif %}
-                    <span title="We’re currently in Beta. Things are gonna be much fancier soon!" class="beta">Beta</span>
-                </a>
+                <main class="pt-2 md:pt-6 pb-16">
+                    {% spaceless %}
+                    <div class="main-header max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8 space-y-8">
+                        {% include 'components/message.html' %}
+
+                        {% block header %}{% endblock %}
+                    </div>
+                    {% endspaceless %}
+                    <div class="main-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+                        {% block content %}{% endblock %}
+
+                        <footer>
+                            <div class="mt-28 border-t border-stone-300 dark:border-stone-700 pt-8 text-xs xl:text-center">
+                                <p class="text-stone-400 dark:text-stone-600 xl:text-center">Copyright &copy; 2016–{% now 'Y' %} <a href="https://piep.works">Piepworks LLC</a>. All rights reserved.</p>
+                                <ul class="policies print:hidden inline-flex gap-3">
+                                    <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
+                                    <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
+                                </ul>
+                            </div>
+                        </footer>
+                    </div>
+                </main>
             </div>
-            {% include 'inventory/_nav.html' %}
-        </header>
-
-        {% if user.is_authenticated %}
-            {% flag 'paddle' %}
-                {% include 'inventory/_subscription-banner-wrapper.html' %}
-            {% endflag %}
-
-            {% include 'inventory/_nav-status.html' %}
-        {% endif %}
-
-        {% include 'inventory/_messages.html' %}
-
-        <main>
-            {% block content %}
-            {% endblock %}
-        </main>
-        <footer>
-            <p>Copyright &copy; 2016–{% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
-            <ul class="policies do-not-print">
-                <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
-                <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
-                <li><a href="https://tools.cassettenest.com/cropfactor/">Crop Factor Calculator</a></li>
-                <li><a href="https://cassettenest.com/changelog/">Changelog</a></li>
-            </ul>
-            <p class="shirt-promo do-not-print"><a href="https://cottonbureau.com/people/trey-labs">Buy a shirt!</a></p>
-            <p class="timezone">Current timezone: {{ TIME_ZONE }}</p>
-        </footer>
+        </div>
     </div>
 
-    {% if js_needed %}
-    <script defer src="{% static 'js/vendor/alpine.min.js' %}"></script>
-
-    <!-- HTMX -->
-    <script src="{% static 'js/vendor/htmx.min.js' %}"></script>
+    <script src="{% static 'js/vendor/htmx-1.8.0.min.js' %}"></script>
+    <script src="{% static 'js/vendor/hyperscript-0.9.7.min.js' %}"></script>
     {% django_htmx_script %}
-    <!-- **** -->
 
-    <script>document.documentElement.classList.add('has-js');</script>
+    <script>
+        document.documentElement.classList.remove('no-js');
+        document.documentElement.classList.add('has-js');
+        {% if user.is_authenticated %}
+        {% include 'js/menu.js' %}
+        {% endif %}
+    </script>
     {% block page_js %}{% endblock %}
-    {% endif %}
 </body>
 </html>

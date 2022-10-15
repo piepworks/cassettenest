@@ -1,9 +1,5 @@
 #!/bin/sh
 
-cp example-local.env .env
-docker-compose up -d --build
-docker-compose exec web python manage.py migrate
-docker-compose exec web python manage.py createsuperuser
-asdf install
-npm i -g browser-sync
-npm i
+$(dirname "$0")/setup-venv
+venv/bin/python manage.py migrate
+venv/bin/python manage.py createsuperuser

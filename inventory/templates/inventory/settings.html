@@ -5,58 +5,74 @@
 {% block bodytag %}class="settings"{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <h1>Settings</h1>
+<h1>Settings</h1>
 
-    {% flag 'paddle' %}
-    {% include 'inventory/_settings-subscription.html' %}
-    {% endflag %}
+{% flag 'paddle' %}
+<div id="subscription">{% include 'inventory/_settings-subscription.html' %}</div>
+{% endflag %}
 
-    <form method="post">
-        {% csrf_token %}
-        {% for field in user_form %}
-            {% include 'inventory/_form-field.html' with field=field %}
-        {% endfor %}
-        {% for field in profile_form %}
-            {% include 'inventory/_form-field.html' with field=field %}
-        {% endfor %}
-        <div class="action"><input type="submit" value="Save settings" /></div>
-    </form>
-    <p><a href="{% url 'password_change' %}">Change your password</a></p>
+<form method="post">
+    {% csrf_token %}
+    {% for field in user_form %}
+        {% include 'components/form-field.html' with field=field %}
+    {% endfor %}
+    {% for field in profile_form %}
+        {% include 'components/form-field.html' with field=field %}
+    {% endfor %}
+    <div class="field last">
+        <label>Password</label>
+        <div><a href="{% url 'password_change' %}">Change your password</a></div>
+    </div>
+    <div class="action"><button class="primary">Save settings</button></div>
+</form>
 
-    {% flag 'export-data' %}
-    {% if exportable_data %}
-    <hr />
 
-    <h2 id="export">Export your data</h2>
-    <ul>
-        {% for k, v in exportable.items %}
-            {% if v %}
-                <li><a href="{% url 'export-'|add:k %}">Download your {{ k }} data.</a></li>
-            {% endif %}
-        {% endfor %}
-    </ul>
-    {% endif %}
-    {% endflag %}
+{% flag 'export-data' %}
+{% if exportable_data %}
+<dl id="export" class="data-import-export">
+    <dt>Export your data</dt>
+    <dd>
+        <ul>
+            {% for k, v in exportable.items %}
+                {% if v %}
+                    <li>
+                        <div class="flex w-0 flex-1 items-center">
+                            {% include 'svg/heroicons/paper-clip.svg' with class='h-5 w-5 flex-shrink-0 text-stone-400 dark:text-stone-500' %}
+                            <span class="ml-2 w-0 flex-1 truncate">Your {% if k == 'camera-backs' %}camera backs{% else %}{{ k }}{% endif %}</span>
+                        </div>
+                        <div class="ml-4 flex-shrink-0">
+                            <a href="{% url 'export-'|add:k %}">Download</a>
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </dd>
+</dl>
+{% endif %}
+{% endflag %}
 
-    {% flag 'import-data' %}
-    <hr />
-
-    <h2 id="import">Import previously exported data</h2>
-    <ul>
-        {% for import in imports %}
-            <li>
-                {{ import }}
-                <form method="post" action="{% url 'import-'|add:import|lower %}" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    {{ csv_form.csv }}
-                    <input type="submit" value="Upload" />
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
-    {% endflag %}
-</div>
+{% flag 'import-data' %}
+<dl id="import" class="data-import-export">
+    <dt>Import previously exported data</dt>
+    <dd>
+        <ul>
+            {% for import in imports %}
+                <li>
+                    <form class="w-full" method="post" action="{% url 'import-'|add:import|lower %}" enctype="multipart/form-data">
+                        <div class="flex items-center">
+                            <div class="basis-1/4">{{ import }}</div>
+                            {% csrf_token %}
+                            <div class="flex-grow">{{ csv_form.csv }}</div>
+                            <button>Upload</button>
+                        </div>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    </dd>
+</dl>
+{% endflag %}
 {% endblock %}
 
 {% block page_js %}

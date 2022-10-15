@@ -3,6 +3,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Count, Q
 from django.utils.encoding import force_str
+from django.utils.text import slugify
 
 
 def get_project_or_none(Project, owner, project_id):
@@ -111,13 +112,6 @@ def pluralize(noun, count):
     return noun
 
 
-def get_host(request):
-    if settings.DEBUG:
-        return f'http://{request.get_host()}'
-    else:
-        return 'https://app.cassettenest.com'
-
-
 def send_email_to_trey(subject, message):
     send_mail(
         subject=subject,
@@ -215,3 +209,32 @@ film_formats = [
     ('135', '35mm'),
     ('120', '120'),
 ]
+
+
+class SectionTabs:
+    # TODO: write tests for this stuff.
+    def __init__(self, title, target, current_tab, tabs, add_url=None):
+        self.title = title
+        self.slug = slugify(self.title)[:1]
+        self.current_tab = current_tab
+        self.tabs = tabs
+        self.target = target
+        self.add_url = add_url
+
+    def current_rows(self):
+        return self.tabs[self.current_tab]['rows']
+
+    def current_tab_action(self):
+        try:
+            return self.tabs[self.current_tab]['action']
+        except KeyError:
+            return 'view'
+
+    def set_tab(self, new_tab):
+        if (str(new_tab).isdigit()):
+            try:
+                tab = self.tabs[int(new_tab)]
+                self.current_tab = int(new_tab)
+            except IndexError:
+                # That tab doesn't exist.
+                pass

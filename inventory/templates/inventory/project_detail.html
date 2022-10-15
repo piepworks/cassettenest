@@ -3,55 +3,70 @@
 
 {% block title %}{{ project.name }}{% endblock %}
 
-{% block content %}
-<div class="raw">
-<header class="c-heading">
-    <div class="flex">
-        {% include 'inventory/_heading-back.html' with url='projects' name='projects' %}
+{% block header %}
+<div class="page-heading">
+    <div class="inner">
+        {# include 'inventory/_heading-back.html' with url='projects' name='projects' #}
         <h1>{{ project.name }}</h1>
-        {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
     </div>
-</header>
 
-<p>Status: {{ project.get_status_display }}</p>
+    {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
+</div>
+{% endblock %}
 
-{% if project.notes %}
-    <hr />
-    <h3>Notes</h3>
-    <div>{{ project.notes|markdown }}</div>
-{% endif %}
+{% block content %}
+<dl class="stats">
+    {% if roll_logbook %}
+    <div>
+        <dt>Roll{{ roll_logbook.count|pluralize}} Used</dt>
+        <dd>{{ roll_logbook.count }}</dd>
+    </div>
+    {% endif %}
+    {% if film_counts %}
+    <div>
+        <dt>Roll{{ total_rolls|pluralize }} Remaining</dt>
+        <dd>{{ total_rolls }}</dd>
+    </div>
+    {% endif %}
+</dl>
 
-{% if project.cameras.all %}
-    {% include 'inventory/_project-cameras.html' %}
-{% endif %}
+<div class="metadata">
+    <div>
+        <dl>
+            <div>
+                <dt>Status</dt>
+                <dd>{{ project.get_status_display }}</dd>
+            </div>
+            {% if project.notes %}
+            <div>
+                <dt>Notes</dt>
+                <dd>{{ project.notes|markdown }}</dd>
+            </div>
+            {% endif %}
+        </dl>
+    </div>
+</div>
+
+{% include 'partials/project-camera-logbook-wrapper.html' %}
 
 {% if film_counts %}
     {% include 'inventory/_unused-rolls.html' %}
 {% elif project.status != 'archived' %}
-    <h2>Film remaining: 0 rolls</h2>
+    <h3>Film remaining: 0 rolls</h3>
 {% endif %}
 
-{% if roll_logbook %}
-    {% include 'inventory/_project-logbook.html' %}
-{% endif %}
-
-<div class="do-not-print">
+<div class="print:hidden">
 {% if project.status != 'archived' %}
     {% if film_available_count %}
-        <hr />
         {% include 'inventory/_project-add-rolls.html' %}
     {% endif %}
 
-    {% if cameras %}
-        <hr />
+    {% if cameras_to_add %}
         {% include 'inventory/_project-add-camera.html' %}
     {% endif %}
 {% else %}
-    <hr />
     <p><i>This project is archived. You can add rolls and cameras to it if you <a href="{% url 'project-edit' project.id %}">change its status</a>.</i></p>
 {% endif %}
-</div>
-
 </div>
 {% endblock %}
 

@@ -1,6 +1,10 @@
 version: 2
 updates:
   - package-ecosystem: "npm"
-    directory: "/" # directory with package.json/package-lock.json
+    directory: "/"
+    schedule:
+      interval: "weekly"
+  - package-ecosystem: "npm"
+    directory: "/theme"
     schedule:
       interval: "weekly"

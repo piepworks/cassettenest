@@ -1,0 +1,23 @@
+<div class="flex flex-wrap items-end space-y-2 mt-1">
+    <input type="hidden" name="current_status" value="{{ current_status }}" />
+    <select name="updated_status" required class="mr-3">
+        <option value="">Select a status</option>
+        {% if current_status != 'shot' %}
+        <option value="shot" {% if updated_status == 'shot' %}selected{% endif %}>Shot</option>
+        {% endif %}
+        {% if current_status != 'processing' %}
+        <option value="processing" {% if updated_status == 'processing' %}selected{% endif %}>Processing</option>
+        {% endif %}
+        {% if current_status != 'processed' %}
+        <option value="processed" {% if updated_status == 'processed' %}selected{% endif %}>Processed</option>
+        {% endif %}
+        {% if current_status != 'scanned' %}
+        <option value="scanned" {% if updated_status == 'scanned' %}selected{% endif %}>Scanned</option>
+        {% endif %}
+        {% if current_status != 'archived' %}
+        <option value="archived" {% if updated_status == 'archived' %}selected{% endif %}>Archived</option>
+        {% endif %}
+    </select>
+
+    {% include 'partials/logbook-update-buttons.html' %}
+</div>

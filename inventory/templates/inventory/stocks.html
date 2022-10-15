@@ -15,12 +15,7 @@
 {% endblock %}
 
 {% block content %}
-<div id="spinner" class="htmx-indicator">
-    <div class="loader"></div>
-</div>
-<div class="raw">
-    {% include 'inventory/_stocks-content.html' %}
-</div>
+{% include 'inventory/_stocks-content.html' %}
 {% endblock %}
 
 {% block page_js %}

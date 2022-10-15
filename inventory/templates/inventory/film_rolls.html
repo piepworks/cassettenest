@@ -4,21 +4,24 @@
 {% block title %}{{ film }}{% endblock %}
 
 {% block content %}
-<div class="raw">
 <h1>{% include 'inventory/_film-name-display.html' with film=film %}</h1>
 
 {% capture as film_iso silent %}{% if film.stock %}{{ film.stock.iso }}{% else %}{{ film.iso }}{% endif %}{% endcapture %}
 {% capture as film_description silent %}{% if film.stock %}{{ film.stock.description }}{% else %}{{ film.description }}{% endif %}{% endcapture %}
 {% if film.stock %}{% url 'film-rolls' film.stock.slug film.format as film_url %}{% else %}{% url 'film-slug-redirect' film.slug as film_url %}{% endif %}
 
-<p>ISO {{ film_iso }}</p>
+<dl class="stats">
+    <div>
+        <dt>ISO</dt>
+        <dd>{{ film_iso }}</dd>
+    </div>
+</dl>
 
 {% if film_description %}
     <div>{{ film_description|markdown }}</div>
 {% endif %}
 
 {% if current_project %}
-    <hr />
     <p>Viewing rolls in project: <b><a href="{% url 'project-detail' current_project.id %}">{{ current_project }}</a></b>.</p>
     <p><a href="{{ film_url }}">View all your rolls of {{ film }}.</a></p>
 {% endif %}
@@ -26,14 +29,7 @@
 <section class="storage">
     <h2>Storage</h2>
     {% if rolls_storage %}
-        <ul>
-            {% for roll in rolls_storage %}
-            <li>
-                <a href="{% url 'roll-detail' roll.id %}">Added on {{ roll.created_at|date:'Y-m-d' }}</a>
-                {% if not current_project %}{% include 'inventory/_roll-project-link.html' %}{% endif %}
-            </li>
-            {% endfor %}
-        </ul>
+        {% include 'components/standard-table.html' with table=rolls_storage_table %}
     {% else %}
         <p>You don’t have any of this film.</p>
     {% endif %}
@@ -43,17 +39,9 @@
     <h2 id="film_history_heading">History</h2>
 
     {% if rolls_history %}
-        <ul>
-            {% for roll in rolls_history %}
-            <li>
-                <a href="{% url 'roll-detail' roll.id %}">{{ roll.code }} / {{ roll.started_on|date:'Y' }}</a>
-                {% if not current_project %}{% include 'inventory/_roll-project-link.html' %}{% endif %}
-            </li>
-            {% endfor %}
-        </ul>
+        {% include 'components/standard-table.html' with table=rolls_history_table %}
     {% else %}
         <p>You don’t have any finished rolls of this film yet.</p>
     {% endif %}
 </section>
-</div>
 {% endblock %}

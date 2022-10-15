@@ -1,0 +1,9 @@
+<div id="project-camera-logbook-wrapper">
+    {% if project.cameras.all %}
+        {% include 'inventory/_project-cameras.html' %}
+    {% endif %}
+
+    {% if roll_logbook %}
+        {% include 'inventory/_project-logbook.html' with target='#project-camera-logbook-wrapper' %}
+    {% endif %}
+</div>

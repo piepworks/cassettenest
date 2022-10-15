@@ -3,35 +3,35 @@
 {% block title %}Add Film Stock{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <h1>Add Film Stock</h1>
+<h1>Add Film Stock</h1>
 
-    <div class="notes">
-        {% include 'inventory/_github-icon.html' with id='beaker' %}
-        <div class="inner">
-            <p>Thanks for helping! For the sake of consistency, we may need to make adjustments to this new film stock before <a target="_blank" rel="noopener" href="https://cassettenest.com/policies/privacy/content/">making it available for everyone to use</a>.</p>
-        </div>
+<div class="notes sm:flex gap-6 sm:items-center bg-white shadow-lg dark:shadow-none dark:bg-stone-900 rounded-xl py-4 px-6">
+    {% include 'svg/heroicons/beaker.svg' with class='float-left sm:float-none mt-1 mr-4 mb-1 sm:m-0 h-10 w-10 sm:flex-shrink-0' %}
+    <p>Thanks for helping! For the sake of consistency (maintaining a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Controlled_vocabulary">controlled vocabulary</a>), we may need to make adjustments to this new film stock before <a target="_blank" rel="noopener" href="https://cassettenest.com/policies/privacy/content">making it available for everyone to use</a>.</p>
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <div class="progressive-field-wrapper progressive-field-wrapper__top">
+        {% include 'components/form-field.html' with field=form.manufacturer progressive=True primary=True progressive_text='…or add a new manufacturer.' %}
+        {% include 'components/form-field.html' with field=form.new_manufacturer progressive=True progressive_text='…or choose an existing manufacturer.' label_override='New Manufacturer' top_field=True %}
     </div>
 
-    <form method="post">
-        {% csrf_token %}
-        <div x-data="{ primary: true }" class="progressive-field-wrapper progressive-field-wrapper__top">
-            {% include 'inventory/_form-field.html' with field=form.manufacturer progressive=True primary=True progressive_text='…or add a new manufacturer.' %}
-            {% include 'inventory/_form-field.html' with field=form.new_manufacturer progressive=True progressive_text='…or choose an existing manufacturer.' label_override='New Manufacturer' top_field=True %}
-        </div>
-
-        {% for field in form %}
-            {% if field.name != 'manufacturer' and field.name != 'new_manufacturer'%}
-                {% include 'inventory/_form-field.html' with field=field %}
+    {% for field in form %}
+        {% if field.name != 'manufacturer' and field.name != 'new_manufacturer'%}
+            {% if forloop.last %}
+                {% include 'components/form-field.html' with field=field class='last' %}
+            {% else %}
+                {% include 'components/form-field.html' with field=field %}
             {% endif %}
-        {% endfor %}
+        {% endif %}
+    {% endfor %}
 
-        <div class="action">
-            <p><input type="submit" value="Save film stock" /></p>
-            <p><input type="submit" class="secondary" name="another" value="Save film stock and add another" /></p>
-        </div>
-    </form>
-</div>
+    <div class="action">
+        <button class="primary">Save film stock</button>
+        <button name="another">Save film stock and add another</button>
+    </div>
+</form>
 {% endblock %}
 
 {% block page_js %}

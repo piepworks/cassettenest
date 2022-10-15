@@ -18,6 +18,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
+from itertools import chain
 from waffle.decorators import waffle_flag
 import requests
 from .models import Camera, CameraBack, Stock, Film, Manufacturer, Journal, Project, Roll, Frame
@@ -31,6 +32,7 @@ from .forms import (
     ReadyForm,
     RegisterForm,
     RollForm,
+    StepperForm,
     StockForm,
     UserForm,
     UploadCSVForm,
@@ -45,12 +47,13 @@ from .utils import (
     status_keys,
     status_number,
     bulk_status_next_keys,
-    get_host,
     send_email_to_trey,
     inventory_filter,
     preset_apertures,
     preset_shutter_speeds,
     available_types,
+    SectionTabs,
+    film_types,
 )
 from .utils_paddle import (
     supported_webhooks,
@@ -72,40 +75,141 @@ def index(request):
         status='empty'
     ).exclude(multiple_backs=True)
     camera_backs_empty = camera_backs_total.filter(status='empty')
+    cameras_unavailable = cameras_total.filter(status='unavailable')
     rolls = Roll.objects.filter(owner=owner)
     rolls_loaded = rolls.filter(status=status_number('loaded'))
-    rolls_ready_count = rolls.filter(status=status_number('shot')).count()
-    rolls_storage_count = rolls.filter(
-        status=status_number('storage')
-    ).count()
     all_projects = Project.objects.filter(
         owner=owner,
     ).order_by('-updated_at',)
-    projects_current = all_projects.filter(status='current')
-    projects_count = all_projects.count()
-    rolls_outstanding_count = rolls.exclude(
-        status=status_number('storage')
-    ).exclude(
-        status=status_number('archived')
-    ).count()
 
-    context = {
-        'email': owner.email,
-        'cameras_total': cameras_total,
-        'cameras_empty': cameras_empty,
-        'camera_backs_empty': camera_backs_empty,
-        'projects_current': projects_current,
-        'projects_count': projects_count,
-        'rolls': rolls,
-        'rolls_loaded': rolls_loaded,
-        'rolls_ready_count': rolls_ready_count,
-        'rolls_storage_count': rolls_storage_count,
-        'rolls_outstanding_count': rolls_outstanding_count,
-    }
-    return render(request, 'inventory/index.html', context)
+    cameras = SectionTabs(
+        'Cameras',
+        '#homepage_sections',
+        0,
+        [
+            {
+                'name': 'Loaded',
+                'count': rolls_loaded.count(),
+                'rows': rolls_loaded,
+                'action': 'roll'
+            },
+            {
+                'name': 'Ready to Load',
+                'count': cameras_empty.count() + camera_backs_empty.count(),
+                'rows': list(chain(cameras_empty, camera_backs_empty)),
+                'action': 'load',
+            },
+            {
+                'name': 'Unavailable',
+                'count': cameras_unavailable.count(),
+                'rows': cameras_unavailable,
+                'action': 'load',
+            },
+        ],
+        reverse('camera-add'),
+    )
+
+    projects = SectionTabs(
+        'Projects',
+        '#homepage_sections',
+        0,
+        [
+            {
+                'name': 'Current',
+                'count': all_projects.filter(status='current').count(),
+                'rows': all_projects.filter(status='current'),
+            },
+            {
+                'name': 'Archived',
+                'count': all_projects.filter(status='archived').count(),
+                'rows': all_projects.filter(status='archived'),
+            }
+        ],
+        reverse('project-add'),
+    )
+
+    if request.GET.get('c'):
+        cameras.set_tab(request.GET.get('c'))
+
+    if request.GET.get('p'):
+        projects.set_tab(request.GET.get('p'))
+
+    if request.htmx:
+        slug = request.GET.get('slug')
+        c = request.GET.get('c') if request.GET.get('c') else 0
+        p = request.GET.get('p') if request.GET.get('p') else 0
+
+        if slug == 'c':
+            cameras.set_tab(c)
+        elif slug == 'p':
+            projects.set_tab(p)
+
+        context = {
+            'cameras': cameras,
+            'projects': projects,
+        }
+
+        response = render(request, 'partials/homepage-sections.html', context)
+        response['HX-Push'] = reverse('index') + f'?c={c}&p={p}'
+
+        return response
+
+    else:
+        context = {
+            'email': owner.email,
+            'cameras': cameras,
+            'cameras_total': cameras_total,
+            'projects': projects,
+            'rolls': rolls,
+            'film_types': film_types,
+        }
+
+        return render(request, 'inventory/index.html', context)
 
 
 def patterns(request):
+    from django.contrib.messages.storage.base import Message
+
+    test_messages = [
+        Message(0, 'Yay!', 'success'),
+        Message(0, 'Whoops!', 'error'),
+        Message(0, 'Uh oh!', 'warning'),
+        Message(0, 'Ah!', 'info'),
+    ]
+
+    test_rolls = {
+        'all': 123,
+        '135': 4,
+        '120': 119,
+        'c41': {
+            'all': 1,
+            '135': 5,
+            '120': 1,
+            'push2': {
+                '135': 77,
+                '120': 1,
+            }
+        },
+        'bw': {
+            'all': 500,
+            '135': 4,
+            '120': 75,
+            'push3': {
+                '135': 88,
+                '120': 8,
+            }
+        },
+        'e6': {
+            'all': 100,
+            '135': 1,
+            '120': 7000,
+            'pull1': {
+                '135': 84,
+                '120': 45,
+            }
+        },
+    }
+
     roll1 = {
         'film': {
             'type': 'e6',
@@ -131,13 +235,74 @@ def patterns(request):
         }
     }
 
+    paddle = {
+        'live_mode': dj_settings.PADDLE_LIVE_MODE,
+        'vendor_id': dj_settings.PADDLE_VENDOR_ID,
+        'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
+        'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
+        'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
+        'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
+    }
+
+    subscription_never = {
+        'active': False,
+        'trial': {'enabled': True, 'duration': 14},
+    }
+
+    subscription_monthly = {
+        'active': True,
+        'plan': paddle['standard_monthly_name'],
+        'plan_id': paddle['standard_monthly_id'],
+        'update_url': 'https://example.com',
+        'cancel_url': 'https://example.com',
+    }
+
+    subscription_annual = {
+        'active': True,
+        'plan': paddle['standard_annual_name'],
+        'plan_id': paddle['standard_annual_id'],
+        'update_url': 'https://example.com',
+        'cancel_url': 'https://example.com',
+    }
+
+    subscription_friend = {
+        'friend': True,
+    }
+
+    subscription_scheduled = {
+        'active': True,
+        'status': 'deleted',
+        'plan': paddle['standard_monthly_name'],
+        'plan_id': paddle['standard_monthly_id'],
+        'cancellation_date': datetime.date.today() + datetime.timedelta(days=1),
+    }
+
+    subscription_trial = {
+        'active': True,
+        'status': 'trialing',
+        'plan': paddle['standard_monthly_name'],
+        'plan_id': paddle['standard_monthly_id'],
+        'trial_days_remaining': 2,
+        'update_url': 'https://example.com',
+        'cancel_url': 'https://example.com',
+    }
+
     context = {
+        'test_rolls': test_rolls,
+        'test_messages': test_messages,
         'form': PatternsForm,
         'roll1': roll1,
         'roll2': roll2,
         'roll3': roll3,
         'js_needed': True,
         'wc_needed': True,
+        'paddle': paddle,
+        'subscription_never': subscription_never,
+        'subscription_monthly': subscription_monthly,
+        'subscription_annual': subscription_annual,
+        'subscription_friend': subscription_friend,
+        'subscription_scheduled': subscription_scheduled,
+        'subscription_trial': subscription_trial,
     }
 
     return render(request, 'patterns.html', context)
@@ -195,10 +360,18 @@ def settings(request):
             'duration': dj_settings.SUBSCRIPTION_TRIAL_DURATION,
         }
 
+        plan_name = ''
         if request.user.profile.paddle_subscription_plan_id:
             plan_name = paddle_plan_name(request.user.profile.paddle_subscription_plan_id)
-        else:
-            plan_name = ''
+
+        cancellation_date = None
+        if request.user.profile.paddle_cancellation_date:
+            cancellation_date = request.user.profile.paddle_cancellation_date
+
+        try:
+            trial_days_remaining = request.user.profile.trial_days_remaining
+        except AttributeError:
+            trial_days_remaining = None
 
         paddle = {
             'live_mode': dj_settings.PADDLE_LIVE_MODE,
@@ -208,6 +381,21 @@ def settings(request):
             'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
             'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
             'plan_name': plan_name,
+        }
+
+        # All the bits about a subscription to be able to show the subscription
+        # section on this page.
+        subscription = {
+            'friend': request.user.is_staff or request.user.profile.friend,
+            'status': request.user.profile.subscription_status,
+            'active': request.user.profile.has_active_subscription,
+            'plan': plan_name,
+            'plan_id': request.user.profile.paddle_subscription_plan_id,
+            'trial': trial,
+            'trial_days_remaining': trial_days_remaining,
+            'cancellation_date': cancellation_date,
+            'update_url': request.user.profile.paddle_update_url,
+            'cancel_url': request.user.profile.paddle_cancel_url,
         }
 
         context = {
@@ -220,6 +408,7 @@ def settings(request):
             'js_needed': True,
             'trial': trial,
             'paddle': paddle,
+            'subscription': subscription,
         }
 
         return render(request, 'inventory/settings.html', context)
@@ -437,14 +626,35 @@ def stock(request, manufacturer, slug):
         })
         total_rolls = total_rolls + film.count
 
+    headings = ['Format', 'Count']
+    total_rolls_table = {
+        'headings': headings,
+        'rows': [{'columns': [film.get_format_display(), film.count] for film in films}],
+    }
+    total_inventory_table = {
+        'headings': headings,
+        'rows': [{'columns': [film['name'], film['user_inventory_count']] for film in films_list}]
+    }
+    total_history_table = {
+        'headings': headings,
+        'rows': [{
+            'columns': [
+                {'title': film['name'], 'href': f'{film["url"]}#film_history_heading'},
+                film['user_history_count'],
+            ]
+        } for film in films_list]
+    }
+
     context = {
         'films': films,
-        'films_list': films_list,
         'total_rolls': total_rolls,
         'total_inventory': total_inventory,
         'total_history': total_history,
         'stock': stock,
         'manufacturer': manufacturer,
+        'total_rolls_table': total_rolls_table,
+        'total_inventory_table': total_inventory_table,
+        'total_history_table': total_history_table,
     }
 
     return render(request, 'inventory/stock.html', context)
@@ -579,6 +789,7 @@ def logbook(request):
     year = ''
     all_years = {}
     all_years_count = rolls.count()
+    all_years.update({'all': all_years_count})
     pagination_querystring = ''
     status_counts = {
         'all': rolls.count(),
@@ -599,19 +810,27 @@ def logbook(request):
         pagination_querystring += f'&status={status}'
         if status == 'storage':
             return redirect(reverse('inventory'))
-        else:
-            description = status_description(status)
-            rolls = rolls.filter(status=status_number(status))
+
+        description = status_description(status)
+        rolls = rolls.filter(status=status_number(status))
+    elif request.GET.get('status') and request.GET.get('status') == 'all':
+        # This is for the sake of submitting the mobile filter/form so we don't
+        # leave `?status=all` on the URL.
+        return redirect(reverse('logbook'))
 
     if request.GET.get('year'):
+        if request.GET.get('year') == 'all':
+            return redirect(reverse('logbook'))
+
         year = request.GET.get('year')
         pagination_querystring += f'&year={year}'
         rolls = rolls.filter(started_on__year=year)
 
-    # Pagination / 20 per page
-    paginator = Paginator(rolls, 20)
-    page_number = request.GET.get('page')
+    # Pagination
+    paginator = Paginator(rolls, 10)
+    page_number = request.GET.get('page') if request.GET.get('page') else 1
     page_obj = paginator.get_page(page_number)
+    page_range = paginator.get_elided_page_range(number=page_number)
     bulk_status_next = ''
 
     if status in bulk_status_keys:
@@ -622,6 +841,7 @@ def logbook(request):
         'rolls': rolls,
         'status': status,
         'page_obj': page_obj,
+        'page_range': page_range,
         'description': description,
         'year': year,
         'all_years': all_years,
@@ -629,11 +849,16 @@ def logbook(request):
         'bulk_status_keys': bulk_status_keys,
         'bulk_status_next': bulk_status_next,
         'status_counts': status_counts,
-        'pagination_querystring': pagination_querystring,
-        'js_needed': True,
+        'pagination_querystring': pagination_querystring[1:],
     }
 
-    return render(request, 'inventory/logbook.html', context)
+    if request.htmx:
+        response = render(request, 'partials/logbook-page-data.html', context)
+        # response['HX-Push'] = reverse('logbook') + full_querystring
+
+        return response
+    else:
+        return render(request, 'inventory/logbook.html', context)
 
 
 @login_required
@@ -748,7 +973,7 @@ def ready(request):
     }
 
     # Pagination / 20 per page
-    paginator = Paginator(rolls, 20)
+    paginator = Paginator(rolls, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -762,7 +987,15 @@ def ready(request):
         'wc_needed': True,
     }
 
-    return render(request, 'inventory/ready.html', context)
+    if request.htmx:
+        return render(request, 'components/logbook-table.html', {
+            'status': 'shot',
+            'bulk_status_keys': bulk_status_keys,
+            'page_obj': page_obj,
+            'page': 'ready',
+        })
+    else:
+        return render(request, 'inventory/ready.html', context)
 
 
 @require_POST
@@ -936,8 +1169,13 @@ def project_delete(request, pk):
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
+    c = request.GET.get('c') if request.GET.get('c') else 0
+    sectiontab_querystring = f'c={c}'
+    page = request.GET.get('page') or 1
+    pagination_querystring = f'page={page}'
+
     # Get all of this user's cameras not already associated with this project.
-    cameras = Camera.objects.filter(owner=owner).exclude(
+    cameras_to_add = Camera.objects.filter(owner=owner).exclude(
         pk__in=project.cameras.values_list('pk', flat=True)
     ).exclude(
         status='unavailable'
@@ -951,17 +1189,26 @@ def project_detail(request, pk):
                 if back.status == ('empty'):
                     camera_backs_empty.append(back)
 
+    ready_to_load = []
+    for camera in cameras_empty:
+        ready_to_load.append(camera)
+    for back in camera_backs_empty:
+        ready_to_load.append(back)
+
+    loaded = []
     loaded_roll_list = Roll.objects.filter(
         owner=owner,
         project=project,
         status=status_number('loaded'),
     )
+    for roll in loaded_roll_list:
+        loaded.append(roll)
 
-    rolls_loaded_outside_project = []
+    loaded_outside_project = []
     for camera in project.cameras.all():
         for roll in camera.roll_set.all():
             if roll.status == status_number('loaded') and roll.project != project:
-                rolls_loaded_outside_project.append(roll)
+                loaded_outside_project.append(roll)
 
     # Unused rolls already in this project
     total_film_count = Film.objects.filter(
@@ -1008,18 +1255,60 @@ def project_detail(request, pk):
         '-code'
     )
 
-    # Pagination / 20 per page
-    paginator = Paginator(roll_logbook, 20)
-    page_number = request.GET.get('page')
+    # TODO: write logic to show either `Cameras` or `Cameras and Backs`.
+    cameras = SectionTabs(
+        'Cameras and Backs',
+        '#project-camera-logbook-wrapper',
+        0,
+        [
+            {
+                'name': 'Loaded',
+                'count': len(loaded),
+                'rows': loaded,
+                'action': 'roll',
+            },
+            {
+                'name': 'Ready to load',
+                'count': len(ready_to_load),
+                'rows': ready_to_load,
+                'action': 'load'
+            },
+            {
+                'name': 'Loaded outside of project',
+                'count': len(loaded_outside_project),
+                'rows': loaded_outside_project,
+                'action': 'roll',
+            }
+        ]
+    )
+    cameras.set_tab(c)
+
+    # Pagination
+    paginator = Paginator(roll_logbook, 10)
+    page_number = request.GET.get('page') if request.GET.get('page') else 1
     page_obj = paginator.get_page(page_number)
+    page_range = paginator.get_elided_page_range(number=page_number)
+
+    # Archived project cameras table
+    cameras_table = {}
+    if project.status == 'archived':
+        cameras_table = {
+            'headings': ['Camera'],
+            'rows': [{
+                'columns': [
+                    {
+                        'title': camera,
+                        'href': camera.get_absolute_url(),
+                    },
+                ]
+            } for camera in project.cameras.all()]
+        }
 
     context = {
         'owner': owner,
         'project': project,
+        'cameras_to_add': cameras_to_add,
         'cameras': cameras,
-        'cameras_empty': cameras_empty,
-        'camera_backs_empty': camera_backs_empty,
-        'rolls_loaded_outside_project': rolls_loaded_outside_project,
         'total_film_count': total_film_count,
         'total_rolls': total_film_count.count(),
         'film_counts': film_counts,
@@ -1028,10 +1317,30 @@ def project_detail(request, pk):
         'loaded_roll_list': loaded_roll_list,
         'roll_logbook': roll_logbook,
         'page_obj': page_obj,
-        'js_needed': True,
+        'pagination_querystring': pagination_querystring,
+        'sectiontab_querystring': sectiontab_querystring,
+        'stepper_form': StepperForm,
+        'cameras_table': cameras_table,
     }
 
-    return render(request, 'inventory/project_detail.html', context)
+    if request.htmx:
+        response = render(request, 'partials/project-camera-logbook-wrapper.html', {
+            'project': project,
+            'cameras': cameras,
+            'roll_logbook': roll_logbook,
+            'items': cameras,
+            'page_obj': page_obj,
+            'page_range': page_range,
+            'pagination_querystring': pagination_querystring,
+            'sectiontab_querystring': sectiontab_querystring,
+        })
+
+        querystring = f'?{sectiontab_querystring}&{pagination_querystring}'
+        response['HX-Push'] = reverse('project-detail', args=(project.id,)) + querystring
+
+        return response
+    else:
+        return render(request, 'inventory/project_detail.html', context)
 
 
 @require_POST
@@ -1153,6 +1462,7 @@ def rolls_add(request):
         films = Film.objects.all().exclude(Q(personal=True) & ~Q(added_by=owner)).order_by('stock')
         context = {
             'films': films,
+            'stepper_form': StepperForm,
             'js_needed': True,
         }
 
@@ -1263,12 +1573,64 @@ def film_rolls(request, stock=None, format=None, slug=None):
         rolls_storage = rolls_storage.filter(project=current_project)
         rolls_history = rolls_history.filter(project=current_project)
 
+    rolls_storage_table = {
+        'headings': ['Added on', 'Project'] if not current_project else ['Added on', ''],
+        'rows': [{
+            'columns': [
+                {
+                    'title': roll.created_at.strftime('%B %d, %Y'),
+                    'href': reverse('roll-detail', args=(roll.id,)),
+                },
+                {
+                    'title': roll.project.name if roll.project else None,
+                    'href': f'?project={roll.project.id}' if roll.project else None
+                },
+            ]
+        } if roll.project and not current_project else {
+            'columns': [
+                {
+                    'title': roll.created_at.strftime('%B %d, %Y'),
+                    'href': reverse('roll-detail', args=(roll.id,)),
+                },
+                '',
+            ],
+        } for roll in rolls_storage]
+    }
+
+    rolls_history_table = {
+        'headings': ['Year', 'Code', 'Project'] if not current_project else ['Code', ''],
+        'rows': [{
+            'columns': [
+                roll.started_on.strftime('%Y'),
+                {
+                    'title': roll.code,
+                    'href': reverse('roll-detail', args=(roll.id,)),
+                },
+                {
+                    'title': roll.project.name,
+                    'href': f'?project={roll.project.id}',
+                }
+            ],
+        } if roll.project and not current_project else {
+            'columns': [
+                roll.started_on.strftime('%Y'),
+                {
+                    'title': roll.code,
+                    'href': reverse('roll-detail', args=(roll.id,)),
+                },
+                '',
+            ],
+        } for roll in rolls_history]
+    }
+
     context = {
         'rolls_storage': rolls_storage,
         'rolls_history': rolls_history,
         'film': film,
         'owner': request.user,
         'current_project': current_project,
+        'rolls_storage_table': rolls_storage_table,
+        'rolls_history_table': rolls_history_table,
     }
 
     return render(request, 'inventory/film_rolls.html', context)
@@ -1605,7 +1967,6 @@ def roll_journal_delete(request, roll_pk, entry_pk):
     return redirect(reverse('roll-detail', args=(roll.id,)))
 
 
-@waffle_flag('frames')
 @login_required
 def roll_frame_add(request, roll_pk):
     roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
@@ -1719,7 +2080,6 @@ def roll_frame_add(request, roll_pk):
         )
 
 
-@waffle_flag('frames')
 @login_required
 def roll_frame_detail(request, roll_pk, number):
     frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
@@ -1740,7 +2100,6 @@ def roll_frame_detail(request, roll_pk, number):
     )
 
 
-@waffle_flag('frames')
 @login_required
 def roll_frame_edit(request, roll_pk, number):
     frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
@@ -1818,7 +2177,6 @@ def roll_frame_edit(request, roll_pk, number):
         )
 
 
-@waffle_flag('frames')
 @require_POST
 @login_required
 def roll_frame_delete(request, roll_pk, number):
@@ -1968,6 +2326,12 @@ def camera_or_back_load(request, pk, back_pk=None):
 @login_required
 def camera_or_back_detail(request, pk, back_pk=None):
     camera = get_object_or_404(Camera, id=pk, owner=request.user)
+    b = request.GET.get('b') if request.GET.get('b') else 0
+    pagination_querystring = ''
+    page = request.GET.get('page')
+    if page:
+        pagination_querystring += f'&page={page}'
+
     if back_pk:
         camera_back = get_object_or_404(
             CameraBack,
@@ -2027,10 +2391,11 @@ def camera_or_back_detail(request, pk, back_pk=None):
                     status=status_number('loaded')
                 )[0]
 
-        # Pagination / 20 per page
-        paginator = Paginator(rolls_history, 20)
-        page_number = request.GET.get('page')
+        # Pagination
+        paginator = Paginator(rolls_history, 10)
+        page_number = request.GET.get('page') if request.GET.get('page') else 1
         page_obj = paginator.get_page(page_number)
+        page_range = paginator.get_elided_page_range(number=page_number)
 
         context = {
             'owner': request.user,
@@ -2040,16 +2405,72 @@ def camera_or_back_detail(request, pk, back_pk=None):
             'roll': roll,
             'rolls_history': rolls_history,
             'page_obj': page_obj,
+            'film_types': film_types,
+            'pagination_querystring': pagination_querystring,
+            'b': b,
         }
 
-        if camera_back:
-            return render(
-                request, 'inventory/camera_back_detail.html', context
+        if camera.multiple_backs:
+            all_camera_backs = CameraBack.objects.filter(
+                camera__owner=request.user,
+                camera=camera,
             )
+            loaded_rolls = Roll.objects.filter(
+                owner=request.user,
+                camera=camera,
+                status=status_number('loaded'),
+            )
+
+            camera_backs = SectionTabs(
+                'Backs',
+                '#camera_backs_section',
+                0,
+                [
+                    {
+                        'name': 'Loaded',
+                        'count': all_camera_backs.filter(status='loaded').count(),
+                        'rows': loaded_rolls,
+                        'action': 'roll',
+                    },
+                    {
+                        'name': 'Ready to Load',
+                        'count': all_camera_backs.filter(status='empty').count(),
+                        'rows': all_camera_backs.filter(status='empty'),
+                        'action': 'load',
+                    },
+                    {
+                        'name': 'Unavailable',
+                        'count': all_camera_backs.filter(status='unavailable').count(),
+                        'rows': all_camera_backs.filter(status='unavailable'),
+                        'action': 'load',
+                    },
+                ],
+                reverse('camera-back-add', args=(camera.id,)),
+            )
+            camera_backs.set_tab(b)
+            context['camera_backs'] = camera_backs
+
+        if request.htmx:
+            if request.htmx.trigger.startswith('section'):
+                # Camera backs
+                response = render(request, 'components/section.html', {
+                    'items': camera_backs,
+                    'pagination_querystring': pagination_querystring,
+                })
+                response['HX-Push'] = reverse('camera-detail', args=(camera.id,)) + f'?b={b}{pagination_querystring}'
+                return response
+            else:
+                return render(request, 'components/logbook-table.html', {
+                    'page_obj': page_obj,
+                    'page_range': page_range,
+                    'pagination_querystring': f'&b={b}',
+                })
+
         else:
-            return render(
-                request, 'inventory/camera_detail.html', context
-            )
+            if camera_back:
+                return render(request, 'inventory/camera_back_detail.html', context)
+            else:
+                return render(request, 'inventory/camera_detail.html', context)
 
 
 @login_required
@@ -2239,6 +2660,34 @@ def camera_back_delete(request, pk, back_pk):
         '%s successfully deleted.' % (name)
     )
     return redirect(reverse('camera-detail', args=(camera.id,)))
+
+
+@login_required
+def session_sidebar_status(request):
+    if request.headers.get('x-requested-with') != 'XMLHttpRequest':
+        return HttpResponseForbidden()
+
+    try:
+        status = request.session['sidebar']
+    except KeyError:
+        status = 'open'
+
+    return HttpResponse(status)
+
+
+@login_required
+def session_sidebar(request):
+    if not request.htmx:
+        return HttpResponseForbidden()
+
+    try:
+        status = request.session['sidebar']
+    except KeyError:
+        status = 'open'
+
+    request.session['sidebar'] = 'open' if status == 'closed' else 'closed'
+
+    return HttpResponse()
 
 
 # EXPORT / IMPORT

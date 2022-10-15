@@ -1,0 +1,101 @@
+{% load widget_tweaks capture_tags %}
+
+{% if field.field.widget.input_type == 'hidden' %}
+    {{ field }}
+{% else %}
+<div class="field{% if class %} {{ class }}{% endif %}{% if not field.field.widget.input_type %} field--textarea{% else %} field--{{ field.field.widget.input_type }}{% endif %}{% if progressive %} field--progressive {% if primary %} field--progressive-primary{% endif %}{% endif %}{% if top_field %} field--progressive__top{% endif %}"
+    {% if progressive_text %} data-progressive-text="{{ progressive_text }}"{% endif %}
+    {% if label_override %} data-label-override="{{ label_override }}"{% endif %}
+    data-label="{{ field.field.label }}"
+    {% if progressive and not primary %}
+        {% if not show_first %} _="on load add .hidden to me"{% endif %}
+    {% endif %}>
+    {% if field.field.widget.input_type == 'checkbox' %}
+        {% if field|length > 1 %}
+            <fieldset>
+                <legend class="font-bold">{{ field.label }}</legend>
+                <div class="mt-3 space-y-2">
+                    {% for f in field %}
+                        <div class="flex items-center h-5">{{ f }}</div>
+                    {% endfor %}
+                </div>
+            </fieldset>
+            {% if field.help_text %}
+                <div class="mt-2 md:mt-0 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
+            {% endif %}
+        {% else %}
+            <div class="flex items-center h-5">
+                {{ field }}
+                <label class="text-sm font-medium" for="{{ field.id_for_label }}">{{ field.label }}</label>
+            </div>
+            {% if field.help_text %}
+                <div class="mt-2 md:mt-0 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
+            {% endif %}
+        {% endif %}
+    {% elif field.field.widget.input_type == 'radio' %}
+        <fieldset>
+            <legend>{{ field.label }}</legend>
+            <div class="mt-3 space-y-2">
+                {% for f in field %}
+                    <div class="flex items-center h-5">{{ f }}</div>
+                {% endfor %}
+            </div>
+        </fieldset>
+        {% if field.help_text %}
+            <div class="mt-2 md:mt-0 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
+        {% endif %}
+    {% else %}
+        <label class="mb-2 sm:mb-0 block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} _="on load set my innerHTML to '{{ label_override }}'"{% endif %}">{{ field.label }}</label>
+        {% capture as xref silent %}{{ primary|yesno:'primary,secondary' }}{% endcapture %}
+
+        {% capture as textarea_hyperscript silent %}
+            _:on keyup[key is 'Enter'] js(me) checkAutocomplete(me)
+        {% endcapture %}
+
+        <div class="col-span-2">
+            {% if not field.field.widget.input_type %}
+                {% include 'components/form-markdown-toolbar.html' with id=field.id_for_label %}
+                {# Set autocomplete on Markdown textareas. #}
+                {% render_field field|attr:textarea_hyperscript x-ref=xref  %}
+            {% else %}
+                {% if field.field.widget.input_type == 'number' %}
+                    {% include 'components/form-stepper-field.html' %}
+                {% else %}
+                    <div class="flex items-center space-x-1">
+                        {% if enhanced_label.before %}
+                            <span class="subdued"{% if enhanced_label.before_tooltip %} title="{{ enhanced_label.before_tooltip }}"{% endif %}>{{ enhanced_label.before }}</span>
+                        {% endif %}
+                        {% render_field field x-ref=xref %}
+                        {% if enhanced_label.after %}
+                            <span class="subdued"{% if enhanced_label.after_tooltip %} title="{{ enhanced_label.after_tooltip }}"{% endif %}>{{ enhanced_label.after }}</span>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endif %}
+            {% if field.help_text and field.label != 'Username' %}
+                <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
+            {% endif %}
+        </div>
+    {% endif %}
+    {% if progressive %}
+        <div class="js-required mt-2 sm:mt-0">
+            <button
+                class="link"
+                type="button"
+                _="on click
+                   set thisField to the closest .field
+                   set nextField to the next .field
+                       within the closest .progressive-field-wrapper
+                       with wrapping
+
+                   toggle .hidden on nextField
+                   toggle .hidden on thisField
+
+                   set nextInput to the first <[x-ref]/> in nextField
+                   call nextInput.focus()">
+                {{ progressive_text }}
+            </button>
+        </div>
+    {% endif %}
+</div>
+{% endif %}

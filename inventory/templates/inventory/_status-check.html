@@ -1,5 +1,5 @@
 {% if check %}
-<span class="icon" aria-label="Completed">{% include 'inventory/_github-icon.html' with id='check' title="Completed" %}</span>
+<span class="icon pr-2" aria-label="Completed">{% include 'svg/heroicons/check-circle-outline.svg' with title='Completed' class='text-green-500 dark:text-green-300 w-8 h-8' %}</span>
 {% else %}
-<span class="icon" aria-label="Incomplete">{% include 'inventory/_github-icon.html' with id='dot' title="Incomplete" %}</span>
+<span class="icon pr-2" aria-label="Incomplete">{% include 'svg/circle.svg' with title='Incomplete' class='text-stone-300 dark:text-stone-500 w-8 h-8' %}</span>
 {% endif %}

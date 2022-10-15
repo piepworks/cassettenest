@@ -1,16 +1,16 @@
 <form action="{% url 'project-camera-update' project.id %}" method="post">
     {% csrf_token %}
-    <input type="hidden" name="action" value="add" />
+    <input type="hidden" name="action" value="add">
 
-    <div class="c-field">
+    <div class="field space-y-2">
         <label for="id_camera">Add a camera to this project</label>
         <select id="id_camera" name="camera" required>
             <option value="">Choose a camera</option>
-        {% for camera in cameras %}
+        {% for camera in cameras_to_add %}
             <option value="{{ camera.id }}">{{ camera.name }}</option>
         {% endfor %}
         </select>
     </div>
 
-    <div class="action"><input type="submit" value="Add to project" /></div>
+    <div><button>Add to project</button></div>
 </form>

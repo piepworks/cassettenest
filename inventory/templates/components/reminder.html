@@ -1,0 +1,30 @@
+{% load capture_tags %}
+
+{% capture as type silent %}{% if not item.film %}empty{% else %}{% if item.film.stock %}{{ item.film.stock.type }}{% else %}{{ item.film.type }}{% endif %}{% endif %}{% endcapture %}
+{% capture as roll_iso silent %}{% if item.film.stock %}{{ item.film.stock.iso }}{% else %}{{ item.film.iso }}{% endif %}{% endcapture %}
+{% if type != 'empty' %}
+    {% capture as film_type_name silent %}{% for key, value in film_types %}{% if key == type %}{{ value }}{% endif %}{% endfor %}{% endcapture %}
+    {% capture as film_description silent %}Loaded with {{ film_type_name }} film,{% if item.push_pull %} effective ISO is {{ item.effective_iso }}{% else %} ISO is {{ roll_iso }}{% endif %}{% endcapture %}
+{% endif %}
+
+{# Potential class names for Tailwind: #}
+{# type-empty type-c41 type-bw type-e6 #}
+
+<div title="{{ film_description }}" class="reminder-square type-{{ type }} flex-shrink-0 relative rounded flex items-center justify-center w-20 h-20 -my-1">
+    {% if type != 'empty' %}
+        <div aria-hidden="true" class="absolute fold bottom-0 left-0 h-4 w-4 rounded-tr"></div>
+        <div class="reminder-type absolute top-1 right-2 text-xs">{{ type|upper }}</div>
+    {% endif %}
+    <div class="reminder-iso{% if type == 'empty' %} text-lg{% else %} text-xl{% endif %}">
+        {% if type == 'empty' %}
+            Empty
+        {% elif roll_iso %}
+            {% if item.push_pull %}{{ item.effective_iso }}{% else %}{{ roll_iso }}{% endif %}
+        {% endif %}
+    </div>
+    {% if item.push_pull %}
+        <div class="reminder-push-pull absolute bottom-1 right-2 text-xs">
+            {{ roll_iso }} {{ item.push_pull }}
+        </div>
+    {% endif %}
+</div>

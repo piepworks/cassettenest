@@ -2,57 +2,94 @@
 {% url 'index' as index_url %}
 {% url 'ready' as ready_url %}
 {% url 'logbook' as logbook_url %}
+{% url 'settings' as settings_url %}
 
-<ol class="c-status-nav do-not-print">
-    {% if 'camera' in request.path %}
-    <li class="current">
-    {% else %}
-    <li>
-    {% endif %}
-        {% if request.path != index_url %}
-            <a href="{% url 'index' %}">Dashboard</a>
-        {% else %}
-            <span>Dashboard</span>
+<div class="flex-1 print:hidden">
+    <ul class="mt-5 px-2 space-y-1">
+        <li{% if 'camera' in request.path or request.path == index_url %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Dashboard"{% endif %}>
+            {% if request.path != index_url %}
+                <a href="{{ index_url }}">
+                    {% include 'svg/heroicons/home.svg' %}
+                    <span>Dashboard</span>
+                </a>
+            {% else %}
+                {% include 'svg/heroicons/home.svg' %}
+                <span>Dashboard</span>
+            {% endif %}
+        </li>
+
+        <li{% if inventory_url in request.path or 'rolls/' in request.path %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Inventory"{% endif %}>
+            {% if request.path != inventory_url %}
+                <a href="{{ inventory_url }}">
+                    {% include 'svg/heroicons/film.svg' %}
+                    <span>Inventory</span>
+                </a>
+            {% else %}
+                {% include 'svg/heroicons/film.svg' %}
+                <span>Inventory</span>
+            {% endif %}
+        </li>
+        <li{% if request.path == ready_url %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Ready to Process"{% endif %}>
+            {% if request.path != ready_url %}
+                <a href="{{ ready_url }}">
+                    {% include 'svg/heroicons/clipboard-list.svg' %}
+                    <span>Ready to Process</span>
+                </a>
+            {% else %}
+                {% include 'svg/heroicons/clipboard-list.svg' %}
+                <span>Ready to Process</span>
+            {% endif %}
+        </li>
+
+        <li{% if logbook_url in request.path or 'roll/' in request.path or 'project' in request.path %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Logbook"{% endif %}>
+            {% if request.path != logbook_url %}
+                <a href="{{ logbook_url }}">
+                    {% include 'svg/heroicons/book.svg' %}
+                    <span>Logbook</span>
+                </a>
+            {% else %}
+                {% include 'svg/heroicons/book.svg' %}
+                <span>Logbook</span>
+            {% endif %}
+            {% comment %}
+                <!-- This is for a dropdown that doesn’t exist and may never. -->
+                <ol>
+                    <li><a href="{% url 'logbook' %}?status=loaded">Loaded</a></li>
+                    <li><a href="{% url 'logbook' %}?status=shot">Shot</a></li>
+                    <li><a href="{% url 'logbook' %}?status=processing">Processing</a></li>
+                    <li><a href="{% url 'logbook' %}?status=processed">Processed</a></li>
+                    <li><a href="{% url 'logbook' %}?status=scanned">Scanned</a></li>
+                    <li><a href="{% url 'logbook' %}?status=archived">Archived</a></li>
+                </ol>
+            {% endcomment %}
+        </li>
+    </ul>
+
+    <ul class="secondary mt-10 px-2 space-y-1">
+        <li{% if request.path == settings_url %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Settings"{% endif %}>
+            {% if request.path != settings_url %}
+                <a href="{{ settings_url }}">
+                    {% include 'svg/heroicons/adjustments-horizontal.svg' %}
+                    <span>Settings</span>
+                </a>
+            {% else %}
+                {% include 'svg/heroicons/adjustments-horizontal.svg' %}
+                <span>Settings</span>
+            {% endif %}
+        </li>
+        {% if user.is_superuser %}
+        <li{% if request.session.sidebar == 'closed' %} title="Admin"{% endif %}>
+            <a href="{% url 'admin:index' %}">
+                {% include 'svg/heroicons/bolt.svg' with class='admin' %}
+                <span class="text-gold">Admin</span>
+            </a>
+        </li>
         {% endif %}
-    </li>
-    {% if inventory_url in request.path or 'rolls/' in request.path %}
-    <li class="current">
-    {% else %}
-    <li>
-    {% endif %}
-        {% if request.path != inventory_url %}
-            <a href="{% url 'inventory' %}">Inventory</a>
-        {% else %}
-            <span>Inventory</span>
-        {% endif %}
-    </li>
-    <li>
-        {% if request.path != ready_url %}
-            <a href="{% url 'ready' %}">Ready<span> to Process</span></a>
-        {% else %}
-            <span>Ready<span> to Process</span></span>
-        {% endif %}
-    </li>
-    {% if logbook_url in request.path or 'roll/' in request.path or 'project' in request.path %}
-    <li class="current">
-    {% else %}
-    <li>
-    {% endif %}
-        {% if request.path != logbook_url %}
-            <a href="{% url 'logbook' %}">Logbook</a>
-        {% else %}
-            <span>Logbook</span>
-        {% endif %}
-        {% comment %}
-        <!-- This is for a dropdown that doesn’t exist and may never. -->
-        <ol>
-            <li><a href="{% url 'logbook' %}?status=loaded">Loaded</a></li>
-            <li><a href="{% url 'logbook' %}?status=shot">Shot</a></li>
-            <li><a href="{% url 'logbook' %}?status=processing">Processing</a></li>
-            <li><a href="{% url 'logbook' %}?status=processed">Processed</a></li>
-            <li><a href="{% url 'logbook' %}?status=scanned">Scanned</a></li>
-            <li><a href="{% url 'logbook' %}?status=archived">Archived</a></li>
-        </ol>
-        {% endcomment %}
-    </li>
-</ol>
+        <li{% if request.session.sidebar == 'closed' %} title="Log out"{% endif %}>
+            <a href="{% url 'logout' %}" onClick="return confirm('Do you want to log out?')">
+                {% include 'svg/heroicons/hand.svg' %}
+                <span>Log out</span>
+            </a>
+        </li>
+    </ul>
+</div>

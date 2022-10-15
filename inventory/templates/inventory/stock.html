@@ -4,44 +4,28 @@
 {% block title %}Film Stock: {{ stock }}{% endblock %}
 
 {% block content %}
-<div class="raw">
     <h1><a href="{% url 'stocks' %}">Film Stocks</a> &gt; <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> {{ stock.name }}</h1>
 
     {% if stock.added_by %}
-        <div class="notes">
-            {% include 'inventory/_github-icon.html' with id='heart-fill' %}
-            <div class="inner">This stock was added by the Cassette Nest community!</div>
+        <div class="notes sm:flex gap-3 sm:items-center bg-white shadow-lg dark:shadow-none dark:bg-stone-900 rounded-xl py-4 px-6">
+            {% include 'svg/heroicons/heart.svg' with class='float-left sm:float-none mt-1 mr-4 mb-1 sm:m-0 h-8 w-8 sm:flex-shrink-0' %}
+            <p>This stock was added by the Cassette Nest community!</p>
         </div>
     {% endif %}
 
-    <hr />
-
     <p>Total rolls of this stock in Cassette Nest: <b>{{ total_rolls }}</b></p>
 
-    <ul>
-    {% for film in films %}
-        <li>{{ film.get_format_display }}: {{ film.count }}</li>
-    {% endfor %}
-    </ul>
+    {% include 'components/standard-table.html' with table=total_rolls_table %}
 
     {% if user.is_authenticated %}
 
     <h2>Your inventory of this stock ({{ total_inventory }})</h2>
 
-    <section class="cards">
-        {% for film in films_list %}
-            {% include 'inventory/_card.html' with name=film.name location=film.url slot='count' count=film.user_inventory_count type='film' film_type=film.type %}
-        {% endfor %}
-    </section>
+
+    {% include 'components/standard-table.html' with table=total_inventory_table %}
 
     <h2>Your history of this stock ({{ total_history }})</h2>
 
-    <section class="cards">
-        {% for film in films_list %}
-            {% capture as history_url silent %}{{ film.url }}#film_history_heading{% endcapture %}
-            {% include 'inventory/_card.html' with name=film.name location=history_url slot='count' count=film.user_history_count type='film' film_type=film.type %}
-        {% endfor %}
-    </section>
+    {% include 'components/standard-table.html' with table=total_history_table %}
     {% endif %}
-</div>
 {% endblock %}

@@ -1,0 +1,1124 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply
+      bg-stone-100
+      dark:bg-stone-800
+      text-stone-900
+      dark:text-stone-200;
+
+    --folded-corner: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0% 80%);
+  }
+
+  ::selection {
+    @apply
+      bg-gold
+      text-stone-800;
+  }
+
+  a,
+  button.link {
+    @apply
+      text-blue-600
+      dark:text-blue-400
+      underline
+      hover:text-blue-500
+      dark:hover:text-blue-300
+      hover:underline;
+  }
+
+  /* So Safari doesn't always highlight the logo on every page load.
+     I don't love this. Remove it as soon as we find a better solution. */
+  a {
+    @apply
+      focus:outline-none
+      focus-visible:outline-blue-500;
+  }
+
+  button.link {
+    @apply
+      p-0
+      bg-transparent
+      hover:bg-transparent
+      border-none
+      rounded-none;
+  }
+
+  form { @apply space-y-6; }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='date'],
+  input[type='number'],
+  input[type='checkbox'],
+  input[type='radio'],
+  select,
+  textarea {
+    @apply
+      border-stone-300
+      focus:ring-2
+      focus:ring-offset-2
+      focus:ring-blue-500
+      focus:ring-offset-stone-100
+      dark:focus:ring-offset-stone-800;
+  }
+
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='date'],
+  input[type='number'],
+  select,
+  textarea {
+    @apply
+      text-stone-800
+      appearance-none
+      block
+      px-3
+      py-2
+      border
+      rounded-md
+      shadow-sm
+      placeholder-stone-400
+      focus:outline-none
+      sm:text-sm
+      focus:placeholder-stone-400;
+  }
+
+  textarea { @apply w-full; }
+
+  select { @apply pr-8; }
+
+  input[type='date'] {
+    @apply
+      /* To keep things vertically centered in Safari: */
+      flex
+      align-middle
+      min-w-[6rem];
+  }
+
+  input[type='checkbox'],
+  input[type='radio'] {
+    @apply mr-2;
+  }
+
+  input[type='checkbox'] {
+    @apply
+      h-4
+      w-4
+      text-blue-600
+      rounded;
+  }
+
+  input[type='number'] {
+    appearance: textfield;
+
+    @apply
+      max-w-[5rem]
+      rounded-none
+      text-center
+      font-bold
+      text-xl
+      md:text-base
+      md:font-normal;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      @apply appearance-none;
+    }
+  }
+
+  .no-js input[type='number'] {
+    @apply font-normal text-base;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: auto;
+    }
+  }
+
+  fieldset {
+    legend { @apply mb-2; }
+
+    select,
+    input[type='number'] { @apply inline; }
+  }
+
+  main {
+    .main-header:empty { display: none; }
+
+    h1 {
+      @apply
+        text-2xl
+        font-bold
+        leading-7
+        sm:text-3xl
+        sm:truncate;
+    }
+
+    h3 {
+      @apply
+        text-lg
+        font-medium
+        leading-6
+        border-b-4
+        border-stone-300
+        dark:border-stone-600
+        mb-10
+        pb-4;
+    }
+
+    button,
+    input[type='submit'],
+    [type='button'],
+    .button {
+      touch-action: manipulation;
+
+      @apply
+        cursor-pointer
+        inline-flex
+        items-center
+        px-4
+        py-2
+        border-2
+        border-stone-300
+        dark:border-stone-500
+        rounded-md
+        shadow-sm
+        text-sm
+        font-medium
+        text-stone-700
+        dark:text-stone-200
+        enabled:hover:text-stone-700
+        enabled:dark:hover:text-stone-200
+        bg-white
+        dark:bg-stone-600
+        hover:bg-stone-50
+        dark:hover:bg-stone-700
+        dark:hover:border-stone-600
+        focus:outline-none
+        focus:ring-2
+        focus:ring-offset-2
+        focus:ring-offset-stone-100
+        dark:focus:ring-offset-stone-800
+        focus:ring-blue-500
+        disabled:bg-transparent
+        disabled:hover:bg-transparent
+        disabled:text-stone-400
+        dark:disabled:text-stone-500
+        disabled:border-stone-400
+        dark:disabled:border-stone-500
+        disabled:border-dashed;
+
+      &,
+      &:hover { @apply no-underline; }
+
+      &.primary,
+      &.destructive {
+        @apply
+          border-transparent
+          text-white
+          hover:text-white;
+      }
+
+      &.primary {
+        @apply
+          bg-blue-600
+          hover:bg-blue-700;
+      }
+
+      &.destructive {
+        @apply
+          bg-red-600
+          hover:bg-red-700;
+      }
+    }
+  }
+}
+
+@layer components {
+  .page-heading {
+    @apply
+      md:flex
+      md:items-center
+      md:justify-between;
+
+    .inner {
+      @apply
+        flex-1
+        min-w-0;
+    }
+
+    h1 {
+      @apply
+        text-2xl
+        font-bold
+        leading-7
+        sm:text-3xl
+        sm:truncate;
+    }
+
+    form { @apply space-y-0; }
+  }
+
+  #menu-inner {
+    @apply
+      md:w-64
+      bg-stone-800
+      dark:bg-stone-900
+      transition-all;
+
+    #menu-desktop-toggle {
+      margin-bottom: calc(env(safe-area-inset-bottom) * 3);
+
+      @apply
+        sticky
+        left-0
+        w-full;
+
+      button {
+        @apply
+          text-center
+          w-full;
+
+        &:hover svg { @apply text-stone-300; }
+      }
+
+      svg {
+        @apply
+          inline
+          w-8
+          h-8
+          text-stone-600;
+      }
+    }
+
+    li svg {
+      @apply
+        text-stone-400
+        mr-4
+        md:mr-3
+        flex-shrink-0
+        h-8
+        w-8
+        md:h-6
+        md:w-6;
+
+      &.admin { @apply text-gold; }
+    }
+
+    ul {
+      a {
+        @apply
+          p-2
+          no-underline
+          text-stone-300
+          flex-grow
+          whitespace-nowrap
+          hover:bg-stone-700
+          dark:hover:bg-stone-800
+          hover:text-white;
+      }
+
+      li,
+      a {
+        @apply
+          text-stone-300
+          flex
+          items-center
+          text-lg
+          md:text-sm
+          font-medium
+          rounded-md;
+      }
+    }
+
+    li.current {
+      @apply
+        p-2
+        bg-stone-900
+        dark:bg-black
+        text-white;
+
+      a { @apply -m-2; }
+
+      svg { @apply text-stone-300; }
+    }
+
+    &.collapsed {
+      @apply md:w-20;
+
+      #menu-desktop-toggle { @apply rotate-180; }
+
+      ul {
+        @apply
+          md:space-y-4
+          md:mx-1
+          md:mt-8;
+
+        &.secondary { @apply md:mt-14; }
+      }
+
+      li {
+        &,
+        a { @apply md:justify-center; }
+
+        svg {
+          @apply
+            md:w-7
+            md:h-7
+            md:mr-0;
+        }
+
+        span { @apply md:hidden; }
+
+        &.current a {
+          @apply
+            md:mx-0
+            md:-my-3;
+        }
+
+        a,
+        &.current {
+          @apply
+            md:py-3
+            md:px-0;
+        }
+      }
+    }
+  }
+
+  .tabs {
+    a {
+      @apply
+        border-transparent
+        text-stone-500
+        dark:text-stone-400
+        hover:text-stone-700
+        dark:hover:text-stone-200
+        hover:border-stone-300
+        no-underline;
+    }
+
+    a.current {
+      @apply
+        border-blue-400
+        text-blue-600
+        dark:text-blue-300;
+    }
+  }
+
+  .type {
+    &-empty {
+      @apply border-2 border-dashed rounded-lg bg-transparent border-stone-300 dark:border-stone-500;
+
+      .reminder-iso { @apply text-stone-300 dark:text-stone-500; }
+    }
+
+    &-c41 {
+      @apply bg-blue-500 dark:bg-blue-600;
+
+      .fold { @apply bg-blue-300 dark:bg-blue-400; }
+      .reminder-type { @apply text-blue-300 dark:text-blue-400; }
+      .reminder-iso { @apply text-white; }
+      .reminder-push-pull { @apply text-blue-300 dark:text-blue-400; }
+    }
+
+    &-bw {
+      @apply bg-stone-400 dark:bg-stone-500;
+
+      .fold { @apply bg-stone-300 dark:bg-stone-400; }
+      .reminder-type { @apply text-stone-300 dark:text-stone-400; }
+      .reminder-iso { @apply text-white; }
+      .reminder-push-pull { @apply text-stone-300 dark:text-stone-400; }
+    }
+
+    &-e6 {
+      @apply bg-purple-600;
+
+      .fold { @apply bg-purple-400; }
+      .reminder-type { @apply text-purple-400; }
+      .reminder-iso { @apply text-white; }
+      .reminder-push-pull { @apply text-purple-400; }
+    }
+  }
+
+  .stats {
+    @apply
+      grid
+      grid-cols-1
+      gap-5
+      sm:grid-cols-2;
+
+    > div {
+      @apply
+        px-4
+        py-5
+        bg-white
+        dark:bg-stone-600
+        shadow
+        rounded-lg
+        overflow-hidden
+        sm:p-6;
+    }
+
+    dt {
+      @apply
+        text-sm
+        font-medium
+        truncate
+        text-stone-500
+        dark:text-stone-300;
+    }
+
+    dd {
+      @apply
+        mt-1
+        text-3xl
+        font-semibold;
+
+      &,
+      a {
+        @apply
+          text-stone-900
+          dark:text-white;
+      }
+
+      a {
+        @apply
+          hover:no-underline
+          hover:text-white
+          dark:hover:text-stone-900
+          hover:bg-stone-900
+          dark:hover:bg-white;
+      }
+    }
+  }
+
+  .metadata {
+    @apply mt-10;
+
+    > div {
+      @apply
+        border-stone-200
+        dark:border-stone-600;
+
+      dl {
+        @apply
+          sm:divide-y
+          sm:divide-stone-200
+          sm:dark:divide-stone-600;
+
+        > div {
+          @apply
+            py-4
+            sm:py-5
+            sm:grid
+            sm:grid-cols-3
+            sm:gap-4;
+        }
+
+        dt {
+          @apply
+            text-sm
+            font-medium
+            text-subdued;
+        }
+
+        dd {
+          @apply
+            mt-1
+            text-sm
+            sm:mt-0
+            sm:col-span-2
+            prose
+            prose-stone
+            dark:prose-invert;
+
+          p:first-child { @apply mt-0; }
+        }
+      }
+    }
+  }
+
+  .logbook {
+    table {
+      @apply
+        min-w-full
+        divide-y
+        divide-stone-200
+        dark:divide-stone-600;
+
+      thead th {
+        @apply
+          px-6
+          py-3
+          text-left
+          text-xs
+          font-medium
+          text-stone-500
+          uppercase
+          tracking-wider;
+      }
+
+      tbody {
+        tr {
+          &:nth-child(odd) {
+            @apply
+              bg-white
+              dark:bg-stone-900;
+          }
+
+          &:nth-child(even) {
+            @apply
+              bg-transparent;
+          }
+        }
+
+        td {
+          @apply
+            px-6
+            py-4
+            whitespace-nowrap
+            text-sm
+            text-stone-500
+            dark:text-stone-200;
+        }
+      }
+    }
+  }
+
+  .pagination nav {
+    button { @apply rounded-none; }
+
+    a,
+    .ellipsis,
+    .current,
+    button[disabled] {
+      @apply
+        no-underline
+        relative
+        inline-flex
+        items-center
+        px-4
+        py-2
+        border
+        border-solid
+        border-stone-300
+        dark:border-stone-700
+        bg-white
+        dark:bg-stone-900
+        text-sm
+        font-medium
+        text-stone-500
+        hover:text-stone-500
+        hover:bg-stone-50
+        dark:hover:bg-black;
+
+      &:first-child,
+      &:last-child { @apply px-2; }
+
+      &:first-child { @apply rounded-l-md; }
+
+      &:last-child { @apply rounded-r-md; }
+
+      &.current {
+        @apply
+          z-10
+          bg-blue-50
+          dark:bg-blue-500
+          border-blue-500
+          dark:border-blue-300
+          text-blue-600
+          hover:text-blue-600
+          dark:text-blue-100
+          dark:hover:text-blue-100;
+      }
+    }
+
+    button[disabled] {
+      @apply
+        text-stone-300
+        hover:text-stone-300
+        dark:text-stone-700
+        hover:dark:text-stone-700;
+    }
+
+    .ellipsis,
+    button[disabled] {
+      @apply
+        hover:bg-white
+        dark:hover:bg-stone-900;
+    }
+  }
+
+  .registration {
+    h2 {
+      @apply
+        mt-6
+        mb-4
+        text-center
+        text-3xl
+        font-extrabold;
+    }
+
+    p {
+      @apply mt-4 text-sm;
+
+      &:only-of-type { @apply text-center; }
+
+      &.policies { @apply text-left pt-6; }
+    }
+
+    input { @apply w-full; }
+
+    a {
+      @apply
+        font-medium
+        text-blue-600
+        dark:text-blue-400
+        hover:text-blue-500
+        dark:hover:text-blue-300;
+    }
+
+    .action button {
+      @apply
+        w-full
+        flex
+        justify-center;
+    }
+  }
+
+  .messages {
+    svg { @apply hidden; }
+
+    .success {
+      @apply
+        bg-green-200
+        dark:bg-green-500
+        text-green-700
+        dark:text-green-800;
+
+      .success-icon {
+        @apply
+          block
+          text-green-500
+          dark:text-green-800;
+      }
+    }
+
+    .error {
+      @apply
+        bg-red-100
+        dark:bg-red-400
+        text-red-700
+        dark:text-red-800;
+
+      .error-icon {
+        @apply
+          block
+          text-red-400
+          dark:text-red-700;
+      }
+    }
+
+    .warning {
+      @apply
+        bg-yellow-200
+        text-yellow-700;
+
+      .warning-icon {
+        @apply
+          block
+          text-yellow-500
+          dark:text-yellow-600;
+      }
+    }
+
+    .info {
+      @apply
+        bg-blue-100
+        dark:bg-blue-200
+        text-blue-700;
+
+      .info-icon {
+        @apply
+          block
+          text-blue-400
+          dark:text-blue-600;
+      }
+    }
+  }
+
+  .patterns {
+    section > h2 {
+      @apply
+        text-xl
+        font-bold
+        mb-6
+        pb-2
+        border-b-2
+        dark:border-b-stone-500;
+
+      a { @apply no-underline; }
+    }
+
+    .field { @apply my-6; }
+
+    .icon svg {
+      @apply h-4 w-4 ml-4 fill-stone-600 dark:fill-stone-400;
+    }
+
+    button.icon svg,
+    .button.icon svg {
+      @apply ml-0;
+    }
+  }
+
+  .markdown-toolbar {
+    @apply
+      justify-between
+      bg-stone-300
+      dark:bg-stone-600
+      rounded-t-md
+      p-3
+      mt-1
+      -mb-1;
+
+    svg {
+      @apply
+        h-4
+        w-4
+        fill-stone-500
+        dark:fill-stone-300
+        hover:fill-stone-600
+        dark:hover:fill-stone-100;
+    }
+  }
+
+  .stepper {
+    @apply flex;
+
+    button {
+      @apply
+        border-4
+        text-stone-50
+        dark:text-stone-100
+        enabled:hover:text-stone-50
+        enabled:focus:text-stone-50
+        bg-stone-400
+        hover:bg-stone-500
+        enabled:focus:bg-stone-500
+        dark:enabled:bg-stone-600
+        dark:enabled:hover:bg-stone-700
+        dark:enabled:focus:bg-stone-700
+        enabled:border-transparent
+        hover:enabled:border-transparent
+        hover:disabled:bg-transparent
+        pt-1
+        pb-2
+        text-3xl
+        md:text-xl
+        md:border-2;
+
+      &.left {
+        border-right-style: solid;
+
+        @apply
+          rounded-l-full
+          pl-6
+          dark:border-r-transparent;
+      }
+
+      &.right {
+        border-left-style: solid;
+
+        @apply
+          rounded-r-full
+          pr-6
+          dark:border-l-transparent;
+      }
+    }
+
+    input {
+      @apply
+        border-y-4
+        md:border-y-2
+        border-x-0
+        border-stone-400
+        dark:border-transparent;
+    }
+  }
+
+  /* Table row borders */
+  .ready-summary table,
+  .frames table,
+  .journal-entries table {
+    th,
+    td {
+      @apply
+        border-b
+        border-stone-300
+        dark:border-stone-600;
+    }
+
+    tbody tr:last-child {
+      th,
+      td { @apply border-b-0; }
+    }
+  }
+
+  .ready-summary {
+    @apply overflow-x-auto;
+
+    .compact {
+      @apply
+        hidden
+        md:inline;
+    }
+
+    table {
+      @apply min-w-full;
+
+      td {
+        @apply
+          text-right
+          px-4;
+      }
+
+      th,
+      td {
+        @apply
+          whitespace-nowrap
+          py-3;
+
+        &:last-child {
+          @apply
+            border-l
+            pl-4
+            pr-0;
+        }
+      }
+
+      .push-pull {
+        @apply
+          text-stone-400
+          dark:text-stone-500;
+      }
+
+      thead th {
+        @apply
+          text-right
+          pr-4;
+
+        &:last-child { @apply pr-0; }
+      }
+
+      tbody th { @apply text-left; }
+    }
+  }
+
+  .frames,
+  .journal-entries {
+    @apply overflow-x-auto;
+
+    table {
+      @apply
+        w-full
+        table-fixed;
+
+      thead th { @apply text-left; }
+
+      th,
+      td { @apply p-2; }
+
+      td {
+        @apply
+          whitespace-nowrap
+          overflow-hidden
+          text-ellipsis
+          print:whitespace-normal;
+      }
+    }
+  }
+
+  .section-tabbed {
+    form { @apply space-y-0; }
+  }
+
+  /* Form bits */
+
+  .field {
+    @apply
+      sm:grid
+      sm:grid-cols-3
+      sm:items-start
+      sm:gap-4
+      sm:border-b
+      sm:border-stone-300
+      sm:dark:border-stone-600
+      sm:pb-5;
+
+    &.last {
+      @apply
+        border-none
+        pb-0;
+    }
+  }
+
+  .progressive-field-wrapper { @apply space-y-6; }
+
+  .action {
+    @apply
+      pt-6
+      flex
+      flex-wrap
+      items-center
+      gap-3;
+  }
+
+  .subscription-settings {
+    @apply
+      space-y-4
+      p-6
+      bg-stone-200
+      dark:bg-stone-700
+      rounded-lg
+      my-6;
+
+    h3 { @apply mb-0 pb-0; }
+  }
+
+  .data-import-export {
+    @apply
+      text-sm
+      font-medium
+      space-y-2;
+
+    ul {
+      @apply
+        divide-y
+        divide-stone-300
+        dark:divide-stone-600
+        rounded-md
+        border
+        border-stone-300
+        dark:border-stone-600;
+    }
+
+    li {
+      @apply
+        flex
+        items-center
+        justify-between
+        py-3
+        pl-3
+        pr-4;
+    }
+  }
+
+  .subscription-banner {
+    @apply
+      text-blue-50
+      bg-blue-500;
+
+    a {
+      @apply
+        text-blue-50
+        px-1
+        hover:py-1
+        hover:no-underline
+        hover:bg-blue-600;
+    }
+
+    &.deleted {
+      @apply
+        text-stone-600
+        bg-yellow-400;
+
+      a {
+        @apply
+          text-stone-600
+          hover:bg-yellow-500;
+      }
+    }
+
+    &.paused,
+    &.past-due {
+      @apply
+        text-red-50
+        bg-red-500;
+
+      a {
+        @apply
+          text-red-50
+          hover:bg-red-600;
+      }
+    }
+  }
+}
+
+@layer utilities {
+  .js-required,
+  .has-js .no-js { @apply hidden; }
+
+  .has-js .js-required { @apply block; }
+
+  .has-js .js-required.markdown-toolbar { @apply flex; }
+
+  .has-js textarea { @apply rounded-t-none; }
+
+  .folded .reminder-square:not(.type-empty) {
+    clip-path: var(--folded-corner);
+
+    .fold { @apply block; }
+  }
+
+  .unfolded .reminder-square:not(.type-empty) {
+    clip-path: none;
+
+    .fold { @apply hidden; }
+  }
+
+  .text-subdued {
+    @apply
+      text-stone-500
+      dark:text-stone-400;
+
+    a& {
+      @apply
+        hover:text-stone-700
+        dark:hover:text-stone-100;
+    }
+  }
+
+  .fix-this {
+    @apply
+      p-6
+      border-pink-400
+      dark:border-pink-600
+      border-4
+      border-dashed
+      rounded-xl;
+  }
+
+  .button-inactive {
+    @apply
+      border-stone-400
+      text-stone-400
+      hover:text-stone-400
+      bg-stone-100
+      hover:bg-stone-100
+      dark:border-stone-600
+      dark:text-stone-500
+      hover:dark:text-stone-500
+      dark:bg-stone-800
+      hover:dark:bg-stone-800;
+  }
+
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+}

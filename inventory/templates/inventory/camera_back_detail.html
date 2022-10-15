@@ -4,43 +4,39 @@
 {% block title %}{{ camera_back }}{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <div class="c-heading">
-        <div class="flex">
-            <h1><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>, Back “{{ camera_back.name }}”</h1>
-            {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True %}
-        </div>
+<div class="page-heading">
+    <div class="inner">
+        <h1><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>, Back “{{ camera_back.name }}”</h1>
     </div>
-
-    <section class="status">
-        <h2>Status: {{ camera_back.get_status_display }}</h2>
-    </section>
-
-    {% if camera_back.get_format_display %}
-        <p>Format: {{ camera_back.get_format_display }}</p>
-    {% endif %}
-
-    {% if camera_back.status == 'loaded' %}
-        {% include 'inventory/_camera-loaded.html' %}
-        <div class="action">{% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}</div>
-    {% elif camera_back.status != 'unavailable' %}
-        <p><a href="{% url 'camera-back-load' camera.id camera_back.id %}">Load this camera back</a></p>
-    {% endif %}
-
-    {% if camera_back.notes %}
-        <h2>Notes</h2>
-        <div>{{ camera_back.notes|markdown }}</div>
-    {% endif %}
-
-    {% if rolls_history %}
-        <hr />
-
-        <section class="history">
-            <h3 id="previous-rolls">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }} for this back</h3>
-            <p><a href="{% url 'camera-detail' camera.id %}#previous-rolls">View all previous rolls for this camera.</a></p>
-
-            {% include 'inventory/_logbook-table.html' with rolls=rolls_history page='project' %}
-        </section>
-    {% endif %}
+    {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True %}
 </div>
+
+<section class="status">
+    <h2>Status: {{ camera_back.get_status_display }}</h2>
+</section>
+
+{% if camera_back.get_format_display %}
+    <p>Format: {{ camera_back.get_format_display }}</p>
+{% endif %}
+
+{% if camera_back.status == 'loaded' %}
+    {% include 'inventory/_camera-loaded.html' %}
+    <div class="action">{% include 'inventory/_form-finish-roll.html' with camera=camera roll=roll %}</div>
+{% elif camera_back.status != 'unavailable' %}
+    <p><a href="{% url 'camera-back-load' camera.id camera_back.id %}">Load this camera back</a></p>
+{% endif %}
+
+{% if camera_back.notes %}
+    <h2>Notes</h2>
+    <div>{{ camera_back.notes|markdown }}</div>
+{% endif %}
+
+{% if rolls_history %}
+    <section class="history">
+        <h3 id="previous-rolls">{{ rolls_history.count }} previous roll{{ rolls_history.count|pluralize }} for this back</h3>
+        <p><a href="{% url 'camera-detail' camera.id %}#previous-rolls">View all previous rolls for this camera.</a></p>
+
+        {% include 'components/logbook-table.html' with rolls=rolls_history page='project' %}
+    </section>
+{% endif %}
 {% endblock %}

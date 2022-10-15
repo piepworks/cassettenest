@@ -1,37 +1,37 @@
 {% if method != 'add' %}
-    <div class="c-field">
+    <div class="field">
         <label>Film</label>
-        <p class="c-field__input-placeholder">{{ roll.film }}</p>
+        <p class="field__input-placeholder">{{ roll.film }}</p>
     </div>
 {% endif %}
-{% include 'inventory/_form-field.html' with field=form.started_on %}
-{% include 'inventory/_form-field.html' with field=form.ended_on %}
+{% include 'components/form-field.html' with field=form.started_on %}
+{% include 'components/form-field.html' with field=form.ended_on %}
 {% if roll.status != '02_loaded' %}
-    {% include 'inventory/_form-field.html' with field=form.status %}
-    {% include 'inventory/_form-field.html' with field=form.camera %}
-    {% include 'inventory/_form-field.html' with field=form.camera_back %}
+    {% include 'components/form-field.html' with field=form.status %}
+    {% include 'components/form-field.html' with field=form.camera %}
+    {% include 'components/form-field.html' with field=form.camera_back %}
 {% else %}
-    <div class="c-field">
+    <div class="field">
         <input type="hidden" name="status" value="{{ roll.status }}" />
         <label>Status</label>
-        <small class="c-field__help">You can't update the status of a loaded roll from this form.</small>
-        <p class="c-field__input-placeholder">Loaded</p>
+        <small class="field__help">You can't update the status of a loaded roll from this form.</small>
+        <p class="field__input-placeholder">Loaded</p>
     </div>
     {% if roll.camera %}
-        <div class="c-field">
+        <div class="field">
             <label>Camera / Back</label>
-            <small class="c-field__help">You can't update the camera for a loaded roll of film from this form.</small>
-            <p class="c-field__input-placeholder">
+            <small class="field__help">You can't update the camera for a loaded roll of film from this form.</small>
+            <p class="field__input-placeholder">
                 {{ roll.camera }}{% if roll.camera_back %}, Back “{{ roll.camera_back.name }}”{% endif %}
             </p>
         </div>
     {% endif %}
 {% endif %}
-{% include 'inventory/_form-field.html' with field=form.lens %}
-{% include 'inventory/_form-field.html' with field=form.project %}
-{% include 'inventory/_form-field.html' with field=form.push_pull %}
-{% include 'inventory/_form-field.html' with field=form.location %}
-{% include 'inventory/_form-field.html' with field=form.notes %}
-{% include 'inventory/_form-field.html' with field=form.lab %}
-{% include 'inventory/_form-field.html' with field=form.scanner %}
-{% include 'inventory/_form-field.html' with field=form.notes_on_development %}
+{% include 'components/form-field.html' with field=form.lens %}
+{% include 'components/form-field.html' with field=form.project %}
+{% include 'components/form-field.html' with field=form.push_pull %}
+{% include 'components/form-field.html' with field=form.location %}
+{% include 'components/form-field.html' with field=form.notes %}
+{% include 'components/form-field.html' with field=form.lab %}
+{% include 'components/form-field.html' with field=form.scanner %}
+{% include 'components/form-field.html' with field=form.notes_on_development class='last' %}

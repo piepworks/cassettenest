@@ -3,132 +3,176 @@
 {% block bodytag %}class="patterns"{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <h1>Pattern Library</h1>
+<h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">Pattern Library</h1>
 
-    <p>Very inspired by <a href="https://adamsilver.io">Adam Silver</a>’s <a href="http://nostyle.herokuapp.com">No Style Design System</a>.</p>
+<section id="section-subscription-banners" class="space-y-5">
+    <h2><a href="#section-subscription-banners">Subscription Banners</a></h2>
+    {% include 'inventory/_subscription-banner.html' with message='Subscriptions are awesome. <a href="https://example.com">Link</a>' %}
+    {% include 'inventory/_subscription-banner.html' with message='Deleted. <a href="https://example.com">Link</a>' status='deleted' %}
+    {% include 'inventory/_subscription-banner.html' with message='Paused <a href="https://example.com">Link</a>' status='paused' %}
+    {% include 'inventory/_subscription-banner.html' with message='Past Due <a href="https://example.com">Link</a>' status='past-due' %}
+</section>
 
-    <section class="pattern">
-        <h2>Form Fields</h2>
+<section id="section-subscription-management">
+    <h2><a href="#section-subscription-management">Subscription Management</a></h2>
+
+    <h3 class="border-0 mb-0 pb-0 opacity-75">Friend mode</h3>
+    {% include 'inventory/_settings-subscription.html' with subscription=subscription_friend %}
+    <h3 class="border-0 mb-0 pb-0 opacity-75">Not subscribed, trial mode enabled</h3>
+    {% include 'inventory/_settings-subscription.html' with subscription=subscription_never %}
+    <h3 class="border-0 mb-0 pb-0 opacity-75">Trial mode (not sure this is totally correct)</h3>
+    {% include 'inventory/_settings-subscription.html' with subscription=subscription_trial %}
+    <h3 class="border-0 mb-0 pb-0 opacity-75">Subscribed to monthly plan</h3>
+    {% include 'inventory/_settings-subscription.html' with subscription=subscription_monthly %}
+    <h3 class="border-0 mb-0 pb-0 opacity-75">Subscribed to annual plan</h3>
+    {% include 'inventory/_settings-subscription.html' with subscription=subscription_annual %}
+    <h3 class="border-0 mb-0 pb-0 opacity-75">Scheduled to be cancelled</h3>
+    {% include 'inventory/_settings-subscription.html' with subscription=subscription_scheduled %}
+</section>
+
+<section id="section-ready-table">
+    <h2><a href="#section-ready-table">Ready Table</a></h2>
+
+    {% include 'components/ready-table.html' with rolls=test_rolls %}
+</section>
+
+<section id="section-notifications">
+    <h2><a href="#section-notifications">Notifications</a></h2>
+
+    {% include 'components/message.html' with messages=test_messages %}
+</section>
+
+<section id="section-form-fields">
+    <h2><a href="#section-form-fields">Form Fields</a></h2>
+    <form>
         {% for field in form %}
-        {% include 'inventory/_form-field.html' with field=field %}
+            {% include 'components/form-field.html' with field=field %}
         {% endfor %}
-
-        <div class="c-field">
+        <div>
             <fieldset>
                 <legend>Fieldset & Legend</legend>
-                {{ form.choice }}
-                {{ form.number }}
+                <div class="space-y-2">
+                    {{ form.choice }}
+                    {{ form.number }}
+                </div>
             </fieldset>
         </div>
-    </section>
+    </form>
+</section>
 
-    <section class="pattern space">
-        <h2>Buttons</h2>
+<section id="section-buttons">
+    <h2><a href="#section-buttons">Buttons</a></h2>
 
+    <div class="space-y-4">
         <div><button>Button Tag</button></div>
         <div><input type="submit" value="Input Button"></div>
-        <div class="wrap">
-            <button>Primary (default)</button>
-            <button class="secondary">Secondary</button>
-            <button class="destructive" title="DANGER!">Destructive</button>
-        </div>
         <div><a class="button" href="#">Link Button</a></div>
-    </section>
 
-    <section class="pattern">
-        <h2>Icons (<a href="https://octicons.github.com">from GitHub</a> for now)</h2>
-        <table>
-            <tr>
-                <td>X</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='x' %}</div></td>
-            </tr>
-            <tr>
-                <td>Pencil</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</div></td>
-            </tr>
-            <tr>
-                <td>Check</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</div></td>
-            </tr>
-            <tr>
-                <td>Dot</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</div></td>
-            </tr>
-            <tr>
-                <td>Calendar</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='calendar' %}</div></td>
-            </tr>
-            <tr>
-                <td>Arrow-Both</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='arrow-both' %}</div></td>
-            </tr>
-            <tr>
-                <td>Arrow-Left</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='arrow-left' %}</div></td>
-            </tr>
-            <tr>
-                <td>Arrow-Right</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='arrow-right' %}</div></td>
-            </tr>
-            <tr>
-                <td>Camera</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='camera' %}</div></td>
-            </tr>
-            <tr>
-                <td>Trashcan</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='trashcan' %}</div></td>
-            </tr>
-            <tr>
-                <td>Globe</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='globe' %}</div></td>
-            </tr>
-            <tr>
-                <td>Location</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='location' %}</div></td>
-            </tr>
-            <tr>
-                <td>Archive</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='archive' %}</div></td>
-            </tr>
-            <tr>
-                <td>Book</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='book' %}</div></td>
-            </tr>
-            <tr>
-                <td>Notes</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='notes' %}</div></td>
-            </tr>
-            <tr>
-                <td>Beaker</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='beaker' %}</div></td>
-            </tr>
-            <tr>
-                <td>Download</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='download' %}</div></td>
-            </tr>
-            <tr>
-                <td>List-Unordered</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='list-unordered' %}</div></td>
-            </tr>
-            <tr>
-                <td>List-Ordered</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='list-ordered' %}</div></td>
-            </tr>
-            <tr>
-                <td>Bold</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='bold' %}</div></td>
-            </tr>
-            <tr>
-                <td>Link</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='link' %}</div></td>
-            </tr>
-            <tr>
-                <td>Heart - Fill</td>
-                <td><div class="icon">{% include 'inventory/_github-icon.html' with id='heart-fill' %}</div></td>
-            </tr>
-        </table>
+        <div class="pt-6 space-x-2">
+            <button class="primary">Primary</button>
+            <button class="secondary">Secondary</button>
+        </div>
+        <div class="space-x-2">
+            <button class="destructive" title="DANGER!">Destructive</button>
+            <button disabled>Disabled</button>
+        </div>
+    </div>
+</section>
 
+<section id="section-icons">
+    <h2><a href="#section-icons">Icons</a> (<a href="https://octicons.github.com">Octicons</a>)</h2>
+    <table>
+        <tr>
+            <td>X</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='x' %}</div></td>
+        </tr>
+        <tr>
+            <td>Pencil</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</div></td>
+        </tr>
+        <tr>
+            <td>Check</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='check' %}</div></td>
+        </tr>
+        <tr>
+            <td>Dot</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='dot' %}</div></td>
+        </tr>
+        <tr>
+            <td>Calendar</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='calendar' %}</div></td>
+        </tr>
+        <tr>
+            <td>Arrow-Both</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='arrow-both' %}</div></td>
+        </tr>
+        <tr>
+            <td>Arrow-Left</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='arrow-left' %}</div></td>
+        </tr>
+        <tr>
+            <td>Arrow-Right</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='arrow-right' %}</div></td>
+        </tr>
+        <tr>
+            <td>Camera</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='camera' %}</div></td>
+        </tr>
+        <tr>
+            <td>Trashcan</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='trashcan' %}</div></td>
+        </tr>
+        <tr>
+            <td>Globe</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='globe' %}</div></td>
+        </tr>
+        <tr>
+            <td>Location</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='location' %}</div></td>
+        </tr>
+        <tr>
+            <td>Archive</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='archive' %}</div></td>
+        </tr>
+        <tr>
+            <td>Book</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='book' %}</div></td>
+        </tr>
+        <tr>
+            <td>Notes</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='notes' %}</div></td>
+        </tr>
+        <tr>
+            <td>Beaker</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='beaker' %}</div></td>
+        </tr>
+        <tr>
+            <td>Download</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='download' %}</div></td>
+        </tr>
+        <tr>
+            <td>List-Unordered</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='list-unordered' %}</div></td>
+        </tr>
+        <tr>
+            <td>List-Ordered</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='list-ordered' %}</div></td>
+        </tr>
+        <tr>
+            <td>Bold</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='bold' %}</div></td>
+        </tr>
+        <tr>
+            <td>Link</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='link' %}</div></td>
+        </tr>
+        <tr>
+            <td>Heart - Fill</td>
+            <td><div class="icon">{% include 'inventory/_github-icon.html' with id='heart-fill' %}</div></td>
+        </tr>
+    </table>
+
+    <div class="mt-2 space-y-3">
         <h3>Icon Buttons</h3>
         <div>
             <button class="icon icon-destructive" aria-label="Delete">
@@ -148,53 +192,53 @@
                 {% include 'inventory/_github-icon.html' with id='pencil' %}
             </a>
         </div>
-    </section>
+    </div>
+</section>
 
-    <section class="pattern space">
-        <h2>Cards</h2>
-        <div>
-            {% include 'inventory/_card.html' with name='Plain card' %}
-            {% include 'inventory/_card.html' with name='Plain card with count' slot='count' %}
-        </div>
-        <div>
-            {% include 'inventory/_card.html' with name='Film count: E6' slot='count' count=50 type='film' film_type='e6' %}
-            {% include 'inventory/_card.html' with name='Film count: C41' slot='count' count=25 type='film' film_type='c41' %}
-            {% include 'inventory/_card.html' with name='Film count: B&W' slot='count' count=12 type='film' film_type='bw' %}
-        </div>
-        <div>
-            {% include 'inventory/_card.html' with name='Camera card with empty reminder' slot='reminder' %}
-            {% include 'inventory/_card.html' with name='Camera card with E6 film reminder' slot='reminder' roll=roll1 %}
-            {% include 'inventory/_card.html' with name='Camera card with pushed C41 film reminder' slot='reminder' roll=roll2 %}
-            {% include 'inventory/_card.html' with name='Camera card with pulled B&W film reminder' slot='reminder' roll=roll3 %}
-        </div>
-    </section>
+<section id="section-cards">
+    <h2><a href="#section-cards">Cards</a></h2>
+    <div>
+        {% include 'inventory/_card.html' with name='Plain card' %}
+        {% include 'inventory/_card.html' with name='Plain card with count' slot='count' %}
+    </div>
+    <div>
+        {% include 'inventory/_card.html' with name='Film count: E6' slot='count' count=50 type='film' film_type='e6' %}
+        {% include 'inventory/_card.html' with name='Film count: C41' slot='count' count=25 type='film' film_type='c41' %}
+        {% include 'inventory/_card.html' with name='Film count: B&W' slot='count' count=12 type='film' film_type='bw' %}
+    </div>
+    <div>
+        {% include 'inventory/_card.html' with name='Camera card with empty reminder' slot='reminder' %}
+        {% include 'inventory/_card.html' with name='Camera card with E6 film reminder' slot='reminder' roll=roll1 %}
+        {% include 'inventory/_card.html' with name='Camera card with pushed C41 film reminder' slot='reminder' roll=roll2 %}
+        {% include 'inventory/_card.html' with name='Camera card with pulled B&W film reminder' slot='reminder' roll=roll3 %}
+    </div>
+</section>
 
-    <section class="pattern">
-        <h2>Headings</h2>
+<section id="section-headings">
+    <h2><a href="#section-headings">Headings</a></h2>
 
-        <h3>Homepage</h3>
-        <h2 class="c-heading c-heading--divider">Loaded Cameras</h2>
+    <h3>Homepage</h3>
+    <h2 class="c-heading c-heading--divider">Loaded Cameras</h2>
 
-        <h3>Page Detail</h3>
-        <h1 class="c-heading">35-bw-11</h1>
+    <h3>Page Detail</h3>
+    <h1 class="c-heading">35-bw-11</h1>
 
-        <h3>Page Detail with buttons</h3>
-        <header class="c-heading">
-            <div class="flex">
-                <h1>35-bw-11</h1>
-                <div class="action">
-                    <a href="#" class="button icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</a>
-                    <a href="#" class="button icon icon-destructive">{% include 'inventory/_github-icon.html' with id='trashcan' %}</a>
-                </div>
+    <h3>Page Detail with buttons</h3>
+    <header class="c-heading">
+        <div class="flex">
+            <h1>35-bw-11</h1>
+            <div class="action">
+                <a href="#" class="button icon">{% include 'inventory/_github-icon.html' with id='pencil' %}</a>
+                <a href="#" class="button icon icon-destructive">{% include 'inventory/_github-icon.html' with id='trashcan' %}</a>
             </div>
-        </header>
-    </section>
+        </div>
+    </header>
+</section>
 
-    <section class="pattern">
-        <h2>Tables</h2>
-        <p>&hellip;</p>
-    </section>
-</div>
+<section id="section-tables">
+    <h2><a href="#section-tables">Tables</a></h2>
+    <p>&hellip;</p>
+</section>
 {% endblock %}
 
 {% block page_js %}
