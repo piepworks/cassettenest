@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
 from django.contrib.staticfiles.storage import staticfiles_storage
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from django.conf import settings
 from django.urls import include, path
 from inventory import views
@@ -117,4 +117,5 @@ if settings.DEBUG:
     urlpatterns = [
         path('__debug__/', include(debug_toolbar.urls)),
         path('__reload__/', include('django_browser_reload.urls')),
+        path('500', TemplateView.as_view(template_name='500.html')),
     ] + urlpatterns

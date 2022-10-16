@@ -14,14 +14,18 @@
         </div>
 
         <main>
-            <div class="raw">
-                <h1>Something is broken.</h1>
-                <p>Sorry about that. I’m on the case and will have this fixed soon.</p>
-                <p><a href="https://cassettenest.com/feedback/?choice=bug" rel="noopener">Contact me</a> if you have any questions.</p>
-            </div>
+            <h1>Something is broken.</h1>
+            <p>Sorry about that. I’m on the case and will have this fixed soon.</p>
+            <p><a href="https://cassettenest.com/feedback/?choice=bug" rel="noopener">Contact me</a> if you have any questions.</p>
         </main>
         <footer>
-            <p>Copyright &copy; 2016–{% now 'Y' %} <a href="https://treylabs.com">Trey Labs LLC</a>. All rights reserved.</p>
+            <div class="mt-28 border-t border-stone-300 dark:border-stone-700 pt-8 text-xs xl:text-center">
+                <p class="text-stone-400 dark:text-stone-600 xl:text-center">Copyright &copy; 2016–{% now 'Y' %} <a href="https://piep.works">Piepworks LLC</a>. All rights reserved.</p>
+                <ul class="policies print:hidden inline-flex gap-3">
+                    <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
+                    <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
+                </ul>
+            </div>
         </footer>
     </div>
 </body>
