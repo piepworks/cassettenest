@@ -52,7 +52,7 @@ npm run build
 "Run Command":
 
 ```
-python manage.py migrate --noinput
 python manage.py collectstatic --noinput
+python manage.py migrate --noinput
 gunicorn --worker-tmp-dir /dev/shm film.wsgi
 ```
