@@ -19,7 +19,7 @@
         {% include 'components/form-field.html' with field=form.notes %}
 
         <div class="action">
-            <input type="submit" value="Save" />
+            <button class="primary">Save</button>
             {% if action == 'Edit' %}
             <a href="{% url 'roll-journal-detail' roll.id entry.id %}">Cancel</a>
             {% endif %}

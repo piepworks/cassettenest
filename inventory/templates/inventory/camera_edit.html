@@ -18,7 +18,7 @@
         {% include 'components/form-field.html' with field=form.unavailable %}
         {% endif %}
         <div class="action">
-            <input type="submit" value="Update camera" />
+            <button class="primary">Update camera</button>
             <a href="{% url 'camera-detail' camera.id %}">Cancel</a>
         </div>
     </form>
@@ -27,7 +27,7 @@
     <form onsubmit="return confirmDelete('camera')" action="{% url 'camera-delete' camera.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="camera" value="{{ camera.id }}" />
-        <div class="action">Since you’ve never used this, you can <input type="submit" class="destructive" value="delete this camera" /></div>
+        <div class="action">Since you’ve never used this, you can <button class="destructive">delete this camera</button></div>
     </form>
     {% endif %}
 </div>

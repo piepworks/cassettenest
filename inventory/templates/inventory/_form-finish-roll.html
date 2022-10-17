@@ -1,5 +1,5 @@
 <form action="{% url 'camera-detail' camera.id %}" method="post">
     {% csrf_token %}
     <input type="hidden" name="roll" value="{{ roll.id }}" />
-    <input type="submit" class="primary" value="Finish roll" />
+    <button class="primary">Finish roll</button>
 </form>
