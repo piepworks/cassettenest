@@ -82,7 +82,7 @@ def is_valid_webhook(payload):
 def is_valid_ip_address(forwarded_for):
     # https://developer.paddle.com/webhook-reference/webhooks-security
 
-    client_ip_address = ip_address(forwarded_for)
+    client_ip_address = ip_address(forwarded_for.split(',')[0])
 
     if settings.PADDLE_LIVE_MODE == 0:
         allow_list = [
