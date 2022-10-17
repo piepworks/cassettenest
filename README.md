@@ -39,6 +39,20 @@ Once everything's set up, the next time you want to run it:
 - To run both the Django server and compile Tailwind on demand:
     - `npm run start`
 
----
+## Deployment
 
-Backup storage "lifecycle" is defined in `cassettenest.xml` (which is in iCloud /Documents/DigitalOcean Spaces Storage Lifecycle Definitions).
+In DigitalOcean settings for the app itself (not the project which includes the database), configure these commands:
+
+"Build Command":
+
+```
+npm run build
+```
+
+"Run Command":
+
+```
+python manage.py migrate --noinput
+python manage.py collectstatic --noinput
+gunicorn --worker-tmp-dir /dev/shm film.wsgi
+```
