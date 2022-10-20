@@ -7,9 +7,7 @@
 {% block content %}
 <h1>Settings</h1>
 
-{% flag 'paddle' %}
 <div id="subscription">{% include 'inventory/_settings-subscription.html' %}</div>
-{% endflag %}
 
 <form method="post">
     {% csrf_token %}
@@ -76,8 +74,6 @@
 {% endblock %}
 
 {% block page_js %}
-{% flag 'paddle' %}
     <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
     {% include 'inventory/_settings-subscription-js.html' %}
-{% endflag %}
 {% endblock %}

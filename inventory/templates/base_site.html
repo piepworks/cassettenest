@@ -29,9 +29,7 @@
             {% if user.is_authenticated %}{% include '_hamburger.html' %}{% endif %}
             <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
                 {% if user.is_authenticated %}
-                    {% flag 'paddle' %}
-                        {% include 'inventory/_subscription-banner-wrapper.html' %}
-                    {% endflag %}
+                    {% include 'inventory/_subscription-banner-wrapper.html' %}
                 {% endif %}
                 <main class="pt-2 md:pt-6 pb-16">
                     {% spaceless %}

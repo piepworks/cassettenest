@@ -196,7 +196,6 @@ class SettingsTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('Username: This field is required.', messages)
 
-    @override_flag('paddle', active=True)
     def test_plan_display(self):
         plan = settings.PADDLE_STANDARD_MONTHLY
         profile = Profile.objects.get(user=self.user)
@@ -208,7 +207,6 @@ class SettingsTests(TestCase):
 
         self.assertContains(response, f'You’re currently subscribed to the <b>{paddle_plan_name(plan)}</b> plan.')
 
-    @override_flag('paddle', active=True)
     def test_friend_mode(self):
         profile = Profile.objects.get(user=self.user)
         profile.friend = True
@@ -1309,7 +1307,6 @@ class SubscriptionTests(TestCase):
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
-@override_flag('paddle', active=True)
 class SubscriptionBannerTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1362,16 +1359,6 @@ class SubscriptionBannerTests(TestCase):
 
         self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription is scheduled to be canceled.')
-
-    def test_subscription_banner_no_flag(self):
-        self.user.profile.subscription_status = 'none'
-        self.user.profile.save()
-
-        with override_flag('paddle', active=False):
-            response = self.client.get(reverse('index'))
-
-        self.assertTemplateNotUsed(response, 'inventory/_subscription-banner.html')
-        self.assertNotContains(response, 'Paid plans are now available.')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)

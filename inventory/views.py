@@ -19,7 +19,6 @@ from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
 from itertools import chain
-from waffle.decorators import waffle_flag
 import requests
 from .models import Camera, CameraBack, Stock, Film, Manufacturer, Journal, Project, Roll, Frame
 from .forms import (
