@@ -1306,6 +1306,7 @@ class SubscriptionTests(TestCase):
         self.assertContains(response, f'There was a problem changing plans. Please try again.')
 
 
+@freeze_time(datetime.datetime.now())
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class SubscriptionBannerTests(TestCase):
     @classmethod
@@ -1328,9 +1329,7 @@ class SubscriptionBannerTests(TestCase):
         self.user.profile.save()
 
         response = self.client.get(reverse('index'))
-
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
-        self.assertContains(response, 'Paid plans are now available.')
+        self.assertContains(response, f'You have {settings.SUBSCRIPTION_TRIAL_DURATION} days left in your free trial.')
 
     def test_subscription_banner_cancelled(self):
         self.user.profile.subscription_status = 'deleted'
@@ -1338,7 +1337,6 @@ class SubscriptionBannerTests(TestCase):
 
         response = self.client.get(reverse('index'))
 
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription has been cancelled.')
 
     def test_subscription_banner_past_due(self):
@@ -1347,7 +1345,6 @@ class SubscriptionBannerTests(TestCase):
 
         response = self.client.get(reverse('index'))
 
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Looks like there’s a problem with your subscription.')
 
     def test_subscription_banner_cancelling(self):
@@ -1357,7 +1354,6 @@ class SubscriptionBannerTests(TestCase):
 
         response = self.client.get(reverse('index'))
 
-        self.assertTemplateUsed(response, 'inventory/_subscription-banner.html')
         self.assertContains(response, 'Your subscription is scheduled to be canceled.')
 
 
@@ -2221,6 +2217,42 @@ class StockAddTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn('New film stock “Kodak Tri-X 400” (in 35mm, 120) added!', messages)
+
+
+@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+class SubscriptionRequirementTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.active_user = User.objects.create_user('active')
+        trial_duration = datetime.timedelta(days=int(settings.SUBSCRIPTION_TRIAL_DURATION))
+        with freeze_time(datetime.date.today() - trial_duration):
+            cls.inactive_user = User.objects.create_user('inactive')
+
+        film = baker.make(Film, stock=baker.make(Stock))
+        cls.roll1 = baker.make(Roll, owner=cls.active_user, film=film)
+        cls.roll2 = baker.make(Roll, owner=cls.inactive_user, film=film)
+
+    def test_account_inactive_page(self):
+        self.client.force_login(self.inactive_user)
+        response = self.client.get(reverse('account-inactive'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_account_inactive_page_redirect(self):
+        self.client.force_login(self.active_user)
+        response = self.client.get(reverse('account-inactive'))
+        self.assertEqual(response.status_code, 302)
+
+    def test_hidden_edit_controls(self):
+        self.client.force_login(self.inactive_user)
+        response = self.client.get(reverse('roll-detail', args=(self.roll2.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'class="action"')
+
+    def test_visible_edit_controls(self):
+        self.client.force_login(self.active_user)
+        response = self.client.get(reverse('roll-detail', args=(self.roll1.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'class="action"')
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
