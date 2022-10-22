@@ -20,10 +20,10 @@ def subscription_banner(request):
                       f'<a href="{settings_url}">Choose a plan.</a>',
 
         'trial_over': f'Your free trial has ended. '
-                      f'Please <a href="{settings_url}">choose a plan</a>!',
+                      f'To continue using Cassette Nest, <a href="{settings_url}">choose a plan</a>!',
 
         'past_due':   f'Looks like there’s a problem with your subscription. '
-                      f'<a href="{settings_url}">Please check your settings.</a>',
+                      f'<a href="{settings_url}">Please check your billing settings.</a>',
 
         'paused':     f'Your subscription is currently paused. '
                       f'<a href="mailto:boss@treylabs.com">Get in touch</a> if you have questions.',
@@ -32,13 +32,14 @@ def subscription_banner(request):
                       f'<a href="{settings_url}">Update your settings</a> if you change your mind.',
 
         'cancelled':  f'Your subscription has been cancelled. '
-                      f'a href="{settings_url}">Update your settings to resubscribe</a>.',
+                      f'<a href="{settings_url}">Update your settings to resubscribe</a>.',
     }
 
     if not active_subscription and subscription_status == 'none':
         if trial_period:
             message = messages['trial']
         else:
+            subscription_status = 'trial-over'
             message = messages['trial_over']
     elif subscription_status != 'none':
         if subscription_status == 'deleted':

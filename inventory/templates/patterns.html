@@ -5,15 +5,33 @@
 {% block content %}
 <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">Pattern Library</h1>
 
-{% comment %}
 <section id="section-subscription-banners" class="space-y-5">
     <h2><a href="#section-subscription-banners">Subscription Banners</a></h2>
-    {% include 'inventory/_subscription-banner.html' with message='Subscriptions are awesome. <a href="https://example.com">Link</a>' %}
-    {% include 'inventory/_subscription-banner.html' with message='Deleted. <a href="https://example.com">Link</a>' status='deleted' %}
-    {% include 'inventory/_subscription-banner.html' with message='Paused <a href="https://example.com">Link</a>' status='paused' %}
-    {% include 'inventory/_subscription-banner.html' with message='Past Due <a href="https://example.com">Link</a>' status='past-due' %}
+    <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner">
+        You have 14 days left in your free trial.
+        <a href="https://example.com">Choose a plan.</a>
+    </div>
+    <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner trial-over">
+        Your free trial has ended.
+        To continue using Cassette Nest, <a href="https://example.com">choose a plan</a>!
+    </div>
+    <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner past_due">
+        Looks like there’s a problem with your subscription.
+        <a href="https://example.com">Please check your billing settings.</a>
+    </div>
+    <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner paused">
+        Your subscription is currently paused.
+        <a href="mailto:boss@treylabs.com">Get in touch</a> if you have questions.
+    </div>
+    <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner deleted">
+        Your subscription is scheduled to be canceled.
+        <a href="https://example.com">Update your settings</a> if you change your mind.
+    </div>
+    <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner deleted">
+        Your subscription has been cancelled.
+        <a href="https://example.com">Update your settings to resubscribe</a>.
+    </div>
 </section>
-{% endcomment %}
 
 <section id="section-subscription-management">
     <h2><a href="#section-subscription-management">Subscription Management</a></h2>

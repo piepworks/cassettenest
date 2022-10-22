@@ -1036,6 +1036,7 @@
         hover:bg-blue-600;
     }
 
+    &.trial-over,
     &.deleted {
       @apply
         text-stone-600
@@ -1048,8 +1049,9 @@
       }
     }
 
+    /* stylelint-disable selector-class-pattern */
     &.paused,
-    &.past-due {
+    &.past_due {
       @apply
         text-red-50
         bg-red-500;
@@ -1060,6 +1062,7 @@
           hover:bg-red-600;
       }
     }
+    /* stylelint-enable selector-class-pattern */
   }
 }
 

@@ -14,9 +14,9 @@ class Profile(models.Model):
         ('none', 'Never had a subscription'),
         # https://developer.paddle.com/reference/platform-parameters/event-statuses
         ('active', 'Subscribed'),
-        ('trialing', 'Trial period'),
+        ('trialing', 'Trial period'),  # We don't use this since we have our own trial functionality.
         ('past_due', 'Past-Due'),
-        ('paused', 'Paused'),
+        ('paused', 'Paused'),  # We don't use this, but we could I guess.
         ('deleted', 'Canceled'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
