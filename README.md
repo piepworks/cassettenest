@@ -1,6 +1,6 @@
 # Cassette Nest
 
-[![codecov](https://codecov.io/gh/trey/cassettenest/branch/tailwind/graph/badge.svg?token=jRevCZkCfH)](https://codecov.io/gh/trey/cassettenest)
+[![codecov](https://codecov.io/gh/trey/cassettenest/branch/main/graph/badge.svg?token=jRevCZkCfH)](https://codecov.io/gh/trey/cassettenest)
 
 A way for analog photographers to track their film use from box to binder.
 
