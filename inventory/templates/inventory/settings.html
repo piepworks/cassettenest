@@ -51,6 +51,7 @@
 {% endflag %}
 
 {% flag 'import-data' %}
+{% if user.profile.account_active %}
 <dl id="import" class="data-import-export">
     <dt>Import previously exported data</dt>
     <dd>
@@ -70,6 +71,7 @@
         </ul>
     </dd>
 </dl>
+{% endif %}
 {% endflag %}
 {% endblock %}
 

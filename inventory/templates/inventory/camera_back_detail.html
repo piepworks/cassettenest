@@ -8,7 +8,9 @@
     <div class="inner">
         <h1><a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a>, Back “{{ camera_back.name }}”</h1>
     </div>
-    {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True %}
+    {% if user.profile.account_active %}
+        {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True %}
+    {% endif %}
 </div>
 
 <section class="status">
