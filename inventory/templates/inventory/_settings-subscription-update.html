@@ -52,23 +52,29 @@
                            remove [@disabled] from changeButton
                            add .primary to changeButton
 
-                           if existingPlan is '{{ paddle.standard_annual_id }}' and plan is '{{ paddle.standard_monthly_id }}'
-                               remove .hidden from changeAnnualToMonthly
+                           if existingPlan is '{{ paddle.standard_annual_id }}'
+                               if plan is '{{ paddle.standard_monthly_id }}'
+                                   remove .hidden from changeAnnualToMonthly
+                               end
+                               if plan is '{{ paddle.awesome_annual_id }}'
+                                   remove .hidden from changeAnnualToAwesome
+                               end
                            end
-                           if existingPlan is '{{ paddle.standard_monthly_id }}' and plan is '{{ paddle.standard_annual_id }}'
-                               remove .hidden from changeMonthlyToAnnual
-                            end
-                           if existingPlan is '{{ paddle.standard_monthly_id }}' and plan is '{{ paddle.awesome_annual_id }}'
-                               remove .hidden from changeMonthlyToAnnual
+                           if existingPlan is '{{ paddle.standard_monthly_id }}'
+                               if plan is '{{ paddle.standard_annual_id }}'
+                                   remove .hidden from changeMonthlyToAnnual
+                               end
+                               if plan is '{{ paddle.awesome_annual_id }}'
+                                   remove .hidden from changeMonthlyToAnnual
+                               end
                            end
-                           if existingPlan is '{{ paddle.standard_annual_id }}' and plan is '{{ paddle.awesome_annual_id }}'
-                               remove .hidden from changeAnnualToAwesome
-                           end
-                           if existingPlan is '{{ paddle.awesome_annual_id }}' and plan is '{{ paddle.standard_annual_id }}'
-                               remove .hidden from changeAwesomeToAnnual
-                           end
-                           if existingPlan is '{{ paddle.awesome_annual_id }}' and plan is '{{ paddle.standard_monthly_id }}'
-                               remove .hidden from changeAnnualToMonthly
+                           if existingPlan is '{{ paddle.awesome_annual_id }}'
+                               if plan is '{{ paddle.standard_annual_id }}'
+                                   remove .hidden from changeAwesomeToAnnual
+                               end
+                               if plan is '{{ paddle.standard_monthly_id }}'
+                                   remove .hidden from changeAnnualToMonthly
+                               end
                            end
                        else
                            add [@disabled] to changeButton
