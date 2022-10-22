@@ -248,7 +248,8 @@ def patterns(request):
 
     subscription_never = {
         'active': False,
-        'trial': {'enabled': True, 'duration': 14},
+        'trial_period': True,
+        'trial_days_remaining': 2,
     }
 
     subscription_monthly = {
@@ -267,6 +268,14 @@ def patterns(request):
         'cancel_url': 'https://example.com',
     }
 
+    subscription_awesome = {
+        'active': True,
+        'plan': paddle['awesome_annual_name'],
+        'plan_id': paddle['awesome_annual_id'],
+        'update_url': 'https://example.com',
+        'cancel_url': 'https://example.com',
+    }
+
     subscription_friend = {
         'friend': True,
     }
@@ -277,16 +286,6 @@ def patterns(request):
         'plan': paddle['standard_monthly_name'],
         'plan_id': paddle['standard_monthly_id'],
         'cancellation_date': datetime.date.today() + datetime.timedelta(days=1),
-    }
-
-    subscription_trial = {
-        'active': True,
-        'status': 'trialing',
-        'plan': paddle['standard_monthly_name'],
-        'plan_id': paddle['standard_monthly_id'],
-        'trial_days_remaining': 2,
-        'update_url': 'https://example.com',
-        'cancel_url': 'https://example.com',
     }
 
     context = {
@@ -302,9 +301,9 @@ def patterns(request):
         'subscription_never': subscription_never,
         'subscription_monthly': subscription_monthly,
         'subscription_annual': subscription_annual,
+        'subscription_awesome': subscription_awesome,
         'subscription_friend': subscription_friend,
         'subscription_scheduled': subscription_scheduled,
-        'subscription_trial': subscription_trial,
     }
 
     return render(request, 'patterns.html', context)
@@ -364,10 +363,6 @@ def settings(request):
             'Projects',
             'Journals',
         ]
-        trial = {
-            'enabled': dj_settings.SUBSCRIPTION_TRIAL,
-            'duration': dj_settings.SUBSCRIPTION_TRIAL_DURATION,
-        }
 
         plan_name = ''
         if request.user.profile.paddle_subscription_plan_id:
@@ -402,7 +397,7 @@ def settings(request):
             'active': request.user.profile.has_active_subscription,
             'plan': plan_name,
             'plan_id': request.user.profile.paddle_subscription_plan_id,
-            'trial': trial,
+            'trial_period': request.user.profile.trial_period,
             'trial_days_remaining': trial_days_remaining,
             'cancellation_date': cancellation_date,
             'update_url': request.user.profile.paddle_update_url,
@@ -417,7 +412,6 @@ def settings(request):
             'exportable_data': exportable_data,
             'imports': imports,
             'js_needed': True,
-            'trial': trial,
             'paddle': paddle,
             'subscription': subscription,
         }

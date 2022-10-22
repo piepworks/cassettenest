@@ -8,8 +8,8 @@
             {% if not subscription.active %}
                 <h3 class="border-b-0 mb-2">You’re not currently subscribed. Please choose a plan.</h3>
 
-                {% if user.profile.trial_period %}
-                    <p>Your free trial will end in <strong>{{ user.profile.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
+                {% if subscription.trial_period %}
+                    <p>Your free trial will end in <strong>{{ subscription.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
                 {% endif %}
 
                 {% include 'inventory/_settings-subscription-plans.html' %}
