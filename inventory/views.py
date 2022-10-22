@@ -54,6 +54,7 @@ from .utils import (
     SectionTabs,
     film_types,
 )
+from .decorators import user_account_active, user_account_inactive
 from .utils_paddle import (
     supported_webhooks,
     is_valid_plan,
@@ -314,6 +315,13 @@ def marketing_site(request):
         return HttpResponse('You are logged in.')
     else:
         return HttpResponseForbidden('You are not logged in.')
+
+
+@user_account_inactive
+@login_required
+def account_inactive(request):
+    context = {}
+    return render(request, 'account-inactive.html', context)
 
 
 @login_required
