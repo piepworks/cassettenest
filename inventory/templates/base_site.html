@@ -70,7 +70,7 @@
     <script>
         document.documentElement.classList.remove('no-js');
         document.documentElement.classList.add('has-js');
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and request.path != patterns_url %}
         {% include 'js/menu.js' %}
         {% endif %}
     </script>
