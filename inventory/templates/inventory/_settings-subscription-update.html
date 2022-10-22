@@ -38,15 +38,11 @@
                     _="on updateExplanation(plan)
                        set existingPlan to my @data-plan
                        set changeButton to (.change-plan-button in the closest .field)
-                       set changeMonthlyToAnnual to (.change-plan-message-monthly-to-annual in the closest .field)
-                       set changeAnnualToMonthly to (.change-plan-message-annual-to-monthly in the closest .field)
-                       set changeAnnualToAwesome to (.change-plan-message-annual-to-awesome in the closest .field)
-                       set changeAwesomeToAnnual to (.change-plan-message-awesome-to-annual in the closest .field)
+                       set changeLowToHigh to (.low-to-high in the closest .field)
+                       set changeHighToLow to (.high-to-low in the closest .field)
 
-                       add .hidden to changeMonthlyToAnnual
-                       add .hidden to changeAnnualToMonthly
-                       add .hidden to changeAnnualToAwesome
-                       add .hidden to changeAwesomeToAnnual
+                       add .hidden to changeLowToHigh
+                       add .hidden to changeHighToLow
 
                        if plan is not existingPlan
                            remove [@disabled] from changeButton
@@ -54,55 +50,57 @@
 
                            if existingPlan is '{{ paddle.standard_annual_id }}'
                                if plan is '{{ paddle.standard_monthly_id }}'
-                                   remove .hidden from changeAnnualToMonthly
+                                   put '{{ paddle.standard_annual_name }}' into .from in changeHighToLow
+                                   put '{{ paddle.standard_monthly_name }}' into .to in changeHighToLow
+                                   remove .hidden from changeHighToLow
                                end
                                if plan is '{{ paddle.awesome_annual_id }}'
-                                   remove .hidden from changeAnnualToAwesome
+                                   put '{{ paddle.standard_annual_name }}' into .from in changeLowToHigh
+                                   put '{{ paddle.awesome_annual_name }}' into .to in changeLowToHigh
+                                   remove .hidden from changeLowToHigh
                                end
                            end
                            if existingPlan is '{{ paddle.standard_monthly_id }}'
                                if plan is '{{ paddle.standard_annual_id }}'
-                                   remove .hidden from changeMonthlyToAnnual
+                                   put '{{ paddle.standard_monthly_name }}' into .from in changeLowToHigh
+                                   put '{{ paddle.standard_annual_name }}' into .to in changeLowToHigh
+                                   remove .hidden from changeLowToHigh
                                end
                                if plan is '{{ paddle.awesome_annual_id }}'
-                                   remove .hidden from changeMonthlyToAnnual
+                                   put '{{ paddle.standard_monthly_name }}' into .from in changeLowToHigh
+                                   put '{{ paddle.awesome_annual_name }}' into .to in changeLowToHigh
+                                   remove .hidden from changeLowToHigh
                                end
                            end
                            if existingPlan is '{{ paddle.awesome_annual_id }}'
                                if plan is '{{ paddle.standard_annual_id }}'
-                                   remove .hidden from changeAwesomeToAnnual
+                                   put '{{ paddle.awesome_annual_name }}' into .from in changeHighToLow
+                                   put '{{ paddle.standard_annual_name }}' into .to in changeHighToLow
+                                   remove .hidden from changeHighToLow
                                end
                                if plan is '{{ paddle.standard_monthly_id }}'
-                                   remove .hidden from changeAnnualToMonthly
+                                   put '{{ paddle.awesome_annual_name }}' into .from in changeHighToLow
+                                   put '{{ paddle.standard_monthly_name }}' into .to in changeHighToLow
+                                   remove .hidden from changeHighToLow
                                end
                            end
                        else
                            add [@disabled] to changeButton
-                           remove .primary from changeButton">
+                           remove .primary from changeButton
+                       end">
 
-                    <p class="hidden change-plan-message-monthly-to-annual py-3 text-sm opacity-75">
-                        If you change from a <b>monthly</b> to an <b>annual</b> plan, you will be charged immedately and
-                        your subscription will renew every year on this date. Any remaining pro-rated balance will be
-                        used towards this first payment.
+                    <p class="hidden low-to-high py-3 text-sm opacity-75">
+                        <b>What’s going to happen?</b> If you change from a <b class="from"></b> to an <b class="to"></b>
+                        plan, you will be charged immedately and your subscription will renew every year on this date.
+                        Any remaining pro-rated balance will be used towards this first payment.
                     </p>
-                    <p class="hidden change-plan-message-annual-to-monthly py-3 text-sm opacity-75">
-                        If you change from an <b>annual</b> to a <b>monthly</b> plan, your remaining pro-rated balance
-                        will be used until it runs out, at which point your subscription will renew on this day each
-                        month.
-                    </p>
-                    <p class="hidden change-plan-message-annual-to-awesome py-3 text-sm opacity-75">
-                        If you change from an <b>{{ paddle.standard_annual_name }}</b> to a
-                        <b>{{ paddle.awesome_annual_name}}</b> plan, you will be charged immedately and your
-                        subscription will renew every year on this date. Any remaining pro-rated balance will be used
-                        towards this first payment.
-                    </p>
-                    <p class="hidden change-plan-message-awesome-to-annual py-3 text-sm opacity-75">
-                        If you change from an <b>{{ paddle.awesome_annual_name }}</b> to a
-                        <b>{{ paddle.standard_annual_name}}</b> plan, your remaining pro-rated balance will be used
-                        until it runs out, at which point your subscription will renew on this day each month.
+                    <p class="hidden high-to-low py-3 text-sm opacity-75">
+                        <b>What’s going to happen?</b> If you change from an <b class="from"></b> to a <b class="to"></b>
+                        plan, your remaining pro-rated balance will be used until it runs out, at which point your
+                        subscription will renew on this day each month.
                     </p>
                 </div>
-                <button class="primary change-plan-button" _="on load add [@disabled] remove .primary">Change plan</button>
+                <button class="change-plan-button" disabled>Change plan</button>
             </fieldset>
         </div>
     </form>
