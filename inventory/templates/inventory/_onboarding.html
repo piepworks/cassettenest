@@ -27,5 +27,12 @@
             <a href="{% url 'settings' %}">Add your email address</a>
         </li>
         {% endif %}
+        <li class="flex items-center">
+            {% include 'inventory/_status-check.html' with check=user.profile.has_active_subscription %}
+            <div class="flex flex-wrap gap-0 sm:gap-3 items-center">
+                <a href="{% url 'settings' %}#subscription">Choose a plan</a>
+                <span class="pt-1 text-xs text-stone-400">You have <b>{{ user.profile.trial_days_remaining }} days</b> left in your free trial.</span>
+            </div>
+        </li>
     </ol>
 </section>

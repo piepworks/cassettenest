@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% if not cameras_total or not rolls or not email %}
+{% if not cameras_total or not rolls or not email or not user.profile.has_active_subscription %}
 {% include 'inventory/_onboarding.html' %}
 {% endif %}
 

@@ -8,6 +8,14 @@ def subscription_banner(request):
     if not request.user.is_authenticated:
         return no_banner
 
+    # Don't show "Choose a plan" banner on the homepage when the onboarding bit is there too.
+    if (
+        not request.user.profile.has_active_subscription
+        and request.user.profile.subscription_status == 'none'
+        and request.path is reverse('index')
+    ):
+        return no_banner
+
     user_profile = request.user.profile
     active_subscription = user_profile.has_active_subscription
     trial_days_remaining = user_profile.trial_days_remaining
