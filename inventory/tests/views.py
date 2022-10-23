@@ -1328,7 +1328,7 @@ class SubscriptionBannerTests(TestCase):
         self.user.profile.subscription_status = 'none'
         self.user.profile.save()
 
-        response = self.client.get(reverse('index'))
+        response = self.client.get(reverse('settings'))
         self.assertContains(response, f'You have {settings.SUBSCRIPTION_TRIAL_DURATION} days left in your free trial.')
 
     def test_subscription_banner_cancelled(self):
