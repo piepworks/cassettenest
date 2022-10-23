@@ -5,6 +5,11 @@
 {% block content %}
 <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">Pattern Library</h1>
 
+<section id="section-onboarding" class="space-y-5">
+    <h2><a href="#section-onboarding">Onboarding</a></h2>
+    {% include 'inventory/_onboarding.html' with email=True user=onboarding_user cameras_total=False rolls=False %}
+</section>
+
 <section id="section-subscription-banners" class="space-y-5">
     <h2><a href="#section-subscription-banners">Subscription Banners</a></h2>
     <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner">

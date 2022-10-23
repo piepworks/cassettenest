@@ -170,6 +170,13 @@ def index(request):
 def patterns(request):
     from django.contrib.messages.storage.base import Message
 
+    onboarding_user = {
+        'profile': {
+            'has_active_subscription': False,
+            'trial_days_remaining': 14,
+        }
+    }
+
     test_messages = [
         Message(0, 'Yay!', 'success'),
         Message(0, 'Whoops!', 'error'),
@@ -289,6 +296,7 @@ def patterns(request):
     }
 
     context = {
+        'onboarding_user': onboarding_user,
         'test_rolls': test_rolls,
         'test_messages': test_messages,
         'form': PatternsForm,
