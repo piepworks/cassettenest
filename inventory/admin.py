@@ -148,7 +148,7 @@ class UserAdmin(BaseUserAdmin):
         'short_date_joined',
     )
     list_filter = ('profile__subscription_status', 'is_active',)
-    ordering = ('-date_joined',)
+    ordering = ('-last_login',)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
