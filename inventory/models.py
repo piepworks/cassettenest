@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
-from .utils import status_number, film_types, film_formats
+from .utils import status_number, film_types, film_formats, is_active
 
 
 class Profile(models.Model):
@@ -14,9 +14,9 @@ class Profile(models.Model):
         ('none', 'Never had a subscription'),
         # https://developer.paddle.com/reference/platform-parameters/event-statuses
         ('active', 'Subscribed'),
-        ('trialing', 'Trial period'),
+        ('trialing', 'Trial period'),  # We don't use this since we have our own trial functionality.
         ('past_due', 'Past-Due'),
-        ('paused', 'Paused'),
+        ('paused', 'Paused'),  # We don't use this, but we could I guess.
         ('deleted', 'Canceled'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -48,6 +48,22 @@ class Profile(models.Model):
                 return False
         else:
             return False
+
+    @property
+    def account_active(self):
+        return is_active(self.user)
+
+    @property
+    def trial_days_remaining(self):
+        today = datetime.date.today()
+        date_joined = self.user.date_joined.date()
+        trial_duration = int(settings.SUBSCRIPTION_TRIAL_DURATION)
+
+        return trial_duration - (today - date_joined).days
+
+    @property
+    def trial_period(self):
+        return self.trial_days_remaining > 0
 
 
 @receiver(post_save, sender=User)

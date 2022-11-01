@@ -19,7 +19,6 @@ from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings as dj_settings
 from itertools import chain
-from waffle.decorators import waffle_flag
 import requests
 from .models import Camera, CameraBack, Stock, Film, Manufacturer, Journal, Project, Roll, Frame
 from .forms import (
@@ -55,6 +54,7 @@ from .utils import (
     SectionTabs,
     film_types,
 )
+from .decorators import user_account_active, user_account_inactive
 from .utils_paddle import (
     supported_webhooks,
     is_valid_plan,
@@ -170,6 +170,13 @@ def index(request):
 def patterns(request):
     from django.contrib.messages.storage.base import Message
 
+    onboarding_user = {
+        'profile': {
+            'has_active_subscription': False,
+            'trial_days_remaining': 14,
+        }
+    }
+
     test_messages = [
         Message(0, 'Yay!', 'success'),
         Message(0, 'Whoops!', 'error'),
@@ -240,13 +247,16 @@ def patterns(request):
         'vendor_id': dj_settings.PADDLE_VENDOR_ID,
         'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
         'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
+        'awesome_annual_id': int(dj_settings.PADDLE_AWESOME_ANNUAL),
         'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
         'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
+        'awesome_annual_name': paddle_plan_name(dj_settings.PADDLE_AWESOME_ANNUAL),
     }
 
     subscription_never = {
         'active': False,
-        'trial': {'enabled': True, 'duration': 14},
+        'trial_period': True,
+        'trial_days_remaining': 2,
     }
 
     subscription_monthly = {
@@ -265,6 +275,14 @@ def patterns(request):
         'cancel_url': 'https://example.com',
     }
 
+    subscription_awesome = {
+        'active': True,
+        'plan': paddle['awesome_annual_name'],
+        'plan_id': paddle['awesome_annual_id'],
+        'update_url': 'https://example.com',
+        'cancel_url': 'https://example.com',
+    }
+
     subscription_friend = {
         'friend': True,
     }
@@ -277,17 +295,8 @@ def patterns(request):
         'cancellation_date': datetime.date.today() + datetime.timedelta(days=1),
     }
 
-    subscription_trial = {
-        'active': True,
-        'status': 'trialing',
-        'plan': paddle['standard_monthly_name'],
-        'plan_id': paddle['standard_monthly_id'],
-        'trial_days_remaining': 2,
-        'update_url': 'https://example.com',
-        'cancel_url': 'https://example.com',
-    }
-
     context = {
+        'onboarding_user': onboarding_user,
         'test_rolls': test_rolls,
         'test_messages': test_messages,
         'form': PatternsForm,
@@ -300,9 +309,9 @@ def patterns(request):
         'subscription_never': subscription_never,
         'subscription_monthly': subscription_monthly,
         'subscription_annual': subscription_annual,
+        'subscription_awesome': subscription_awesome,
         'subscription_friend': subscription_friend,
         'subscription_scheduled': subscription_scheduled,
-        'subscription_trial': subscription_trial,
     }
 
     return render(request, 'patterns.html', context)
@@ -313,6 +322,13 @@ def marketing_site(request):
         return HttpResponse('You are logged in.')
     else:
         return HttpResponseForbidden('You are not logged in.')
+
+
+@user_account_inactive
+@login_required
+def account_inactive(request):
+    context = {}
+    return render(request, 'account-inactive.html', context)
 
 
 @login_required
@@ -355,10 +371,6 @@ def settings(request):
             'Projects',
             'Journals',
         ]
-        trial = {
-            'enabled': dj_settings.SUBSCRIPTION_TRIAL,
-            'duration': dj_settings.SUBSCRIPTION_TRIAL_DURATION,
-        }
 
         plan_name = ''
         if request.user.profile.paddle_subscription_plan_id:
@@ -378,8 +390,10 @@ def settings(request):
             'vendor_id': dj_settings.PADDLE_VENDOR_ID,
             'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
             'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
+            'awesome_annual_id': int(dj_settings.PADDLE_AWESOME_ANNUAL),
             'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
             'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
+            'awesome_annual_name': paddle_plan_name(dj_settings.PADDLE_AWESOME_ANNUAL),
             'plan_name': plan_name,
         }
 
@@ -391,7 +405,7 @@ def settings(request):
             'active': request.user.profile.has_active_subscription,
             'plan': plan_name,
             'plan_id': request.user.profile.paddle_subscription_plan_id,
-            'trial': trial,
+            'trial_period': request.user.profile.trial_period,
             'trial_days_remaining': trial_days_remaining,
             'cancellation_date': cancellation_date,
             'update_url': request.user.profile.paddle_update_url,
@@ -406,7 +420,6 @@ def settings(request):
             'exportable_data': exportable_data,
             'imports': imports,
             'js_needed': True,
-            'trial': trial,
             'paddle': paddle,
             'subscription': subscription,
         }
@@ -998,6 +1011,7 @@ def ready(request):
         return render(request, 'inventory/ready.html', context)
 
 
+@user_account_active
 @require_POST
 @login_required
 def rolls_update(request):
@@ -1069,6 +1083,7 @@ def projects(request):
     return render(request, 'inventory/projects.html', context)
 
 
+@user_account_active
 @login_required
 def project_add(request):
     if request.method == 'POST':
@@ -1101,6 +1116,7 @@ def project_add(request):
         return render(request, 'inventory/project_add_edit.html', context)
 
 
+@user_account_active
 @login_required
 def project_edit(request, pk):
     project = get_object_or_404(Project, id=pk, owner=request.user)
@@ -1148,6 +1164,7 @@ def project_edit(request, pk):
         return render(request, 'inventory/project_add_edit.html', context)
 
 
+@user_account_active
 @require_POST
 @login_required
 def project_delete(request, pk):
@@ -1343,6 +1360,7 @@ def project_detail(request, pk):
         return render(request, 'inventory/project_detail.html', context)
 
 
+@user_account_active
 @require_POST
 @login_required
 def project_rolls_add(request, pk):
@@ -1373,6 +1391,7 @@ def project_rolls_add(request, pk):
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
+@user_account_active
 @require_POST
 @login_required
 def project_rolls_remove(request, pk):
@@ -1396,6 +1415,7 @@ def project_rolls_remove(request, pk):
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
+@user_account_active
 @require_POST
 @login_required
 def project_camera_update(request, pk):
@@ -1424,6 +1444,7 @@ def project_camera_update(request, pk):
     return redirect(reverse('project-detail', args=(project.id,)))
 
 
+@user_account_active
 @login_required
 def rolls_add(request):
     owner = request.user
@@ -1469,6 +1490,7 @@ def rolls_add(request):
         return render(request, 'inventory/rolls_add.html', context)
 
 
+@user_account_active
 @login_required
 def roll_add(request):
     '''For adding non-storage rolls.'''
@@ -1636,6 +1658,7 @@ def film_rolls(request, stock=None, format=None, slug=None):
     return render(request, 'inventory/film_rolls.html', context)
 
 
+@user_account_active
 @login_required
 def stock_add(request):
     if request.method == 'POST':
@@ -1759,6 +1782,7 @@ def roll_detail(request, pk):
     return render(request, 'inventory/roll_detail.html', context)
 
 
+@user_account_active
 @login_required
 def roll_edit(request, pk):
     owner = request.user
@@ -1811,6 +1835,7 @@ def roll_edit(request, pk):
         )
 
 
+@user_account_active
 @require_POST
 @login_required
 def roll_delete(request, pk):
@@ -1850,6 +1875,7 @@ def roll_journal_detail(request, roll_pk, entry_pk):
     )
 
 
+@user_account_active
 @login_required
 def roll_journal_add(request, roll_pk):
     roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
@@ -1903,6 +1929,7 @@ def roll_journal_add(request, roll_pk):
         )
 
 
+@user_account_active
 @login_required
 def roll_journal_edit(request, roll_pk, entry_pk):
     owner = request.user
@@ -1950,6 +1977,7 @@ def roll_journal_edit(request, roll_pk, entry_pk):
         )
 
 
+@user_account_active
 @require_POST
 @login_required
 def roll_journal_delete(request, roll_pk, entry_pk):
@@ -1967,6 +1995,7 @@ def roll_journal_delete(request, roll_pk, entry_pk):
     return redirect(reverse('roll-detail', args=(roll.id,)))
 
 
+@user_account_active
 @login_required
 def roll_frame_add(request, roll_pk):
     roll = get_object_or_404(Roll, pk=roll_pk, owner=request.user)
@@ -2100,6 +2129,7 @@ def roll_frame_detail(request, roll_pk, number):
     )
 
 
+@user_account_active
 @login_required
 def roll_frame_edit(request, roll_pk, number):
     frame = get_object_or_404(Frame, roll__id=roll_pk, roll__owner=request.user, number=number)
@@ -2177,6 +2207,7 @@ def roll_frame_edit(request, roll_pk, number):
         )
 
 
+@user_account_active
 @require_POST
 @login_required
 def roll_frame_delete(request, roll_pk, number):
@@ -2208,6 +2239,7 @@ def cameras(request):
     return render(request, 'inventory/cameras.html', context)
 
 
+@user_account_active
 @login_required
 def camera_or_back_load(request, pk, back_pk=None):
     owner = request.user
@@ -2473,6 +2505,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
                 return render(request, 'inventory/camera_detail.html', context)
 
 
+@user_account_active
 @login_required
 def camera_add(request):
     if request.method == 'POST':
@@ -2507,6 +2540,7 @@ def camera_add(request):
         return render(request, 'inventory/camera_add.html', context)
 
 
+@user_account_active
 @login_required
 def camera_back_add(request, pk):
     owner = request.user
@@ -2552,6 +2586,7 @@ def camera_back_add(request, pk):
         return render(request, 'inventory/camera_back_add.html', context)
 
 
+@user_account_active
 @login_required
 def camera_edit(request, pk):
     camera = get_object_or_404(Camera, id=pk, owner=request.user)
@@ -2587,6 +2622,7 @@ def camera_edit(request, pk):
         return render(request, 'inventory/camera_edit.html', context)
 
 
+@user_account_active
 @login_required
 def camera_back_edit(request, pk, back_pk):
     owner = request.user
@@ -2629,6 +2665,7 @@ def camera_back_edit(request, pk, back_pk):
         return render(request, 'inventory/camera_back_edit.html', context)
 
 
+@user_account_active
 @require_POST
 @login_required
 def camera_delete(request, pk):
@@ -2645,6 +2682,7 @@ def camera_delete(request, pk):
     return redirect(reverse('index'))
 
 
+@user_account_active
 @require_POST
 @login_required
 def camera_back_delete(request, pk, back_pk):
@@ -2765,6 +2803,7 @@ class ExportRollsView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportRollsView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
@@ -2863,6 +2902,7 @@ class ExportCamerasView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportCamerasView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
@@ -2934,6 +2974,7 @@ class ExportCameraBacksView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportCameraBacksView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
@@ -3021,6 +3062,7 @@ class ExportProjectsView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportProjectsView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):
@@ -3103,6 +3145,7 @@ class ExportJournalsView(WriteCSVMixin, View):
         return export['response']
 
 
+@method_decorator(user_account_active, name='dispatch')
 @method_decorator(login_required, name='dispatch')
 class ImportJournalsView(ReadCSVMixin, RedirectAfterImportMixin, View):
     def post(self, request, *args, **kwargs):

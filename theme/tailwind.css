@@ -237,6 +237,15 @@
           bg-red-600
           hover:bg-red-700;
       }
+
+      &.gold {
+        @apply
+          bg-gold
+          hover:bg-black
+          text-yellow-900
+          hover:text-white
+          border-transparent;
+      }
     }
   }
 }
@@ -770,10 +779,6 @@
 
     .field { @apply my-6; }
 
-    .icon svg {
-      @apply h-4 w-4 ml-4 fill-stone-600 dark:fill-stone-400;
-    }
-
     button.icon svg,
     .button.icon svg {
       @apply ml-0;
@@ -1036,6 +1041,7 @@
         hover:bg-blue-600;
     }
 
+    &.trial-over,
     &.deleted {
       @apply
         text-stone-600
@@ -1048,8 +1054,9 @@
       }
     }
 
+    /* stylelint-disable selector-class-pattern */
     &.paused,
-    &.past-due {
+    &.past_due {
       @apply
         text-red-50
         bg-red-500;
@@ -1060,6 +1067,7 @@
           hover:bg-red-600;
       }
     }
+    /* stylelint-enable selector-class-pattern */
   }
 }
 

@@ -1,3 +1,61 @@
+{% load capture_tags %}
+
+{% capture as change_plan_hyperscript silent %}
+on updateExplanation(plan)
+set existingPlan to my @data-plan
+set changeButton to (.change-plan-button in the closest .field)
+set changeLowToHigh to (.low-to-high in the closest .field)
+set changeHighToLow to (.high-to-low in the closest .field)
+
+add .hidden to changeLowToHigh
+add .hidden to changeHighToLow
+
+if plan is not existingPlan
+    remove [@disabled] from changeButton
+    add .primary to changeButton
+
+    if existingPlan is '{{ paddle.standard_annual_id }}'
+        if plan is '{{ paddle.standard_monthly_id }}'
+            put '{{ paddle.standard_annual_name }}' into .from in changeHighToLow
+            put '{{ paddle.standard_monthly_name }}' into .to in changeHighToLow
+            remove .hidden from changeHighToLow
+        end
+        if plan is '{{ paddle.awesome_annual_id }}'
+            put '{{ paddle.standard_annual_name }}' into .from in changeLowToHigh
+            put '{{ paddle.awesome_annual_name }}' into .to in changeLowToHigh
+            remove .hidden from changeLowToHigh
+        end
+    end
+    if existingPlan is '{{ paddle.standard_monthly_id }}'
+        if plan is '{{ paddle.standard_annual_id }}'
+            put '{{ paddle.standard_monthly_name }}' into .from in changeLowToHigh
+            put '{{ paddle.standard_annual_name }}' into .to in changeLowToHigh
+            remove .hidden from changeLowToHigh
+        end
+        if plan is '{{ paddle.awesome_annual_id }}'
+            put '{{ paddle.standard_monthly_name }}' into .from in changeLowToHigh
+            put '{{ paddle.awesome_annual_name }}' into .to in changeLowToHigh
+            remove .hidden from changeLowToHigh
+        end
+    end
+    if existingPlan is '{{ paddle.awesome_annual_id }}'
+        if plan is '{{ paddle.standard_annual_id }}'
+            put '{{ paddle.awesome_annual_name }}' into .from in changeHighToLow
+            put '{{ paddle.standard_annual_name }}' into .to in changeHighToLow
+            remove .hidden from changeHighToLow
+        end
+        if plan is '{{ paddle.standard_monthly_id }}'
+            put '{{ paddle.awesome_annual_name }}' into .from in changeHighToLow
+            put '{{ paddle.standard_monthly_name }}' into .to in changeHighToLow
+            remove .hidden from changeHighToLow
+        end
+    end
+else
+    add [@disabled] to changeButton
+    remove .primary from changeButton
+end
+{% endcapture %}
+
 <div class="subscription-plans">
     <div class="flex flex-wrap gap-3">
         {% if subscription.update_url %}
@@ -27,26 +85,26 @@
                         &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span>&nbsp;per year)</small>
                     </label>
                 </div>
-                <div data-plan="{{ subscription.plan_id }}" class="plan-change-explanation"
-                    _="on updateExplanation(plan)
-                       set existingPlan to my @data-plan
-                       if plan is not existingPlan
-                           remove [@disabled] from (.change-plan-button in the closest .field)
-                           if existingPlan is '{{ paddle.standard_annual_id }}'
-                               add .hidden to (.change-plan-message-to-annual in the closest .field)
-                               remove .hidden from (.change-plan-message-to-monthly in the closest .field)
-                           else
-                               add .hidden to (.change-plan-message-to-monthly in the closest .field)
-                               remove .hidden from (.change-plan-message-to-annual in the closest .field)
-                           end
-                       else
-                           add [@disabled] to (.change-plan-button in the closest .field)
-                           add .hidden to (.change-plan-message-to-monthly in the closest .field)
-                           add .hidden to (.change-plan-message-to-annual in the closest .field)">
-                    <p class="hidden change-plan-message-to-annual py-3 text-sm opacity-75">If you change from <b>{{ paddle.standard_monthly_name }}</b> to <b>{{ paddle.standard_annual_name }}</b>, you will be charged immedately and your subscription will renew every year on this date. Any remaining pro-rated balance will be used towards this first payment.</p>
-                    <p class="hidden change-plan-message-to-monthly py-3 text-sm opacity-75">If you change from <b>{{ paddle.standard_annual_name }}</b> to <b>{{ paddle.standard_monthly_name }}</b>, your remaining pro-rated balance will be used until it runs out, at which point your subscription will renew on this day each month.</p>
+                <div>
+                    <label>
+                        <input _="on change send updateExplanation(plan: {{ paddle.awesome_annual_id }}) to (.plan-change-explanation in the closest .field)" type="radio" name="plan" value="{{ paddle.awesome_annual_id }}"{% if subscription.plan_id == paddle.awesome_annual_id %} checked{% endif %}>
+                        {{ paddle.awesome_annual_name }}
+                        &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.awesome_annual_id }}">$100</span>&nbsp;per year)</small>
+                    </label>
                 </div>
-                <button class="primary change-plan-button" _="on load add [@disabled]">Change plan</button>
+                <div data-plan="{{ subscription.plan_id }}" class="plan-change-explanation" _="{{ change_plan_hyperscript }}">
+                    <p class="hidden low-to-high py-3 text-sm opacity-75">
+                        <b>What’s going to happen?</b> If you change from a <b class="from"></b> to an <b class="to"></b>
+                        plan, you will be charged immedately and your subscription will renew every year on this date.
+                        Any remaining pro-rated balance will be used towards this first payment.
+                    </p>
+                    <p class="hidden high-to-low py-3 text-sm opacity-75">
+                        <b>What’s going to happen?</b> If you change from an <b class="from"></b> to a <b class="to"></b>
+                        plan, your remaining pro-rated balance will be used until it runs out, at which point your
+                        subscription will renew on this day each month.
+                    </p>
+                </div>
+                <button class="change-plan-button" disabled>Change plan</button>
             </fieldset>
         </div>
     </form>

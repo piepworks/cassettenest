@@ -29,9 +29,11 @@
             {% if user.is_authenticated %}{% include '_hamburger.html' %}{% endif %}
             <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
                 {% if user.is_authenticated %}
-                    {% flag 'paddle' %}
-                        {% include 'inventory/_subscription-banner-wrapper.html' %}
-                    {% endflag %}
+                    {% if subscription_banner != '' and request.path != patterns_url %}
+                    <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner{% if subscription_banner.status != 'none' %} {{ subscription_banner.status }}{% endif %}">
+                        {{ subscription_banner.message | safe }}
+                    </div>
+                    {% endif %}
                 {% endif %}
                 <main class="pt-2 md:pt-6 pb-16">
                     {% spaceless %}
@@ -68,7 +70,7 @@
     <script>
         document.documentElement.classList.remove('no-js');
         document.documentElement.classList.add('has-js');
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and request.path != patterns_url %}
         {% include 'js/menu.js' %}
         {% endif %}
     </script>

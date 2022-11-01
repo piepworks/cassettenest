@@ -10,7 +10,9 @@
         <h1>{{ project.name }}</h1>
     </div>
 
-    {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
+    {% if user.profile.account_active %}
+        {% include 'inventory/_heading-buttons.html' with item=project url='project' name='project' %}
+    {% endif %}
 </div>
 {% endblock %}
 
@@ -57,12 +59,14 @@
 
 <div class="print:hidden">
 {% if project.status != 'archived' %}
-    {% if film_available_count %}
-        {% include 'inventory/_project-add-rolls.html' %}
-    {% endif %}
+    {% if user.profile.account_active %}
+        {% if film_available_count %}
+            {% include 'inventory/_project-add-rolls.html' %}
+        {% endif %}
 
-    {% if cameras_to_add %}
-        {% include 'inventory/_project-add-camera.html' %}
+        {% if cameras_to_add %}
+            {% include 'inventory/_project-add-camera.html' %}
+        {% endif %}
     {% endif %}
 {% else %}
     <p><i>This project is archived. You can add rolls and cameras to it if you <a href="{% url 'project-edit' project.id %}">change its status</a>.</i></p>

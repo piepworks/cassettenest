@@ -8,8 +8,8 @@
             {% if not subscription.active %}
                 <h3 class="border-b-0 mb-2">You’re not currently subscribed. Please choose a plan.</h3>
 
-                {% if subscription.trial.enabled %}
-                    <p>Try it free for <strong>{{ subscription.trial.duration }} days!</strong></p>
+                {% if subscription.trial_period %}
+                    <p>Your free trial will end in <strong>{{ subscription.trial_days_remaining }} day{{ user.profile.trial_days_remaining|pluralize }}</strong>.</p>
                 {% endif %}
 
                 {% include 'inventory/_settings-subscription-plans.html' %}
@@ -34,7 +34,7 @@
             {% endif %}
         </div>
         <div class="no-js">
-            <p>Sorry, subscription management requires JavaScript to work. :(</p>
+            <p>😢 Sorry, subscription management requires JavaScript to work.</p>
         </div>
         <div class="pt-4 flex gap-2 sm:gap-3 sm:items-center text-sm text-stone-500 dark:text-stone-400">
             {% include 'svg/heroicons/shield-check.svg' with class='h-9 w-9 text-stone-400 dark:text-stone-500 flex-shrink-0' %}

@@ -106,6 +106,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'inventory.context_processors.subscription_banner',
             ],
         },
     },
@@ -203,6 +204,7 @@ PADDLE_VENDOR_ID = os.environ.get('PADDLE_VENDOR_ID')
 PADDLE_VENDOR_AUTH_CODE = os.environ.get('PADDLE_VENDOR_AUTH_CODE')
 PADDLE_STANDARD_MONTHLY = os.environ.get('PADDLE_STANDARD_MONTHLY')
 PADDLE_STANDARD_ANNUAL = os.environ.get('PADDLE_STANDARD_ANNUAL')
+PADDLE_AWESOME_ANNUAL = os.environ.get('PADDLE_AWESOME_ANNUAL')
 PADDLE_PUBLIC_KEY = os.environ.get('PADDLE_PUBLIC_KEY')
 
 # Django Debug Toolbar
