@@ -25,7 +25,6 @@
 </form>
 
 
-{% flag 'export-data' %}
 {% if exportable_data %}
 <dl id="export" class="data-import-export">
     <dt>Export your data</dt>
@@ -48,7 +47,6 @@
     </dd>
 </dl>
 {% endif %}
-{% endflag %}
 
 {% flag 'import-data' %}
 {% if user.profile.account_active %}
