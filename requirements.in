@@ -5,7 +5,6 @@ django-bleach
 django-browser-reload
 django-capture-tag
 django-cors-headers
-django-dbbackup==4.0.0b0
 django-debug-toolbar
 django-htmx
 django-waffle
