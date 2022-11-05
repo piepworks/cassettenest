@@ -69,7 +69,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'waffle',
     'corsheaders',
-    'dbbackup',
     'widget_tweaks',
     'django_htmx',
     'django_browser_reload',
