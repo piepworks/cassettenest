@@ -82,46 +82,64 @@ def index(request):
         owner=owner,
     ).order_by('-updated_at',)
 
+    # Define counts so that we can intelligently show non-empty tabs by default.
+    count_loaded_cameras = rolls_loaded.count()
+    count_ready_cameras = cameras_empty.count() + camera_backs_empty.count()
+    count_unavailable_cameras = cameras_unavailable.count()
+
+    initial_cameras_tab = 0
+    if count_ready_cameras and not count_loaded_cameras:
+        initial_cameras_tab = 1
+    elif count_unavailable_cameras:
+        initial_cameras_tab = 2
+
     cameras = SectionTabs(
         'Cameras',
         '#homepage_sections',
-        0,
+        initial_cameras_tab,
         [
             {
                 'name': 'Loaded',
-                'count': rolls_loaded.count(),
+                'count': count_loaded_cameras,
                 'rows': rolls_loaded,
                 'action': 'roll'
             },
             {
                 'name': 'Ready to Load',
-                'count': cameras_empty.count() + camera_backs_empty.count(),
+                'count': count_ready_cameras,
                 'rows': list(chain(cameras_empty, camera_backs_empty)),
                 'action': 'load',
             },
             {
                 'name': 'Unavailable',
-                'count': cameras_unavailable.count(),
+                'count': count_unavailable_cameras,
                 'rows': cameras_unavailable,
-                'action': 'load',
             },
         ],
         reverse('camera-add'),
     )
 
+    # Define counts so that we can intelligently show non-empty tabs by default.
+    count_current_projects = all_projects.filter(status='current').count()
+    count_archived_projects = all_projects.filter(status='archived').count()
+
+    initial_projects_tab = 0
+    if not count_current_projects and count_archived_projects:
+        initial_projects_tab = 1
+
     projects = SectionTabs(
         'Projects',
         '#homepage_sections',
-        0,
+        initial_projects_tab,
         [
             {
                 'name': 'Current',
-                'count': all_projects.filter(status='current').count(),
+                'count': count_current_projects,
                 'rows': all_projects.filter(status='current'),
             },
             {
                 'name': 'Archived',
-                'count': all_projects.filter(status='archived').count(),
+                'count': count_archived_projects,
                 'rows': all_projects.filter(status='archived'),
             }
         ],
@@ -136,8 +154,8 @@ def index(request):
 
     if request.htmx:
         slug = request.GET.get('slug')
-        c = request.GET.get('c') if request.GET.get('c') else 0
-        p = request.GET.get('p') if request.GET.get('p') else 0
+        c = request.GET.get('c') if request.GET.get('c') else initial_cameras_tab
+        p = request.GET.get('p') if request.GET.get('p') else initial_projects_tab
 
         if slug == 'c':
             cameras.set_tab(c)
@@ -1186,10 +1204,6 @@ def project_delete(request, pk):
 def project_detail(request, pk):
     owner = request.user
     project = get_object_or_404(Project, id=pk, owner=owner)
-    c = request.GET.get('c') if request.GET.get('c') else 0
-    sectiontab_querystring = f'c={c}'
-    page = request.GET.get('page') or 1
-    pagination_querystring = f'page={page}'
 
     # Get all of this user's cameras not already associated with this project.
     cameras_to_add = Camera.objects.filter(owner=owner).exclude(
@@ -1272,27 +1286,42 @@ def project_detail(request, pk):
         '-code'
     )
 
+    count_loaded_cameras = len(loaded)
+    count_ready_cameras = len(ready_to_load)
+    count_outside_cameras = len(loaded_outside_project)
+
+    initial_camera_tab = 0
+    if count_ready_cameras and not count_loaded_cameras:
+        initial_camera_tab = 1
+    elif count_outside_cameras:
+        initial_camera_tab = 2
+
+    c = request.GET.get('c') if request.GET.get('c') else initial_camera_tab
+    sectiontab_querystring = f'c={c}'
+    page = request.GET.get('page') or 1
+    pagination_querystring = f'page={page}'
+
     # TODO: write logic to show either `Cameras` or `Cameras and Backs`.
     cameras = SectionTabs(
         'Cameras and Backs',
         '#project-camera-logbook-wrapper',
-        0,
+        initial_camera_tab,
         [
             {
                 'name': 'Loaded',
-                'count': len(loaded),
+                'count': count_loaded_cameras,
                 'rows': loaded,
                 'action': 'roll',
             },
             {
                 'name': 'Ready to load',
-                'count': len(ready_to_load),
+                'count': count_ready_cameras,
                 'rows': ready_to_load,
                 'action': 'load'
             },
             {
                 'name': 'Loaded outside of project',
-                'count': len(loaded_outside_project),
+                'count': count_outside_cameras,
                 'rows': loaded_outside_project,
                 'action': 'roll',
             }
