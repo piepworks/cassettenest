@@ -1213,9 +1213,11 @@ def project_detail(request, pk):
     )
     cameras_empty = project.cameras.filter(status='empty').exclude(multiple_backs=True)
 
+    cameras_section_name = 'Cameras'
     camera_backs_empty = []
     for camera in project.cameras.all():
         if camera.multiple_backs:
+            cameras_section_name = 'Cameras and Backs'
             for back in camera.camera_backs.all():
                 if back.status == ('empty'):
                     camera_backs_empty.append(back)
@@ -1301,9 +1303,8 @@ def project_detail(request, pk):
     page = request.GET.get('page') or 1
     pagination_querystring = f'page={page}'
 
-    # TODO: write logic to show either `Cameras` or `Cameras and Backs`.
     cameras = SectionTabs(
-        'Cameras and Backs',
+        cameras_section_name,
         '#project-camera-logbook-wrapper',
         initial_camera_tab,
         [
