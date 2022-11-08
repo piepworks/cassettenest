@@ -38,25 +38,26 @@
         href="{{ action_url }}{{ querystring }}"
         class="folded hover:unfolded md:unfolded md:hover:folded flex flex-grow items-center justify-between no-underline hover:no-underline p-4 sm:px-6">
         <div>
-            <div class="flex items-center font-medium text-sm pr-2 text-stone-900 dark:text-white">
-                {% if items.current_tab_action == 'roll' %}
+            <div class="flex items-center font-medium text-stone-900 dark:text-white">
+                {% if items.current_tab_action == 'roll'%}
+                    <span class="text-sm pr-2">
                     {% if item.camera_back %}
                         {{ item.camera_back }}
                     {% else %}
                         {{ item.camera }}
                     {% endif %}
+                    </span>
                 {% else %}
                     {{ item }}
                 {% endif %}
             </div>
+            {% if items.current_tab_action == 'roll' %}
             <div class="mt-2 sm:flex sm:justify-between">
                 <div class="mt-2 flex items-center text-sm text-stone-400 dark:text-stone-400 sm:mt-0">
-                    <p>
-                        {% if items.current_tab_action == 'roll' %}Loaded on {% endif %}
-                        <time datetime="{{ item.created_at }}">{{ item.created_at|date:'F j, Y' }}</time>
-                    </p>
+                    <p>Loaded on <time datetime="{{ item.created_at }}">{{ item.created_at|date:'F j, Y' }}</time></p>
                 </div>
             </div>
+            {% endif %}
         </div>
         {% if items.current_tab_action == 'roll' or items.current_tab_action == 'load' %}
             {% include 'components/reminder.html' %}
