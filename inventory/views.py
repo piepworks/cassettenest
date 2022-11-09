@@ -660,11 +660,19 @@ def stock(request, manufacturer, slug):
     headings = ['Format', 'Count']
     total_rolls_table = {
         'headings': headings,
-        'rows': [{'columns': [film.get_format_display(), film.count] for film in films}],
+        'rows': [{
+            'columns': [
+                film['name'],
+                film['count']
+            ]} for film in films_list],
     }
     total_inventory_table = {
         'headings': headings,
-        'rows': [{'columns': [film['name'], film['user_inventory_count']] for film in films_list}]
+        'rows': [{
+            'columns': [
+                film['name'],
+                film['user_inventory_count']
+            ]} for film in films_list]
     }
     total_history_table = {
         'headings': headings,
@@ -672,8 +680,7 @@ def stock(request, manufacturer, slug):
             'columns': [
                 {'title': film['name'], 'href': f'{film["url"]}#film_history_heading'},
                 film['user_history_count'],
-            ]
-        } for film in films_list]
+            ]} for film in films_list]
     }
 
     context = {

@@ -2059,7 +2059,6 @@ class StockViewTests(TestCase):
         self.assertIsNotNone(response.context['stocks'])
 
     def test_stock_page(self):
-        film = baker.make(Film, name='Portra 400', slug='portra-400-135', stock=self.public_stock)
         response = self.client.get(reverse('stock', args=(self.public_stock.manufacturer.slug, self.public_stock.slug)))
         self.assertContains(response, f'{self.public_stock.name}')
         self.assertContains(response, 'Your inventory of this stock')
