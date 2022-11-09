@@ -61,11 +61,9 @@
         </div>
     </div>
 
-    {% if user.is_authenticated %}
     <script src="{% static 'js/vendor/htmx-1.8.2.min.js' %}" defer></script>
     <script src="{% static 'js/vendor/hyperscript-0.9.7.min.js' %}" defer></script>
     {% django_htmx_script %}
-    {% endif %}
 
     <script>
         document.documentElement.classList.remove('no-js');
