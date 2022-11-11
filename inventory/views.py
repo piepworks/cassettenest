@@ -90,7 +90,7 @@ def index(request):
     initial_cameras_tab = 0
     if count_ready_cameras and not count_loaded_cameras:
         initial_cameras_tab = 1
-    elif count_unavailable_cameras:
+    elif count_unavailable_cameras and not count_loaded_cameras:
         initial_cameras_tab = 2
 
     cameras = SectionTabs(
