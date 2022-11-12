@@ -47,7 +47,7 @@ django-cors-headers==3.13.0
     # via -r requirements.in
 django-debug-toolbar==3.7.0
     # via -r requirements.in
-django-htmx==1.12.2
+django-htmx==1.13.0
     # via -r requirements.in
 django-waffle==3.0.0
     # via -r requirements.in
@@ -122,7 +122,7 @@ sqlparse==0.4.3
     # via
     #   django
     #   django-debug-toolbar
-stack-data==0.6.0
+stack-data==0.6.1
     # via ipython
 tinycss2==1.1.1
     # via bleach
@@ -143,7 +143,7 @@ webencodings==0.5.1
     # via
     #   bleach
     #   tinycss2
-wheel==0.37.1
+wheel==0.38.4
     # via pip-tools
 whitenoise==6.2.0
     # via -r requirements.in
