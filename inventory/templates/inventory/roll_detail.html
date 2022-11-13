@@ -150,8 +150,7 @@
             <tr>
                 <th class="entry-number">#</th>
                 <th class="entry-date">Date</th>
-                <th class="entry-aperture">Aperture</th>
-                <th class="entry-shutter">Shutter Speed</th>
+                <th class="entry-notes">Notes</th>
             </tr>
         </thead>
         <tbody>
@@ -162,16 +161,9 @@
                     <span class="print:hidden">{{ frame.date|date:'M j' }}</span>
                     <span class="hidden print:inline">{{ frame.date|date:'M j, Y' }}</span>
                 </td>
-                <td>
-                    {% if frame.aperture %}
-                        <span class="subdued">ƒ/</span>
-                        {{ frame.aperture }}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if frame.shutter_speed %}
-                        {{ frame.shutter_speed }}
-                        <span class="subdued" title="second(s)">s</span>
+                <td class="entry-notes">
+                    {% if frame.notes %}
+                        {{ frame.notes|markdown }}
                     {% endif %}
                 </td>
             </tr>
