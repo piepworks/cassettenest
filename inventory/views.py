@@ -1588,6 +1588,7 @@ def roll_add(request):
             'form': form,
             'films': films,
             'js_needed': True,
+            'wc_needed': True,
         }
 
         return render(request, 'inventory/roll_add.html', context)

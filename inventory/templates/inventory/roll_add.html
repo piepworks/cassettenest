@@ -39,6 +39,8 @@
 
 {% block page_js %}
 <script>
+    {% include 'js/markdown-autocomplete.js' %}
+
     // Automatically select a film if possible.
     // ?film=[film id]
     (new URL(window.location)).searchParams.forEach((x, y) => {
