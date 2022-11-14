@@ -2104,7 +2104,7 @@ def roll_frame_add(request, roll_pk):
             'shutter_speed': previous_shutter_speed if another else '',
         })
         # Allow for having a 0th frame without a 1st frame saved at ths same time.
-        min_number = 0 if starting_number is 1 else starting_number
+        min_number = 0 if starting_number == 1 else starting_number
         form.fields['ending_number'].widget.attrs['min'] = min_number
 
         show_input = {
