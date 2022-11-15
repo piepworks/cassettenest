@@ -70,8 +70,6 @@ jobs:
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_AWESOME_ANNUAL: ${{ secrets.PADDLE_AWESOME_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
-          DBBACKUP_STORAGE: ${{ secrets.DBBACKUP_STORAGE }}
-          DBBACKUP_STORAGE_OPTIONS: ${{ secrets.DBBACKUP_STORAGE_OPTIONS }}
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3.1.1
         with:

@@ -218,8 +218,3 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_URLS_REGEX = r"^/marketing-site$"
 
 BLEACH_ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.extend(['p', 'hr'])
-
-# Django Database Backup
-DBBACKUP_STORAGE = os.environ.get('DBBACKUP_STORAGE')
-DBBACKUP_STORAGE_OPTIONS = {'location': os.environ.get('DBBACKUP_STORAGE_OPTIONS')}
-DBBACKUP_FILENAME_TEMPLATE = 'cassettenest_{datetime}.{extension}'
