@@ -7,6 +7,7 @@
     @apply
       bg-stone-100
       dark:bg-stone-800
+      print:bg-white
       text-stone-900
       dark:text-stone-200;
 
@@ -24,6 +25,7 @@
     @apply
       text-blue-600
       dark:text-blue-400
+      print:text-stone-800
       underline
       hover:text-blue-500
       dark:hover:text-blue-300
@@ -468,13 +470,16 @@
     > div {
       @apply
         px-4
+        print:px-0
         py-5
         bg-white
         dark:bg-stone-600
         shadow
+        print:shadow-none
         rounded-lg
         overflow-hidden
-        sm:p-6;
+        sm:p-6
+        print:sm:px-0;
     }
 
     dt {
