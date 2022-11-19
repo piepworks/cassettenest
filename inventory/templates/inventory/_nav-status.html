@@ -4,7 +4,7 @@
 {% url 'logbook' as logbook_url %}
 {% url 'settings' as settings_url %}
 
-<div class="flex-1 print:hidden">
+<div class="flex-1">
     <ul class="mt-5 px-2 space-y-1">
         <li{% if 'camera' in request.path or request.path == index_url %} class="current"{% endif %}{% if request.session.sidebar == 'closed' %} title="Dashboard"{% endif %}>
             {% if request.path != index_url %}

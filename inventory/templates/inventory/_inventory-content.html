@@ -9,7 +9,7 @@
     {% endif %}
 
     {% if total_rolls %}
-    <h2 class="text-xl font-semibold mt-6 mb-3">Filters</h2>
+    <h2 class="print:hidden text-xl font-semibold mt-6 mb-3">Filters</h2>
 
     <form
         id="film_filter"
@@ -18,7 +18,7 @@
         hx-trigger="change"
         hx-indicator="#spinner"
         hx-target="#inventory-content-wrapper"
-        class="mb-10">
+        class="print:hidden mb-10">
         <div class="field--filter">
             <div class="flex gap-3">
                 <label for="id_format">

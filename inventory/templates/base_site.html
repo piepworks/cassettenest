@@ -23,21 +23,21 @@
          call cnMenu.close()
        on keyup[key is '\\']
          call cnMenu.desktopToggle()">
-    <div class="wrapper md:h-screen md:overflow-hidden md:flex">
+    <div class="wrapper md:h-screen md:print:h-auto md:overflow-hidden md:flex">
         {% if user.is_authenticated and request.path != patterns_url %}{% include '_menu.html' %}{% endif %}
         <div class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">
             {% if user.is_authenticated %}{% include '_hamburger.html' %}{% endif %}
             <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
                 {% if user.is_authenticated %}
                     {% if subscription_banner != '' and request.path != patterns_url %}
-                    <div class="px-6 py-4 mb-4 md:mb-0 subscription-banner{% if subscription_banner.status != 'none' %} {{ subscription_banner.status }}{% endif %}">
+                    <div class="print:hidden px-6 py-4 mb-4 md:mb-0 subscription-banner{% if subscription_banner.status != 'none' %} {{ subscription_banner.status }}{% endif %}">
                         {{ subscription_banner.message | safe }}
                     </div>
                     {% endif %}
                 {% endif %}
                 <main class="pt-2 md:pt-6 pb-16">
                     {% spaceless %}
-                    <div class="main-header max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8 space-y-8">
+                    <div class="print:hidden main-header max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8 space-y-8">
                         {% include 'components/message.html' %}
 
                         {% block header %}{% endblock %}
@@ -48,7 +48,7 @@
 
                         <footer>
                             <div class="mt-28 border-t border-stone-300 dark:border-stone-700 pt-8 text-xs xl:text-center">
-                                <p class="text-stone-400 dark:text-stone-600 xl:text-center">Copyright &copy; 2016–{% now 'Y' %} <a href="https://piep.works">Piepworks LLC</a>. All rights reserved.</p>
+                                <p class="text-stone-400 dark:text-stone-600 xl:text-center"><span class="hidden print:inline">Cassette Nest is </span>Copyright &copy; 2016–{% now 'Y' %} <a href="https://piep.works">Piepworks LLC</a>. All rights reserved.</p>
                                 <ul class="policies print:hidden inline-flex gap-3">
                                     <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
                                     <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>

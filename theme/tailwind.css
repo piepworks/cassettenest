@@ -180,6 +180,7 @@
       touch-action: manipulation;
 
       @apply
+        print:hidden
         cursor-pointer
         inline-flex
         items-center
@@ -982,6 +983,7 @@
 
   .action {
     @apply
+      print:hidden
       pt-6
       flex
       flex-wrap

@@ -7,11 +7,11 @@
 {% if rolls.all %}
 <h1>You have {{ rolls.all }} roll{{ rolls.all|pluralize }} ready to process.</h1>
 
-<p class="my-6">View <a href="{% url 'logbook' %}?status=shot">these rolls in your Logbook</a>.</p>
+<p class="print:hidden my-6">View <a href="{% url 'logbook' %}?status=shot">these rolls in your Logbook</a>.</p>
 
 {% include 'components/ready-table.html' %}
 
-<form method="post" action="{% url 'rolls-update' %}">
+<form method="post" action="{% url 'rolls-update' %}" class="print:hidden">
     {% csrf_token %}
     {% include 'inventory/_order-form.html' %}
 </form>
