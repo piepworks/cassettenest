@@ -19,7 +19,7 @@
             <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">
                 {{ roll.code }}
             </h1>
-            <small class="year ml-3 inline-flex items-center rounded-full bg-stone-300 dark:bg-stone-600 print:bg-stone-600 px-3 py-0.5 text-sm font-medium text-stone-700 dark:text-stone-200 print:text-white">{{ roll.started_on|date:'Y' }}</small>
+            <small class="year ml-3 inline-flex items-center rounded-full bg-stone-300 dark:bg-stone-600 print:bg-transparent px-3 py-0.5 print:border-2 print:border-stone-500 text-sm font-medium text-stone-700 dark:text-stone-200 print:text-black">{{ roll.started_on|date:'Y' }}</small>
         </div>
         {% else %}
         <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">{{ roll }}</h1>
