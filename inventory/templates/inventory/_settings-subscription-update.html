@@ -75,14 +75,14 @@ end
                     <label>
                         <input _="on change send updateExplanation(plan: {{ paddle.standard_monthly_id }}) to (.plan-change-explanation in the closest .field)" type="radio" name="plan" value="{{ paddle.standard_monthly_id }}"{% if subscription.plan_id == paddle.standard_monthly_id %} checked{% endif %}>
                         {{ paddle.standard_monthly_name }}
-                        &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$2</span>&nbsp;per month)</small>
+                        &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_monthly_id }}">$5</span>&nbsp;per month)</small>
                     </label>
                 </div>
                 <div>
                     <label>
                         <input _="on change send updateExplanation(plan: {{ paddle.standard_annual_id }}) to (.plan-change-explanation in the closest .field)" type="radio" name="plan" value="{{ paddle.standard_annual_id }}"{% if subscription.plan_id == paddle.standard_annual_id %} checked{% endif %}>
                         {{ paddle.standard_annual_name }}
-                        &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$20</span>&nbsp;per year)</small>
+                        &nbsp;<small>(<span class="paddle-gross" data-product="{{ paddle.standard_annual_id }}">$50</span>&nbsp;per year)</small>
                     </label>
                 </div>
                 <div>
