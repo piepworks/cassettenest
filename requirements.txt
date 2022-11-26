@@ -63,7 +63,7 @@ idna==3.4
     # via requests
 ipython==8.6.0
     # via -r requirements.in
-jedi==0.18.1
+jedi==0.18.2
     # via ipython
 markdown==3.4.1
     # via -r requirements.in
@@ -87,7 +87,7 @@ pip-lock==2.9.0
     # via -r requirements.in
 pip-tools==6.10.0
     # via -r requirements.in
-prompt-toolkit==3.0.32
+prompt-toolkit==3.0.33
     # via ipython
 psycopg2-binary==2.9.5
     # via -r requirements.in
@@ -95,7 +95,7 @@ ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.2
     # via stack-data
-pycodestyle==2.9.1
+pycodestyle==2.10.0
     # via
     #   -r requirements.in
     #   autopep8
@@ -135,7 +135,7 @@ traitlets==5.5.0
     # via
     #   ipython
     #   matplotlib-inline
-urllib3==1.26.12
+urllib3==1.26.13
     # via requests
 wcwidth==0.2.5
     # via prompt-toolkit
