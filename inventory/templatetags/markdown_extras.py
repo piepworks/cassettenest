@@ -8,11 +8,16 @@ import bleach
 @register.filter()
 @stringfilter
 def markdown(value):
+    bleach.sanitizer.ALLOWED_TAGS.append('br')
+
     return mark_safe(
         bleach.clean(
             md.markdown(
                 value,
-                extensions=['markdown.extensions.fenced_code']
-            )
+                extensions=[
+                    'markdown.extensions.fenced_code',
+                    'markdown.extensions.smarty'
+                ],
+            ),
         )
     )

@@ -200,9 +200,8 @@
                         {{ entry.frame }}
                     {% endif %}
                 </td>
-                <td>
-                    <span class="print:hidden">{{ entry.notes }}</span>
-                    <div class="hidden print:inline">{{ entry.notes|markdown }}</div>
+                <td class="entry-notes">
+                    {{ entry.notes|markdown }}
                 </td>
             </tr>
             {% endfor %}
