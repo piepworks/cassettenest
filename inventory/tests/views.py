@@ -279,7 +279,8 @@ class InventoryTests(TestCase):
             password=cls.password,
         )
         cls.inventory_url = reverse('inventory')
-        baker.make(Roll, owner=cls.user, film=baker.make(Film, slug='slug', stock=baker.make(Stock)))
+        baker.make(Roll, owner=cls.user, film=baker.make(Film, slug='slug', stock=baker.make(Stock, name='Stock Name')))
+        baker.make(Roll, owner=cls.user, film=baker.make(Film, name='No Stock', slug='no-stock'))
 
     def setUp(self):
         self.client.login(
@@ -300,6 +301,13 @@ class InventoryTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '(35mm, C41 Color)')
         self.assertContains(response, '(filtered)')
+
+    def test_film_with_and_without_stock(self):
+        response = self.client.get(reverse('inventory'))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Stock Name')
+        self.assertContains(response, 'No Stock')
 
     # HTMX / Ajax
     def test_filtered_with_htmx(self):
