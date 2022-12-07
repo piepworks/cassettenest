@@ -1,3 +1,4 @@
+/* global importScripts, workbox */
 importScripts('/static/js/vendor/workbox-v6.5.4/workbox-sw.js');
 
 workbox.setConfig({
