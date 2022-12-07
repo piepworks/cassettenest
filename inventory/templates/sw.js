@@ -14,4 +14,6 @@ workbox.routing.setDefaultHandler(
   new workbox.strategies.NetworkOnly()
 );
 
-workbox.recipes.offlineFallback();
+workbox.recipes.offlineFallback({
+  pageFallback: '/offline',
+});
