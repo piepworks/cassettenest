@@ -1,8 +1,10 @@
-// Bump this version number each time a cached or asset changes.
-// If you don't, the SW won't be reinstalled and the pages you cache initially won't be updated
-// (by default at least, see next sections for more on caching).
-const VERSION = '1';
+importScripts('/static/js/vendor/workbox-v6.5.4/workbox-sw.js');
 
-self.addEventListener('install', () => {
-  console.log('[SW] Installing SW version:', VERSION);
+workbox.setConfig({
+  modulePathPrefix: '/static/js/vendor/workbox-v6.5.4',
 });
+
+workbox.routing.registerRoute(
+  ({request}) => request.destination === 'image',
+  new workbox.strategies.CacheFirst()
+);
