@@ -1,0 +1,35 @@
+{
+  "name": "Cassette Nest",
+  "short_name": "Cassette Nest",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#292524",
+  "theme_color": "#292524",
+  "description": "An easy and fun way to build an lifelong archive of metadata about your film photography.",
+  "icons": [
+    {
+      "src": "/static/img/pwa/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/img/pwa/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/static/img/pwa/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/static/img/pwa/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
