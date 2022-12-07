@@ -18,6 +18,9 @@ urlpatterns = [
     path('marketing-site', views.marketing_site, name='marketing-site'),
     path('account-inactive', views.account_inactive, name='account-inactive'),
 
+    # PWA goodies
+    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw.js',),
+
     # Since browsers always ask for /favicon.ico, give it ’em.
     path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
 
