@@ -57,8 +57,8 @@
             {% for import in imports %}
                 <li>
                     <form class="w-full" method="post" action="{% url 'import-'|add:import|lower %}" enctype="multipart/form-data">
-                        <div class="flex items-center">
-                            <div class="basis-1/4">{{ import }}</div>
+                        <div class="flex flex-wrap items-center gap-3 sm:gap-0">
+                            <div class="w-full sm:w-auto sm:basis-1/4">{{ import }}</div>
                             {% csrf_token %}
                             <div class="flex-grow">{{ csv_form.csv }}</div>
                             <button>Upload</button>
