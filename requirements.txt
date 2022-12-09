@@ -18,7 +18,7 @@ bleach[css]==5.0.1
     # via django-bleach
 build==0.9.0
     # via pip-tools
-certifi==2022.9.24
+certifi==2022.12.7
     # via requests
 charset-normalizer==2.1.1
     # via requests
@@ -71,7 +71,7 @@ matplotlib-inline==0.1.6
     # via ipython
 model-bakery==1.9.0
     # via -r requirements.in
-packaging==21.3
+packaging==22.0
     # via build
 parso==0.8.3
     # via jedi
@@ -87,7 +87,7 @@ pip-lock==2.9.0
     # via -r requirements.in
 pip-tools==6.11.0
     # via -r requirements.in
-prompt-toolkit==3.0.33
+prompt-toolkit==3.0.36
     # via ipython
 psycopg2-binary==2.9.5
     # via -r requirements.in
@@ -103,8 +103,6 @@ pycryptodome==3.16.0
     # via -r requirements.in
 pygments==2.13.0
     # via ipython
-pyparsing==3.0.9
-    # via packaging
 python-dateutil==2.8.2
     # via freezegun
 python-dotenv==0.21.0
@@ -131,7 +129,7 @@ tomli==2.0.1
     #   autopep8
     #   build
     #   pep517
-traitlets==5.6.0
+traitlets==5.7.0
     # via
     #   ipython
     #   matplotlib-inline
