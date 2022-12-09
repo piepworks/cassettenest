@@ -463,6 +463,19 @@ class ExportTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(rows, 2)
 
+    def test_export_frames(self):
+        baker.make(Frame, roll=baker.make(Roll, owner=self.user))
+        baker.make(Frame, roll=baker.make(Roll, owner=self.user))
+        response = self.client.get(reverse('export-frames'))
+
+        reader = csv.reader(io.StringIO(response.content.decode('UTF-8')))
+        # Disregard the header row.
+        next(reader)
+        rows = sum(1 for row in reader)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(rows, 2)
+
 
 @freeze_time(datetime.datetime.now())
 class ImportTests(TestCase):
@@ -759,6 +772,58 @@ class ImportTests(TestCase):
         # Make sure we set `created_at` and `update_at` from the csv.
         self.assertEqual(journals[0].created_at, self.tz_yesterday)
         self.assertEqual(journals[0].updated_at, self.tz_yesterday)
+
+    def test_import_frames_failure(self):
+        response = self.client.post(
+            reverse('import-frames'),
+            data={'csv': 'Nothing.'},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('Nope.', messages)
+
+    def test_import_frames_success(self):
+        frame = baker.make(Frame, roll=baker.make(Roll, owner=self.user))
+        self.assertEqual(Frame.objects.filter(roll__owner=self.user).count(), 1)
+
+        # Set created_at and updated_at to yesterday so we can be sure the
+        # import doesn’t change it.
+        Frame.objects.filter(roll__owner=self.user).update(
+            created_at=self.tz_yesterday,
+            updated_at=self.tz_yesterday,
+        )
+
+        # First, export.
+        response1 = self.client.get(reverse('export-frames'))
+        reader = csv.reader(io.StringIO(response1.content.decode('UTF-8')))
+        next(reader)  # Disregard the header row.
+        rows = sum(1 for row in reader)
+        self.assertEqual(rows, 1)
+        self.assertEqual(
+            response1.get('Content-Disposition'),
+            'attachment; filename="frames.csv"'
+        )
+
+        # Next, delete.
+        frame.delete()
+        self.assertEqual(Frame.objects.filter(roll__owner=self.user).count(), 0)
+
+        # Then import from our export.
+        response2 = self.client.post(
+            reverse('import-frames'),
+            data={'csv': SimpleUploadedFile('frames.csv', response1.content)},
+        )
+        messages = [m.message for m in get_messages(response2.wsgi_request)]
+
+        self.assertEqual(response2.status_code, 302)
+        self.assertIn('Imported 1 frame.', messages)
+        frames = Frame.objects.filter(roll__owner=self.user)
+        self.assertEqual(frames.count(), 1)
+
+        # Make sure we set `created_at` and `update_at` from the csv.
+        self.assertEqual(frames[0].created_at, self.tz_yesterday)
+        self.assertEqual(frames[0].updated_at, self.tz_yesterday)
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
