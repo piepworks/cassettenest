@@ -4,8 +4,6 @@
 #
 #    pip-compile
 #
-appnope==0.1.3
-    # via ipython
 asgiref==3.5.2
     # via django
 asttokens==2.2.1
@@ -18,7 +16,7 @@ bleach[css]==5.0.1
     # via django-bleach
 build==0.9.0
     # via pip-tools
-certifi==2022.9.24
+certifi==2022.12.7
     # via requests
 charset-normalizer==2.1.1
     # via requests
@@ -127,10 +125,7 @@ stack-data==0.6.2
 tinycss2==1.1.1
     # via bleach
 tomli==2.0.1
-    # via
-    #   autopep8
-    #   build
-    #   pep517
+    # via autopep8
 traitlets==5.6.0
     # via
     #   ipython
