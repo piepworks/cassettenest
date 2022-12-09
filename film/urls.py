@@ -99,6 +99,7 @@ urlpatterns = [
     path('export/rolls', views.ExportRollsView.as_view(), name='export-rolls'),
     path('export/projects', views.ExportProjectsView.as_view(), name='export-projects'),
     path('export/journals', views.ExportJournalsView.as_view(), name='export-journals'),
+    path('export/frames', views.ExportFramesView.as_view(), name='export-frames'),
 
     # Import
     path('import/cameras', views.ImportCamerasView.as_view(), name='import-cameras'),
@@ -106,6 +107,7 @@ urlpatterns = [
     path('import/rolls', views.ImportRollsView.as_view(), name='import-rolls'),
     path('import/projects', views.ImportProjectsView.as_view(), name='import-projects'),
     path('import/journals', views.ImportJournalsView.as_view(), name='import-journals'),
+    path('import/frames', views.ImportFramesView.as_view(), name='import-frames'),
 
     # Paddle
     path('paddle-webhooks', views.paddle_webhooks, name='paddle-webhooks'),

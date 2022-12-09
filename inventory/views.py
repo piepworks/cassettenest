@@ -380,6 +380,7 @@ def settings(request):
             'rolls': Roll.objects.filter(owner=request.user).count(),
             'projects': Project.objects.filter(owner=request.user).count(),
             'journals': Journal.objects.filter(roll__owner=request.user).count(),
+            'frames': Frame.objects.filter(roll__owner=request.user).count(),
         }
         exportable_data = True if sum(exportable.values()) else False
         imports = [
@@ -388,6 +389,7 @@ def settings(request):
             'Rolls',
             'Projects',
             'Journals',
+            'Frames',
         ]
 
         plan_name = ''
@@ -3216,6 +3218,80 @@ class ImportJournalsView(ReadCSVMixin, RedirectAfterImportMixin, View):
 
         item = {
             'noun': 'journal',
+        }
+
+        return self.redirect(request, count, item)
+
+
+@method_decorator(login_required, name='dispatch')
+class ExportFramesView(WriteCSVMixin, View):
+    def get(self, request, *args, **kwargs):
+        export = self.write_csv('frames.csv')
+        frames = Frame.objects.filter(roll__owner=request.user)
+
+        export['writer'].writerow([
+            'id',
+            'roll_id',
+            'roll',
+            'number',
+            'date',
+            'notes',
+            'aperture',
+            'shutter_speed',
+            'created',
+            'updated',
+        ])
+
+        for frame in frames:
+            export['writer'].writerow([
+                frame.id,
+                frame.roll.id,
+                frame.roll,
+                frame.number,
+                frame.date,
+                frame.notes,
+                frame.aperture,
+                frame.shutter_speed,
+                frame.created_at,
+                frame.updated_at,
+            ])
+
+        return export['response']
+
+
+@method_decorator(user_account_active, name='dispatch')
+@method_decorator(login_required, name='dispatch')
+class ImportFramesView(ReadCSVMixin, RedirectAfterImportMixin, View):
+    def post(self, request, *args, **kwargs):
+        reader = self.read_csv(request)
+
+        if not reader:
+            return redirect(reverse('settings'))
+
+        count = 0
+
+        for row in reader:
+            obj, created = Frame.objects.get_or_create(
+                id=row['id'],
+                roll=get_object_or_404(Roll, id=row['roll_id'], owner=request.user),
+                number=row['number'],
+            )
+
+            if created:
+                count += 1
+
+                Frame.objects.filter(id=row['id'], roll__owner=request.user).update(
+                    date=datetime.datetime.strptime(row['date'], '%Y-%m-%d').date(),
+                    notes=row['notes'],
+                    aperture=row['aperture'],
+                    shutter_speed=row['shutter_speed'],
+                    # Keep the original created and updated dates and times.
+                    created_at=row['created'],
+                    updated_at=row['updated'],
+                )
+
+        item = {
+            'noun': 'frame',
         }
 
         return self.redirect(request, count, item)
