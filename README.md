@@ -38,6 +38,9 @@ Once everything's set up, the next time you want to run it:
     - `dev/start`
 - To run both the Django server and compile Tailwind on demand:
     - `npm run start`
+- [Update Workbox](https://developer.chrome.com/docs/workbox/modules/workbox-sw/#using-local-workbox-files-instead-of-cdn) ([More info on workbox-cli](https://developer.chrome.com/docs/workbox/modules/workbox-cli/#copylibraries))
+    - `npx workbox-cli copyLibraries static/js/vendor/`
+    - Update paths in `inventory/templates/sw.js` as needed.
 
 ## Deployment
 
