@@ -69,21 +69,9 @@
         document.documentElement.classList.remove('no-js');
         document.documentElement.classList.add('has-js');
         {% if user.is_authenticated and request.path != patterns_url %}
-        {% include 'js/menu.js' %}
+            {% include 'js/menu.js' %}
         {% endif %}
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(registration => {
-                    console.log('SW registration', registration);
-                    navigator.serviceWorker.ready.then(
-                        registration => console.log('SW is active', registration.active)
-                    );
-                }).catch(registrationError => {
-                    console.log('SW registration failed', registrationError);
-                });
-            });
-        }
+        {% include 'js/sw-setup.js' %}
     </script>
     {% block page_js %}{% endblock %}
 </body>
