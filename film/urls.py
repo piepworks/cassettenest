@@ -19,7 +19,7 @@ urlpatterns = [
     path('account-inactive', views.account_inactive, name='account-inactive'),
 
     # PWA goodies
-    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw'),
+    path('sw.js', TemplateView.as_view(template_name='js/sw.js', content_type='application/javascript'), name='sw'),
     path('offline', TemplateView.as_view(template_name='offline.html'), name='offline'),
 
     # Since browsers always ask for /favicon.ico, give it ’em.
