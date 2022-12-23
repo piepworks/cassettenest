@@ -1,9 +1,9 @@
 /* {% load static %} */
 /* global importScripts, workbox */
-importScripts('/static/js/vendor/workbox-v6.5.4/workbox-sw.js');
+importScripts(`{% static 'js/vendor/workbox-v6.5.4/workbox-sw.js' %}`);
 
 workbox.setConfig({
-  modulePathPrefix: '/static/js/vendor/workbox-v6.5.4',
+  modulePathPrefix: `{% static 'js/vendor/workbox-v6.5.4' %}`,
 });
 
 workbox.routing.registerRoute(
@@ -16,7 +16,7 @@ workbox.routing.setDefaultHandler(
 );
 
 workbox.recipes.offlineFallback({
-  pageFallback: '/offline',
+  pageFallback: `{% url 'offline' %}`,
 });
 
 // ---
