@@ -1372,6 +1372,7 @@ def project_detail(request, pk):
         'format_counts': format_counts,
         'loaded_roll_list': loaded_roll_list,
         'roll_logbook': roll_logbook,
+        'page': 'project',
         'page_obj': page_obj,
         'pagination_querystring': pagination_querystring,
         'sectiontab_querystring': sectiontab_querystring,
