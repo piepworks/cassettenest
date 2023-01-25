@@ -17,7 +17,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
-from django.conf import settings as dj_settings
+from django.conf import settings
 from itertools import chain
 import requests
 from .models import Camera, CameraBack, Stock, Film, Manufacturer, Journal, Project, Roll, Frame
@@ -261,14 +261,14 @@ def patterns(request):
     }
 
     paddle = {
-        'live_mode': dj_settings.PADDLE_LIVE_MODE,
-        'vendor_id': dj_settings.PADDLE_VENDOR_ID,
-        'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
-        'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
-        'awesome_annual_id': int(dj_settings.PADDLE_AWESOME_ANNUAL),
-        'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
-        'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
-        'awesome_annual_name': paddle_plan_name(dj_settings.PADDLE_AWESOME_ANNUAL),
+        'live_mode': settings.PADDLE_LIVE_MODE,
+        'vendor_id': settings.PADDLE_VENDOR_ID,
+        'standard_monthly_id': int(settings.PADDLE_STANDARD_MONTHLY),
+        'standard_annual_id': int(settings.PADDLE_STANDARD_ANNUAL),
+        'awesome_annual_id': int(settings.PADDLE_AWESOME_ANNUAL),
+        'standard_monthly_name': paddle_plan_name(settings.PADDLE_STANDARD_MONTHLY),
+        'standard_annual_name': paddle_plan_name(settings.PADDLE_STANDARD_ANNUAL),
+        'awesome_annual_name': paddle_plan_name(settings.PADDLE_AWESOME_ANNUAL),
     }
 
     subscription_never = {
@@ -350,7 +350,7 @@ def account_inactive(request):
 
 
 @login_required
-def settings(request):
+def account_settings(request):
     if request.method == 'POST':
         user_form = UserForm(request.POST, instance=request.user)
         profile_form = ProfileForm(request.POST, instance=request.user)
@@ -406,14 +406,14 @@ def settings(request):
             trial_days_remaining = None
 
         paddle = {
-            'live_mode': dj_settings.PADDLE_LIVE_MODE,
-            'vendor_id': dj_settings.PADDLE_VENDOR_ID,
-            'standard_monthly_id': int(dj_settings.PADDLE_STANDARD_MONTHLY),
-            'standard_annual_id': int(dj_settings.PADDLE_STANDARD_ANNUAL),
-            'awesome_annual_id': int(dj_settings.PADDLE_AWESOME_ANNUAL),
-            'standard_monthly_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_MONTHLY),
-            'standard_annual_name': paddle_plan_name(dj_settings.PADDLE_STANDARD_ANNUAL),
-            'awesome_annual_name': paddle_plan_name(dj_settings.PADDLE_AWESOME_ANNUAL),
+            'live_mode': settings.PADDLE_LIVE_MODE,
+            'vendor_id': settings.PADDLE_VENDOR_ID,
+            'standard_monthly_id': int(settings.PADDLE_STANDARD_MONTHLY),
+            'standard_annual_id': int(settings.PADDLE_STANDARD_ANNUAL),
+            'awesome_annual_id': int(settings.PADDLE_AWESOME_ANNUAL),
+            'standard_monthly_name': paddle_plan_name(settings.PADDLE_STANDARD_MONTHLY),
+            'standard_annual_name': paddle_plan_name(settings.PADDLE_STANDARD_ANNUAL),
+            'awesome_annual_name': paddle_plan_name(settings.PADDLE_AWESOME_ANNUAL),
             'plan_name': plan_name,
         }
 
@@ -500,15 +500,15 @@ def subscription_update(request):
     # https://developer.paddle.com/api-reference/subscription-api/users/updateuser
     plan = request.POST.get('plan')
     sandbox = ''
-    if dj_settings.PADDLE_LIVE_MODE == 0:
+    if settings.PADDLE_LIVE_MODE == 0:
         sandbox = 'sandbox-'
 
     if is_valid_plan(plan):
         r = requests.post(
             f'https://{sandbox}vendors.paddle.com/api/2.0/subscription/users/update',
             data={
-                'vendor_id': dj_settings.PADDLE_VENDOR_ID,
-                'vendor_auth_code': dj_settings.PADDLE_VENDOR_AUTH_CODE,
+                'vendor_id': settings.PADDLE_VENDOR_ID,
+                'vendor_auth_code': settings.PADDLE_VENDOR_AUTH_CODE,
                 'subscription_id': request.user.profile.paddle_subscription_id,
                 'plan_id': plan,
             }

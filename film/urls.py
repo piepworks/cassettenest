@@ -36,7 +36,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('logbook/', views.logbook, name='logbook'),
     path('ready/', views.ready, name='ready'),
-    path('settings/', views.settings, name='settings'),
+    path('settings/', views.account_settings, name='settings'),
 
     # Rolls
     path('rolls/add/', views.rolls_add, name='rolls-add'),
