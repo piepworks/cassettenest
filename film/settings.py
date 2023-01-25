@@ -15,8 +15,10 @@ import socket
 import bleach
 import dotenv
 import sys
+import sentry_sdk
 from pytz import common_timezones
 from django.core.management.utils import get_random_secret_key
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 def env_var(key, default=None):
@@ -30,6 +32,23 @@ def env_var(key, default=None):
     elif val == 'False' or val == '0':
         val = False
     return val
+
+
+sentry_sdk.init(
+    dsn=os.environ.get('SENTRY_DSN'),
+    integrations=[
+        DjangoIntegration(),
+    ],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=os.environ.get('SENTRY_SAMPLE_RATE'),
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)
 
 
 # Folks who get an email when things break.
