@@ -24,9 +24,9 @@ window.cnMenu = {
     // a full page reload. Hopefully most people won't see this, because there's
     // a bit of a blip when it happens.
     document.removeEventListener('htmx:historyRestore', window.desktopToggleSetup);
-    window.desktopToggleSetup = function() {
+    window.desktopToggleSetup = function () {
       fetch('{% url "session-sidebar-status" %}', {
-        headers: {'X-Requested-With': 'XMLHttpRequest'}
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
       }).then(
         (response) => response.text()).then(
         (text) => {
