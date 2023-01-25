@@ -23,4 +23,5 @@ pycryptodome
 python-dotenv
 pytz
 requests
+sentry-sdk
 whitenoise
