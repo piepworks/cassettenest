@@ -67,6 +67,8 @@ executing==1.2.0
     # via stack-data
 filelock==3.9.0
     # via virtualenv
+flake8==6.0.0
+    # via -r requirements.in
 freezegun==1.2.2
     # via -r requirements.in
 gunicorn==20.1.0
@@ -83,6 +85,8 @@ markdown==3.4.1
     # via -r requirements.in
 matplotlib-inline==0.1.6
     # via ipython
+mccabe==0.7.0
+    # via flake8
 model-bakery==1.9.0
     # via -r requirements.in
 mypy-extensions==0.4.3
@@ -123,8 +127,11 @@ pycodestyle==2.10.0
     # via
     #   -r requirements.in
     #   autopep8
+    #   flake8
 pycryptodome==3.16.0
     # via -r requirements.in
+pyflakes==3.0.1
+    # via flake8
 pygments==2.14.0
     # via ipython
 pyproject-hooks==1.0.0

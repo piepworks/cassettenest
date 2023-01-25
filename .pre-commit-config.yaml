@@ -12,6 +12,14 @@ repos:
     rev: 22.12.0
     hooks:
       - id: black
+  - repo: https://github.com/pycqa/flake8
+    rev: 6.0.0
+    hooks:
+      - id: flake8
+        exclude: |
+          (?x)^(
+            inventory/migrations/.*
+          )$
   - repo: local
     hooks:
       - id: pending-migrations

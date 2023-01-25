@@ -10,6 +10,7 @@ django-debug-toolbar
 django-htmx
 django-waffle
 django-widget-tweaks
+flake8
 freezegun
 gunicorn
 ipython
