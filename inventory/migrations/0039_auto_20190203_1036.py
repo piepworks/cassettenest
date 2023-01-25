@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0038_auto_20190203_1015'),
+        ("inventory", "0038_auto_20190203_1015"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='film',
-            name='url',
-            field=models.URLField(blank=True, verbose_name='URL'),
+            model_name="film",
+            name="url",
+            field=models.URLField(blank=True, verbose_name="URL"),
         ),
         migrations.AlterField(
-            model_name='manufacturer',
-            name='url',
-            field=models.URLField(blank=True, verbose_name='URL'),
+            model_name="manufacturer",
+            name="url",
+            field=models.URLField(blank=True, verbose_name="URL"),
         ),
     ]

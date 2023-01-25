@@ -7,30 +7,60 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0045_auto_20191206_1635'),
+        ("inventory", "0045_auto_20191206_1635"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='camera',
-            name='multiple_backs',
+            model_name="camera",
+            name="multiple_backs",
             field=models.BooleanField(default=False),
         ),
         migrations.CreateModel(
-            name='CameraBack',
+            name="CameraBack",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=255)),
-                ('notes', models.TextField(blank=True)),
-                ('status', models.CharField(choices=[('empty', 'Empty'), ('loaded', 'Loaded'), ('unavailable', 'Unavailable')], default='empty', max_length=20)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('camera', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inventory.Camera')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("notes", models.TextField(blank=True)),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("empty", "Empty"),
+                            ("loaded", "Loaded"),
+                            ("unavailable", "Unavailable"),
+                        ],
+                        default="empty",
+                        max_length=20,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "camera",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="inventory.Camera",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='roll',
-            name='camera_back',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='inventory.CameraBack'),
+            model_name="roll",
+            name="camera_back",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="inventory.CameraBack",
+            ),
         ),
     ]

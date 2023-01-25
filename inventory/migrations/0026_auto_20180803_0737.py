@@ -4,35 +4,33 @@ from django.db import migrations
 
 
 def update_status(apps, schema_editor):
-    Roll = apps.get_model('inventory', 'Roll')
+    Roll = apps.get_model("inventory", "Roll")
 
-    Roll.objects.filter(status='storage').update(status='01_storage')
-    Roll.objects.filter(status='loaded').update(status='02_loaded')
-    Roll.objects.filter(status='shot').update(status='03_shot')
-    Roll.objects.filter(status='processing').update(status='04_processing')
-    Roll.objects.filter(status='processed').update(status='05_processed')
-    Roll.objects.filter(status='scanned').update(status='06_scanned')
-    Roll.objects.filter(status='archived').update(status='07_archived')
+    Roll.objects.filter(status="storage").update(status="01_storage")
+    Roll.objects.filter(status="loaded").update(status="02_loaded")
+    Roll.objects.filter(status="shot").update(status="03_shot")
+    Roll.objects.filter(status="processing").update(status="04_processing")
+    Roll.objects.filter(status="processed").update(status="05_processed")
+    Roll.objects.filter(status="scanned").update(status="06_scanned")
+    Roll.objects.filter(status="archived").update(status="07_archived")
 
 
 def revert_status(apps, schema_editor):
-    Roll = apps.get_model('inventory', 'Roll')
+    Roll = apps.get_model("inventory", "Roll")
 
-    Roll.objects.filter(status='01_storage').update(status='storage')
-    Roll.objects.filter(status='02_loaded').update(status='loaded')
-    Roll.objects.filter(status='03_shot').update(status='shot')
-    Roll.objects.filter(status='04_processing').update(status='processing')
-    Roll.objects.filter(status='05_processed').update(status='processed')
-    Roll.objects.filter(status='06_scanned').update(status='scanned')
-    Roll.objects.filter(status='07_archived').update(status='archived')
+    Roll.objects.filter(status="01_storage").update(status="storage")
+    Roll.objects.filter(status="02_loaded").update(status="loaded")
+    Roll.objects.filter(status="03_shot").update(status="shot")
+    Roll.objects.filter(status="04_processing").update(status="processing")
+    Roll.objects.filter(status="05_processed").update(status="processed")
+    Roll.objects.filter(status="06_scanned").update(status="scanned")
+    Roll.objects.filter(status="07_archived").update(status="archived")
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0025_auto_20180803_0734'),
+        ("inventory", "0025_auto_20180803_0734"),
     ]
 
-    operations = [
-        migrations.RunPython(update_status, revert_status)
-    ]
+    operations = [migrations.RunPython(update_status, revert_status)]

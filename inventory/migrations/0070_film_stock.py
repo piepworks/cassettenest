@@ -7,13 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0069_auto_20210629_1155'),
+        ("inventory", "0069_auto_20210629_1155"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='film',
-            name='stock',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='inventory.stock'),
+            model_name="film",
+            name="stock",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="inventory.stock",
+            ),
         ),
     ]

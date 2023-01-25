@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0006_film_owner'),
+        ("inventory", "0006_film_owner"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='film',
-            name='status',
-            field=models.CharField(choices=[('storage', 'Storage'), ('loaded', 'Loaded'), ('shot', 'Shot'), ('processing', 'Processing'), ('processed', 'Processed'), ('scanned', 'Scanned'), ('archived', 'Archived')], default='storage', max_length=20),
+            model_name="film",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("storage", "Storage"),
+                    ("loaded", "Loaded"),
+                    ("shot", "Shot"),
+                    ("processing", "Processing"),
+                    ("processed", "Processed"),
+                    ("scanned", "Scanned"),
+                    ("archived", "Archived"),
+                ],
+                default="storage",
+                max_length=20,
+            ),
         ),
     ]

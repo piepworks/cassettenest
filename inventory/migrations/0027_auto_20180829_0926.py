@@ -6,38 +6,47 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0026_auto_20180803_0737'),
+        ("inventory", "0026_auto_20180803_0737"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='roll',
-            name='lab',
-            field=models.CharField(blank=True, help_text='The name of the lab (or Self, Home, etc.)', max_length=255),
+            model_name="roll",
+            name="lab",
+            field=models.CharField(
+                blank=True,
+                help_text="The name of the lab (or Self, Home, etc.)",
+                max_length=255,
+            ),
         ),
         migrations.AddField(
-            model_name='roll',
-            name='lens',
-            field=models.CharField(blank=True, help_text='(or lenses)', max_length=255),
+            model_name="roll",
+            name="lens",
+            field=models.CharField(blank=True, help_text="(or lenses)", max_length=255),
         ),
         migrations.AddField(
-            model_name='roll',
-            name='location',
-            field=models.CharField(blank=True, help_text='(or locations)', max_length=255),
+            model_name="roll",
+            name="location",
+            field=models.CharField(
+                blank=True, help_text="(or locations)", max_length=255
+            ),
         ),
         migrations.AddField(
-            model_name='roll',
-            name='notes_on_development',
-            field=models.TextField(blank=True, help_text='Chemicals used, development times, techniques, etc.'),
+            model_name="roll",
+            name="notes_on_development",
+            field=models.TextField(
+                blank=True,
+                help_text="Chemicals used, development times, techniques, etc.",
+            ),
         ),
         migrations.AddField(
-            model_name='roll',
-            name='scanner',
+            model_name="roll",
+            name="scanner",
             field=models.CharField(blank=True, max_length=255),
         ),
         migrations.AlterField(
-            model_name='roll',
-            name='notes',
-            field=models.TextField(blank=True, help_text='General notes'),
+            model_name="roll",
+            name="notes",
+            field=models.TextField(blank=True, help_text="General notes"),
         ),
     ]

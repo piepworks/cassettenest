@@ -6,12 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0035_remove_journal_owner'),
+        ("inventory", "0035_remove_journal_owner"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='journal',
-            options={'ordering': ['date'], 'verbose_name': 'journal entry', 'verbose_name_plural': 'journal entries'},
+            name="journal",
+            options={
+                "ordering": ["date"],
+                "verbose_name": "journal entry",
+                "verbose_name_plural": "journal entries",
+            },
         ),
     ]

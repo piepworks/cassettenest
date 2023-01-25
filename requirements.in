@@ -1,4 +1,5 @@
 autopep8
+black
 coverage
 django
 django-bleach
@@ -9,6 +10,7 @@ django-debug-toolbar
 django-htmx
 django-waffle
 django-widget-tweaks
+flake8
 freezegun
 gunicorn
 ipython
@@ -17,6 +19,7 @@ model-bakery
 phpserialize
 pip-lock
 pip-tools
+pre-commit
 psycopg2-binary
 pycodestyle
 pycryptodome

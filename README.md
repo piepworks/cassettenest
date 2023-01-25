@@ -6,7 +6,7 @@ A way for analog photographers to track their film use from box to binder.
 
 [cassettenest.com](http://cassettenest.com)
 
-Copyright &copy; 2016-2022 Piepworks LLC. All rights reserved.
+Copyright &copy; 2016-2023 Piepworks LLC. All rights reserved.
 
 ## Local Setup
 

@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0033_journal'),
+        ("inventory", "0033_journal"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='journal',
-            options={'ordering': ['date']},
+            name="journal",
+            options={"ordering": ["date"]},
         ),
         migrations.AlterUniqueTogether(
-            name='journal',
-            unique_together={('roll', 'date')},
+            name="journal",
+            unique_together={("roll", "date")},
         ),
     ]

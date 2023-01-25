@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0059_auto_20210126_1753'),
+        ("inventory", "0059_auto_20210126_1753"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='friend',
-            field=models.BooleanField(default=False, help_text='This account doesn’t need a subscription.'),
+            model_name="profile",
+            name="friend",
+            field=models.BooleanField(
+                default=False, help_text="This account doesn’t need a subscription."
+            ),
         ),
     ]

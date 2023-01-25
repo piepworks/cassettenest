@@ -8,22 +8,35 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0062_auto_20210226_1607'),
+        ("inventory", "0062_auto_20210226_1607"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Frame',
+            name="Frame",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField()),
-                ('date', models.DateField(default=datetime.date.today)),
-                ('notes', models.TextField(blank=True)),
-                ('aperture', models.CharField(blank=True, max_length=20)),
-                ('shutter_speed', models.CharField(blank=True, max_length=20)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('roll', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inventory.roll')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("number", models.IntegerField()),
+                ("date", models.DateField(default=datetime.date.today)),
+                ("notes", models.TextField(blank=True)),
+                ("aperture", models.CharField(blank=True, max_length=20)),
+                ("shutter_speed", models.CharField(blank=True, max_length=20)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "roll",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="inventory.roll"
+                    ),
+                ),
             ],
         ),
     ]

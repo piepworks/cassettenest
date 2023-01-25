@@ -9,32 +9,82 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('inventory', '0068_auto_20210515_2102'),
+        ("inventory", "0068_auto_20210515_2102"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='film',
-            name='name',
-            field=models.CharField(help_text='\n            The name of the film itself without the manufacturer’s name (unless that’s part of the film’s name.)\n        ', max_length=50),
+            model_name="film",
+            name="name",
+            field=models.CharField(
+                help_text="\n            The name of the film itself without the manufacturer’s name (unless that’s part of the film’s name.)\n        ",
+                max_length=50,
+            ),
         ),
         migrations.CreateModel(
-            name='Stock',
+            name="Stock",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('personal', models.BooleanField(default=False, help_text='For user-submitted stocks. Only visible to the user who added it if this is true.')),
-                ('name', models.CharField(help_text='\n            The name of the film stock itself without the manufacturer’s name (unless that’s part of the film’s name.)\n        ', max_length=50)),
-                ('slug', models.SlugField()),
-                ('url', models.URLField(blank=True, help_text='Any website that describes this film stock, hopefully from the manufacturer themselves.', verbose_name='URL')),
-                ('description', models.TextField(blank=True, help_text='Any details about the film or how best to use it.')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('added_by', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
-                ('manufacturer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='inventory.manufacturer')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "personal",
+                    models.BooleanField(
+                        default=False,
+                        help_text="For user-submitted stocks. Only visible to the user who added it if this is true.",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text="\n            The name of the film stock itself without the manufacturer’s name (unless that’s part of the film’s name.)\n        ",
+                        max_length=50,
+                    ),
+                ),
+                ("slug", models.SlugField()),
+                (
+                    "url",
+                    models.URLField(
+                        blank=True,
+                        help_text="Any website that describes this film stock, hopefully from the manufacturer themselves.",
+                        verbose_name="URL",
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True,
+                        help_text="Any details about the film or how best to use it.",
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "added_by",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "manufacturer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="inventory.manufacturer",
+                    ),
+                ),
             ],
             options={
-                'ordering': ['manufacturer__name', 'name'],
-                'unique_together': {('manufacturer', 'name')},
+                "ordering": ["manufacturer__name", "name"],
+                "unique_together": {("manufacturer", "name")},
             },
         ),
     ]

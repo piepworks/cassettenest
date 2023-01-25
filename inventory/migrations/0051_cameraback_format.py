@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0050_auto_20200418_1122'),
+        ("inventory", "0050_auto_20200418_1122"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='cameraback',
-            name='format',
-            field=models.CharField(blank=True, choices=[('135', '35mm'), ('120', '120')], default='120', max_length=20),
+            model_name="cameraback",
+            name="format",
+            field=models.CharField(
+                blank=True,
+                choices=[("135", "35mm"), ("120", "120")],
+                default="120",
+                max_length=20,
+            ),
         ),
     ]

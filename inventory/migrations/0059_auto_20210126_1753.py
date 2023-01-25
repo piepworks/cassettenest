@@ -6,13 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0058_auto_20210126_1729'),
+        ("inventory", "0058_auto_20210126_1729"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='subscription',
-            field=models.CharField(choices=[('none', 'None'), ('monthly', 'Monthly'), ('annual', 'Annual')], default='none', max_length=20),
+            model_name="profile",
+            name="subscription",
+            field=models.CharField(
+                choices=[
+                    ("none", "None"),
+                    ("monthly", "Monthly"),
+                    ("annual", "Annual"),
+                ],
+                default="none",
+                max_length=20,
+            ),
         ),
     ]

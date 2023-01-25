@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0027_auto_20180829_0926'),
+        ("inventory", "0027_auto_20180829_0926"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='cameras',
-            field=models.ManyToManyField(to='inventory.Camera'),
+            model_name="project",
+            name="cameras",
+            field=models.ManyToManyField(to="inventory.Camera"),
         ),
     ]

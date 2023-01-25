@@ -6,13 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0070_film_stock'),
+        ("inventory", "0070_film_stock"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='stock',
-            name='type',
-            field=models.CharField(choices=[('c41', 'C41 Color'), ('bw', 'Black and White'), ('e6', 'E6 Color Reversal')], default='c41', max_length=20),
+            model_name="stock",
+            name="type",
+            field=models.CharField(
+                choices=[
+                    ("c41", "C41 Color"),
+                    ("bw", "Black and White"),
+                    ("e6", "E6 Color Reversal"),
+                ],
+                default="c41",
+                max_length=20,
+            ),
         ),
     ]

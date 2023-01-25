@@ -11,3 +11,4 @@ paddle_public_key.txt
 /test-results/
 /playwright-report/
 /playwright/.cache/
+!.vscode

@@ -6,13 +6,16 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0048_auto_20200412_1208'),
+        ("inventory", "0048_auto_20200412_1208"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='camera',
-            name='multiple_backs',
-            field=models.BooleanField(default=False, help_text='\n            Select this option if you have multiple interchangeable film\n            cassette backs for this camera that can be swapped mid-roll.\n        '),
+            model_name="camera",
+            name="multiple_backs",
+            field=models.BooleanField(
+                default=False,
+                help_text="\n            Select this option if you have multiple interchangeable film\n            cassette backs for this camera that can be swapped mid-roll.\n        ",
+            ),
         ),
     ]

@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0007_film_status'),
+        ("inventory", "0007_film_status"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='filmname',
-            name='format',
-            field=models.CharField(choices=[('135', '35mm'), ('120', '120')], default='135', max_length=20),
+            model_name="filmname",
+            name="format",
+            field=models.CharField(
+                choices=[("135", "35mm"), ("120", "120")], default="135", max_length=20
+            ),
         ),
     ]

@@ -7,13 +7,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0039_auto_20190203_1036'),
+        ("inventory", "0039_auto_20190203_1036"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='journal',
-            name='date',
+            model_name="journal",
+            name="date",
             field=models.DateField(default=datetime.date.today),
         ),
     ]

@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0072_auto_20210809_1419'),
+        ("inventory", "0072_auto_20210809_1419"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='film',
-            name='name',
-            field=models.CharField(blank=True, help_text='\n            The name of the film itself without the manufacturer’s name (unless that’s part of the film’s name.)\n        ', max_length=50),
+            model_name="film",
+            name="name",
+            field=models.CharField(
+                blank=True,
+                help_text="\n            The name of the film itself without the manufacturer’s name (unless that’s part of the film’s name.)\n        ",
+                max_length=50,
+            ),
         ),
     ]

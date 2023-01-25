@@ -6,13 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0023_auto_20180615_1744'),
+        ("inventory", "0023_auto_20180615_1744"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='project',
-            name='status',
-            field=models.CharField(choices=[('current', 'Current'), ('archived', 'Archived')], default='current', max_length=20),
+            model_name="project",
+            name="status",
+            field=models.CharField(
+                choices=[("current", "Current"), ("archived", "Archived")],
+                default="current",
+                max_length=20,
+            ),
         ),
     ]

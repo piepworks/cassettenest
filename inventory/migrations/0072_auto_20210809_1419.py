@@ -7,58 +7,58 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0071_stock_type'),
+        ("inventory", "0071_stock_type"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='stock',
-            name='iso',
-            field=models.PositiveSmallIntegerField(default=100, verbose_name='ISO'),
+            model_name="stock",
+            name="iso",
+            field=models.PositiveSmallIntegerField(default=100, verbose_name="ISO"),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='iso',
-            field=models.IntegerField(blank=True, null=True, verbose_name='ISO'),
+            model_name="film",
+            name="iso",
+            field=models.IntegerField(blank=True, null=True, verbose_name="ISO"),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='manufacturer',
+            model_name="film",
+            name="manufacturer",
             field=models.ForeignKey(
                 blank=True,
                 null=True,
                 on_delete=django.db.models.deletion.CASCADE,
-                to='inventory.manufacturer'
+                to="inventory.manufacturer",
             ),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='name',
+            model_name="film",
+            name="name",
             field=models.CharField(
                 blank=True,
-                help_text='''
+                help_text="""
                     The name of the film itself without the manufacturer’s name (unless that’s part of the film’s name.)
-                ''',
-                max_length=50
+                """,
+                max_length=50,
             ),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='slug',
+            model_name="film",
+            name="slug",
             field=models.SlugField(blank=True),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='type',
+            model_name="film",
+            name="type",
             field=models.CharField(
                 blank=True,
                 choices=[
-                    ('c41', 'C41 Color'),
-                    ('bw', 'Black and White'),
-                    ('e6', 'E6 Color Reversal')
+                    ("c41", "C41 Color"),
+                    ("bw", "Black and White"),
+                    ("e6", "E6 Color Reversal"),
                 ],
-                default='c41',
-                max_length=20
+                default="c41",
+                max_length=20,
             ),
         ),
     ]
