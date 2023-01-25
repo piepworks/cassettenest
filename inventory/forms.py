@@ -8,7 +8,19 @@ from .models import Camera, CameraBack, Roll, Stock, Manufacturer, Project, Jour
 from .utils import apertures, shutter_speeds, film_formats
 
 
-class RegisterForm(UserCreationForm):
+class UniqueEmailForm:
+    # https://gist.github.com/gregplaysguitar/1184995#file-upgrade_user_admin-py-L44-L53
+    def clean_email(self):
+        qs = User.objects.filter(email=self.cleaned_data['email'])
+        if self.instance:
+            qs = qs.exclude(pk=self.instance.pk)
+        if qs.count():
+            raise forms.ValidationError('That email address is already in use')
+        else:
+            return self.cleaned_data['email']
+
+
+class RegisterForm(UniqueEmailForm, UserCreationForm):
     # Make the email field required.
     email = forms.EmailField()
 
@@ -183,20 +195,9 @@ class ReadyForm(forms.Form):
     )
 
 
-class UserForm(ModelForm):
+class UserForm(UniqueEmailForm, ModelForm):
     # Make the email field required.
     email = forms.EmailField()
-
-    # https://gist.github.com/gregplaysguitar/1184995#file-upgrade_user_admin-py-L44-L53
-    def clean_email(self):
-        qs = User.objects.filter(email=self.cleaned_data['email'])
-        if self.instance:
-            qs = qs.exclude(pk=self.instance.pk)
-        if qs.count():
-            # TODO: actually display this error on the page.
-            raise forms.ValidationError('That email address is already in use')
-        else:
-            return self.cleaned_data['email']
 
     class Meta:
         model = User
