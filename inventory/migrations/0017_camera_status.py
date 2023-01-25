@@ -6,13 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0016_auto_20180428_0915'),
+        ("inventory", "0016_auto_20180428_0915"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='camera',
-            name='status',
-            field=models.CharField(choices=[('empty', 'Empty'), ('loaded', 'Loaded'), ('unavailable', 'Unavailable')], default='empty', max_length=20),
+            model_name="camera",
+            name="status",
+            field=models.CharField(
+                choices=[
+                    ("empty", "Empty"),
+                    ("loaded", "Loaded"),
+                    ("unavailable", "Unavailable"),
+                ],
+                default="empty",
+                max_length=20,
+            ),
         ),
     ]

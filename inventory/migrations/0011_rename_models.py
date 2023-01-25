@@ -4,13 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-    atomic=False
+    atomic = False
 
     dependencies = [
-        ('inventory', '0010_film_camera'),
+        ("inventory", "0010_film_camera"),
     ]
 
     operations = [
-        migrations.RenameModel('Film', 'Roll'),
-        migrations.RenameModel('FilmName', 'Film')
+        migrations.RenameModel("Film", "Roll"),
+        migrations.RenameModel("FilmName", "Film"),
     ]

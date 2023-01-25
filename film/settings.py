@@ -11,10 +11,8 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import socket
 import bleach
 import dotenv
-import sys
 import sentry_sdk
 from pytz import common_timezones
 from django.core.management.utils import get_random_secret_key
@@ -22,128 +20,128 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 
 def env_var(key, default=None):
-    '''
+    """
     Retrieves env vars and makes Python boolean replacements
     https://wellfire.co/learn/easier-12-factor-django/
-    '''
+    """
     val = os.environ.get(key, default)
-    if val == 'True' or val == '1':
+    if val == "True" or val == "1":
         val = True
-    elif val == 'False' or val == '0':
+    elif val == "False" or val == "0":
         val = False
     return val
 
 
 sentry_sdk.init(
-    dsn=os.environ.get('SENTRY_DSN'),
+    dsn=os.environ.get("SENTRY_DSN"),
     integrations=[
         DjangoIntegration(),
     ],
-
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
     # We recommend adjusting this value in production.
-    traces_sample_rate=os.environ.get('SENTRY_SAMPLE_RATE'),
-
+    traces_sample_rate=os.environ.get("SENTRY_SAMPLE_RATE"),
     # If you wish to associate users to errors (assuming you are using
     # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
+    send_default_pii=True,
 )
 
 
 # Folks who get an email when things break.
-ADMINS = [('Trey', 'trey@treypiepmeier.com'), ]
+ADMINS = [
+    ("Trey", "trey@treypiepmeier.com"),
+]
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-dotenv.load_dotenv(dotenv_path=BASE_DIR + '/.env')
+dotenv.load_dotenv(dotenv_path=BASE_DIR + "/.env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', default=get_random_secret_key())
+SECRET_KEY = os.environ.get("SECRET_KEY", default=get_random_secret_key())
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.environ.get('DEBUG', default=0))
+DEBUG = int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',')
-CSRF_TRUSTED_ORIGINS = [os.environ.get('CSRF_TRUSTED_ORIGINS')]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(",")
+CSRF_TRUSTED_ORIGINS = [os.environ.get("CSRF_TRUSTED_ORIGINS")]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'inventory.apps.InventoryConfig',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'whitenoise.runserver_nostatic',
-    'django.contrib.staticfiles',
-    'django_bleach',
-    'capture_tag',
-    'debug_toolbar',
-    'waffle',
-    'corsheaders',
-    'widget_tweaks',
-    'django_htmx',
-    'django_browser_reload',
+    "inventory.apps.InventoryConfig",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "whitenoise.runserver_nostatic",
+    "django.contrib.staticfiles",
+    "django_bleach",
+    "capture_tag",
+    "debug_toolbar",
+    "waffle",
+    "corsheaders",
+    "widget_tweaks",
+    "django_htmx",
+    "django_browser_reload",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'inventory.middleware.AppPlaformRedirectMiddleware',
-    'inventory.middleware.TimezoneMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'waffle.middleware.WaffleMiddleware',
-    'django_htmx.middleware.HtmxMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "inventory.middleware.AppPlaformRedirectMiddleware",
+    "inventory.middleware.TimezoneMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "waffle.middleware.WaffleMiddleware",
+    "django_htmx.middleware.HtmxMiddleware",
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
 ]
 
-ROOT_URLCONF = 'film.urls'
+ROOT_URLCONF = "film.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'inventory.context_processors.subscription_banner',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+                "inventory.context_processors.subscription_banner",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'film.wsgi.application'
+WSGI_APPLICATION = "film.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_DB'),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('POSTGRES_PORT')
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("DB_HOST"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
     }
 }
 
@@ -152,16 +150,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -169,9 +167,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'America/New_York'
+TIME_ZONE = "America/New_York"
 
 TIME_ZONES = [(tz, tz) for tz in common_timezones]
 
@@ -184,56 +182,56 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'), ]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-LOGIN_REDIRECT_URL = 'index'
-LOGOUT_REDIRECT_URL = 'index'
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "index"
 
 # Email
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_PORT = os.environ.get('EMAIL_PORT')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = int(os.environ.get('EMAIL_USE_TLS', default=0))
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
-SERVER_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND")
+EMAIL_HOST = os.environ.get("EMAIL_HOST")
+EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = int(os.environ.get("EMAIL_USE_TLS", default=0))
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+SERVER_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
-SUBSCRIPTION_TRIAL = int(os.environ.get('SUBSCRIPTION_TRIAL', default=0))
-SUBSCRIPTION_TRIAL_DURATION = os.environ.get('SUBSCRIPTION_TRIAL_DURATION')
+SUBSCRIPTION_TRIAL = int(os.environ.get("SUBSCRIPTION_TRIAL", default=0))
+SUBSCRIPTION_TRIAL_DURATION = os.environ.get("SUBSCRIPTION_TRIAL_DURATION")
 
 # Paddle
-PADDLE_LIVE_MODE = int(os.environ.get('PADDLE_LIVE_MODE', default=0))
-PADDLE_VENDOR_ID = os.environ.get('PADDLE_VENDOR_ID')
-PADDLE_VENDOR_AUTH_CODE = os.environ.get('PADDLE_VENDOR_AUTH_CODE')
-PADDLE_STANDARD_MONTHLY = os.environ.get('PADDLE_STANDARD_MONTHLY')
-PADDLE_STANDARD_ANNUAL = os.environ.get('PADDLE_STANDARD_ANNUAL')
-PADDLE_AWESOME_ANNUAL = os.environ.get('PADDLE_AWESOME_ANNUAL')
-PADDLE_PUBLIC_KEY = os.environ.get('PADDLE_PUBLIC_KEY')
+PADDLE_LIVE_MODE = int(os.environ.get("PADDLE_LIVE_MODE", default=0))
+PADDLE_VENDOR_ID = os.environ.get("PADDLE_VENDOR_ID")
+PADDLE_VENDOR_AUTH_CODE = os.environ.get("PADDLE_VENDOR_AUTH_CODE")
+PADDLE_STANDARD_MONTHLY = os.environ.get("PADDLE_STANDARD_MONTHLY")
+PADDLE_STANDARD_ANNUAL = os.environ.get("PADDLE_STANDARD_ANNUAL")
+PADDLE_AWESOME_ANNUAL = os.environ.get("PADDLE_AWESOME_ANNUAL")
+PADDLE_PUBLIC_KEY = os.environ.get("PADDLE_PUBLIC_KEY")
 
 # Django Debug Toolbar
-INTERNAL_IPS = ['127.0.0.1']
+INTERNAL_IPS = ["127.0.0.1"]
 
 # Allow for checking if someone is logged on via the marketing site.
-CORS_ALLOWED_ORIGINS = [
-    os.environ.get('MARKETING_SITE_URL')
-]
-CORS_ALLOW_METHODS = ['GET']
+CORS_ALLOWED_ORIGINS = [os.environ.get("MARKETING_SITE_URL")]
+CORS_ALLOW_METHODS = ["GET"]
 CORS_ALLOW_CREDENTIALS = True
 CORS_URLS_REGEX = r"^/marketing-site$"
 
-BLEACH_ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.extend(['p', 'hr'])
+BLEACH_ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.extend(["p", "hr"])

@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0001_initial'),
+        ("inventory", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='filmname',
-            name='slug',
-            field=models.SlugField(default='', unique=True),
+            model_name="filmname",
+            name="slug",
+            field=models.SlugField(default="", unique=True),
             preserve_default=False,
         ),
     ]

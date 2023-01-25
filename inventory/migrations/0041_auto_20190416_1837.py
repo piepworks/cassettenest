@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0040_auto_20190412_2206'),
+        ("inventory", "0040_auto_20190412_2206"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='roll',
-            name='code',
-            field=models.CharField(blank=True, help_text='A unique roll code (per year)', max_length=100),
+            model_name="roll",
+            name="code",
+            field=models.CharField(
+                blank=True, help_text="A unique roll code (per year)", max_length=100
+            ),
         ),
     ]

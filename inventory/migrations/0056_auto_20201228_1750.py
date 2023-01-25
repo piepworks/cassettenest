@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0055_auto_20201017_1222'),
+        ("inventory", "0055_auto_20201017_1222"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='profile',
-            name='stripe_customer_id',
+            model_name="profile",
+            name="stripe_customer_id",
             field=models.CharField(blank=True, max_length=255),
         ),
         migrations.AddField(
-            model_name='profile',
-            name='stripe_subscription_id',
+            model_name="profile",
+            name="stripe_subscription_id",
             field=models.CharField(blank=True, max_length=255),
         ),
     ]

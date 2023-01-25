@@ -6,13 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0060_profile_friend'),
+        ("inventory", "0060_profile_friend"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='subscription_status',
-            field=models.CharField(choices=[('none', 'Never had a subscription'), ('pending', 'Pending update'), ('trialing', 'Trial period'), ('active', 'Subscribed'), ('error', 'Payment error'), ('canceling', 'Scheduled to cancel'), ('canceled', 'Canceled')], default='none', max_length=20),
+            model_name="profile",
+            name="subscription_status",
+            field=models.CharField(
+                choices=[
+                    ("none", "Never had a subscription"),
+                    ("pending", "Pending update"),
+                    ("trialing", "Trial period"),
+                    ("active", "Subscribed"),
+                    ("error", "Payment error"),
+                    ("canceling", "Scheduled to cancel"),
+                    ("canceled", "Canceled"),
+                ],
+                default="none",
+                max_length=20,
+            ),
         ),
     ]

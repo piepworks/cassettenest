@@ -6,13 +6,22 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('inventory', '0017_camera_status'),
+        ("inventory", "0017_camera_status"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='roll',
-            name='push_pull',
-            field=models.CharField(blank=True, choices=[('-2', 'Pull 2 stops'), ('-1', 'Pull 1 stop'), ('+1', 'Push 1 stop'), ('+2', 'Push 2 stops')], max_length=2),
+            model_name="roll",
+            name="push_pull",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("-2", "Pull 2 stops"),
+                    ("-1", "Pull 1 stop"),
+                    ("+1", "Push 1 stop"),
+                    ("+2", "Push 2 stops"),
+                ],
+                max_length=2,
+            ),
         ),
     ]

@@ -9,18 +9,26 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('inventory', '0052_auto_20200504_2120'),
+        ("inventory", "0052_auto_20200504_2120"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='film',
-            name='added_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+            model_name="film",
+            name="added_by",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='film',
-            name='personal',
-            field=models.BooleanField(default=False, help_text='For user-submitted films. Only visible to the user who added it if this is true.'),
+            model_name="film",
+            name="personal",
+            field=models.BooleanField(
+                default=False,
+                help_text="For user-submitted films. Only visible to the user who added it if this is true.",
+            ),
         ),
     ]

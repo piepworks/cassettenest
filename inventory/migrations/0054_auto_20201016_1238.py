@@ -9,43 +9,61 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('inventory', '0053_auto_20201015_1525'),
+        ("inventory", "0053_auto_20201015_1525"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='manufacturer',
-            name='added_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL),
+            model_name="manufacturer",
+            name="added_by",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddField(
-            model_name='manufacturer',
-            name='personal',
-            field=models.BooleanField(default=False, help_text='For user-submitted films. Only visible to the user who added it if this is true.'),
+            model_name="manufacturer",
+            name="personal",
+            field=models.BooleanField(
+                default=False,
+                help_text="For user-submitted films. Only visible to the user who added it if this is true.",
+            ),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='description',
-            field=models.TextField(blank=True, help_text='Any details about the film or how best to use it.'),
+            model_name="film",
+            name="description",
+            field=models.TextField(
+                blank=True,
+                help_text="Any details about the film or how best to use it.",
+            ),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='name',
-            field=models.CharField(help_text='\n            The name of the film stock itself without the manufacturer’s name (unless that’s part of the film’s name.)\n        ', max_length=50),
+            model_name="film",
+            name="name",
+            field=models.CharField(
+                help_text="\n            The name of the film stock itself without the manufacturer’s name (unless that’s part of the film’s name.)\n        ",
+                max_length=50,
+            ),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='slug',
+            model_name="film",
+            name="slug",
             field=models.SlugField(),
         ),
         migrations.AlterField(
-            model_name='film',
-            name='url',
-            field=models.URLField(blank=True, help_text='Any website that describes this film, hopefully from the manufacturer themselves.', verbose_name='URL'),
+            model_name="film",
+            name="url",
+            field=models.URLField(
+                blank=True,
+                help_text="Any website that describes this film, hopefully from the manufacturer themselves.",
+                verbose_name="URL",
+            ),
         ),
         migrations.AlterField(
-            model_name='manufacturer',
-            name='name',
+            model_name="manufacturer",
+            name="name",
             field=models.CharField(max_length=50, unique=True),
         ),
     ]

@@ -9,19 +9,40 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('inventory', '0008_filmname_format'),
+        ("inventory", "0008_filmname_format"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Camera',
+            name="Camera",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('format', models.CharField(choices=[('135', '35mm'), ('120', '120')], default='135', max_length=20)),
-                ('name', models.CharField(max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "format",
+                    models.CharField(
+                        choices=[("135", "35mm"), ("120", "120")],
+                        default="135",
+                        max_length=20,
+                    ),
+                ),
+                ("name", models.CharField(max_length=50)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
