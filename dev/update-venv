@@ -1,4 +1,4 @@
 #!/bin/sh
 
-pip-compile
+pip-compile --resolver=backtracking
 venv/bin/python -m pip install -r requirements.txt
