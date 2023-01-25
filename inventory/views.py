@@ -2561,7 +2561,14 @@ def camera_add(request):
             camera.owner = request.user
             camera.save()
 
-            messages.success(request, 'Camera added!')
+            success_message = 'Camera added!'
+            if camera.multiple_backs:
+                success_message += ' To be able to load this camera, add one or more camera backs.'
+
+            messages.success(request, success_message)
+
+            if camera.multiple_backs:
+                return redirect(reverse('camera-back-add', args=(camera.id,)))
 
             if 'another' in request.POST:
                 return redirect('camera-add')

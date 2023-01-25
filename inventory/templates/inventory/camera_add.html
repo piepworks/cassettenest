@@ -10,7 +10,25 @@
     {% csrf_token %}
     {% include 'components/form-field.html' with field=form.name %}
     {% include 'components/form-field.html' with field=form.format %}
-    {% include 'components/form-field.html' with field=form.multiple_backs %}
+
+    <div class="field field--checkbox" data-label="Multiple backs">
+        <div class="flex items-center h-5">
+            <input type="checkbox" name="multiple_backs" id="id_multiple_backs"
+                _="on change
+                     if my.checked is true
+                       add @disabled to <[name='another']/>
+                     else
+                       remove @disabled from <[name='another']/>
+                     end">
+            <label class="text-sm font-medium" for="id_multiple_backs">Multiple backs</label>
+        </div>
+
+        <div class="mt-2 md:mt-0 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">
+            Select this option if you have multiple interchangeable film
+            cassette backs for this camera that can be swapped mid-roll.
+        </div>
+    </div>
+
     {% include 'components/form-field.html' with field=form.notes %}
     {% include 'components/form-field.html' with field=form.unavailable class='last' %}
 
