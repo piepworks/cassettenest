@@ -29,6 +29,6 @@ repos:
       - id: eslint
         name: Run ESLint
         language: system
-        entry: npx eslint --ext .js ./
+        entry: npx eslint --ext .js ./inventory/templates/js
         types: [javascript]
         pass_filenames: false
