@@ -288,26 +288,7 @@
     #menu-desktop-toggle {
       margin-bottom: calc(env(safe-area-inset-bottom) * 3);
 
-      @apply
-        sticky
-        left-0
-        w-full;
-
-      button {
-        @apply
-          text-center
-          w-full;
-
-        &:hover svg { @apply text-stone-300; }
-      }
-
-      svg {
-        @apply
-          inline
-          w-8
-          h-8
-          text-stone-600;
-      }
+      button:hover svg { color: theme(textColor.stone.300); }
     }
 
     li svg {
