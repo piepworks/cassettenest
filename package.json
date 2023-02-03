@@ -3,8 +3,8 @@
   "version": "2.0.0",
   "description": "A way for analog photographers to track their film use from box to binder.",
   "scripts": {
-    "watch:tailwind": "postcss theme/tailwind.css -o static/tailwind.css --watch --verbose",
-    "build:tailwind": "NODE_ENV=production postcss theme/tailwind.css -o static/tailwind.css",
+    "watch:tailwind": "postcss tailwind/main.css -o static/tailwind.css --watch --verbose",
+    "build:tailwind": "NODE_ENV=production postcss tailwind/main.css -o static/tailwind.css",
     "dj": "dev/start",
     "start": "npm-run-all --parallel watch:tailwind dj",
     "build": "npm-run-all build:*"

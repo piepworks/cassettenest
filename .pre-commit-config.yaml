@@ -31,7 +31,7 @@ repos:
       - id: stylelint
         name: Run Stylelint
         language: system
-        entry: npx stylelint "theme/tailwind.css"
+        entry: npx stylelint "tailwind/main.css"
         types: [css]
         pass_filenames: false
       - id: eslint

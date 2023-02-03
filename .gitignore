@@ -1,6 +1,6 @@
 venv/
 *.css
-!/theme/tailwind.css
+!/tailwind/main.css
 staticfiles/
 node_modules/
 .env*
