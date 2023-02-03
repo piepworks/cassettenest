@@ -358,10 +358,13 @@ def account_settings(request):
             user.last_name = user_form.cleaned_data["last_name"]
             user.email = user_form.cleaned_data["email"]
             user.profile.timezone = profile_form.cleaned_data["timezone"]
+            user.profile.color_preference = profile_form.cleaned_data[
+                "color_preference"
+            ]
             user.save()
 
             messages.success(request, "Settings updated!")
-            return redirect(reverse("index"))
+            return redirect(reverse("settings"))
         else:
             for field in user_form:
                 for error in field.errors:

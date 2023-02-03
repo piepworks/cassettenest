@@ -1,5 +1,5 @@
 {% load static tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
-<html lang="en" class="no-js">
+<html lang="en" class="no-js{% if user.is_authenticated %}{% if user.profile.color_preference == 'dark' %} dark{% endif %}{% endif %}">
 <head>
     {% url 'index' as index_url %}
     <title>{% block title %}{% endblock %}{% if request.path != index_url %} / {% endif %}Cassette Nest</title>
@@ -68,6 +68,15 @@
     <script>
         document.documentElement.classList.remove('no-js');
         document.documentElement.classList.add('has-js');
+
+        {% if user.is_authenticated and user.profile.color_preference == 'auto' or not user.is_authenticated %}
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        {% endif %}
+
         {% if user.is_authenticated and request.path != patterns_url %}
             {% include 'js/menu.js' %}
         {% endif %}

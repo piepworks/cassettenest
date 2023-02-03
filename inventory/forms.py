@@ -223,13 +223,7 @@ class UserForm(UniqueEmailForm, ModelForm):
 class ProfileForm(ModelForm):
     class Meta:
         model = Profile
-        fields = ["timezone"]
-
-
-class ProfileColorForm(ModelForm):
-    class Meta:
-        model = Profile
-        fields = ["color_preference"]
+        fields = ["timezone", "color_preference"]
 
 
 class PatternsForm(forms.Form):
