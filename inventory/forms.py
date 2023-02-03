@@ -226,6 +226,12 @@ class ProfileForm(ModelForm):
         fields = ["timezone"]
 
 
+class ProfileColorForm(ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["color_preference"]
+
+
 class PatternsForm(forms.Form):
     # This form is just to show examples of each field type.
 

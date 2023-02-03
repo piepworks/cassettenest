@@ -6,10 +6,16 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
+from django.utils.translation import gettext_lazy as _
 from .utils import status_number, film_types, film_formats, is_active
 
 
 class Profile(models.Model):
+    class ColorModes(models.TextChoices):
+        AUTO = ("auto", _("Automatic"))
+        LIGHT = ("light", _("Light"))
+        DARK = ("dark", _("Dark"))
+
     SUBSCRIPTION_STATUS_CHOICES = (
         ("none", "Never had a subscription"),
         # https://developer.paddle.com/reference/platform-parameters/event-statuses
@@ -28,6 +34,9 @@ class Profile(models.Model):
         blank=True,
         choices=settings.TIME_ZONES,
         default=settings.TIME_ZONE,
+    )
+    color_preference = models.CharField(
+        max_length=5, choices=ColorModes.choices, default=ColorModes.AUTO
     )
     subscription_status = models.CharField(
         max_length=20, choices=SUBSCRIPTION_STATUS_CHOICES, default="none"
@@ -532,7 +541,6 @@ class Roll(models.Model):
             and self.status not in [status_number("storage"), status_number("loaded")]
             and self.ended_on is None
         ):
-
             # If the camera is still loaded with this roll, unload it.
             if self.camera.status == "loaded":
                 camera_roll = Roll.objects.filter(
