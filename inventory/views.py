@@ -86,7 +86,7 @@ def index(request):
     cameras_unavailable = cameras_total.filter(status="unavailable")
     rolls = Roll.objects.filter(owner=owner)
     rolls_loaded = rolls.filter(status=status_number("loaded"))
-    all_projects = Project.objects.filter(owner=owner,).order_by(
+    all_projects = Project.objects.filter(owner=owner).order_by(
         "-updated_at",
     )
 
@@ -746,7 +746,9 @@ def register(request):
             email = form.cleaned_data.get("email")
             send_email_to_trey(
                 subject="New Cassette Nest user!",
-                message=f"{username} / {email} signed up!",
+                message=f"""{username} / {email} signed up!\n
+                    https://{get_current_site(request)}{reverse('admin:auth_user_changelist')}
+                """,
             )
 
             return redirect("index")
