@@ -38,7 +38,7 @@ decorator==5.1.1
     # via ipython
 distlib==0.3.6
     # via virtualenv
-django==4.1.6
+django==4.1.7
     # via
     #   -r requirements.in
     #   django-bleach
@@ -73,7 +73,7 @@ freezegun==1.2.2
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
-identify==2.5.17
+identify==2.5.18
     # via pre-commit
 idna==3.4
     # via requests
