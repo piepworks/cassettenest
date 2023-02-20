@@ -239,6 +239,7 @@ class PatternsForm(forms.Form):
     text = forms.CharField()
     email = forms.EmailField(help_text=help_text)
     password = forms.CharField(help_text=help_text, widget=widgets.PasswordInput())
+    url = forms.URLField(label="URL", help_text=help_text)
     date_input = forms.DateField(
         help_text=help_text, widget=widgets.DateInput(attrs={"type": "date"})
     )

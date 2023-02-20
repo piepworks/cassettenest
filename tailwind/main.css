@@ -74,6 +74,7 @@
   input[type='password'],
   input[type='date'],
   input[type='number'],
+  input[type='url'],
   select,
   textarea {
     @apply
