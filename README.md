@@ -18,11 +18,12 @@ Copyright &copy; 2016-2023 Piepworks LLC. All rights reserved.
     psql
     create database cassette_nest;
     grant postgres to cassette_nest;
+    alter user cassette_nest createdb;
     ```
 1. Create a new a `.env` file based on [the example](example-local.env).
 2. `dev/bootstrap`
 3. `python manage.py migrate`
-4. Import a database dump if you want.
+4. `pre-commit install`
 
 ## Development
 
