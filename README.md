@@ -10,9 +10,16 @@ Copyright &copy; 2016-2023 Piepworks LLC. All rights reserved.
 
 ## Local Setup
 
-0. Install [Postgres.app](https://postgresapp.com)
+0. Install [Postgres.app](https://postgresapp.com) and set up a new database and user.
+    - [Adjust your path for the Postgres app goodies.](https://postgresapp.com/documentation/cli-tools.html)
+    - Run the following commands to set up the database and user.
+    ```shell
+    createuser cassette_nest
+    psql
+    create database cassette_nest;
+    grant postgres to cassette_nest;
+    ```
 1. Create a new a `.env` file based on [the example](example-local.env).
-    - Adjust as needed, but you shouldn't need to do anything.
 2. `dev/bootstrap`
 3. `python manage.py migrate`
 4. Import a database dump if you want.
