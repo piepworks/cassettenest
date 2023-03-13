@@ -73,7 +73,7 @@ freezegun==1.2.2
     # via -r requirements.in
 gunicorn==20.1.0
     # via -r requirements.in
-identify==2.5.18
+identify==2.5.20
     # via pre-commit
 idna==3.4
     # via requests
@@ -111,7 +111,7 @@ pip-lock==2.9.0
     # via -r requirements.in
 pip-tools==6.12.3
     # via -r requirements.in
-platformdirs==3.1.0
+platformdirs==3.1.1
     # via
     #   black
     #   virtualenv
@@ -173,11 +173,11 @@ traitlets==5.9.0
     # via
     #   ipython
     #   matplotlib-inline
-urllib3==1.26.14
+urllib3==1.26.15
     # via
     #   requests
     #   sentry-sdk
-virtualenv==20.20.0
+virtualenv==20.21.0
     # via pre-commit
 wcwidth==0.2.6
     # via prompt-toolkit
