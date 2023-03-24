@@ -1,6 +1,6 @@
 <h1>
     <span id="page-name">
-        {% if manufacturer %}<a hx-get="{% url 'stocks' %}" hx-target=".main-content" href="{% url 'stocks' %}">{% endif %}
+        {% if manufacturer %}<a hx-get="{% url 'stocks' %}" hx-target=".main-content" hx-indicator=".htmx-indicator" href="{% url 'stocks' %}">{% endif %}
         Film Stocks
         {% if manufacturer %}</a>{% endif %}
     </span>
