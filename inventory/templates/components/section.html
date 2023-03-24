@@ -14,6 +14,8 @@
                     {{ items.title }}
                 </h3>
             </div>
+            {% include 'partials/htmx-indicator.html' %}
+
             {% if items.add_url %}
             <div class="ml-4 mt-2 flex-shrink-0">
                 <a class="button primary" href="{{ items.add_url }}">
@@ -35,6 +37,7 @@
                         hx-trigger="change"
                         hx-target="{{ items.target }}"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+                        hx-indicator=".htmx-indicator"
                         hx-vals='{"slug": "{{ items.slug }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
                         class="flex">
                         {% if items.slug == 'c' and request.GET.p %}
@@ -62,6 +65,7 @@
                                 hx-get="?{{ items.slug }}={{ forloop.counter0 }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}"
                                 hx-vals='{"slug": "{{ items.slug }}", "{{ items.slug }}": "{{ forloop.counter0 }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
                                 hx-target="{{ items.target }}"
+                                hx-indicator=".htmx-indicator"
                                 href="?{{ items.slug }}={{ forloop.counter0 }}{% if adjacent_section %}&{{ adjacent_slug }}={{ adjacent_section }}{% endif %}{% if page == 'index' %}#section_{{ items.slug }}{% endif %}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}"
                                 class="{% if forloop.counter0 == items.current_tab %}current {% endif %}whitespace-nowrap pb-4 px-1 border-b-2 font-medium text-sm">
                                 {{ tab.name }}
@@ -78,7 +82,7 @@
         {% endif %}
     </div>
 
-    <div class="bg-white dark:bg-stone-600 overflow-hidden rounded-b-md mb-6">
+    <div class="bg-white dark:bg-stone-600 overflow-hidden rounded-b-md mb-6 htmx-replace">
         {% if items.current_rows %}
             <ul role="list" class="divide-y divide-stone-200 dark:divide-stone-700">
                 {% for row in items.current_rows %}
