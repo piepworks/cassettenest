@@ -1060,6 +1060,16 @@
     }
     /* stylelint-enable selector-class-pattern */
   }
+
+  .htmx-indicator {
+    display: none;
+    align-self: end;
+    justify-content: center;
+
+    .htmx-request& {
+      display: flex;
+    }
+  }
 }
 
 @layer utilities {
