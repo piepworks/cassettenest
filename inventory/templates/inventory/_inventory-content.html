@@ -19,7 +19,7 @@
     hx-target="#inventory-content-wrapper"
     class="print:hidden mb-10">
     <div class="field--filter">
-        <div class="flex gap-3">
+        <div class="flex flex-col sm:flex-row gap-3">
             <label for="id_format">
                 <div class="mb-2">Format:</div>
                 <select name="format" id="id_format">
@@ -45,7 +45,7 @@
                     {% endfor %}
                 </select>
             </label>
-            {% include 'partials/htmx-indicator.html' %}
+            {% include 'partials/htmx-indicator.html' with wrapper_class='flex justify-center mt-3 w-full sm:w-auto' %}
         </div>
         <button class="block mt-6 no-js">Filter</button>
     </div>
