@@ -1,4 +1,4 @@
-<div role="status" class="htmx-indicator">
+<div role="status" class="{% if wrapper_class %}{{ wrapper_class }} {% endif %}htmx-indicator">
   {# https://flowbite.com/docs/components/spinner/ #}
   <svg aria-hidden="true"
        class="{% if class %}{{ class }}{% else %}w-10 h-10 mr-2{% endif %} text-stone-200 animate-spin dark:text-stone-500 fill-blue-600"
