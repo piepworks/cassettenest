@@ -80,6 +80,7 @@
 
         {% if user.is_authenticated and request.path != patterns_url %}
             {% include 'js/menu.js' %}
+            {% include 'js/htmx-fade.js' %}
         {% endif %}
         {% include 'js/sw-setup.js' %}
     </script>

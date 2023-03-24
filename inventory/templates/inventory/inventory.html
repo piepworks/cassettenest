@@ -32,15 +32,6 @@
     let formatName = '{{ filters.format_name }}';
     let typeName = '{{ filters.type_name }}';
 
-    // Fade the list when it's loading.
-    document.getElementById('film-wrapper').style.opacity = 1.0;
-
-    document.body.addEventListener('htmx:beforeRequest', () => {
-        document.getElementById('film-wrapper').style.opacity = 0.25;
-    });
-
-    document.body.addEventListener('htmx:afterRequest', () => {
-        document.getElementById('film-wrapper').style.opacity = 1.0;
-    });
+    {% include 'js/htmx-fade.js' %}
 </script>
 {% endblock %}
