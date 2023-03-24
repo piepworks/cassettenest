@@ -6,7 +6,12 @@
             {% include 'components/tabs.html' with name='status' target="#logbook_page_data" tabs=status_counts current_tab=current_status size='md' %}
         </div>
 
-        {% if description %}<div class="status-description p-6 -mx-6 my-6 md:mb-6 md:mt-0 text-stone-500 dark:text-stone-400 bg-stone-200 dark:bg-stone-700 last:rounded-b-lg last:-mb-6 md:last:mb-0">{{ description }}</div>{% endif %}
+        {% if description %}
+            <div class="status-description flex items-center justify-between p-6 -mx-6 my-6 md:mb-6 md:mt-0 text-stone-500 dark:text-stone-400 bg-stone-200 dark:bg-stone-700 last:rounded-b-lg last:-mb-6 md:last:mb-0">
+                <p>{{ description }}</p>
+                <div>{% include 'partials/htmx-indicator.html' with class='w-6 h-6' %}</div>
+            </div>
+        {% endif %}
 
         {% if not status %}
         {% capture as current_year silent %}{% if year %}{{ year }}{% else %}all{% endif %}{% endcapture %}
