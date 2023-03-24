@@ -11,12 +11,12 @@
         remaining
     {% else %}
         {% if filters.format != 'all' or filters.type != 'all' %}
-            total <a hx-get="{% url 'inventory' %}" hx-indicator="#spinner" hx-target="#inventory-content-wrapper" href="{% url 'inventory' %}">(reset filters)</a></small>
+            total <a hx-get="{% url 'inventory' %}" hx-indicator=".htmx-indicator" hx-target="#inventory-content-wrapper" href="{% url 'inventory' %}">(reset filters)</a></small>
         {% endif %}
     {% endif %}
 </h3>
 
-<section id="film-wrapper" class="logbook">
+<section id="film-wrapper" class="logbook htmx-replace">
     {% if film_counts %}
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">

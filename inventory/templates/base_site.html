@@ -15,6 +15,7 @@
     {% if wc_needed %}
     <script type="module" src="{% static 'js/vendor/wc/@github/markdown-toolbar-element/index.js' %}"></script>
     {% endif %}
+    <style>svg { max-width: 50px; }</style>
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 {% url 'patterns' as patterns_url %}
@@ -79,6 +80,7 @@
 
         {% if user.is_authenticated and request.path != patterns_url %}
             {% include 'js/menu.js' %}
+            {% include 'js/htmx-fade.js' %}
         {% endif %}
         {% include 'js/sw-setup.js' %}
     </script>

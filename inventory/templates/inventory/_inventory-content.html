@@ -1,61 +1,60 @@
-<div id="inventory-content-wrapper">
-    <p><a href="{% url 'stocks' %}">View all Film Stocks</a> <small><a href="https://cassettenest.com/docs/stocks">(What is this?)</a></small></p>
+<p><a href="{% url 'stocks' %}">View all Film Stocks</a> <small><a href="https://cassettenest.com/docs/stocks">(What is this?)</a></small></p>
 
-    {% if user.profile.account_active %}
-    <div class="flex flex-wrap gap-3 my-3">
-        <a class="button primary" href="{% url 'rolls-add' %}">Add rolls to storage</a>
-        <a class="button" href="{% url 'roll-add' %}">Add a roll to your logbook</a>
-    </div>
-    {% endif %}
-
-    {% if total_rolls %}
-    <h2 class="print:hidden text-xl font-semibold mt-6 mb-3">Filters</h2>
-
-    <form
-        id="film_filter"
-        method="get"
-        hx-get="{% url 'inventory' %}"
-        hx-trigger="change"
-        hx-indicator="#spinner"
-        hx-target="#inventory-content-wrapper"
-        class="print:hidden mb-10">
-        <div class="field--filter">
-            <div class="flex gap-3">
-                <label for="id_format">
-                    <div class="mb-2">Format:</div>
-                    <select name="format" id="id_format">
-                        <option value="all">All formats</option>
-                        {% for format in format_counts %}
-                        <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
-                            {{ format.format_display }}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </label>
-                <label for="id_type">
-                    <div class="mb-2">Type:</div>
-                    <select name="type" id="id_type">
-                        <option value="all">All types</option>
-                        {% for type in type_counts %}
-                            {# TODO: Remove this if statement. #}
-                            {% if type.stock__type != None %}
-                                <option value="{{ type.stock__type }}"{% if filters.type == type.stock__type %} selected{% endif %}>
-                                    {{ type.type_display }}
-                                </option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                </label>
-            </div>
-            <button class="block mt-6 no-js">Filter</button>
-        </div>
-    </form>
-
-    <div id="unused-rolls-wrapper">
-        {% include 'inventory/_unused-rolls.html' %}
-    </div>
-
-    {% else %}
-    <p>No film found.</p>
-    {% endif %}
+{% if user.profile.account_active %}
+<div class="flex flex-wrap gap-3 my-3">
+    <a class="button primary" href="{% url 'rolls-add' %}">Add rolls to storage</a>
+    <a class="button" href="{% url 'roll-add' %}">Add a roll to your logbook</a>
 </div>
+{% endif %}
+
+{% if total_rolls %}
+<h2 class="print:hidden text-xl font-semibold mt-6 mb-3">Filters</h2>
+
+<form
+    id="film_filter"
+    method="get"
+    hx-get="{% url 'inventory' %}"
+    hx-trigger="change"
+    hx-indicator=".htmx-indicator"
+    hx-target="#inventory-content-wrapper"
+    class="print:hidden mb-10">
+    <div class="field--filter">
+        <div class="flex flex-col sm:flex-row gap-3">
+            <label for="id_format">
+                <div class="mb-2">Format:</div>
+                <select name="format" id="id_format">
+                    <option value="all">All formats</option>
+                    {% for format in format_counts %}
+                    <option value="{{ format.format }}"{% if filters.format == format.format %} selected{% endif %}>
+                        {{ format.format_display }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label for="id_type">
+                <div class="mb-2">Type:</div>
+                <select name="type" id="id_type">
+                    <option value="all">All types</option>
+                    {% for type in type_counts %}
+                        {# TODO: Remove this if statement. #}
+                        {% if type.stock__type != None %}
+                            <option value="{{ type.stock__type }}"{% if filters.type == type.stock__type %} selected{% endif %}>
+                                {{ type.type_display }}
+                            </option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </label>
+            {% include 'partials/htmx-indicator.html' with wrapper_class='flex justify-center mt-3 w-full sm:w-auto' %}
+        </div>
+        <button class="block mt-6 no-js">Filter</button>
+    </div>
+</form>
+
+<div id="unused-rolls-wrapper">
+    {% include 'inventory/_unused-rolls.html' %}
+</div>
+
+{% else %}
+<p>No film found.</p>
+{% endif %}

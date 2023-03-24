@@ -20,11 +20,9 @@
 {% endblock %}
 
 {% block content %}
-<div id="spinner" class="htmx-indicator">
-    <div class="loader"></div>
+<div id="inventory-content-wrapper">
+    {% include 'inventory/_inventory-content.html' %}
 </div>
-
-{% include 'inventory/_inventory-content.html' %}
 {% endblock %}
 
 {% block page_js %}
@@ -33,16 +31,5 @@
     let newSubtitle = '';
     let formatName = '{{ filters.format_name }}';
     let typeName = '{{ filters.type_name }}';
-
-    // Fade the list when it's loading.
-    document.getElementById('film-wrapper').style.opacity = 1.0;
-
-    document.body.addEventListener('htmx:beforeRequest', () => {
-        document.getElementById('film-wrapper').style.opacity = 0.25;
-    });
-
-    document.body.addEventListener('htmx:afterRequest', () => {
-        document.getElementById('film-wrapper').style.opacity = 1.0;
-    });
 </script>
 {% endblock %}

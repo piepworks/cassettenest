@@ -27,16 +27,5 @@
     if (typeof(typeName) === 'undefined') {
         let typeName;
     }
-
-    // Fade the list when it's loading.
-    document.getElementById('stocks-list-wrapper').style.opacity = 1.0;
-
-    document.body.addEventListener('htmx:beforeRequest', () => {
-        document.getElementById('stocks-list-wrapper').style.opacity = 0.25;
-    });
-
-    document.body.addEventListener('htmx:afterRequest', () => {
-        document.getElementById('stocks-list-wrapper').style.opacity = 1.0;
-    });
 </script>
 {% endblock %}

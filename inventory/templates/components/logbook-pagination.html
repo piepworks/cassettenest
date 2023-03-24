@@ -1,5 +1,5 @@
 {% if page_obj.has_previous or page_obj.has_next %}
-<div class="pagination mt-6 py-3 flex items-center justify-between" hx-push-url="true" hx-target="{% if target %}{{ target }}{% else %}.logbook-wrapper{% endif %}">
+<div class="pagination mt-6 py-3 flex items-center justify-between" hx-push-url="true" hx-target="{% if target %}{{ target }}{% else %}.logbook-wrapper{% endif %}" hx-indicator=".htmx-indicator">
     <div class="flex-1 flex justify-between align-center sm:hidden">
         {# Mobile #}
         {% if page_obj.has_previous %}
@@ -57,4 +57,5 @@
         </nav>
     </div>
 </div>
+{% include 'partials/htmx-indicator.html' with wrapper_class='mt-3 flex' %}
 {% endif %}
