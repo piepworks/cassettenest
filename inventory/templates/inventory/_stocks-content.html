@@ -14,6 +14,7 @@
     method="get"
     action="{% url 'stocks' %}"
     hx-get="{% url 'stocks' %}"
+    hx-indicator=".htmx-indicator"
     hx-trigger="change"
     hx-target=".main-content">
     <div class="field--filter">
@@ -40,19 +41,20 @@
                     {% endfor %}
                 </select>
             </label>
+            {% include 'partials/htmx-indicator.html' %}
         </div>
         <button class="no-js">Filter</button>
     </div>
 </form>
 
-<div id="stocks-list-wrapper" class="space-y-6">
+<div id="stocks-list-wrapper" class="space-y-6 htmx-replace">
     {% if filters.manufacturer != 'all' or filters.type != 'all' %}
         <p class="space-x-1">
             <span>
                 {% if manufacturer %}{{ manufacturer }}{% endif %}
                 {% if manufacturer and type_name != 'all' %}({% endif %}{% if type_name != 'all' %}{{ type_name }}{% endif %}{% if manufacturer and type_name != 'all' %}){% endif %}
             </span>
-            <a class="text-xs" hx-get="{% url 'stocks' %}" hx-target=".main-content" href="{% url 'stocks' %}">Reset filters</a>
+            <a class="text-xs" hx-get="{% url 'stocks' %}" hx-target=".main-content" hx-indicator=".htmx-indicator" href="{% url 'stocks' %}">Reset filters</a>
         </p>
     {% endif %}
 
