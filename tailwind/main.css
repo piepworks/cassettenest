@@ -9,7 +9,8 @@
       dark:bg-stone-800
       print:bg-white
       text-stone-900
-      dark:text-stone-200;
+      dark:text-stone-200
+      dark:print:text-black;
 
     --folded-corner: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0% 80%);
   }
@@ -26,6 +27,7 @@
       text-blue-600
       dark:text-blue-400
       print:text-stone-800
+      dark:print:text-black
       underline
       hover:text-blue-500
       dark:hover:text-blue-300
@@ -198,6 +200,7 @@
         font-medium
         text-stone-700
         dark:text-stone-200
+        dark:print:text-black
         enabled:hover:text-stone-700
         enabled:dark:hover:text-stone-200
         bg-white
@@ -393,6 +396,7 @@
         border-transparent
         text-stone-500
         dark:text-stone-400
+        dark:print:text-black
         hover:text-stone-700
         dark:hover:text-stone-200
         hover:border-stone-300
@@ -403,7 +407,8 @@
       @apply
         border-blue-400
         text-blue-600
-        dark:text-blue-300;
+        dark:text-blue-300
+        dark:print:text-black;
     }
   }
 
@@ -470,7 +475,8 @@
         font-medium
         truncate
         text-stone-500
-        dark:text-stone-300;
+        dark:text-stone-300
+        dark:print:text-black;
     }
 
     dd {
@@ -483,7 +489,8 @@
       a {
         @apply
           text-stone-900
-          dark:text-white;
+          dark:text-white
+          dark:print:text-black;
       }
 
       a {
@@ -524,7 +531,8 @@
           @apply
             text-sm
             font-medium
-            text-subdued;
+            text-subdued
+            dark:print:text-black;
         }
 
         dd {
@@ -535,7 +543,10 @@
             sm:col-span-2
             prose
             prose-stone
-            dark:prose-invert;
+            dark:prose-invert
+            dark:print:text-black;
+
+          a { @apply dark:print:text-black; }
 
           p:first-child { @apply mt-0; }
         }
@@ -584,7 +595,8 @@
             whitespace-nowrap
             text-sm
             text-stone-500
-            dark:text-stone-200;
+            dark:text-stone-200
+            dark:print:text-black;
         }
       }
     }
