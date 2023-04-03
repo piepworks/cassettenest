@@ -39,7 +39,6 @@ class Profile(models.Model):
         max_length=5,
         choices=ColorModes.choices,
         default=ColorModes.AUTO,
-        help_text="Note: Automatic mode requires JavaScript to work 😢",
     )
     subscription_status = models.CharField(
         max_length=20, choices=SUBSCRIPTION_STATUS_CHOICES, default="none"

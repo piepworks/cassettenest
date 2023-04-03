@@ -1092,6 +1092,8 @@
 
   .has-js .js-required.markdown-toolbar { @apply flex; }
 
+  .has-js .js-required.color-preference { @apply grid; }
+
   .has-js textarea { @apply rounded-t-none; }
 
   .folded .reminder-square:not(.type-empty) {
