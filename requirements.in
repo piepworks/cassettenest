@@ -20,7 +20,7 @@ phpserialize
 pip-lock
 pip-tools
 pre-commit
-psycopg2-binary
+psycopg[binary]
 pycodestyle
 pycryptodome
 python-dotenv
