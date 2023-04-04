@@ -70,18 +70,13 @@
         document.documentElement.classList.remove('no-js');
         document.documentElement.classList.add('has-js');
 
-        {% if user.is_authenticated and user.profile.color_preference == 'auto' or not user.is_authenticated %}
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        {% endif %}
-
         {% if user.is_authenticated and request.path != patterns_url %}
             {% include 'js/menu.js' %}
             {% include 'js/htmx-fade.js' %}
         {% endif %}
+
+        {% include 'js/color-preference.js' %}
+
         {% include 'js/sw-setup.js' %}
     </script>
     {% block page_js %}{% endblock %}

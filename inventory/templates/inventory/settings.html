@@ -15,11 +15,7 @@
         {% include 'components/form-field.html' with field=field %}
     {% endfor %}
     {% for field in profile_form %}
-        {% if field.name == 'color_preference' %}
-            {% include 'components/form-field.html' with field=field class='js-required color-preference' %}
-        {% else %}
-            {% include 'components/form-field.html' with field=field %}
-        {% endif %}
+        {% include 'components/form-field.html' with field=field %}
     {% endfor %}
     <div class="field last">
         <label>Password</label>
@@ -27,7 +23,6 @@
     </div>
     <div class="action"><button class="primary">Save settings</button></div>
 </form>
-
 
 {% if exportable_data %}
 <dl id="export" class="data-import-export">
@@ -80,4 +75,19 @@
 {% block page_js %}
     <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
     {% include 'inventory/_settings-subscription-js.html' %}
+    <script>
+        const previewColorModeChange = mode => {
+           if (mode === 'light' && isDarkMode()) {
+               document.documentElement.classList.remove('dark');
+           } else if (mode === 'dark' && !isDarkMode()) {
+               document.documentElement.classList.add('dark');
+           } else {
+               setColorMode();
+           }
+        };
+
+        document.getElementById('id_color_preference').addEventListener('change', e => {
+           previewColorModeChange(e.target.value);
+        });
+    </script>
 {% endblock %}
