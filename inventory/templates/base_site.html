@@ -1,5 +1,5 @@
 {% load static tz capture_tags waffle_tags django_htmx %}{% get_current_timezone as TIME_ZONE %}<!DOCTYPE html>
-<html lang="en" class="no-js{% if user.is_authenticated %}{% if user.profile.color_preference == 'dark' %} dark{% endif %}{% endif %}">
+<html lang="en" class="no-js{% if user.profile.color_preference != 'light' %} dark{% endif %}">
 <head>
     {% url 'index' as index_url %}
     <title>{% block title %}{% endblock %}{% if request.path != index_url %} / {% endif %}Cassette Nest</title>
