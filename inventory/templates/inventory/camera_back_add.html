@@ -3,7 +3,6 @@
 {% block title %}Add a camera back for {{ camera.name }}{% endblock %}
 
 {% block content %}
-<div class="raw">
 <h1>Add a camera back for <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></h1>
 
 <form method="post">
@@ -18,5 +17,4 @@
         <button name="another">Save camera back and add another</button>
     </div>
 </form>
-</div>
 {% endblock %}

@@ -3,34 +3,32 @@
 {% block title %}Edit {{ camera.name }}{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <h1>Edit <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></h1>
+<h1>Edit <a href="{% url 'camera-detail' camera.id %}">{{ camera.name }}</a></h1>
 
-    <form method="post">
-        {% csrf_token %}
-        {% include 'components/form-field.html' with field=form.name %}
-        {% include 'components/form-field.html' with field=form.format %}
-        {% include 'components/form-field.html' with field=form.notes %}
-        {% if camera.format == '120' %}
-        {% include 'components/form-field.html' with field=form.multiple_backs %}
-        {% endif %}
-        {% if camera.status != 'loaded' %}
-        {% include 'components/form-field.html' with field=form.unavailable %}
-        {% endif %}
-        <div class="action">
-            <button class="primary">Update camera</button>
-            <a href="{% url 'camera-detail' camera.id %}">Cancel</a>
-        </div>
-    </form>
-
-    {% if not camera.roll_set.all %}
-    <form onsubmit="return confirmDelete('camera')" action="{% url 'camera-delete' camera.id %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="camera" value="{{ camera.id }}" />
-        <div class="action">Since you’ve never used this, you can <button class="destructive">delete this camera</button></div>
-    </form>
+<form method="post">
+    {% csrf_token %}
+    {% include 'components/form-field.html' with field=form.name %}
+    {% include 'components/form-field.html' with field=form.format %}
+    {% include 'components/form-field.html' with field=form.notes %}
+    {% if camera.format == '120' %}
+    {% include 'components/form-field.html' with field=form.multiple_backs %}
     {% endif %}
-</div>
+    {% if camera.status != 'loaded' %}
+    {% include 'components/form-field.html' with field=form.unavailable %}
+    {% endif %}
+    <div class="action">
+        <button class="primary">Update camera</button>
+        <a href="{% url 'camera-detail' camera.id %}">Cancel</a>
+    </div>
+</form>
+
+{% if not camera.roll_set.all %}
+<form onsubmit="return confirmDelete('camera')" action="{% url 'camera-delete' camera.id %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="camera" value="{{ camera.id }}" />
+    <div class="action">Since you’ve never used this, you can <button class="destructive">delete this camera</button></div>
+</form>
+{% endif %}
 {% endblock %}
 
 {% block page_js %}

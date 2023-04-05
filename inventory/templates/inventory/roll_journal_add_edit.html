@@ -3,29 +3,27 @@
 {% block title %}{{ action }} journal entry for {{ roll }}{% endblock %}
 
 {% block content %}
-<div class="raw">
-    <h1>{{ action }} journal entry for {{ roll }}</h1>
+<h1>{{ action }} journal entry for {{ roll }}</h1>
 
-    <form method="post">
-        {% csrf_token %}
-        {% comment %}
-        <div>
-            <label for="checkbox-done">Done?</label>
-            <input id="checkbox-done" type="checkbox" />
-        </div>
-        {% endcomment %}
-        {% include 'components/form-field.html' with field=form.date %}
-        {% include 'components/form-field.html' with field=form.frame %}
-        {% include 'components/form-field.html' with field=form.notes %}
+<form method="post">
+    {% csrf_token %}
+    {% comment %}
+    <div>
+        <label for="checkbox-done">Done?</label>
+        <input id="checkbox-done" type="checkbox" />
+    </div>
+    {% endcomment %}
+    {% include 'components/form-field.html' with field=form.date %}
+    {% include 'components/form-field.html' with field=form.frame %}
+    {% include 'components/form-field.html' with field=form.notes %}
 
-        <div class="action">
-            <button class="primary">Save</button>
-            {% if action == 'Edit' %}
-            <a href="{% url 'roll-journal-detail' roll.id entry.id %}">Cancel</a>
-            {% endif %}
-        </div>
-    </form>
-</div>
+    <div class="action">
+        <button class="primary">Save</button>
+        {% if action == 'Edit' %}
+        <a href="{% url 'roll-journal-detail' roll.id entry.id %}">Cancel</a>
+        {% endif %}
+    </div>
+</form>
 {% endblock %}
 
 {% block page_js %}
