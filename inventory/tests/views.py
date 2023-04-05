@@ -1596,19 +1596,6 @@ class ProjectTests(TestCase):
             password=self.password,
         )
 
-    def test_empty_projects_page(self):
-        response = self.client.get(reverse("projects"))
-        project_add_url = reverse("project-add")
-        self.assertContains(
-            response, f'<a href="{project_add_url}">Add a project</a>', html=True
-        )
-        self.assertIsNotNone(response.context["projects"])
-
-    def test_projects_page(self):
-        baker.make(Project, owner=self.user)
-        response = self.client.get(reverse("projects"))
-        self.assertIsNotNone(response.context["projects"])
-
     def test_project_add_get(self):
         response = self.client.get(reverse("project-add"))
         self.assertEqual(response.status_code, 200)
@@ -1916,10 +1903,6 @@ class CameraViewTests(TestCase):
             username=self.username,
             password=self.password,
         )
-
-    def test_cameras_page(self):
-        response = self.client.get(reverse("cameras"))
-        self.assertEqual(response.status_code, 200)
 
     def test_camera_add_get(self):
         response = self.client.get(reverse("camera-add"))

@@ -1226,7 +1226,7 @@ def project_delete(request, pk):
         )
     else:
         messages.success(request, "Project deleted.")
-    return redirect(reverse("projects"))
+    return redirect(reverse("index"))
 
 
 @login_required
