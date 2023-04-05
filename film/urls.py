@@ -90,7 +90,7 @@ urlpatterns = [
         name="roll-frame-delete",
     ),
     # Projects
-    path("projects/", views.projects, name="projects"),
+    path("projects/", RedirectView.as_view(pattern_name="index")),
     path("project/add/", views.project_add, name="project-add"),
     path("project/<int:pk>/edit/", views.project_edit, name="project-edit"),
     path("project/<int:pk>/delete/", views.project_delete, name="project-delete"),
@@ -117,7 +117,7 @@ urlpatterns = [
     path("film/<slug:stock>/<slug:format>/", views.film_rolls, name="film-rolls"),
     path("film/<slug:slug>/", views.film_rolls, name="film-slug-redirect"),
     # Cameras and Backs
-    path("cameras/", views.cameras, name="cameras"),
+    path("cameras/", RedirectView.as_view(pattern_name="index")),
     path("camera/add/", views.camera_add, name="camera-add"),
     path("camera/<int:pk>/back/add/", views.camera_back_add, name="camera-back-add"),
     path("camera/<int:pk>/", views.camera_or_back_detail, name="camera-detail"),

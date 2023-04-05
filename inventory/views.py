@@ -1129,20 +1129,6 @@ def rolls_update(request):
     return redirect(reverse("logbook") + "?status=%s" % updated_status)
 
 
-@login_required
-def projects(request):
-    owner = request.user
-    projects = Project.objects.filter(owner=owner).order_by(
-        "-status",
-        "-updated_at",
-    )
-    context = {
-        "projects": projects,
-    }
-
-    return render(request, "inventory/projects.html", context)
-
-
 @user_account_active
 @login_required
 def project_add(request):
@@ -2328,20 +2314,6 @@ def roll_frame_delete(request, roll_pk, number):
 
     messages.success(request, f"{name} successfully deleted.")
     return redirect(reverse("roll-detail", args=(roll_pk,)))
-
-
-@login_required
-def cameras(request):
-    owner = request.user
-    cameras = Camera.objects.filter(owner=owner).order_by(
-        "-status",
-        "-updated_at",
-    )
-    context = {
-        "cameras": cameras,
-    }
-
-    return render(request, "inventory/cameras.html", context)
 
 
 @user_account_active
