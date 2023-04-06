@@ -354,6 +354,9 @@ class CameraBack(models.Model):
     def __str__(self):
         return "%s, Back “%s”" % (self.camera, self.name)
 
+    def get_absolute_url(self):
+        return reverse("camera-back-detail", args=(self.camera.id, self.id))
+
 
 class Project(models.Model):
     """
