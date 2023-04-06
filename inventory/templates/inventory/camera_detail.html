@@ -5,7 +5,6 @@
 
 {% block header %}
 <div class="page-heading">
-    {# include 'inventory/_heading-back.html' with url='cameras' name='cameras' #}
     <div class="inner">
         <h1>{{ camera.name }}</h1>
     </div>
@@ -22,7 +21,7 @@
         {% include 'inventory/_heading-buttons.html' with item=camera url='camera' name='camera' prevent_delete=True additional_buttons=additional_buttons %}
     {% endif %}
 </div>
-{% endblock %}
+{% endblock header %}
 
 {% block content %}
 <dl class="stats">
@@ -83,4 +82,4 @@
         {% include 'components/logbook-table.html' with rolls=rolls_history %}
     {% endif %}
 {% endif %}
-{% endblock %}
+{% endblock content %}
