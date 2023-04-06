@@ -63,6 +63,10 @@
             {% include 'inventory/_project-add-rolls.html' %}
         {% endif %}
 
+        {% if film_available_count and cameras_to_add %}
+            <hr class="invisible sm:visible sm:border-stone-300 sm:dark:border-stone-600 mt-6">
+        {% endif %}
+
         {% if cameras_to_add %}
             {% include 'inventory/_project-add-camera.html' %}
         {% endif %}

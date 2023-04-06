@@ -2,15 +2,16 @@
     {% csrf_token %}
     <input type="hidden" name="action" value="add">
 
-    <div class="field space-y-2">
-        <label for="id_camera">Add a camera to this project</label>
-        <select id="id_camera" name="camera" required>
-            <option value="">Choose a camera</option>
-        {% for camera in cameras_to_add %}
-            <option value="{{ camera.id }}">{{ camera.name }}</option>
-        {% endfor %}
-        </select>
+    <div class="field space-y-2 last">
+        <fieldset class="col-span-3">
+            <legend>Add a camera to this project</legend>
+            <select id="id_camera" name="camera" required>
+                <option value="">Choose a camera</option>
+            {% for camera in cameras_to_add %}
+                <option value="{{ camera.id }}">{{ camera.name }}</option>
+            {% endfor %}
+            </select>
+        </fieldset>
     </div>
-
-    <div><button>Add to project</button></div>
+    <div><button>Add camera</button></div>
 </form>
