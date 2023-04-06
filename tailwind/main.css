@@ -822,6 +822,7 @@
         dark:enabled:bg-stone-600
         dark:enabled:hover:bg-stone-700
         dark:enabled:focus:bg-stone-700
+        dark:disabled:bg-transparent
         enabled:border-transparent
         hover:enabled:border-transparent
         hover:disabled:bg-transparent
@@ -830,6 +831,8 @@
         text-3xl
         md:text-xl
         md:border-2;
+
+      &.hidden { display: none; }
 
       &.left {
         border-right-style: solid;
