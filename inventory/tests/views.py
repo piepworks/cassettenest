@@ -1036,7 +1036,7 @@ class RollsAddTests(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
 
         self.assertEqual(response.status_code, 302)
-        self.assertIn("Enter a valid quantity.", messages)
+        self.assertIn("Enter a valid quantity of 1 or more", messages)
 
     def test_adding_rolls_less_than_1(self):
         response = self.client.post(
@@ -1049,7 +1049,7 @@ class RollsAddTests(TestCase):
         messages = [m.message for m in get_messages(response.wsgi_request)]
 
         self.assertEqual(response.status_code, 302)
-        self.assertIn("Enter a quantity of 1 or more.", messages)
+        self.assertIn("Enter a valid quantity of 1 or more", messages)
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)

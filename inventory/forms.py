@@ -98,6 +98,17 @@ class RollForm(ModelForm):
         }
 
 
+class RollsAddForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(RollsAddForm, self).__init__(*args, **kwargs)
+
+    quantity = forms.IntegerField(initial=1, min_value=1)
+
+    class Meta:
+        model = Roll
+        fields = ["film", "notes", "quantity"]
+
+
 class StockForm(ModelForm):
     def __init__(self, *args, **kwargs):
         self.user = kwargs.pop("user")

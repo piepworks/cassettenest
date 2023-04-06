@@ -41,6 +41,7 @@ from .forms import (
     ReadyForm,
     RegisterForm,
     RollForm,
+    RollsAddForm,
     StepperForm,
     StockForm,
     UserForm,
@@ -1513,19 +1514,22 @@ def project_camera_update(request, pk):
 @user_account_active
 @login_required
 def rolls_add(request):
-    owner = request.user
+    # Exclude films that are flagged as `personal` and not created by the current user.
+    films_queryset = (
+        Film.objects.all()
+        .exclude(Q(personal=True) & ~Q(added_by=request.user))
+        .order_by("stock")
+    )
 
     if request.method == "POST":
-        film = get_object_or_404(Film, id=request.POST.get("film", ""))
+        form = RollsAddForm(request.POST)
 
-        try:
-            quantity = int(request.POST.get("quantity", ""))
-        except ValueError:
-            messages.error(request, "Enter a valid quantity.")
-            return redirect(reverse("index"))
+        if form.is_valid():
+            film = get_object_or_404(films_queryset, id=request.POST.get("film", ""))
+            notes = form.cleaned_data["notes"]
+            quantity = form.cleaned_data["quantity"]
 
-        if quantity > 0:
-            roll = Roll.objects.create(owner=owner, film=film)
+            roll = Roll.objects.create(owner=request.user, film=film, notes=notes)
 
             # The first roll has already been created, this creates the rest.
             for x in range(1, quantity):
@@ -1540,21 +1544,13 @@ def rolls_add(request):
                 f"Added {quantity} {roll_plural} of {film}!",
             )
         else:
-            messages.error(request, "Enter a quantity of 1 or more.")
+            messages.error(request, "Enter a valid quantity of 1 or more")
 
         return redirect(reverse("inventory"))
-
     else:
-        # Exclude films that are flagged as `personal` and not created by the current user.
-        films = (
-            Film.objects.all()
-            .exclude(Q(personal=True) & ~Q(added_by=owner))
-            .order_by("stock")
-        )
         context = {
-            "films": films,
-            "stepper_form": StepperForm,
-            "js_needed": True,
+            "films": films_queryset,
+            "form": RollsAddForm,
         }
 
         return render(request, "inventory/rolls_add.html", context)
