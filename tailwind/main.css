@@ -220,7 +220,8 @@
         dark:disabled:text-stone-500
         disabled:border-stone-400
         dark:disabled:border-stone-500
-        disabled:border-dashed;
+        disabled:border-dashed
+        dark:disabled:bg-transparent;
 
       &,
       &:hover { @apply no-underline; }
