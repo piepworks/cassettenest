@@ -52,18 +52,18 @@
 
 <div class="metadata">
     <div>
-        <dl>
-            <div>
+        <div class="dl">
+            <dl>
                 <dt>Format</dt>
                 <dd>{{ camera.get_format_display }}</dd>
-            </div>
+            </dl>
             {% if camera.notes %}
-            <div>
+            <dl>
                 <dt>Notes</dt>
                 <dd>{{ camera.notes|markdown }}</dd>
-            </div>
+            </dl>
             {% endif %}
-        </dl>
+        </div>
     </div>
 </div>
 

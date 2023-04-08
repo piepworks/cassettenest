@@ -18,12 +18,12 @@
 {% block content %}
 <div class="metadata">
     <div>
-        <dl>
-            <div>
+        <div class="dl">
+            <dl>
                 <dt>Date</dt>
                 <dd>{{ entry.date|date:'l, F j, Y' }}</dd>
-            </div>
-            <div>
+            </dl>
+            <dl>
                 <dt>Frame{% if entry.starting_frame != entry.frame %}s{% endif %}</dt>
                 <dd>
                     {% if entry.starting_frame and entry.starting_frame != entry.frame %}
@@ -31,14 +31,14 @@
                     {% endif %}
                     {{ entry.frame }}
                 </dd>
-            </div>
+            </dl>
             {% if entry.notes %}
-            <div>
+            <dl>
                 <dt>Notes</dt>
                 <dd>{{ entry.notes|markdown }}</dd>
-            </div>
+            </dl>
             {% endif %}
-        </dl>
+        </div>
     </div>
 </div>
 {% endblock %}

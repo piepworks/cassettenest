@@ -45,7 +45,7 @@
             <div class="mt-2 md:mt-0 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">{{ field.help_text }}</div>
         {% endif %}
     {% else %}
-        <label class="mb-2 sm:mb-0 block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} _="on load set my innerHTML to '{{ label_override }}'"{% endif %}">{{ field.label }}</label>
+        <label class="mb-2 sm:mb-0 block text-sm font-medium" for="{{ field.id_for_label }}"{% if label_override %} _="on load set my innerHTML to '{{ label_override }}'"{% endif %}>{{ field.label }}</label>
         {% capture as xref silent %}{{ primary|yesno:'primary,secondary' }}{% endcapture %}
 
         {% capture as textarea_hyperscript silent %}

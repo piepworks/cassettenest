@@ -16,35 +16,35 @@
 {% endblock %}
 
 {% block content %}
-<dl class="stats">
+<div class="stats">
     {% if roll_logbook %}
-    <div>
+    <dl>
         <dt>Roll{{ roll_logbook.count|pluralize}} Used</dt>
         <dd>{{ roll_logbook.count }}</dd>
-    </div>
+    </dl>
     {% endif %}
     {% if film_counts %}
-    <div>
+    <dl>
         <dt>Roll{{ total_rolls|pluralize }} Remaining</dt>
         <dd>{{ total_rolls }}</dd>
-    </div>
+    </dl>
     {% endif %}
-</dl>
+</div>
 
 <div class="metadata">
     <div>
-        <dl>
-            <div>
+        <div class="dl">
+            <dl>
                 <dt>Status</dt>
                 <dd>{{ project.get_status_display }}</dd>
-            </div>
+            </dl>
             {% if project.notes %}
-            <div>
+            <dl>
                 <dt>Notes</dt>
                 <dd>{{ project.notes|markdown }}</dd>
-            </div>
+            </dl>
             {% endif %}
-        </dl>
+        </div>
     </div>
 </div>
 

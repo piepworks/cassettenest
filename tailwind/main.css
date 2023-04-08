@@ -512,13 +512,13 @@
         border-stone-200
         dark:border-stone-600;
 
-      dl {
+      .dl {
         @apply
           sm:divide-y
           sm:divide-stone-200
           sm:dark:divide-stone-600;
 
-        > div {
+        dl {
           @apply
             py-4
             sm:py-5

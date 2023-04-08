@@ -43,30 +43,30 @@
 
 <div class="metadata">
     <div>
-        <dl>
-            <div>
+        <div class="dl">
+            <dl>
                 <dt>Date</dt>
                 <dd>{{ frame.date }}</dd>
-            </div>
+            </dl>
             {% if frame.aperture %}
-            <div>
+            <dl>
                 <dt>Aperture</dt>
                 <dd><span class="subdued">ƒ/</span> {{ frame.aperture }}</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if frame.shutter_speed %}
-            <div>
+            <dl>
                 <dt>Shutter speed</dt>
                 <dd>{{ frame.shutter_speed }} <span class="subdued" title="second(s)">s</span></dd>
-            </div>
+            </dl>
             {% endif %}
             {% if frame.notes %}
-            <div>
+            <dl>
                 <dt>Notes</dt>
                 <dd>{{ frame.notes|markdown }}</dd>
-            </div>
+            </dl>
             {% endif %}
-        </dl>
+        </div>
     </div>
 </div>
 {% endblock %}

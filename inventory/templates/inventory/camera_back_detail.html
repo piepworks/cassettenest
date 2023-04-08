@@ -24,14 +24,14 @@
 {% endblock header %}
 
 {% block content %}
-<dl class="stats">
+<div class="stats">
     <div class="flex justify-between">
-        <div>
+        <dl>
             <dt>Status</dt>
-            <dd class="flex">
+            <dd>
                 {{ camera_back.get_status_display }}
             </dd>
-        </div>
+        </dl>
         {% if camera_back.status == 'loaded' %}
             <a href="{% url 'roll-detail' roll.id %}" class="py-1 no-underline hover:no-underline folded hover:unfolded md:unfolded md:hover:folded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-stone-600 focus:ring-blue-500 rounded">
                 {% include 'components/reminder.html' with item=roll %}
@@ -40,28 +40,30 @@
     </div>
     {% if rolls_history %}
     <div>
-        <dt>Roll{{ rolls_history.count|pluralize }} finished</dt>
-        <dd>{{ rolls_history.count }}</dd>
+        <dl>
+            <dt>Roll{{ rolls_history.count|pluralize }} finished</dt>
+            <dd>{{ rolls_history.count }}</dd>
+        </dl>
     </div>
     {% endif %}
-</dl>
+</div>
 
 <div class="metadata">
     <div>
-        <dl>
+        <div class="dl">
             {% if camera_back.get_format_display %}
-            <div>
+            <dl>
                 <dt>Format</dt>
                 <dd>{{ camera_back.get_format_display }}</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if camera_back.notes %}
-            <div>
+            <dl>
                 <dt>Notes</dt>
                 <dd>{{ camera_back.notes|markdown }}</dd>
-            </div>
+            </dl>
             {% endif %}
-        </dl>
+        </div>
     </div>
 </div>
 

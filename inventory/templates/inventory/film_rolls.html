@@ -10,12 +10,14 @@
 {% capture as film_description silent %}{% if film.stock %}{{ film.stock.description }}{% else %}{{ film.description }}{% endif %}{% endcapture %}
 {% if film.stock %}{% url 'film-rolls' film.stock.slug film.format as film_url %}{% else %}{% url 'film-slug-redirect' film.slug as film_url %}{% endif %}
 
-<dl class="stats">
+<div class="stats">
     <div>
-        <dt>ISO</dt>
-        <dd>{{ film_iso }}</dd>
+        <dl>
+            <dt>ISO</dt>
+            <dd>{{ film_iso }}</dd>
+        </dl>
     </div>
-</dl>
+</div>
 
 {% if film_description %}
     <div>{{ film_description|markdown }}</div>

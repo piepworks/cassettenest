@@ -1,17 +1,11 @@
 {% extends 'base_site.html' %}
-{% load markdown_extras capture_tags %}
+{% load markdown_extras %}
 
 {% block title %}{{ roll }}{% endblock %}
 
 {% block bodytag %}class="roll-detail"{% endblock %}
 
-{% block content %}
-
-{% if roll.film.stock %}
-    {% capture as film_url silent %}{% url 'film-rolls' roll.film.stock.slug roll.film.format %}{% endcapture %}
-{% else %}
-    {% capture as film_url silent %}{% url 'film-slug-redirect' roll.film.slug %}{% endcapture %}
-{% endif %}
+{% block header %}
 <div class="page-heading">
     <div class="inner">
         {% if roll.code %}
@@ -29,75 +23,86 @@
         {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
     {% endif %}
 </div>
+{% endblock header %}
 
-<dl class="stats">
+{% block content %}
+{% if roll.film.stock %}
+    {% url 'film-rolls' roll.film.stock.slug roll.film.format as film_url %}
+{% else %}
+    {% url 'film-slug-redirect' roll.film.slug as film_url %}
+{% endif %}
+<div class="stats">
     <div>
-        <dt>Film stock</dt>
-        <dd>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{% if not roll.film.stock %}{{ roll.film.name }}{% else %}{{ roll.film }}{% endif %}</a></dd>
+        <dl>
+            <dt>Film stock</dt>
+            <dd>{% if not roll.film.stock %}{{ roll.film.manufacturer }} {% endif %}<a href="{{ film_url }}">{% if not roll.film.stock %}{{ roll.film.name }}{% else %}{{ roll.film }}{% endif %}</a></dd>
+        </dl>
     </div>
     <div>
-        <dt>Status</dt>
-        <dd><a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></dd>
+        <dl>
+            <dt>Status</dt>
+            <dd><a href="{% url 'logbook' %}?status={{ roll.status|slice:'3:' }}">{{ roll.get_status_display }}</a></dd>
+        </dl>
     </div>
-</dl>
+</div>
 
 <div class="metadata">
     <div>
-        <dl>
+        <div class="dl">
             {% if roll.started_on %}
-            <div>
+            <dl>
                 <dt>Started</dt>
                 <dd>{{ roll.started_on }}</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.ended_on %}
-            <div>
+            <dl>
                 <dt>Finished</dt>
                 <dd>{{ roll.ended_on }}</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.camera_back %}
-            <div>
+            <dl>
                 <dt>Camera</dt>
                 <dd><a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a>, <a href="{% url 'camera-back-detail' roll.camera.id roll.camera_back.id %}">Back “{{ roll.camera_back.name }}”</a></dd>
-            </div>
+            </dl>
             {% elif roll.camera %}
-            <div>
+            <dl>
                 <dt>Camera</dt>
                 <dd><a href="{% url 'camera-detail' roll.camera.id %}">{{ roll.camera.name }}</a></dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.lens %}
-            <div>
+            <dl>
                 <dt>Lens(es)</dt>
                 <dd>{{roll.lens}}</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.project %}
-            <div>
+            <dl>
                 <dt>Project</dt>
                 <dd><a href="{% url 'project-detail' roll.project.id %}">{{ roll.project }}</a></dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.push_pull %}
-            <div>
+            <dl>
                 <dt>Push/Pull</dt>
                 <dd>{{ roll.get_push_pull_display }} (effective ISO {{ roll.effective_iso }})</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.location %}
-            <div>
+            <dl>
                 <dt>Location(s)</dt>
                 <dd>{{ roll.location }}</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.notes %}
-            <div>
+            <dl>
                 <dt>Notes</dt>
                 <dd>{{ roll.notes|markdown }}</dd>
-            </div>
+            </dl>
             {% endif %}
-        </dl>
+        </div>
     </div>
 </div>
 
