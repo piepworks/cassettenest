@@ -1551,6 +1551,7 @@ def rolls_add(request):
         context = {
             "films": films_queryset,
             "form": RollsAddForm,
+            "wc_needed": True,
         }
 
         return render(request, "inventory/rolls_add.html", context)
