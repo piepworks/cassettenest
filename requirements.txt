@@ -49,7 +49,7 @@ django==4.2
     #   model-bakery
 django-bleach==3.0.1
     # via -r requirements.in
-django-browser-reload==1.7.0
+django-browser-reload==1.8.0
     # via -r requirements.in
 django-capture-tag==1.0
     # via -r requirements.in
@@ -93,7 +93,7 @@ mypy-extensions==1.0.0
     # via black
 nodeenv==1.7.0
     # via pre-commit
-packaging==23.0
+packaging==23.1
     # via
     #   black
     #   build
@@ -136,7 +136,7 @@ pycryptodome==3.17
     # via -r requirements.in
 pyflakes==3.0.1
     # via flake8
-pygments==2.14.0
+pygments==2.15.0
     # via ipython
 pyproject-hooks==1.0.0
     # via build
