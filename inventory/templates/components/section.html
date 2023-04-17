@@ -34,7 +34,7 @@
                         method="get"
                         hx-get="?{{ items.slug }}={{ forloop.counter0 }}{% if pagination_querystring %}&{{ pagination_querystring }}{% endif %}"
                         action="{% if page == 'index' %}.#section_{{ items.slug }}{% endif %}"
-                        hx-trigger="change"
+                        hx-trigger="change delay:400ms"
                         hx-target="{{ items.target }}"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                         hx-indicator=".htmx-indicator"
