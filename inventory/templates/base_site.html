@@ -77,7 +77,9 @@
 
         {% include 'js/color-preference.js' %}
 
-        {% include 'js/sw-setup.js' %}
+        {% if not debug %}
+            {% include 'js/sw-setup.js' %}
+        {% endif %}
     </script>
     {% block page_js %}{% endblock %}
 </body>
