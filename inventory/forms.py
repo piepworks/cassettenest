@@ -327,7 +327,11 @@ class CameraOrBackLoadForm(ModelForm):
         self.fields["film"] = GroupedFilmChoiceField(
             queryset=self.film_counts.exclude(stock=None)
         )
+        self.fields["push_pull"].initial = 0
 
     class Meta:
         model = Roll
         fields = ["film", "push_pull"]
+        widgets = {
+            "push_pull": widgets.NumberInput(attrs={"min": "-2", "max": 3}),
+        }
