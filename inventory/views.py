@@ -1909,7 +1909,10 @@ def roll_edit(request, pk):
 
             return redirect(reverse("roll-detail", args=(roll.id,)))
     else:
-        form = RollForm(instance=roll)
+        # Adjust raw value of push_pull to be friendly with [type=number] field.
+        adjusted_push_pull = "0" if roll.push_pull == "" else roll.push_pull
+
+        form = RollForm(instance=roll, initial={"push_pull": adjusted_push_pull})
         form.fields["project"].queryset = Project.objects.filter(owner=owner)
         form.fields["camera"].queryset = Camera.objects.filter(owner=owner)
         form.fields["camera_back"].queryset = CameraBack.objects.filter(
@@ -1923,7 +1926,6 @@ def roll_edit(request, pk):
             "owner": owner,
             "roll": roll,
             "form": form,
-            "js_needed": True,
             "wc_needed": True,
         }
 

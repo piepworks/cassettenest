@@ -93,6 +93,7 @@ class RollForm(ModelForm):
         widgets = {
             "started_on": widgets.DateInput(attrs={"type": "date"}),
             "ended_on": widgets.DateInput(attrs={"type": "date"}),
+            "push_pull": widgets.NumberInput(attrs={"min": "-2", "max": 3}),
         }
 
 

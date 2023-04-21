@@ -459,6 +459,7 @@ class Roll(models.Model):
         choices=PUSH_PULL_CHOICES,
         blank=True,
         verbose_name="Push/Pull",
+        help_text="Push (postive) or pull (negative) by this many stops",
     )
     location = models.CharField(
         max_length=255,
@@ -512,6 +513,12 @@ class Roll(models.Model):
             }[self.push_pull]
 
     def save(self, *args, **kwargs):
+        # Adjust push_pull to translate from the [type=number] field to the proper
+        # PUSH_PULL_CHOICES options.
+        self.push_pull = str(self.push_pull)
+        if self.push_pull == "0":
+            self.push_pull = ""
+
         # If the started_on field has been populated and the `code` field has
         # not, populate the code field:
         #
