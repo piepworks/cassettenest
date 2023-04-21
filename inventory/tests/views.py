@@ -2145,6 +2145,7 @@ class RollViewTests(TestCase):
     def test_roll_edit_get(self):
         roll = baker.make(Roll, owner=self.user)
         response = self.client.get(reverse("roll-edit", args=(roll.id,)))
+        self.assertEqual(response.context["form"].initial["push_pull"], "0")
         self.assertEqual(response.status_code, 200)
 
     def test_roll_edit_post(self):
