@@ -53,7 +53,7 @@
     {% endcapture %}
 
     {# If both fields don't have a "max", Safari renders them as different sizes. So make it 100 if it’s not set. #}
-    {% capture as max silent %}max:{% if field.field.max_value %}{{ field.field.max_value }}{% else %}100{% endif%}{% endcapture %}
+    {% capture as max silent %}max:{% if field.field.max_value %}{{ field.field.max_value }}{% elif field.field.widget.attrs.max %}{{ field.field.widget.attrs.max }}{% else %}100{% endif%}{% endcapture %}
 
     {{ field|attr:max|attr:input_hyperscript }}
 

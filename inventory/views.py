@@ -47,6 +47,7 @@ from .forms import (
     UserForm,
     UploadCSVForm,
     FrameForm,
+    CameraOrBackLoadForm,
 )
 from .utils import (
     development_statuses,
@@ -1908,7 +1909,10 @@ def roll_edit(request, pk):
 
             return redirect(reverse("roll-detail", args=(roll.id,)))
     else:
-        form = RollForm(instance=roll)
+        # Adjust raw value of push_pull to be friendly with [type=number] field.
+        adjusted_push_pull = "0" if roll.push_pull == "" else roll.push_pull
+
+        form = RollForm(instance=roll, initial={"push_pull": adjusted_push_pull})
         form.fields["project"].queryset = Project.objects.filter(owner=owner)
         form.fields["camera"].queryset = Camera.objects.filter(owner=owner)
         form.fields["camera_back"].queryset = CameraBack.objects.filter(
@@ -1922,7 +1926,6 @@ def roll_edit(request, pk):
             "owner": owner,
             "roll": roll,
             "form": form,
-            "js_needed": True,
             "wc_needed": True,
         }
 
@@ -2407,15 +2410,17 @@ def camera_or_back_load(request, pk, back_pk=None):
             if camera_or_back.format:
                 film_counts = film_counts.filter(format=camera_or_back.format)
 
+        form = CameraOrBackLoadForm(film_counts=film_counts)
+
         context = {
             "owner": owner,
+            "form": form,
             "camera": camera,
             "camera_back": camera_back,
             "camera_or_back": camera_or_back,
             "current_project": current_project,
             "projects": projects,
-            "film_counts": film_counts,
-            "js_needed": True,
+            "film_counts": film_counts.exists(),
         }
 
         return render(request, "inventory/camera_or_back_load.html", context)

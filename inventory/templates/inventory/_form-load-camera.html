@@ -7,38 +7,9 @@
     {% csrf_token %}
     <input type="hidden" name="project" value="{{ current_project.id }}" />
 
-    {# Note: this no longer works with film types, only via film.stock. #}
-    {% regroup film_counts by stock.get_type_display as film_list %}
-    <div class="field">
-        <label for="id_film">Select a film</label>
-        <select id="id_film" name="film" required>
-            <option value="">---------</option>
-            {% for type in film_list %}
-                {# TODO: remove this if statement. #}
-                {% if type.grouper != None %}
-                <optgroup label="{{ type.grouper }}">
-                    {% for film in type.list %}
-                    <option value="{{ film.id }}">
-                        {{ film }}
-                        ({{ film.count }})
-                    </option>
-                    {% endfor %}
-                </optgroup>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </div>
-    <div class="field">
-        <label for="id_push_pull">Push/Pull</label>
-        <select id="id_push_pull" name="push_pull">
-            <option value="">---------</option>
-            <option value="-2">Pull 2 stops</option>
-            <option value="-1">Pull 1 stop</option>
-            <option value="+1">Push 1 stop</option>
-            <option value="+2">Push 2 stops</option>
-            <option value="+3">Push 3 stops</option>
-        </select>
-    </div>
+    {% for field in form %}
+        {% include 'components/form-field.html' with field=field %}
+    {% endfor %}
 
     <div class="action"><button class="primary">Load camera</button></div>
 </form>

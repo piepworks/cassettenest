@@ -1,5 +1,8 @@
+from functools import partial
+from itertools import groupby
 from django import forms
 from django.forms import ModelForm, ModelChoiceField, widgets
+from django.forms.models import ModelChoiceIterator
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.db.models import Q
@@ -38,11 +41,6 @@ class RegisterForm(UniqueEmailForm, UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "password1", "password2")
-
-
-class CameraChoiceField(ModelChoiceField):
-    def label_from_instance(self, obj):
-        return obj.name
 
 
 class CameraForm(ModelForm):
@@ -95,6 +93,7 @@ class RollForm(ModelForm):
         widgets = {
             "started_on": widgets.DateInput(attrs={"type": "date"}),
             "ended_on": widgets.DateInput(attrs={"type": "date"}),
+            "push_pull": widgets.NumberInput(attrs={"min": "-2", "max": 3}),
         }
 
 
@@ -299,3 +298,44 @@ class FilmForm(ModelForm):
 
 class StepperForm(forms.Form):
     quantity = forms.IntegerField(initial=1, min_value=1)
+
+
+class GroupedFilmChoiceIterator(ModelChoiceIterator):
+    def __iter__(self):
+        if self.field.empty_label is not None:
+            yield ("", self.field.empty_label)
+        queryset = self.queryset
+        # Can't use iterator() when queryset uses prefetch_related()
+        if not queryset._prefetch_related_lookups:
+            queryset = queryset.iterator()
+
+        type_choices = dict(Stock._meta.get_field("type").flatchoices)
+
+        for group, objs in groupby(queryset, lambda film: film.stock.type):
+            yield (
+                type_choices[group],
+                [self.choice(f"{obj} ({obj.count})") for obj in objs],
+            )
+
+
+class GroupedFilmChoiceField(ModelChoiceField):
+    def __init__(self, *args, **kwargs):
+        self.iterator = partial(GroupedFilmChoiceIterator)
+        super().__init__(*args, **kwargs)
+
+
+class CameraOrBackLoadForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.film_counts = kwargs.pop("film_counts")
+        super(CameraOrBackLoadForm, self).__init__(*args, **kwargs)
+        self.fields["film"] = GroupedFilmChoiceField(
+            queryset=self.film_counts.exclude(stock=None)
+        )
+        self.fields["push_pull"].initial = 0
+
+    class Meta:
+        model = Roll
+        fields = ["film", "push_pull"]
+        widgets = {
+            "push_pull": widgets.NumberInput(attrs={"min": "-2", "max": 3}),
+        }

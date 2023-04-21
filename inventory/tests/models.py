@@ -358,6 +358,13 @@ class RollTests(TestCase):
 
         self.assertEqual(camera_back.status, "empty")
 
+    def test_push_pull_zero(self):
+        roll = baker.make(Roll)
+        roll.push_pull = "0"
+        roll.save()
+
+        self.assertEqual(roll.push_pull, "")
+
 
 class CameraTests(TestCase):
     @classmethod
