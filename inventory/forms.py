@@ -312,7 +312,10 @@ class GroupedFilmChoiceIterator(ModelChoiceIterator):
         type_choices = dict(Stock._meta.get_field("type").flatchoices)
 
         for group, objs in groupby(queryset, lambda film: film.stock.type):
-            yield (type_choices[group], [self.choice(obj) for obj in objs])
+            yield (
+                type_choices[group],
+                [self.choice(f"{obj} ({obj.count})") for obj in objs],
+            )
 
 
 class GroupedFilmChoiceField(ModelChoiceField):
