@@ -2028,6 +2028,102 @@ class CameraViewTests(TestCase):
         self.assertEqual(response2.status_code, 200)
         self.assertTemplateUsed(response2, "components/section.html")
 
+    def test_camera_load_get(self):
+        c41 = baker.make(Film, stock=baker.make(Stock, type="c41"))
+        bw = baker.make(Film, stock=baker.make(Stock, type="bw"))
+        e6 = baker.make(Film, stock=baker.make(Stock, type="e6"))
+
+        baker.make(Roll, owner=self.user, film=c41)
+        baker.make(Roll, owner=self.user, film=c41)
+        baker.make(Roll, owner=self.user, film=bw)
+        baker.make(Roll, owner=self.user, film=e6)
+
+        camera = baker.make(Camera, owner=self.user)
+        response = self.client.get(reverse("camera-load", args=(camera.id,)))
+        self.assertEqual(response.status_code, 200)
+
+    def test_camera_load_project_get(self):
+        baker.make(Roll, owner=self.user)
+
+        camera = baker.make(Camera, owner=self.user)
+        project = baker.make(Project, owner=self.user)
+        response = self.client.get(
+            reverse("camera-load", args=(camera.id,)) + f"?project={project.id}"
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_camera_back_load_get(self):
+        c41 = baker.make(Film, stock=baker.make(Stock, type="c41"))
+        bw = baker.make(Film, stock=baker.make(Stock, type="bw"))
+        e6 = baker.make(Film, stock=baker.make(Stock, type="e6"))
+
+        baker.make(Roll, owner=self.user, film=c41)
+        baker.make(Roll, owner=self.user, film=c41)
+        baker.make(Roll, owner=self.user, film=bw)
+        baker.make(Roll, owner=self.user, film=e6)
+
+        camera = baker.make(Camera, owner=self.user)
+        back = baker.make(CameraBack, camera=camera)
+        response = self.client.get(
+            reverse(
+                "camera-back-load",
+                args=(
+                    camera.id,
+                    back.id,
+                ),
+            )
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_camera_load_post(self):
+        film = baker.make(Film, stock=baker.make(Stock))
+        project = baker.make(Project, owner=self.user)
+        baker.make(Roll, film=film, project=project, owner=self.user)
+        camera = baker.make(Camera, owner=self.user)
+
+        response = self.client.post(
+            reverse("camera-load", args=(camera.id,)),
+            data={
+                "film": film.id,
+                "project": project.id,
+            },
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(
+            response, expected_url=reverse("project-detail", args=(project.id,))
+        )
+        self.assertIn(
+            f"{camera} loaded with {film.stock} in {film.get_format_display()}",
+            messages[0],
+        )
+
+    def test_camera_back_load_post(self):
+        film = baker.make(Film, stock=baker.make(Stock))
+        roll = baker.make(Roll, film=film, owner=self.user)
+        camera = baker.make(Camera, owner=self.user)
+        back = baker.make(CameraBack, camera=camera)
+
+        response = self.client.post(
+            reverse(
+                "camera-back-load",
+                args=(
+                    camera.id,
+                    back.id,
+                ),
+            ),
+            data={"film": film.id},
+        )
+        messages = [m.message for m in get_messages(response.wsgi_request)]
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(
+            response, expected_url=reverse("roll-detail", args=(roll.id,))
+        )
+        self.assertIn(
+            f"{back} loaded with {film.stock} in {film.get_format_display()}",
+            messages[0],
+        )
+
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
 class RollViewTests(TestCase):
