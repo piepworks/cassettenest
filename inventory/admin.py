@@ -49,12 +49,14 @@ class StockAdmin(admin.ModelAdmin):
 
 class FilmAdmin(admin.ModelAdmin):
     list_display = (
-        "__str__",
+        "stock",
+        "format",
         "created_at",
         "added_by",
     )
     list_filter = (
         "format",
+        "stock__manufacturer",
         "personal",
         "added_by",
     )
