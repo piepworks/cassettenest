@@ -27,9 +27,17 @@
 
 {% block page_js %}
 <script>
-    let titlePrefix;
-    let newSubtitle = '';
-    let formatName = '{{ filters.format_name }}';
-    let typeName = '{{ filters.type_name }}';
+    if (typeof(titlePrefix) === 'undefined') {
+        let titlePrefix;
+    }
+    if (typeof(newSubtitle) === 'undefined') {
+        let newSubtitle = '';
+    }
+    if (typeof(formatName) === 'undefined') {
+        let formatName = '{{ filters.format_name }}';
+    }
+    if (typeof(typeName) === 'undefined') {
+        let typeName = '{{ filters.type_name }}';
+    }
 </script>
 {% endblock %}
