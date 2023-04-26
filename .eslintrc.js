@@ -12,7 +12,6 @@ module.exports = {
     sourceType: 'module',
     ecmaVersion: 2018,
   },
-  ignorePatterns: ['color-preference.js'],
   rules: {
     indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],

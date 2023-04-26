@@ -15,7 +15,11 @@
         {% include 'components/form-field.html' with field=field %}
     {% endfor %}
     {% for field in profile_form %}
-        {% include 'components/form-field.html' with field=field %}
+        {% if field.name == 'color_preference' %}
+            {% include 'components/form-field.html' with field=field class='js-required color-preference' %}
+        {% else %}
+            {% include 'components/form-field.html' with field=field %}
+        {% endif %}
     {% endfor %}
     <div class="field last">
         <label>Password</label>
@@ -82,7 +86,7 @@
            } else if (mode === 'dark' && !isDarkMode()) {
                document.documentElement.classList.add('dark');
            } else {
-               setColorMode();
+               cnDarkMode.set();
            }
         };
 
