@@ -878,7 +878,7 @@ def logbook(request):
         "archived": rolls.filter(status=status_number("archived")).count(),
     }
 
-    for y in rolls.dates("started_on", "year"):
+    for y in rolls.dates("started_on", "year", order="DESC"):
         count = rolls.filter(started_on__year=y.year).count()
         all_years.update({y.year: count})
 
