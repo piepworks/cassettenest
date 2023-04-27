@@ -19,11 +19,7 @@
 </head>
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 {% url 'patterns' as patterns_url %}
-<body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart
-    _="on keyup[key is 'Escape']
-         call cnMenu.close()
-       on keyup[key is '\\']
-         call cnMenu.desktopToggle()">
+<body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
     <div class="wrapper md:h-screen md:print:h-auto md:overflow-hidden md:flex">
         {% if user.is_authenticated and request.path != patterns_url %}{% include '_menu.html' %}{% endif %}
         <div class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">

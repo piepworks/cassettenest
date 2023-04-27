@@ -73,4 +73,20 @@ window.cnMenu = {
   },
 };
 
+document.body.removeEventListener('keyup', window.cnKeyupBackslash);
+window.cnKeyupBackslash = e => {
+  if (e.code === 'Backslash') {
+    window.cnMenu.desktopToggle();
+  }
+};
+document.body.addEventListener('keyup', window.cnKeyupBackslash);
+
+document.body.removeEventListener('keyup', window.cnKeyupEsc);
+window.cnKeyupEsc = e => {
+  if (e.code === 'Escape') {
+    window.cnMenu.close();
+  }
+};
+document.body.addEventListener('keyup', window.cnKeyupEsc);
+
 window.cnMenu.setup();
