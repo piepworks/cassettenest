@@ -1,4 +1,3 @@
-<td>{{ film.stock.manufacturer|default:film.manufacturer }}</td>
 <td>
     <a href="{{ film.get_absolute_url }}{% if page == 'project' %}?project={{ project.id }}{% endif %}">{{ film.stock|default:film.name }}</a>
 </td>
