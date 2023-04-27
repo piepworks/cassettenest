@@ -12,11 +12,13 @@ sm:block  md:block  lg:block  xl:block
     <div class="{{ size }}:hidden">
         <label for="id_{{ items.slug }}" class="sr-only">Select a tab</label>
         <form
+            id="id_{{ items.slug }}_form"
             method="get"
             hx-get="?{{ name }}={{ tab }}"
             hx-trigger="change"
             hx-target="{{ target }}"
             hx-indicator=".htmx-indicator"
+            hx-preserve
             class="flex">
             <select name="{{ name }}" id="id_{{ items.slug }}" class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                 {% for tab in tabs %}
