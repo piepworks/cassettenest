@@ -10,9 +10,9 @@ sm:block  md:block  lg:block  xl:block
 
     {# Smaller screens #}
     <div class="{{ size }}:hidden">
-        <label for="id_{{ items.slug }}" class="sr-only">Select a tab</label>
+        <label for="id_{{ name }}_select" class="sr-only">Select a {{ name }}</label>
         <form
-            id="id_{{ items.slug }}_form"
+            id="id_{{ name }}_form"
             method="get"
             hx-get="?{{ name }}={{ tab }}"
             hx-trigger="change"
@@ -20,7 +20,7 @@ sm:block  md:block  lg:block  xl:block
             hx-indicator=".htmx-indicator"
             hx-preserve
             class="flex">
-            <select name="{{ name }}" id="id_{{ items.slug }}" class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+            <select name="{{ name }}" id="id_{{ name }}_select" class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                 {% for tab in tabs %}
                 <option value="{{ tab }}"{% if tab|stringformat:'s' == current_tab %} selected{% endif %}>{{ tab|title }}{% if tab|stringformat:'s' == 'all' %} {{ plural|title }}{% endif %} ({{ tabs|get_item:tab }})</option>
                 {% endfor %}
