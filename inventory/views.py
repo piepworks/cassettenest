@@ -65,6 +65,8 @@ from .utils import (
     available_types,
     SectionTabs,
     film_types,
+    push_pull_to_db,
+    push_pull_to_form,
 )
 from .decorators import user_account_active, user_account_inactive
 from .utils_paddle import (
@@ -1886,7 +1888,10 @@ def roll_edit(request, pk):
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
 
     if request.method == "POST":
-        form = RollForm(request.POST, instance=roll)
+        data = request.POST.dict()
+        data["push_pull"] = push_pull_to_db(data["push_pull"])
+
+        form = RollForm(data, instance=roll)
         camera = None
         camera_back = None
 
@@ -1910,9 +1915,11 @@ def roll_edit(request, pk):
             return redirect(reverse("roll-detail", args=(roll.id,)))
     else:
         # Adjust raw value of push_pull to be friendly with [type=number] field.
-        adjusted_push_pull = "0" if roll.push_pull == "" else roll.push_pull
 
-        form = RollForm(instance=roll, initial={"push_pull": adjusted_push_pull})
+        form = RollForm(
+            instance=roll,
+            initial={"push_pull": push_pull_to_form(roll.push_pull)},
+        )
         form.fields["project"].queryset = Project.objects.filter(owner=owner)
         form.fields["camera"].queryset = Camera.objects.filter(owner=owner)
         form.fields["camera_back"].queryset = CameraBack.objects.filter(
@@ -1922,14 +1929,14 @@ def roll_edit(request, pk):
         del status_choices[1]  # remove loaded
         form.fields["status"].choices = status_choices
 
-        context = {
-            "owner": owner,
-            "roll": roll,
-            "form": form,
-            "wc_needed": True,
-        }
+    context = {
+        "owner": owner,
+        "roll": roll,
+        "form": form,
+        "wc_needed": True,
+    }
 
-        return render(request, "inventory/roll_edit.html", context)
+    return render(request, "inventory/roll_edit.html", context)
 
 
 @user_account_active
