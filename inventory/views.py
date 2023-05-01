@@ -1881,7 +1881,8 @@ def roll_edit(request, pk):
 
     if request.method == "POST":
         data = request.POST.dict()
-        data["push_pull"] = push_pull_to_db(data["push_pull"])
+        if "push_pull" in data.keys():
+            data["push_pull"] = push_pull_to_db(data["push_pull"])
 
         form = RollForm(data, instance=roll)
         camera = None
