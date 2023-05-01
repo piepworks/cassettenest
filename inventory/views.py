@@ -1565,7 +1565,11 @@ def rolls_add(request):
 def roll_add(request):
     """For adding non-storage rolls."""
     owner = request.user
-    films = ()
+    films = (
+        Film.objects.all()
+        .exclude(Q(personal=True) & ~Q(added_by=owner))
+        .order_by("stock")
+    )
 
     if request.method == "POST":
         data = request.POST.dict()
@@ -1594,12 +1598,11 @@ def roll_add(request):
                 return redirect(reverse("roll-add"))
             else:
                 return redirect(reverse("logbook") + "?status=" + status[3:])
+        else:
+            if "push_pull" in data.keys():
+                data["push_pull"] = push_pull_to_form(data["push_pull"])
+            form = RollForm(data)
     else:
-        films = (
-            Film.objects.all()
-            .exclude(Q(personal=True) & ~Q(added_by=owner))
-            .order_by("stock")
-        )
         form = RollForm(initial={"push_pull": 0})
         form.fields["camera"].queryset = Camera.objects.filter(owner=owner)
         form.fields["camera_back"].queryset = CameraBack.objects.filter(
