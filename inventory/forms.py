@@ -19,7 +19,7 @@ from .models import (
     Frame,
     Film,
 )
-from .utils import apertures, shutter_speeds, film_formats
+from .utils import apertures, shutter_speeds, film_formats, status_number
 
 
 class UniqueEmailForm:
@@ -95,6 +95,18 @@ class RollForm(ModelForm):
             "ended_on": widgets.DateInput(attrs={"type": "date"}),
             "push_pull": widgets.NumberInput(attrs={"min": "-2", "max": 3}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        # Require started_on when adding to logbook.
+        if (
+            "status" in cleaned_data.keys()
+            and cleaned_data["status"] != status_number("storage")
+            and not cleaned_data["started_on"]
+        ):
+            raise forms.ValidationError("Please choose a “Started on” date")
+
+        return cleaned_data
 
 
 class RollsAddForm(ModelForm):

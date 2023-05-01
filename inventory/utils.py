@@ -194,6 +194,26 @@ def is_inactive(user):
     return not is_active(user)
 
 
+def push_pull_to_form(push_pull):
+    """
+    Take the database's version of push_pull (PUSH_PULL_CHOICES) and adjust it for the form (number field)
+    """
+    return "0" if push_pull == "" else int(push_pull)
+
+
+def push_pull_to_db(push_pull):
+    """
+    Take the form's version of push_pull (number field) and adjust it for the database.
+    """
+    adjusted_push_pull = push_pull
+
+    if push_pull.isdigit():
+        # Zero or positive integer
+        adjusted_push_pull = "" if push_pull == "0" else f"+{push_pull}"
+
+    return adjusted_push_pull
+
+
 apertures = [
     ("", "---------"),
     ("1.2", "1.2"),

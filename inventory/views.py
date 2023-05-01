@@ -65,6 +65,8 @@ from .utils import (
     available_types,
     SectionTabs,
     film_types,
+    push_pull_to_db,
+    push_pull_to_form,
 )
 from .decorators import user_account_active, user_account_inactive
 from .utils_paddle import (
@@ -1563,28 +1565,26 @@ def rolls_add(request):
 def roll_add(request):
     """For adding non-storage rolls."""
     owner = request.user
+    films = (
+        Film.objects.all()
+        .exclude(Q(personal=True) & ~Q(added_by=owner))
+        .order_by("stock")
+    )
 
     if request.method == "POST":
-        form = RollForm(request.POST)
+        data = request.POST.dict()
+        if "push_pull" in data.keys():
+            data["push_pull"] = push_pull_to_db(data["push_pull"])
+
+        form = RollForm(data)
 
         if form.is_valid():
             film = get_object_or_404(Film, id=request.POST.get("film", ""))
             status = form.cleaned_data["status"]
 
-            roll = Roll.objects.create(owner=owner, film=film)
-            # Validate ended on isn't before started on?
-            roll.started_on = form.cleaned_data["started_on"]
-            roll.ended_on = form.cleaned_data["ended_on"]
-            roll.camera = form.cleaned_data["camera"]
-            roll.lens = form.cleaned_data["lens"]
-            roll.project = form.cleaned_data["project"]
-            roll.status = form.cleaned_data["status"]
-            roll.push_pull = form.cleaned_data["push_pull"]
-            roll.location = form.cleaned_data["location"]
-            roll.notes = form.cleaned_data["notes"]
-            roll.lab = form.cleaned_data["lab"]
-            roll.scanner = form.cleaned_data["scanner"]
-            roll.notes_on_development = form.cleaned_data["notes_on_development"]
+            roll = form.save(commit=False)
+            roll.film = film
+            roll.owner = owner
             roll.save()
 
             roll_url = reverse("roll-detail", args=(roll.id,))
@@ -1599,16 +1599,11 @@ def roll_add(request):
             else:
                 return redirect(reverse("logbook") + "?status=" + status[3:])
         else:
-            messages.error(request, "Please fill out the form.")
-            return redirect(reverse("roll-add"))
-
+            if "push_pull" in data.keys():
+                data["push_pull"] = push_pull_to_form(data["push_pull"])
+            form = RollForm(data)
     else:
-        films = (
-            Film.objects.all()
-            .exclude(Q(personal=True) & ~Q(added_by=owner))
-            .order_by("stock")
-        )
-        form = RollForm()
+        form = RollForm(initial={"push_pull": 0})
         form.fields["camera"].queryset = Camera.objects.filter(owner=owner)
         form.fields["camera_back"].queryset = CameraBack.objects.filter(
             camera__owner=owner
@@ -1618,15 +1613,14 @@ def roll_add(request):
         del status_choices[0:2]  # remove storage & loaded
         form.fields["status"].choices = status_choices
 
-        context = {
-            "owner": owner,
-            "form": form,
-            "films": films,
-            "js_needed": True,
-            "wc_needed": True,
-        }
+    context = {
+        "owner": owner,
+        "form": form,
+        "films": films,
+        "wc_needed": True,
+    }
 
-        return render(request, "inventory/roll_add.html", context)
+    return render(request, "inventory/roll_add.html", context)
 
 
 @login_required
@@ -1886,7 +1880,11 @@ def roll_edit(request, pk):
     roll = get_object_or_404(Roll, pk=pk, owner=owner)
 
     if request.method == "POST":
-        form = RollForm(request.POST, instance=roll)
+        data = request.POST.dict()
+        if "push_pull" in data.keys():
+            data["push_pull"] = push_pull_to_db(data["push_pull"])
+
+        form = RollForm(data, instance=roll)
         camera = None
         camera_back = None
 
@@ -1910,9 +1908,11 @@ def roll_edit(request, pk):
             return redirect(reverse("roll-detail", args=(roll.id,)))
     else:
         # Adjust raw value of push_pull to be friendly with [type=number] field.
-        adjusted_push_pull = "0" if roll.push_pull == "" else roll.push_pull
 
-        form = RollForm(instance=roll, initial={"push_pull": adjusted_push_pull})
+        form = RollForm(
+            instance=roll,
+            initial={"push_pull": push_pull_to_form(roll.push_pull)},
+        )
         form.fields["project"].queryset = Project.objects.filter(owner=owner)
         form.fields["camera"].queryset = Camera.objects.filter(owner=owner)
         form.fields["camera_back"].queryset = CameraBack.objects.filter(
@@ -1922,14 +1922,14 @@ def roll_edit(request, pk):
         del status_choices[1]  # remove loaded
         form.fields["status"].choices = status_choices
 
-        context = {
-            "owner": owner,
-            "roll": roll,
-            "form": form,
-            "wc_needed": True,
-        }
+    context = {
+        "owner": owner,
+        "roll": roll,
+        "form": form,
+        "wc_needed": True,
+    }
 
-        return render(request, "inventory/roll_edit.html", context)
+    return render(request, "inventory/roll_edit.html", context)
 
 
 @user_account_active

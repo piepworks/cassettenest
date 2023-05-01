@@ -1082,6 +1082,7 @@ class RollAddTests(TestCase):
             data={
                 "film": self.film.id,
                 "status": status_number("shot"),
+                "push_pull": 1,
                 "started_on": self.today,
                 "ended_on": self.today,
             },
@@ -1108,11 +1109,13 @@ class RollAddTests(TestCase):
         self.assertTrue("Added a roll:" in messages[0])
 
     def test_adding_a_roll_error(self):
-        response = self.client.post(reverse("roll-add"), data={})
-        messages = [m.message for m in get_messages(response.wsgi_request)]
+        response = self.client.post(
+            reverse("roll-add"),
+            data={"status": status_number("shot"), "push_pull": "+1"},
+        )
 
-        self.assertEqual(response.status_code, 302)
-        self.assertIn("Please fill out the form.", messages)
+        self.assertContains(response, "Please choose a “Started on” date")
+        self.assertEqual(response.status_code, 200)
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)
