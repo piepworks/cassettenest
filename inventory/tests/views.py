@@ -1109,10 +1109,9 @@ class RollAddTests(TestCase):
 
     def test_adding_a_roll_error(self):
         response = self.client.post(reverse("roll-add"), data={})
-        messages = [m.message for m in get_messages(response.wsgi_request)]
 
-        self.assertEqual(response.status_code, 302)
-        self.assertIn("Please fill out the form.", messages)
+        self.assertContains(response, "This field is required.")
+        self.assertEqual(response.status_code, 200)
 
 
 @override_settings(STATICFILES_STORAGE=staticfiles_storage)

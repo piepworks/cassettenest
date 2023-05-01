@@ -1565,28 +1565,22 @@ def rolls_add(request):
 def roll_add(request):
     """For adding non-storage rolls."""
     owner = request.user
+    films = ()
 
     if request.method == "POST":
-        form = RollForm(request.POST)
+        data = request.POST.dict()
+        if "push_pull" in data.keys():
+            data["push_pull"] = push_pull_to_db(data["push_pull"])
+
+        form = RollForm(data)
 
         if form.is_valid():
             film = get_object_or_404(Film, id=request.POST.get("film", ""))
             status = form.cleaned_data["status"]
 
-            roll = Roll.objects.create(owner=owner, film=film)
-            # Validate ended on isn't before started on?
-            roll.started_on = form.cleaned_data["started_on"]
-            roll.ended_on = form.cleaned_data["ended_on"]
-            roll.camera = form.cleaned_data["camera"]
-            roll.lens = form.cleaned_data["lens"]
-            roll.project = form.cleaned_data["project"]
-            roll.status = form.cleaned_data["status"]
-            roll.push_pull = form.cleaned_data["push_pull"]
-            roll.location = form.cleaned_data["location"]
-            roll.notes = form.cleaned_data["notes"]
-            roll.lab = form.cleaned_data["lab"]
-            roll.scanner = form.cleaned_data["scanner"]
-            roll.notes_on_development = form.cleaned_data["notes_on_development"]
+            roll = form.save(commit=False)
+            roll.film = film
+            roll.owner = owner
             roll.save()
 
             roll_url = reverse("roll-detail", args=(roll.id,))
@@ -1600,17 +1594,13 @@ def roll_add(request):
                 return redirect(reverse("roll-add"))
             else:
                 return redirect(reverse("logbook") + "?status=" + status[3:])
-        else:
-            messages.error(request, "Please fill out the form.")
-            return redirect(reverse("roll-add"))
-
     else:
         films = (
             Film.objects.all()
             .exclude(Q(personal=True) & ~Q(added_by=owner))
             .order_by("stock")
         )
-        form = RollForm()
+        form = RollForm(initial={"push_pull": 0})
         form.fields["camera"].queryset = Camera.objects.filter(owner=owner)
         form.fields["camera_back"].queryset = CameraBack.objects.filter(
             camera__owner=owner
@@ -1620,15 +1610,14 @@ def roll_add(request):
         del status_choices[0:2]  # remove storage & loaded
         form.fields["status"].choices = status_choices
 
-        context = {
-            "owner": owner,
-            "form": form,
-            "films": films,
-            "js_needed": True,
-            "wc_needed": True,
-        }
+    context = {
+        "owner": owner,
+        "form": form,
+        "films": films,
+        "wc_needed": True,
+    }
 
-        return render(request, "inventory/roll_add.html", context)
+    return render(request, "inventory/roll_add.html", context)
 
 
 @login_required
