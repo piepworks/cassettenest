@@ -710,9 +710,14 @@
     .success {
       @apply
         bg-green-200
-        dark:bg-green-500
-        text-green-700
-        dark:text-green-800;
+        dark:bg-green-500;
+
+      &,
+      a {
+        @apply
+          text-green-700
+          dark:text-green-800;
+      }
 
       .success-icon {
         @apply
@@ -725,9 +730,14 @@
     .error {
       @apply
         bg-red-100
-        dark:bg-red-400
-        text-red-700
-        dark:text-red-800;
+        dark:bg-red-400;
+
+      &,
+      a {
+        @apply
+          text-red-700
+          dark:text-red-800;
+      }
 
       .error-icon {
         @apply
@@ -738,9 +748,12 @@
     }
 
     .warning {
-      @apply
-        bg-yellow-200
-        text-yellow-700;
+      &,
+      a {
+        @apply
+          bg-yellow-200
+          text-yellow-700;
+      }
 
       .warning-icon {
         @apply
@@ -752,9 +765,14 @@
 
     .info {
       @apply
-        bg-blue-100
-        dark:bg-blue-200
-        text-blue-700;
+        bg-blue-100;
+
+      &,
+      a {
+        @apply
+          dark:bg-blue-200
+          text-blue-700;
+      }
 
       .info-icon {
         @apply

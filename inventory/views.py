@@ -208,10 +208,26 @@ def patterns(request):
     }
 
     test_messages = [
-        Message(0, "Yay!", "success"),
-        Message(0, "Whoops!", "error"),
-        Message(0, "Uh oh!", "warning"),
-        Message(0, "Ah!", "info"),
+        Message(
+            0,
+            "Success! <a href='https://example.com'>What a link looks like</a>",
+            "success safe",
+        ),
+        Message(
+            0,
+            "Error! <a href='https://example.com'>What a link looks like</a>",
+            "error safe",
+        ),
+        Message(
+            0,
+            "Warning! <a href='https://example.com'>What a link looks like</a>",
+            "warning safe",
+        ),
+        Message(
+            0,
+            "Info! <a href='https://example.com'>What a link looks like</a>",
+            "info safe",
+        ),
     ]
 
     test_rolls = {
