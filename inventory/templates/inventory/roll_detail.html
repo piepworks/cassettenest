@@ -110,26 +110,26 @@
 <h3>Development</h3>
 <div class="metadata secondary">
     <div>
-        <dl>
+        <div class="dl">
             {% if roll.lab %}
-            <div>
+            <dl>
                 <dt>Lab</dt>
                 <dd>{{ roll.lab }}</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.scanner %}
-            <div>
+            <dl>
                 <dt>Scanner</dt>
                 <dd>{{ roll.scanner }}</dd>
-            </div>
+            </dl>
             {% endif %}
             {% if roll.notes_on_development %}
-            <div>
+            <dl>
                 <dt>Notes on Development</dt>
                 <dd>{{ roll.notes_on_development|markdown }}</dd>
-            </div>
+            </dl>
             {% endif %}
-        </dl>
+        </div>
     </div>
 </div>
 {% endif %}
