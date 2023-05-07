@@ -20,7 +20,7 @@ bleach[css]==5.0.1
     # via django-bleach
 build==0.10.0
     # via pip-tools
-certifi==2022.12.7
+certifi==2023.5.7
     # via
     #   requests
     #   sentry-sdk
