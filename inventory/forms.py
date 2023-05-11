@@ -326,7 +326,7 @@ class GroupedFilmChoiceIterator(ModelChoiceIterator):
         for group, objs in groupby(queryset, lambda film: film.stock.type):
             yield (
                 type_choices[group],
-                [self.choice(f"{obj} ({obj.count})") for obj in objs],
+                [self.choice(obj) for obj in objs],
             )
 
 
@@ -334,6 +334,9 @@ class GroupedFilmChoiceField(ModelChoiceField):
     def __init__(self, *args, **kwargs):
         self.iterator = partial(GroupedFilmChoiceIterator)
         super().__init__(*args, **kwargs)
+
+    def label_from_instance(self, obj):
+        return f"{obj} ({obj.count})"
 
 
 class CameraOrBackLoadForm(ModelForm):
