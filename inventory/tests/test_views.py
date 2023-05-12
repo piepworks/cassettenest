@@ -31,7 +31,9 @@ from inventory.models import (
 from inventory.utils import status_number, bulk_status_next_keys, status_description
 from inventory.utils_paddle import paddle_plan_name
 
-staticfiles_storage = "django.contrib.staticfiles.storage.StaticFilesStorage"
+staticfiles_storage = {
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"}
+}
 
 
 # A little utility to help test HTMX requests.
@@ -52,7 +54,7 @@ def htmx_request(
     return request
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class IndexTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -125,7 +127,7 @@ class MarketingSiteCORSTests(TestCase):
         self.assertEqual(response.content, b"You are logged in.")
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class ReminderCardTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -157,7 +159,7 @@ class ReminderCardTests(TestCase):
         self.assertContains(response, "type-bw")
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class PatternsTests(TestCase):
     def test_patterns_page(self):
         response = self.client.get(reverse("patterns"))
@@ -165,7 +167,7 @@ class PatternsTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class SettingsTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -240,7 +242,7 @@ class SettingsTests(TestCase):
         self.assertContains(response, "You’re a friend of Piepworks")
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class RegisterTests(TestCase):
     def test_registration_page(self):
         response = self.client.get(reverse("register"))
@@ -298,7 +300,7 @@ class RegisterTests(TestCase):
         self.assertEqual(response.status_code, 302)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class InventoryTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -362,7 +364,7 @@ class InventoryTests(TestCase):
         self.assertContains(response, "(filtered)")
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class LogbookTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -874,7 +876,7 @@ class ImportTests(TestCase):
         self.assertEqual(frames[0].updated_at, self.tz_yesterday)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class JournalTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -950,7 +952,7 @@ class JournalTests(TestCase):
         self.assertIn("Something is not right.", messages)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class ReadyTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -989,7 +991,7 @@ class ReadyTests(TestCase):
         self.assertContains(response, "You have 1 roll ready to process.", html=True)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class RollsAddTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1052,7 +1054,7 @@ class RollsAddTests(TestCase):
         self.assertIn("Enter a valid quantity of 1 or more", messages)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class RollAddTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1118,7 +1120,7 @@ class RollAddTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class RollsUpdateTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1188,7 +1190,7 @@ class RollsUpdateTests(TestCase):
         self.assertIn("Something is amiss.", messages)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class FilmRollsTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1276,7 +1278,7 @@ class FilmRollsTests(TestCase):
         self.assertContains(response, "Viewing rolls in project")
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class SubscriptionTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1525,7 +1527,7 @@ class SubscriptionTests(TestCase):
 
 
 @freeze_time(datetime.datetime.now())
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class SubscriptionBannerTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1582,7 +1584,7 @@ class SubscriptionBannerTests(TestCase):
         self.assertContains(response, "Your subscription is scheduled to be canceled.")
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class ProjectTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -1890,7 +1892,7 @@ class ProjectTests(TestCase):
         self.assertIn("Something is amiss.", messages)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class CameraViewTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -2128,7 +2130,7 @@ class CameraViewTests(TestCase):
         )
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class RollViewTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -2175,7 +2177,7 @@ class RollViewTests(TestCase):
 
 
 @override_flag("frames", active=True)
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class FrameViewTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -2434,7 +2436,7 @@ class FrameViewTests(TestCase):
         self.assertIn(f"{frame} successfully deleted.", messages)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class StockViewTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -2607,7 +2609,7 @@ class StockViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class StockAddTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -2740,7 +2742,7 @@ class StockAddTests(TestCase):
         )
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class SubscriptionRequirementTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -2778,7 +2780,7 @@ class SubscriptionRequirementTests(TestCase):
         self.assertContains(response, 'class="action"')
 
 
-@override_settings(STATICFILES_STORAGE=staticfiles_storage)
+@override_settings(STORAGES=staticfiles_storage)
 class SidebarTests(TestCase):
     @classmethod
     def setUpTestData(cls):

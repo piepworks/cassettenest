@@ -1,2 +1,6 @@
 [tool.black]
 target-version = ['py310']
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "film.settings"
+python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
