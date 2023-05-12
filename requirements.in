@@ -23,6 +23,7 @@ pre-commit
 psycopg[binary]
 pycodestyle
 pycryptodome
+pytest-django
 python-dotenv
 pytz
 requests
