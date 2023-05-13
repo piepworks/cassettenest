@@ -40,7 +40,7 @@ jobs:
           npm install
           npm run build
           venv/bin/python manage.py collectstatic --noinput
-          venv/bin/coverage run manage.py test
+          venv/bin/coverage run venv/bin/pytest
           venv/bin/coverage xml
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}

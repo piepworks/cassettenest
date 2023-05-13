@@ -1,4 +1,4 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.contrib.messages import get_messages
@@ -6,6 +6,13 @@ from model_bakery import baker
 from inventory.models import Film, Stock
 
 
+@override_settings(
+    STORAGES={
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+        }
+    }
+)
 class FilmAdminTests(TestCase):
     @classmethod
     def setUpTestData(cls):
