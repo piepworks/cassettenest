@@ -23,6 +23,7 @@ pre-commit
 psycopg[binary]
 pycodestyle
 pycryptodome
+pyquery
 pytest-django
 pytest-xdist
 python-dotenv
