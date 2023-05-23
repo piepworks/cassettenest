@@ -4,8 +4,6 @@
 #
 #    pip-compile --resolver=backtracking
 #
-appnope==0.1.3
-    # via ipython
 asgiref==3.6.0
     # via django
 asttokens==2.2.1
@@ -65,8 +63,6 @@ django-waffle==3.0.0
     # via -r requirements.in
 django-widget-tweaks==1.4.12
     # via -r requirements.in
-exceptiongroup==1.1.1
-    # via pytest
 execnet==1.9.0
     # via pytest-xdist
 executing==1.2.0
@@ -171,7 +167,7 @@ pytz==2023.3
     # via -r requirements.in
 pyyaml==6.0
     # via pre-commit
-requests==2.30.0
+requests==2.31.0
     # via -r requirements.in
 sentry-sdk==1.23.1
     # via -r requirements.in
@@ -188,13 +184,6 @@ stack-data==0.6.2
     # via ipython
 tinycss2==1.1.1
     # via bleach
-tomli==2.0.1
-    # via
-    #   autopep8
-    #   black
-    #   build
-    #   pyproject-hooks
-    #   pytest
 traitlets==5.9.0
     # via
     #   ipython
