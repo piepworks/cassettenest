@@ -172,18 +172,21 @@ def is_active(user):
 
     @user_passes_test(is_active, login_url=reverse_lazy('trial-expired'), redirect_field_name=None)
     """
-    status = user.profile.subscription_status
-    trial_active = user.profile.trial_period
+    if user.is_authenticated:
+        status = user.profile.subscription_status
+        trial_active = user.profile.trial_period
 
-    if user.is_staff or user.profile.friend:
-        return True
-    elif trial_active:
-        return True
-    elif status not in ["none", "paused", "deleted"]:
-        return True
-    elif user.profile.paddle_cancellation_date and status == "deleted":
-        if user.profile.paddle_cancellation_date > datetime.date.today():
+        if user.is_staff or user.profile.friend:
             return True
+        elif trial_active:
+            return True
+        elif status not in ["none", "paused", "deleted"]:
+            return True
+        elif user.profile.paddle_cancellation_date and status == "deleted":
+            if user.profile.paddle_cancellation_date > datetime.date.today():
+                return True
+            else:
+                return False
         else:
             return False
     else:
