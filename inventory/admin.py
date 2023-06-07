@@ -164,9 +164,7 @@ class UserAdmin(BaseUserAdmin):
         "email",
         "rolls",
         "cameras",
-        "frames",
-        "journals",
-        "projects",
+        "is_active",
         "has_active_subscription",
         "subscription_status",
         "timezone",
@@ -192,14 +190,14 @@ class UserAdmin(BaseUserAdmin):
 
     def short_last_login(self, obj):
         if obj:
-            return obj.last_login.date()
+            return obj.last_login.date().strftime("%Y-%m-%d")
 
     short_last_login.admin_order_field = "last_login"
     short_last_login.short_description = "Last Login"
 
     def short_date_joined(self, obj):
         if obj:
-            return obj.date_joined.date()
+            return obj.date_joined.date().strftime("%Y-%m-%d")
 
     short_date_joined.admin_order_field = "date_joined"
     short_date_joined.short_description = "Date Joined"
@@ -218,7 +216,7 @@ class UserAdmin(BaseUserAdmin):
     def subscription_status(self, obj):
         return obj.profile.subscription_status
 
-    subscription_status.short_description = "Status"
+    subscription_status.short_description = "Sub status"
     subscription_status.admin_order_field = "profile__subscription_status"
 
     def rolls(self, obj):
