@@ -32,7 +32,7 @@ click==8.1.3
     # via
     #   black
     #   pip-tools
-coverage==7.2.6
+coverage==7.2.7
     # via -r requirements.in
 cssselect==1.2.0
     # via pyquery
@@ -40,7 +40,7 @@ decorator==5.1.1
     # via ipython
 distlib==0.3.6
     # via virtualenv
-django==4.2.1
+django==4.2.2
     # via
     #   -r requirements.in
     #   django-bleach
@@ -51,7 +51,7 @@ django==4.2.1
     #   model-bakery
 django-bleach==3.0.1
     # via -r requirements.in
-django-browser-reload==1.8.0
+django-browser-reload==1.9.0
     # via -r requirements.in
 django-capture-tag==1.0
     # via -r requirements.in
@@ -85,7 +85,7 @@ idna==3.4
     # via requests
 iniconfig==2.0.0
     # via pytest
-ipython==8.13.2
+ipython==8.14.0
     # via -r requirements.in
 jedi==0.18.2
     # via ipython
@@ -97,7 +97,7 @@ matplotlib-inline==0.1.6
     # via ipython
 mccabe==0.7.0
     # via flake8
-model-bakery==1.11.0
+model-bakery==1.12.0
     # via -r requirements.in
 mypy-extensions==1.0.0
     # via black
@@ -173,7 +173,7 @@ pyyaml==6.0
     # via pre-commit
 requests==2.31.0
     # via -r requirements.in
-sentry-sdk==1.24.0
+sentry-sdk==1.25.0
     # via -r requirements.in
 six==1.16.0
     # via
@@ -199,11 +199,11 @@ traitlets==5.9.0
     # via
     #   ipython
     #   matplotlib-inline
-typing-extensions==4.6.2
+typing-extensions==4.6.3
     # via
     #   asgiref
     #   psycopg
-urllib3==1.26.16
+urllib3==2.0.3
     # via
     #   requests
     #   sentry-sdk
