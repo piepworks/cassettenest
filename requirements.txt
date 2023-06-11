@@ -71,7 +71,7 @@ execnet==1.9.0
     # via pytest-xdist
 executing==1.2.0
     # via stack-data
-filelock==3.12.0
+filelock==3.12.1
     # via virtualenv
 flake8==6.0.0
     # via -r requirements.in
@@ -122,7 +122,7 @@ pip-lock==2.9.0
     # via -r requirements.in
 pip-tools==6.13.0
     # via -r requirements.in
-platformdirs==3.5.1
+platformdirs==3.5.3
     # via
     #   black
     #   virtualenv
@@ -155,7 +155,7 @@ pyproject-hooks==1.0.0
     # via build
 pyquery==2.0.0
     # via -r requirements.in
-pytest==7.3.1
+pytest==7.3.2
     # via
     #   pytest-django
     #   pytest-xdist
@@ -173,7 +173,7 @@ pyyaml==6.0
     # via pre-commit
 requests==2.31.0
     # via -r requirements.in
-sentry-sdk==1.25.0
+sentry-sdk==1.25.1
     # via -r requirements.in
 six==1.16.0
     # via
