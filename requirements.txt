@@ -122,11 +122,11 @@ pip-lock==2.10.0
     # via -r requirements.in
 pip-tools==6.13.0
     # via -r requirements.in
-platformdirs==3.6.0
+platformdirs==3.7.0
     # via
     #   black
     #   virtualenv
-pluggy==1.1.0
+pluggy==1.2.0
     # via pytest
 pre-commit==3.3.3
     # via -r requirements.in
@@ -173,7 +173,7 @@ pyyaml==6.0
     # via pre-commit
 requests==2.31.0
     # via -r requirements.in
-sentry-sdk==1.25.1
+sentry-sdk==1.26.0
     # via -r requirements.in
 six==1.16.0
     # via
