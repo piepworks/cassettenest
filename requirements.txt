@@ -120,7 +120,7 @@ pip-lock==2.10.0
     # via -r requirements.in
 pip-tools==6.13.0
     # via -r requirements.in
-platformdirs==3.7.0
+platformdirs==3.8.0
     # via
     #   black
     #   virtualenv
@@ -153,7 +153,7 @@ pyproject-hooks==1.0.0
     # via build
 pyquery==2.0.0
     # via -r requirements.in
-pytest==7.3.2
+pytest==7.4.0
     # via
     #   pytest-django
     #   pytest-xdist
