@@ -42,6 +42,7 @@ class HostnameRedirectMiddleware:
 
     def __call__(self, request):
         host = request.get_host().partition(":")[0]
+        # TODO: change this to `cassettenest.fly.dev`
         if host == "cassettenest-p8pny.ondigitalocean.app":
             return HttpResponsePermanentRedirect(
                 "https://app.cassettenest.com" + request.path
