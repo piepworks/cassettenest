@@ -40,9 +40,16 @@ decorator==5.1.1
     # via ipython
 distlib==0.3.6
     # via virtualenv
+dj-database-url==2.0.0
+    # via
+    #   -r requirements.in
+    #   environs
+dj-email-url==1.0.6
+    # via environs
 django==4.2.2
     # via
     #   -r requirements.in
+    #   dj-database-url
     #   django-bleach
     #   django-browser-reload
     #   django-cors-headers
@@ -53,6 +60,8 @@ django-bleach==3.0.1
     # via -r requirements.in
 django-browser-reload==1.10.0
     # via -r requirements.in
+django-cache-url==3.4.4
+    # via environs
 django-capture-tag==1.0
     # via -r requirements.in
 django-cors-headers==4.1.0
@@ -64,6 +73,8 @@ django-htmx==1.15.0
 django-waffle==3.0.0
     # via -r requirements.in
 django-widget-tweaks==1.4.12
+    # via -r requirements.in
+environs[django]==9.5.0
     # via -r requirements.in
 execnet==1.9.0
     # via pytest-xdist
@@ -91,6 +102,8 @@ lxml==4.9.2
     # via pyquery
 markdown==3.4.3
     # via -r requirements.in
+marshmallow==3.19.0
+    # via environs
 matplotlib-inline==0.1.6
     # via ipython
 mccabe==0.7.0
@@ -105,6 +118,7 @@ packaging==23.1
     # via
     #   black
     #   build
+    #   marshmallow
     #   pytest
 parso==0.8.3
     # via jedi
@@ -164,7 +178,9 @@ pytest-xdist==3.3.1
 python-dateutil==2.8.2
     # via freezegun
 python-dotenv==1.0.0
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   environs
 pytz==2023.3
     # via -r requirements.in
 pyyaml==6.0
@@ -191,7 +207,9 @@ traitlets==5.9.0
     #   ipython
     #   matplotlib-inline
 typing-extensions==4.6.3
-    # via psycopg
+    # via
+    #   dj-database-url
+    #   psycopg
 urllib3==2.0.3
     # via
     #   requests
