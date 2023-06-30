@@ -75,11 +75,11 @@ class ProfileTests(TestCase):
         # Create a user with `bulk_create` so that `post_save` doesn’t run and create a Profile.
         User.objects.bulk_create(
             [
-                User(id=1, username="legacy_user", password=self.password),
+                User(id=2, username="legacy_user", password=self.password),
             ]
         )
 
-        user = User.objects.get(id=1)
+        user = User.objects.get(id=2)
         user.save()
 
         self.assertIsInstance(user.profile, Profile)

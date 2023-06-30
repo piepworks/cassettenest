@@ -1,6 +1,7 @@
 autopep8
 black
 coverage
+dj-database-url
 django
 django-bleach
 django-browser-reload
@@ -10,6 +11,7 @@ django-debug-toolbar
 django-htmx
 django-waffle
 django-widget-tweaks
+environs[django]
 flake8
 freezegun
 gunicorn
