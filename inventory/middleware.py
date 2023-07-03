@@ -2,6 +2,8 @@ import pytz
 from django.utils import timezone
 from django.conf import settings
 from django.http import HttpResponsePermanentRedirect
+from django.utils.deprecation import MiddlewareMixin
+from django.shortcuts import render
 from .models import Profile
 
 
@@ -46,3 +48,10 @@ class HostnameRedirectMiddleware:
             )
         else:
             return self.get_response(request)
+
+
+class MaintenanceModeMiddleware(MiddlewareMixin):
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if settings.MAINTENANCE_MODE and not request.user.is_staff:
+            response = render(request, "503.html", status=503)
+            return response

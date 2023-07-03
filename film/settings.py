@@ -89,7 +89,6 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "django_htmx",
     "django_browser_reload",
-    "maintenancemode",
 ]
 
 MIDDLEWARE = [
@@ -104,11 +103,11 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "inventory.middleware.HostnameRedirectMiddleware",
     "inventory.middleware.TimezoneMiddleware",
+    "inventory.middleware.MaintenanceModeMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "waffle.middleware.WaffleMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
-    "maintenancemode.middleware.MaintenanceModeMiddleware",
 ]
 
 ROOT_URLCONF = "film.urls"

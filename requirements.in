@@ -8,7 +8,6 @@ django-capture-tag
 django-cors-headers
 django-debug-toolbar
 django-htmx
-django-maintenancemode
 django-waffle
 django-widget-tweaks
 flake8
