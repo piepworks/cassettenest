@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "django_htmx",
     "django_browser_reload",
+    "maintenancemode",
 ]
 
 MIDDLEWARE = [
@@ -107,6 +108,7 @@ MIDDLEWARE = [
     "waffle.middleware.WaffleMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "django_browser_reload.middleware.BrowserReloadMiddleware",
+    "maintenancemode.middleware.MaintenanceModeMiddleware",
 ]
 
 ROOT_URLCONF = "film.urls"
@@ -237,3 +239,5 @@ CORS_ALLOW_CREDENTIALS = True
 CORS_URLS_REGEX = r"^/marketing-site$"
 
 BLEACH_ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.extend(["p", "hr"])
+
+MAINTENANCE_MODE = int(os.environ.get("MAINTENANCE_MODE", default=0))

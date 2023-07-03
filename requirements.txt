@@ -43,12 +43,15 @@ distlib==0.3.6
 django==4.2.2
     # via
     #   -r requirements.in
+    #   django-appconf
     #   django-bleach
     #   django-browser-reload
     #   django-cors-headers
     #   django-debug-toolbar
     #   django-htmx
     #   model-bakery
+django-appconf==1.0.5
+    # via django-maintenancemode
 django-bleach==3.0.1
     # via -r requirements.in
 django-browser-reload==1.10.0
@@ -60,6 +63,8 @@ django-cors-headers==4.1.0
 django-debug-toolbar==4.1.0
     # via -r requirements.in
 django-htmx==1.15.0
+    # via -r requirements.in
+django-maintenancemode==0.11.7
     # via -r requirements.in
 django-waffle==3.0.0
     # via -r requirements.in
@@ -83,6 +88,8 @@ idna==3.4
     # via requests
 iniconfig==2.0.0
     # via pytest
+ipy==1.1
+    # via django-maintenancemode
 ipython==8.14.0
     # via -r requirements.in
 jedi==0.18.2
@@ -177,6 +184,7 @@ six==1.16.0
     # via
     #   asttokens
     #   bleach
+    #   django-maintenancemode
     #   python-dateutil
 sqlparse==0.4.4
     # via
