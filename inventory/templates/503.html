@@ -1,7 +1,7 @@
 {% extends 'base_site.html' %}
 {% load static %}
 
-{% block title %}Be right back!{% endblock %}
+{% block title %}Be right back!{% if request.path == index_url %} / {% endif %}{% endblock %}
 {% block content %}
     <div class="text-center">
         <img class="inline" src="{% static 'img/icon.svg' %}" height="100" width="100" alt="Cassette Nest Icon" />
