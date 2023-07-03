@@ -11,6 +11,8 @@ from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
 from django.conf import settings
+from django import urls
+from pyquery import PyQuery as pq
 from freezegun import freeze_time
 from model_bakery import baker
 from waffle.testutils import override_flag
@@ -2823,3 +2825,12 @@ class SidebarTests(TestCase):
         response = self.client.get(reverse("session-sidebar"))
 
         self.assertEqual(response.status_code, 403)
+
+
+@override_settings(STORAGES=staticfiles_storage, MAINTENANCE_MODE=True)
+def test_503_page(client):
+    response = client.get(urls.reverse("index"))
+    d = pq(response.content)
+
+    assert response.status_code == 503
+    assert d("title").text() == "Be right back! / Cassette Nest"
