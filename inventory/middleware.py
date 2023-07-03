@@ -1,7 +1,7 @@
 import pytz
 from django.utils import timezone
 from django.conf import settings
-from django.http import HttpResponseForbidden
+from django.http import HttpResponsePermanentRedirect
 from .models import Profile
 
 
@@ -29,10 +29,8 @@ class TimezoneMiddleware:
         return self.get_response(request)
 
 
-class AppPlaformRedirectMiddleware:
-    # This is to catch visits from the “Starter” domain created by App Platform
-    # that is apparently impossible to remove. And I get an email every time
-    # some sketchy bot tries to visit it. Let’s just tell them to stop.
+class HostnameRedirectMiddleware:
+    # This is to catch visits from the default hostname for DigitalOcean.
     #
     # Adapted from:
     # https://adamj.eu/tech/2020/03/02/how-to-make-django-redirect-www-to-your-bare-domain/
@@ -43,6 +41,8 @@ class AppPlaformRedirectMiddleware:
     def __call__(self, request):
         host = request.get_host().partition(":")[0]
         if host == "cassettenest-p8pny.ondigitalocean.app":
-            return HttpResponseForbidden("Stop.")
+            return HttpResponsePermanentRedirect(
+                "https://app.cassettenest.com" + request.path
+            )
         else:
             return self.get_response(request)
