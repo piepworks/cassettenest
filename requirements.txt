@@ -40,7 +40,7 @@ decorator==5.1.1
     # via ipython
 distlib==0.3.6
     # via virtualenv
-django==4.2.2
+django==4.2.3
     # via
     #   -r requirements.in
     #   django-bleach
@@ -190,7 +190,7 @@ traitlets==5.9.0
     # via
     #   ipython
     #   matplotlib-inline
-typing-extensions==4.7.0
+typing-extensions==4.7.1
     # via psycopg
 urllib3==2.0.3
     # via
