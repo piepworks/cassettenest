@@ -53,5 +53,5 @@ class HostnameRedirectMiddleware:
 class MaintenanceModeMiddleware(MiddlewareMixin):
     def process_view(self, request, view_func, view_args, view_kwargs):
         if settings.MAINTENANCE_MODE and not request.user.is_staff:
-            response = render(request, "503.html", status=503)
+            response = render(request, "maintenance-mode.html")
             return response

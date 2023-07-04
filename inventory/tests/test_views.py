@@ -2832,5 +2832,4 @@ def test_503_page(client):
     response = client.get(urls.reverse("index"))
     d = pq(response.content)
 
-    assert response.status_code == 503
     assert d("title").text() == "Be right back! / Cassette Nest"
