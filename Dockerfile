@@ -16,11 +16,12 @@ RUN apt-get update && \
     apt-get install -y nodejs
 
 # Install Litestream
-RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.9/litestream-v0.3.9-linux-amd64.deb \
-    && dpkg -i litestream-v0.3.9-linux-amd64.deb
+RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.9/litestream-v0.3.9-linux-amd64.deb && \
+    dpkg -i litestream-v0.3.9-linux-amd64.deb
 
-# Install cron
-RUN apt-get install -y cron
+# Install cron and S3cmd
+RUN apt-get install -y cron && \
+    apt-get install -y s3cmd
 
 COPY requirements.txt /tmp/requirements.txt
 
