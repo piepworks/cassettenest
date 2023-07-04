@@ -1,2 +1,2 @@
-# 0 9 * * * * ./fly/backup.sh
-*/5 * * * * echo "hello world!"
+# 5am Eastern US time every day
+0 9 * * * /code/fly/backup.sh && curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/6760aa70-2264-4187-ab48-f7ef47326c85

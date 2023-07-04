@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# Terminate the script on a first error, disallow unbound variables.
+set -eu
+
+# Load cron configuration.
+crontab /code/crontab
+echo "Cron has been configured." >> /var/log/cron.log
+
+# Start cron as a daemon.
+cron
+echo "Cron has been started." >> /var/log/cron.log
+
 if [[ -z "$DB_DIR" ]]; then
     echo "DB_DIR env var not specified - this should be a path of the directory where the database file should be stored"
     exit 1
