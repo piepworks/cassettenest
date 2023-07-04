@@ -16,8 +16,9 @@ RUN apt-get update && \
     apt-get install -y nodejs
 
 # Install Litestream
-RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.8/litestream-v0.3.8-linux-amd64.deb \
-    && dpkg -i litestream-v0.3.8-linux-amd64.deb
+RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.9/litestream-v0.3.9-linux-amd64.deb \
+    && dpkg -i litestream-v0.3.9-linux-amd64.deb
+
 
 COPY requirements.txt /tmp/requirements.txt
 
