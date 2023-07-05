@@ -3,7 +3,9 @@ venv/
 !/tailwind/main.css
 staticfiles/
 node_modules/
+*.sqlite*
 .env*
+fly.env
 .coverage
 htmlcov/
 backups/

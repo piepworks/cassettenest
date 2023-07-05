@@ -4,27 +4,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    # Set up PostgreSQL.
-    services:
-      # Label used to access the service container
-      postgres:
-        # Docker Hub image
-        image: postgres
-        # Provide the password for postgres
-        env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          # Maps tcp port 5432 on service container to the host
-          - 5432:5432
-
     # Set things up and run the tests.
     steps:
       - uses: actions/checkout@v3
@@ -45,11 +24,6 @@ jobs:
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
           DEBUG: ${{ secrets.DEBUG }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
-          DB_HOST: ${{ secrets.DB_HOST }}
           ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
           CSRF_TRUSTED_ORIGINS: ${{ secrets.CSRF_TRUSTED_ORIGINS }}
           MARKETING_SITE_URL: ${{ secrets.MARKETING_SITE_URL }}
@@ -59,8 +33,6 @@ jobs:
           EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
           EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
           EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
-          DEFAULT_FROM_EMAIL: ${{ secrets.DEFAULT_FROM_EMAIL }}
-          RELOAD: ${{ secrets.RELOAD }}
           SUBSCRIPTION_TRIAL: ${{ secrets.SUBSCRIPTION_TRIAL }}
           SUBSCRIPTION_TRIAL_DURATION: ${{ secrets.SUBSCRIPTION_TRIAL_DURATION }}
           PADDLE_LIVE_MODE: ${{ secrets.PADDLE_LIVE_MODE }}
@@ -70,6 +42,8 @@ jobs:
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_AWESOME_ANNUAL: ${{ secrets.PADDLE_AWESOME_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_SAMPLE_RATE: ${{ env.SENTRY_SAMPLE_RATE }}
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3.1.1
         with:

@@ -32,7 +32,7 @@ class TimezoneMiddleware:
 
 
 class HostnameRedirectMiddleware:
-    # This is to catch visits from the default hostname for DigitalOcean.
+    # This is to catch visits from the default hostname for Fly.
     #
     # Adapted from:
     # https://adamj.eu/tech/2020/03/02/how-to-make-django-redirect-www-to-your-bare-domain/
@@ -42,7 +42,7 @@ class HostnameRedirectMiddleware:
 
     def __call__(self, request):
         host = request.get_host().partition(":")[0]
-        if host == "cassettenest-p8pny.ondigitalocean.app":
+        if host == "cassettenest.fly.dev":
             return HttpResponsePermanentRedirect(
                 "https://app.cassettenest.com" + request.path
             )
