@@ -19,9 +19,14 @@ RUN apt-get update && \
 RUN wget https://github.com/benbjohnson/litestream/releases/download/v0.3.9/litestream-v0.3.9-linux-amd64.deb && \
     dpkg -i litestream-v0.3.9-linux-amd64.deb
 
-# Install cron and S3cmd
+# Install cron and SQLite
 RUN apt-get install -y cron && \
-    apt-get install -y s3cmd
+    apt-get install sqlite3
+
+# Install AWS CLI
+RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" && \
+    unzip awscliv2.zip && \
+    ./aws/install
 
 COPY requirements.txt /tmp/requirements.txt
 

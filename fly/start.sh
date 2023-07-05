@@ -11,6 +11,10 @@ echo "Cron has been configured." >> /var/log/cron.log
 cron
 echo "Cron has been started." >> /var/log/cron.log
 
+# For the sake of cron having access to AWS credentials
+printf "AWS_ACCESS_KEY_ID=%s\n" $AWS_ACCESS_KEY_ID >> /etc/environment
+printf "AWS_SECRET_ACCESS_KEY=%s\n" $AWS_SECRET_ACCESS_KEY >> /etc/environment
+
 if [[ -z "$DB_DIR" ]]; then
     echo "DB_DIR env var not specified - this should be a path of the directory where the database file should be stored"
     exit 1
