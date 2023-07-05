@@ -1,6 +1,6 @@
 {
   "name": "cassettenest",
-  "version": "2.0.0",
+  "version": "4.0.0",
   "description": "A way for analog photographers to track their film use from box to binder.",
   "scripts": {
     "watch:tailwind": "postcss tailwind/main.css -o static/tailwind.css --watch --verbose",
