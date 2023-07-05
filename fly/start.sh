@@ -15,6 +15,12 @@ echo "Cron has been started." >> /var/log/cron.log
 printf "AWS_ACCESS_KEY_ID=%s\n" $AWS_ACCESS_KEY_ID >> /etc/environment
 printf "AWS_SECRET_ACCESS_KEY=%s\n" $AWS_SECRET_ACCESS_KEY >> /etc/environment
 
+# Define storage lifecycle for daily backup bucket
+aws s3api put-bucket-lifecycle-configuration \
+    --bucket cassettenest \
+    --lifecycle-configuration file:///code/fly/spaces-lifecycle.json \
+    --endpoint=https://nyc3.digitaloceanspaces.com
+
 if [[ -z "$DB_DIR" ]]; then
     echo "DB_DIR env var not specified - this should be a path of the directory where the database file should be stored"
     exit 1

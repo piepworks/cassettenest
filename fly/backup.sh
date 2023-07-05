@@ -1,15 +1,15 @@
 #!/bin/bash -x
 
-# Ensure script stops when commands fail.
+# Ensure script stops when commands fail
 set -e
 
 mkdir -p /tmp
 
-# Backup & compress our database to the temp directory.
+# Backup & compress our database to the tmp directory
 sqlite3 /db/db.sqlite '.backup /tmp/backup.sqlite'
 gzip /tmp/backup.sqlite
 
-# Upload backup to S3 using a rolling daily naming scheme.
-/usr/local/bin/aws s3 cp /tmp/backup.sqlite.gz s3://litestream-cassettenest/daily/backup-`date +%d`.sqlite.gz --endpoint=https://nyc3.digitaloceanspaces.com
+/usr/local/bin/aws s3 cp /tmp/backup.sqlite.gz s3://cassettenest/sqlite-backups/`date +%F`.sqlite.gz --endpoint=https://nyc3.digitaloceanspaces.com
 
+# Delete the backup so it doesn't get in the way next time
 rm /tmp/backup.sqlite.gz
