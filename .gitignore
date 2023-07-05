@@ -9,7 +9,6 @@ fly.env
 .coverage
 htmlcov/
 backups/
-paddle_public_key.txt
 /test-results/
 /playwright-report/
 /playwright/.cache/

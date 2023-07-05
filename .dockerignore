@@ -6,4 +6,3 @@ fly.env
 node_modules/
 .venv/
 static/css/
-paddle_public_key.txt
