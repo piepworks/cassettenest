@@ -27,6 +27,7 @@ pycodestyle
 pycryptodome
 pyquery
 pytest-django
+pytest-playwright
 pytest-xdist
 python-dotenv
 pytz
