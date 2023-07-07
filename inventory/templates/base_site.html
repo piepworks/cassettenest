@@ -31,6 +31,8 @@
                         {{ subscription_banner.message | safe }}
                     </div>
                     {% endif %}
+                {% else %}
+                    <p>HEY, I'M NOT AUTHENTICATED!</p>
                 {% endif %}
                 <main class="pt-2 md:pt-6 pb-16">
                     {% spaceless %}
