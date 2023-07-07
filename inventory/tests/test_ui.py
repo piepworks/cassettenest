@@ -25,9 +25,10 @@ def test_create_account(test_server):
     test_server.get_by_role("button", name="Create your account").click()
 
     subscription_banner = test_server.locator(".subscription-banner")
-    expect(subscription_banner).to_contain_text(
-        "You have 14 days left in your free trial."
-    )
+    expect(subscription_banner).not_to_be_in_viewport()
+
+    onboarding = test_server.locator(".onboarding")
+    expect(onboarding).to_contain_text("Welcome to Cassette Nest! Let’s get started:")
 
 
 # TODO: test film stock dropdown htmx stuff
