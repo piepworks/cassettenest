@@ -5,7 +5,7 @@ from django.urls import reverse
 def subscription_banner(request):
     no_banner = {"subscription_banner": ""}
 
-    if not request.user.is_authenticated or not hasattr(request, "user"):
+    if not request.user.is_authenticated:
         return no_banner
 
     # Don't show "Choose a plan" banner on the homepage when the onboarding bit is there too.
