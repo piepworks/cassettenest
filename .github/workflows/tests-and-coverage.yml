@@ -20,7 +20,7 @@ jobs:
           npm run build
           venv/bin/playwright install
           venv/bin/python manage.py collectstatic --noinput
-          venv/bin/coverage run venv/bin/pytest inventory/tests --runplaywright
+          venv/bin/coverage run venv/bin/pytest inventory/tests --runplaywright --screenshot only-on-failure
           venv/bin/coverage xml
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
@@ -45,6 +45,12 @@ jobs:
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_SAMPLE_RATE: ${{ env.SENTRY_SAMPLE_RATE }}
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 2
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v3.1.1
         with:
