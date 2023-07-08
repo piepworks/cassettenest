@@ -2,7 +2,7 @@
 target-version = ['py311']
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "film.settings"
+DJANGO_SETTINGS_MODULE = "film.settings_playwright"
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
 # Delete the following line as soon as possible:
 filterwarnings = "ignore:pkg_resources is deprecated as an API"
