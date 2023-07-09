@@ -40,3 +40,9 @@ repos:
         entry: npx eslint --ext .js ./inventory/templates/js
         types: [javascript]
         pass_filenames: false
+      - id: playwright
+        name: Run Playwright
+        language: system
+        entry: npx playwright test
+        files: \.(css|html|js)
+        pass_filenames: false
