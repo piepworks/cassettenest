@@ -8,4 +8,5 @@ test('has title, go to create account', async ({ page }) => {
   await expect(page).toHaveTitle(/Log in \/ Cassette Nest/);
   await page.getByRole('link', { name: 'start your 14-day free trial' }).click();
   await expect(page).toHaveURL(/.*register/);
+  await page.screenshot({ path: 'test-results/login.png', fullPage: true });
 });
