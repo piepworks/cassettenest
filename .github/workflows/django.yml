@@ -1,4 +1,4 @@
-name: Run tests and check coverage
+name: Django Tests and Coverage
 on: [push, pull_request]
 jobs:
   test:
@@ -20,7 +20,7 @@ jobs:
           npm run build
           venv/bin/playwright install
           venv/bin/python manage.py collectstatic --noinput
-          venv/bin/coverage run venv/bin/pytest inventory/tests --runplaywright --screenshot only-on-failure
+          venv/bin/coverage run venv/bin/pytest
           venv/bin/coverage xml
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
