@@ -23,6 +23,9 @@ env:
   PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
   SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
   SENTRY_SAMPLE_RATE: ${{ vars.SENTRY_SAMPLE_RATE }}
+  PLAYWRIGHT_USERNAME: ${{ secrets.PLAYWRIGHT_USERNAME }}
+  PLAYWRIGHT_PASSWORD: ${{ secrets.PLAYWRIGHT_PASSWORD }}
+  PLAYWRIGHT_EMAIL: ${{ secrets.PLAYWRIGHT_EMAIL }}
 jobs:
   test:
     timeout-minutes: 60
@@ -41,13 +44,12 @@ jobs:
         npm install
         npm run build
         venv/bin/playwright install
-        venv/bin/python manage.py collectstatic --noinput
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npx playwright test --ignore-snapshots
+      run: CREATE_USER=True npx playwright test --ignore-snapshots
     - uses: actions/upload-artifact@v3
       if: always()
       with:

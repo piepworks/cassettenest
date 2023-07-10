@@ -1,16 +1,27 @@
 // @ts-check
-const { defineConfig, devices } = require('@playwright/test');
+import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// require('dotenv').config();
+
+if (fs.existsSync(path.resolve(__dirname, 'e2e', 'playwright.env'))) {
+  dotenv.config({
+    path: path.resolve(__dirname, 'e2e', 'playwright.env'),
+  });
+}
+
+const envs = `PLAYWRIGHT_USERNAME=${process.env.PLAYWRIGHT_USERNAME} PLAYWRIGHT_PASSWORD=${process.env.PLAYWRIGHT_PASSWORD} PLAYWRIGHT_EMAIL=${process.env.PLAYWRIGHT_EMAIL}`;
+const new_user = process.env.CREATE_USER ? 'CREATE_USER=True' : '';
 
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
-module.exports = defineConfig({
+export default defineConfig({
   testDir: './e2e',
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -33,19 +44,32 @@ module.exports = defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    { name: 'setup', testMatch: /.*\.setup\.js/ },
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
 
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: {
+        ...devices['Desktop Firefox'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: {
+        ...devices['Desktop Safari'],
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     },
 
     /* Test against mobile viewports. */
@@ -71,8 +95,7 @@ module.exports = defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command:
-      'venv/bin/python manage.py collectstatic --noinput && DEBUG=False venv/bin/python manage.py runserver',
+    command: `${new_user} ${envs} e2e/start-django.sh`,
     url: 'http://127.0.0.1:8000',
     reuseExistingServer: !process.env.CI,
   },
