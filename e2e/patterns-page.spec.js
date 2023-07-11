@@ -3,13 +3,19 @@ import { test, expect } from '@playwright/test';
 
 test('patterns page / light mode', async ({ page }) => {
   await page.goto('./patterns');
-  await expect(page).toHaveTitle(/Pattern Library \/ Cassette Nest/);
-  await expect(page).toHaveScreenshot('patterns-light.png', { fullPage: true });
+  await page.emulateMedia({ colorScheme: 'light' });
+  await expect(page).toHaveTitle('Pattern Library / Cassette Nest');
+  await expect(page).toHaveScreenshot('patterns-light.png', {
+    fullPage: true,
+    mask: [page.locator('input[type=date]')],
+  });
 });
-
-test.use({ colorScheme: 'dark' });
 
 test('patterns page / dark mode', async ({ page }) => {
   await page.goto('./patterns');
-  await expect(page).toHaveScreenshot('patterns-dark.png', { fullPage: true });
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await expect(page).toHaveScreenshot('patterns-dark.png', {
+    fullPage: true,
+    mask: [page.locator('input[type=date]')],
+  });
 });
