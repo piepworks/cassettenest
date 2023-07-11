@@ -24,6 +24,8 @@ Copyright &copy; 2016-2023 Piepworks LLC. All rights reserved.
         - Just run tests.
     - `dev/coverage`
         - Run tests and generate a coverage report.
+    - `npx playwright test`
+        - Run [Playwright](https://playwright.dev) UI tests.
 
 ---
 

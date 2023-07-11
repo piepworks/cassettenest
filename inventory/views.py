@@ -327,7 +327,7 @@ def patterns(request):
         "status": "deleted",
         "plan": paddle["standard_monthly_name"],
         "plan_id": paddle["standard_monthly_id"],
-        "cancellation_date": datetime.date.today() + datetime.timedelta(days=1),
+        "cancellation_date": datetime.date(2077, 1, 1),
     }
 
     context = {

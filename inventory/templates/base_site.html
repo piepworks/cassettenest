@@ -20,9 +20,9 @@
 {% capture as bodytag silent %}{% block bodytag %}{% endblock %}{% endcapture %}
 {% url 'patterns' as patterns_url %}
 <body{% if bodytag %} {{ bodytag }}{% endif %} ontouchstart>
-    <div class="wrapper md:h-screen md:print:h-auto md:overflow-hidden md:flex">
+    <div class="wrapper{% if request.path != patterns_url %} md:h-screen md:print:h-auto md:overflow-hidden md:flex{% endif %}">
         {% if user.is_authenticated and request.path != patterns_url %}{% include '_menu.html' %}{% endif %}
-        <div class="flex flex-col md:w-0 flex-1 overflow-hidden min-h-screen">
+        <div class="flex flex-col{% if request.path != patterns_url %} md:w-0 flex-1 overflow-hidden min-h-screen{% endif %}">
             {% if user.is_authenticated %}{% include '_hamburger.html' %}{% endif %}
             <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
                 {% if user.is_authenticated %}
@@ -59,8 +59,8 @@
         </div>
     </div>
 
-    <script src="{% static 'js/vendor/htmx-1.8.6.min.js' %}" defer></script>
-    <script src="{% static 'js/vendor/hyperscript-0.9.8.min.js' %}" defer></script>
+    <script src="{% static 'js/vendor/htmx-1.9.2.min.js' %}" defer></script>
+    <script src="{% static 'js/vendor/hyperscript-0.9.9.min.js' %}" defer></script>
     {% django_htmx_script %}
 
     <script>

@@ -6,6 +6,7 @@ node_modules/
 *.sqlite*
 .env*
 fly.env
+playwright.env
 .coverage
 htmlcov/
 backups/
@@ -14,3 +15,7 @@ backups/
 /playwright/.cache/
 !.vscode
 .pytest_cache/
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/playwright/.auth/

@@ -1,0 +1,33 @@
+[
+  {
+    "model": "inventory.manufacturer",
+    "pk": 1,
+    "fields": {
+      "name": "Kodak",
+      "slug": "kodak",
+      "personal": false,
+      "added_by": null,
+      "url": "",
+      "description": "",
+      "created_at": "2021-06-29T16:09:47.819Z",
+      "updated_at": "2021-06-29T16:09:47.819Z"
+    }
+  },
+  {
+    "model": "inventory.stock",
+    "pk": 1,
+    "fields": {
+      "manufacturer": 1,
+      "type": "c41",
+      "name": "Portra 400",
+      "slug": "portra-400",
+      "iso": 100,
+      "url": "",
+      "description": "",
+      "personal": false,
+      "added_by": null,
+      "created_at": "2021-06-29T16:09:47.819Z",
+      "updated_at": "2021-06-29T16:09:47.819Z"
+    }
+  }
+]

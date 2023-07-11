@@ -1,0 +1,60 @@
+name: Playwright Tests
+on: [push, pull_request]
+env:
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
+  DEBUG: ${{ secrets.DEBUG }}
+  ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+  CSRF_TRUSTED_ORIGINS: ${{ secrets.CSRF_TRUSTED_ORIGINS }}
+  MARKETING_SITE_URL: ${{ secrets.MARKETING_SITE_URL }}
+  EMAIL_BACKEND: ${{ secrets.EMAIL_BACKEND }}
+  EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
+  EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
+  EMAIL_HOST_USER: ${{ secrets.EMAIL_HOST_USER }}
+  EMAIL_HOST_PASSWORD: ${{ secrets.EMAIL_HOST_PASSWORD }}
+  EMAIL_USE_TLS: ${{ secrets.EMAIL_USE_TLS }}
+  SUBSCRIPTION_TRIAL: ${{ secrets.SUBSCRIPTION_TRIAL }}
+  SUBSCRIPTION_TRIAL_DURATION: ${{ secrets.SUBSCRIPTION_TRIAL_DURATION }}
+  PADDLE_LIVE_MODE: ${{ secrets.PADDLE_LIVE_MODE }}
+  PADDLE_VENDOR_ID: ${{ secrets.PADDLE_VENDOR_ID }}
+  PADDLE_VENDOR_AUTH_CODE: ${{ secrets.PADDLE_VENDOR_AUTH_CODE }}
+  PADDLE_STANDARD_MONTHLY: ${{ secrets.PADDLE_STANDARD_MONTHLY }}
+  PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
+  PADDLE_AWESOME_ANNUAL: ${{ secrets.PADDLE_AWESOME_ANNUAL }}
+  PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
+  SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+  SENTRY_SAMPLE_RATE: ${{ vars.SENTRY_SAMPLE_RATE }}
+  PLAYWRIGHT_USERNAME: ${{ secrets.PLAYWRIGHT_USERNAME }}
+  PLAYWRIGHT_PASSWORD: ${{ secrets.PLAYWRIGHT_PASSWORD }}
+  PLAYWRIGHT_EMAIL: ${{ secrets.PLAYWRIGHT_EMAIL }}
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Install Django bits
+      run: |
+        python3 -m venv --prompt . venv
+        venv/bin/pip install -U pip setuptools wheel
+        venv/bin/python -m pip install -r requirements.txt
+        venv/bin/python manage.py migrate --noinput
+        venv/bin/python manage.py loaddata e2e/django-fixtures.json
+        npm install
+        npm run build
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run Playwright tests
+      run: CREATE_USER=True npx playwright test --ignore-snapshots
+    - uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: artifacts
+        path: |
+          playwright-report/
+          test-results/
+        retention-days: 2

@@ -12,7 +12,7 @@ def subscription_banner(request):
     if (
         not request.user.profile.has_active_subscription
         and request.user.profile.subscription_status == "none"
-        and request.path is reverse("index")
+        and request.path == reverse("index")
     ):
         return no_banner
 
