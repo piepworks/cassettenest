@@ -44,5 +44,5 @@ repos:
         name: Run Playwright
         language: system
         entry: npx playwright test
-        files: \.(css|html|js)
+        files: \.(css|html|js)$
         pass_filenames: false
