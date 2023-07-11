@@ -38,7 +38,6 @@
                         hx-target="{{ items.target }}"
                         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
                         hx-indicator=".htmx-indicator"
-                        hx-preserve
                         hx-vals='{"slug": "{{ items.slug }}"{% if items.slug == 'c' and request.GET.p %}, "p": "{{ request.GET.p }}"{% elif items.slug == 'p' and request.GET.c %}, "c": "{{ request.GET.c }}"{% endif %}}'
                         class="flex">
                         {% if items.slug == 'c' and request.GET.p %}
