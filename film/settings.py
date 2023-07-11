@@ -12,7 +12,7 @@ env.read_env()
 
 
 sentry_sdk.init(
-    dsn=env("SENTRY_DSN"),
+    dsn=env("SENTRY_DSN", default=None),
     integrations=[
         DjangoIntegration(),
     ],
