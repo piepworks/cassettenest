@@ -49,7 +49,7 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
-        run: CREATE_USER=True npx playwright test --ignore-snapshots
+        run: CREATE_USER=True npx playwright test
       - uses: actions/upload-artifact@v3
         if: always()
         with:
