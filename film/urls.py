@@ -35,6 +35,21 @@ urlpatterns = [
         auth_views.LoginView.as_view(redirect_authenticated_user=True),
         name="login",
     ),
+    path(
+        "accounts/register/",
+        views.RegistrationView.as_view(),
+        name="django_registration_register",
+    ),
+    path(
+        "accounts/activate/<str:activation_key>/",
+        views.ActivationView.as_view(),
+        name="django_registration_activate",
+    ),
+    path(
+        "account-verified/<int:user_id>",
+        views.account_verified,
+        name="account-verified",
+    ),
     path("accounts/", include("django_registration.backends.activation.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     # Static pages

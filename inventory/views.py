@@ -5,7 +5,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
 from django.db.models import Count, Q
 from django.db import IntegrityError, transaction
-from django.contrib.auth import login, authenticate
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_str
@@ -18,6 +17,10 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.contrib.sites.shortcuts import get_current_site
 from django.conf import settings
+from django_registration.backends.activation.views import (
+    ActivationView as BaseActivationView,
+    RegistrationView as BaseRegistrationView,
+)
 from itertools import chain
 import requests
 from .models import (
@@ -39,7 +42,6 @@ from .forms import (
     ProfileForm,
     ProjectForm,
     ReadyForm,
-    RegisterForm,
     RollForm,
     RollsAddForm,
     StepperForm,
@@ -748,37 +750,6 @@ def stock(request, manufacturer, slug):
     }
 
     return render(request, "inventory/stock.html", context)
-
-
-def register(request):
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-
-        if form.is_valid():
-            form.save()
-
-            # Automatically log in
-            username = form.cleaned_data.get("username")
-            raw_password = form.cleaned_data.get("password1")
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-
-            email = form.cleaned_data.get("email")
-            send_email_to_trey(
-                subject="New Cassette Nest user!",
-                message=f"""{username} / {email} signed up!\n
-                    https://{get_current_site(request)}{reverse('admin:auth_user_changelist')}
-                """,
-            )
-
-            return redirect("index")
-    else:
-        if request.user.is_authenticated:
-            return redirect(reverse("index"))
-
-        form = RegisterForm()
-
-    return render(request, "registration/register.html", {"form": form})
 
 
 @login_required
@@ -3386,3 +3357,30 @@ class ImportFramesView(ReadCSVMixin, RedirectAfterImportMixin, View):
         }
 
         return self.redirect(request, count, item)
+
+
+def account_verified(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    send_email_to_trey(
+        subject="New Cassette Nest user!",
+        message=f"""{user.username} / {user.email} signed up!\n
+            https://{get_current_site(request)}{reverse('admin:auth_user_change', args=(user.id,))}
+        """,
+    )
+
+    messages.success(request, "You’re activated and can log in now!")
+
+    return redirect("login")
+
+
+class ActivationView(BaseActivationView):
+    def get_success_url(self, user):
+        return reverse("account-verified", args=(user.id,))
+
+
+class RegistrationView(BaseRegistrationView):
+    def get(self, request, *args, **kwargs):
+        if self.request.user.is_authenticated:
+            return redirect("index")
+        return super().get(request, *args, **kwargs)
