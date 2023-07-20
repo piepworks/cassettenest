@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View
 from django.db.models import Count, Q
 from django.db import IntegrityError, transaction
+from django.contrib.auth import login
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.encoding import force_str
@@ -3369,9 +3370,9 @@ def account_verified(request, user_id):
         """,
     )
 
-    messages.success(request, "You’re activated and can log in now!")
-
-    return redirect("login")
+    login(request, user)
+    messages.success(request, "Your account has been activated! Enjoy!")
+    return redirect("index")
 
 
 class ActivationView(BaseActivationView):
