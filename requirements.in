@@ -1,6 +1,5 @@
 autopep8
 black
-coverage
 dj-database-url
 django
 django-bleach
@@ -28,6 +27,7 @@ psycopg[binary]
 pycodestyle
 pycryptodome
 pyquery
+pytest-cov
 pytest-django
 pytest-playwright
 pytest-xdist

@@ -50,3 +50,8 @@ class FilmAdminTests(TestCase):
             f'The film “<a href="{film_admin_url}">{self.stock} in 35mm</a>” was added successfully.',
             messages,
         )
+
+    def test_user_list(self):
+        baker.make(User)
+        response = self.client.get(reverse("admin:auth_user_changelist"))
+        self.assertEqual(response.status_code, 200)

@@ -300,6 +300,11 @@ class RegisterTests(TestCase):
         response = self.client.get(reverse("django_registration_register"))
         self.assertEqual(response.status_code, 302)
 
+    def test_account_verified(self):
+        user = baker.make(User)
+        response = self.client.get(reverse("account-verified", args=(user.id,)))
+        self.assertEqual(response.status_code, 302)
+
 
 @override_settings(STORAGES=staticfiles_storage)
 class InventoryTests(TestCase):
