@@ -8,7 +8,9 @@ django-browser-reload
 django-capture-tag
 django-cors-headers
 django-debug-toolbar
+django-extensions
 django-htmx
+django-registration
 django-waffle
 django-widget-tweaks
 environs[django]

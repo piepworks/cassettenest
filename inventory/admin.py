@@ -190,7 +190,10 @@ class UserAdmin(BaseUserAdmin):
 
     def short_last_login(self, obj):
         if obj:
-            return obj.last_login.date().strftime("%Y-%m-%d")
+            try:
+                return obj.last_login.date().strftime("%Y-%m-%d")
+            except AttributeError:
+                return None
 
     short_last_login.admin_order_field = "last_login"
     short_last_login.short_description = "Last Login"
