@@ -26,6 +26,7 @@ env:
   PLAYWRIGHT_USERNAME: ${{ secrets.PLAYWRIGHT_USERNAME }}
   PLAYWRIGHT_PASSWORD: ${{ secrets.PLAYWRIGHT_PASSWORD }}
   PLAYWRIGHT_EMAIL: ${{ secrets.PLAYWRIGHT_EMAIL }}
+  DEFAULT_FROM_EMAIL: ${{ env.DEFAULT_FROM_EMAIL }}
 jobs:
   test:
     timeout-minutes: 60

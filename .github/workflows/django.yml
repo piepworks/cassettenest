@@ -44,6 +44,7 @@ jobs:
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_SAMPLE_RATE: ${{ env.SENTRY_SAMPLE_RATE }}
+          DEFAULT_FROM_EMAIL: ${{ env.DEFAULT_FROM_EMAIL }}
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
