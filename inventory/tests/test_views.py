@@ -247,7 +247,7 @@ class SettingsTests(TestCase):
 @override_settings(STORAGES=staticfiles_storage)
 class RegisterTests(TestCase):
     def test_registration_page(self):
-        response = self.client.get(reverse("register"))
+        response = self.client.get(reverse("django_registration_register"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Create an account", html=True)
@@ -258,7 +258,7 @@ class RegisterTests(TestCase):
         email = "test@example.com"
 
         response = self.client.post(
-            reverse("register"),
+            reverse("django_registration_register"),
             data={
                 "username": username,
                 "password1": password,
@@ -268,11 +268,10 @@ class RegisterTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.wsgi_request.user.username, username)
 
     def test_registration_form_error(self):
         response = self.client.post(
-            reverse("register"),
+            reverse("django_registration_register"),
             data={
                 "username": "test",
                 "password1": "password",
@@ -298,7 +297,12 @@ class RegisterTests(TestCase):
             password=password,
         )
 
-        response = self.client.get(reverse("register"))
+        response = self.client.get(reverse("django_registration_register"))
+        self.assertEqual(response.status_code, 302)
+
+    def test_account_verified(self):
+        user = baker.make(User)
+        response = self.client.get(reverse("account-verified", args=(user.id,)))
         self.assertEqual(response.status_code, 302)
 
 

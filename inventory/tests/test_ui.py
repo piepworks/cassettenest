@@ -24,11 +24,7 @@ def test_create_account(test_server):
     test_server.get_by_label("Password confirmation").fill(password)
     test_server.get_by_role("button", name="Create your account").click()
 
-    subscription_banner = test_server.locator(".subscription-banner")
-    expect(subscription_banner).not_to_be_in_viewport()
-
-    onboarding = test_server.locator(".onboarding")
-    expect(onboarding).to_contain_text("Welcome to Cassette Nest! Let’s get started:")
-
-
-# TODO: test film stock dropdown htmx stuff
+    header = test_server.locator("h1")
+    expect(header).to_contain_text(
+        "Registration submitted!Check your email for a confirmation link."
+    )

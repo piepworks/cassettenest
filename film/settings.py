@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "django_htmx",
     "django_browser_reload",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -194,3 +195,6 @@ CORS_URLS_REGEX = r"^/marketing-site$"
 BLEACH_ALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.extend(["p", "hr"])
 
 MAINTENANCE_MODE = env.bool("MAINTENANCE_MODE", default=False)
+
+# django-registration
+ACCOUNT_ACTIVATION_DAYS = 2
