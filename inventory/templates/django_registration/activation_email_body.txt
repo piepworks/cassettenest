@@ -1,4 +1,4 @@
-Your're almost done creating your account, “{{ user }}”
+Your're almost done creating your account, {{ user }}
 
 Follow this link to activate it: {{ scheme }}://{{ site }}{% url 'django_registration_activate' activation_key %}
 
