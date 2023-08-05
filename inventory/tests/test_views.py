@@ -1290,9 +1290,11 @@ class SubscriptionTests(TestCase):
     def setUpTestData(cls):
         cls.username = "test"
         cls.password = "secret"
+        cls.email = "test@example.com"
         cls.user = User.objects.create_user(
             username=cls.username,
             password=cls.password,
+            email=cls.email,
             id=1,
         )
 
@@ -1337,7 +1339,7 @@ class SubscriptionTests(TestCase):
             "alert_name": "subscription_created",
             "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
             "status": "active",
-            "passthrough": "1",
+            "email": self.email,
             "cancel_url": "https://example.com",
             "update_url": "https://example.com",
         }
@@ -1356,7 +1358,7 @@ class SubscriptionTests(TestCase):
             "old_subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
             "subscription_plan_id": settings.PADDLE_STANDARD_ANNUAL,
             "status": "active",
-            "passthrough": "1",
+            "email": self.email,
             "cancel_url": "https://example.com",
             "update_url": "https://example.com",
         }
@@ -1375,7 +1377,7 @@ class SubscriptionTests(TestCase):
             "old_subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
             "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
             "status": "active",
-            "passthrough": "1",
+            "email": self.email,
             "cancel_url": "https://example.com",
             "update_url": "https://example.com",
         }
@@ -1394,7 +1396,7 @@ class SubscriptionTests(TestCase):
             "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
             "cancellation_effective_date": datetime.date.today(),
             "status": "deleted",
-            "passthrough": "1",
+            "email": self.email,
         }
 
         with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
@@ -1411,7 +1413,7 @@ class SubscriptionTests(TestCase):
             "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
             "cancellation_effective_date": datetime.date.today(),
             "status": "active",
-            "passthrough": "1",
+            "email": self.email,
         }
 
         with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
@@ -1428,7 +1430,7 @@ class SubscriptionTests(TestCase):
             "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
             "cancellation_effective_date": datetime.date.today(),
             "status": "active",
-            "passthrough": "1",
+            "email": self.email,
         }
 
         with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
@@ -1445,7 +1447,7 @@ class SubscriptionTests(TestCase):
             "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
             "cancellation_effective_date": datetime.date.today(),
             "status": "active",
-            "passthrough": "1",
+            "email": self.email,
         }
 
         with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
@@ -1472,7 +1474,9 @@ class SubscriptionTests(TestCase):
     def test_webhook_without_alert_name(self):
         with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
             with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(reverse("paddle-webhooks"), data={})
+                response = self.client.post(
+                    reverse("paddle-webhooks"), data={"email": self.email}
+                )
 
         self.assertEqual(response.status_code, 400)
 

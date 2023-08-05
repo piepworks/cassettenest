@@ -510,13 +510,12 @@ def paddle_webhooks(request):
         return HttpResponse(status=400)
 
     alert_name = payload.get("alert_name")
-    cn_user_id = payload.get("passthrough")
+    user = get_object_or_404(User, email=payload.get("email"))
 
-    if not alert_name or not cn_user_id:
+    if not alert_name:
         return HttpResponse(status=400)
 
     if alert_name in supported_webhooks:
-        user = get_object_or_404(User, id=cn_user_id)
         update_subscription(alert_name, user, payload)
 
     return HttpResponse(status=200)
