@@ -29,6 +29,11 @@ urlpatterns = [
         "favicon.ico",
         RedirectView.as_view(url=staticfiles_storage.url("img/favicon.ico")),
     ),
+    # Redirect the old registration URL.
+    path(
+        "register/",
+        RedirectView.as_view(pattern_name="django_registration_register"),
+    ),
     # Redirect an authenticated user from the login page.
     path(
         "accounts/login/",
