@@ -515,6 +515,12 @@ class Roll(models.Model):
     def save(self, *args, **kwargs):
         # Adjust push_pull to translate from the [type=number] field to the proper
         # PUSH_PULL_CHOICES options.
+        try:
+            if self.push_pull > 0:
+                self.push_pull = f"+{self.push_pull}"
+        except TypeError:
+            # Already a string
+            pass
         self.push_pull = str(self.push_pull)
         if self.push_pull == "0":
             self.push_pull = ""
