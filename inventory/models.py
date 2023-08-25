@@ -7,7 +7,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from .utils import status_number, film_types, film_formats, is_active
+from .utils import status_number, film_types, film_formats, is_active, push_pull_to_db
 
 
 class Profile(models.Model):
@@ -515,9 +515,7 @@ class Roll(models.Model):
     def save(self, *args, **kwargs):
         # Adjust push_pull to translate from the [type=number] field to the proper
         # PUSH_PULL_CHOICES options.
-        self.push_pull = str(self.push_pull)
-        if self.push_pull == "0":
-            self.push_pull = ""
+        self.push_pull = push_pull_to_db(self.push_pull)
 
         # If the started_on field has been populated and the `code` field has
         # not, populate the code field:

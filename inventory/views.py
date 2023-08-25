@@ -2346,7 +2346,7 @@ def camera_or_back_load(request, pk, back_pk=None):
         roll.camera = camera
         if camera_back:
             roll.camera_back = camera_back
-        roll.push_pull = push_pull
+        roll.push_pull = push_pull_to_db(push_pull)
         roll.started_on = datetime.date.today()
         roll.save()
         messages.success(
@@ -2432,10 +2432,25 @@ def camera_or_back_detail(request, pk, back_pk=None):
         camera_or_back = camera
 
     if request.method == "POST":
-        roll = get_object_or_404(Roll, id=request.POST.get("roll", ""))
+        # Finish the loaded roll
+        roll = get_object_or_404(
+            Roll, id=request.POST.get("roll", ""), owner=request.user
+        )
         roll.status = status_number("shot")
         roll.save()
         messages.success(request, f"Roll of {roll.film} (code: {roll.code}) finished!")
+
+        if "another" in request.POST:
+            querystring = ""
+            if roll.project:
+                querystring = f"?project={roll.project.id}"
+
+            if back_pk:
+                return redirect(
+                    reverse("camera-back-load", args=(camera.id, back_pk)) + querystring
+                )
+            else:
+                return redirect(reverse("camera-load", args=(camera.id,)) + querystring)
 
         if roll.project:
             return redirect(reverse("project-detail", args=(roll.project.id,)))
