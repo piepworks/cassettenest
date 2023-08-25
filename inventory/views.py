@@ -2346,7 +2346,7 @@ def camera_or_back_load(request, pk, back_pk=None):
         roll.camera = camera
         if camera_back:
             roll.camera_back = camera_back
-        roll.push_pull = push_pull
+        roll.push_pull = push_pull_to_db(push_pull)
         roll.started_on = datetime.date.today()
         roll.save()
         messages.success(
