@@ -2432,6 +2432,7 @@ def camera_or_back_detail(request, pk, back_pk=None):
         camera_or_back = camera
 
     if request.method == "POST":
+        # Finish the loaded roll
         roll = get_object_or_404(
             Roll, id=request.POST.get("roll", ""), owner=request.user
         )

@@ -2139,6 +2139,66 @@ class CameraViewTests(TestCase):
             messages[0],
         )
 
+    def test_camera_unload_post(self):
+        camera = baker.make(Camera, owner=self.user, status="loaded")
+        roll = baker.make(
+            Roll,
+            film=baker.make(Film, stock=baker.make(Stock)),
+            status=status_number("loaded"),
+            owner=self.user,
+            camera=camera,
+        )
+
+        response = self.client.post(
+            reverse("camera-detail", args=(camera.id,)), data={"roll": roll.id}
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_camera_unload_post_load_another(self):
+        camera = baker.make(Camera, owner=self.user, status="loaded")
+        roll = baker.make(
+            Roll,
+            film=baker.make(Film, stock=baker.make(Stock)),
+            status=status_number("loaded"),
+            owner=self.user,
+            camera=camera,
+            project=baker.make(Project, owner=self.user),
+        )
+
+        response = self.client.post(
+            reverse("camera-detail", args=(camera.id,)),
+            data={"roll": roll.id, "another": True},
+        )
+
+        self.assertRedirects(
+            response,
+            expected_url=f"{reverse('camera-load', args=(camera.id,))}?project={roll.project.id}",
+        )
+
+    def test_camera_back_unload_post_load_another(self):
+        camera = baker.make(Camera, owner=self.user, status="loaded")
+        back = baker.make(CameraBack, camera=camera)
+        roll = baker.make(
+            Roll,
+            film=baker.make(Film, stock=baker.make(Stock)),
+            status=status_number("loaded"),
+            owner=self.user,
+            camera=camera,
+            camera_back=back,
+            project=baker.make(Project, owner=self.user),
+        )
+
+        response = self.client.post(
+            reverse("camera-back-detail", args=(camera.id, back.id)),
+            data={"roll": roll.id, "another": True},
+        )
+
+        self.assertRedirects(
+            response,
+            expected_url=f"{reverse('camera-back-load', args=(camera.id, back.id))}?project={roll.project.id}",
+        )
+
 
 @override_settings(STORAGES=staticfiles_storage)
 class RollViewTests(TestCase):
