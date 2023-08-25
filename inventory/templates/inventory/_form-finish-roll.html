@@ -1,5 +1,10 @@
-<form action="{% url 'camera-detail' camera.id %}" method="post">
+<form
+    action="{% if roll.camera_back %}{% url 'camera-back-detail' camera.id roll.camera_back.id %}{% else %}{% url 'camera-detail' camera.id %}{% endif %}{% if roll.project %}?project={{ roll.project.id }}{% endif %}"
+    method="post">
     {% csrf_token %}
     <input type="hidden" name="roll" value="{{ roll.id }}" />
-    <button class="primary">Finish roll</button>
+    <div class="action">
+        <button class="primary">Finish roll</button>
+        <button name="another">Finish roll and load another</button>
+    </div>
 </form>
