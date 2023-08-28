@@ -2316,6 +2316,16 @@ def camera_or_back_load(request, pk, back_pk=None):
         camera_back = None
         camera_or_back = camera
 
+    try:
+        if camera_or_back.multiple_backs:
+            messages.warning(
+                request,
+                "You can’t directly load a multi-back camera. Load one of its backs to continue.",
+            )
+            return redirect(reverse("camera-detail", args=(camera_or_back.id,)))
+    except AttributeError:
+        pass
+
     # Modifying both roll and camera tables
     # Set the camera's status to 'loaded'
     # Set the roll's status to 'loaded'
