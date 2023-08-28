@@ -1,5 +1,3 @@
 #!/bin/sh
 
-venv/bin/coverage run venv/bin/pytest -n auto
-venv/bin/coverage report
-venv/bin/coverage html
+venv/bin/pytest -n auto --cov=inventory --cov-report=html
