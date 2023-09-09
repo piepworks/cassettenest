@@ -2246,7 +2246,7 @@ class RollViewTests(TestCase):
 
     def test_roll_edit_post(self):
         roll = baker.make(Roll, owner=self.user)
-        roll.film = baker.make(Film, slug="slug", iso=100)
+        roll.film = baker.make(Film, stock=baker.make(Stock), slug="slug", iso=100)
         roll.camera = baker.make(Camera, owner=self.user)
         roll.camera_back = baker.make(CameraBack, camera=roll.camera)
         roll.save()
@@ -2256,6 +2256,7 @@ class RollViewTests(TestCase):
                 "lens": "50mm f/1.4",
                 "push_pull": "+2",
                 "status": status_number("storage"),
+                "film": roll.film.id,
             },
         )
         messages = [m.message for m in get_messages(response.wsgi_request)]
