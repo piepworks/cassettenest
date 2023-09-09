@@ -998,6 +998,15 @@
         border-none
         pb-0;
     }
+
+    label {
+      @apply
+        mb-2
+        sm:mb-0
+        block
+        text-sm
+        font-medium
+    }
   }
 
   .progressive-field-wrapper { @apply space-y-6; }

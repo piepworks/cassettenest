@@ -11,11 +11,10 @@
         <p class="col-span-3">Or <a href="{% url 'roll-add' %}">add a roll to your logbook</a>.</p>
     </div>
 
+    {% include 'components/form-field.html' with field=form.film %}
     <div class="field">
-        <label for="id_film">Film</label>
-        <div class="col-span-2">
-            {% include 'inventory/_film-selector.html' %}
-            <div class="mt-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">
+        <div class="col-span-3">
+            <div class="mb-2 text-sm text-stone-500 dark:text-stone-300 prose dark:prose-invert">
                 Not seeing what you need?
                 <a href="{% url 'stock-add' %}">Add a new kind of film to the list.</a>
             </div>
