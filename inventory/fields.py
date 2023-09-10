@@ -66,7 +66,4 @@ class GroupedFilmChoiceField(ModelChoiceField):
         super().__init__(*args, **kwargs)
 
     def label_from_instance(self, obj):
-        try:
-            return f"{obj} ({obj.count})"
-        except AttributeError:
-            return obj
+        return f"{obj} ({obj.count})"
