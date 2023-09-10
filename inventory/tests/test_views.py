@@ -1093,6 +1093,7 @@ class RollAddTests(TestCase):
                 "push_pull": 1,
                 "started_on": self.today,
                 "ended_on": self.today,
+                "camera": baker.make(Camera, owner=self.user).id,
             },
         )
         messages = [m.message for m in get_messages(response.wsgi_request)]
@@ -1109,6 +1110,7 @@ class RollAddTests(TestCase):
                 "started_on": self.today,
                 "ended_on": self.today,
                 "another": True,
+                "camera": baker.make(Camera, owner=self.user).id,
             },
         )
         messages = [m.message for m in get_messages(response.wsgi_request)]
@@ -2257,6 +2259,7 @@ class RollViewTests(TestCase):
                 "push_pull": "+2",
                 "status": status_number("storage"),
                 "film": roll.film.id,
+                "camera": baker.make(Camera, owner=self.user).id,
             },
         )
         messages = [m.message for m in get_messages(response.wsgi_request)]
