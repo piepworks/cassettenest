@@ -22,7 +22,9 @@ class GroupedModelChoiceIterator(ModelChoiceIterator):
         if not queryset._prefetch_related_lookups:
             queryset = queryset.iterator()
         for group, objs in groupby(queryset, self.groupby):
-            yield (group.title(), [self.choice(obj) for obj in objs])
+            if isinstance(group, str):
+                group = group.title()
+            yield (group, [self.choice(obj) for obj in objs])
 
 
 class GroupedModelChoiceField(ModelChoiceField):

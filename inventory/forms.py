@@ -91,6 +91,18 @@ class RollForm(ModelForm):
             queryset=self.fields["film"].queryset,
             choices_groupby="stock.manufacturer",
         )
+        self.fields["camera"] = GroupedModelChoiceField(
+            queryset=self.fields["camera"].queryset,
+            choices_groupby="status",
+        )
+        self.fields["camera_back"] = GroupedModelChoiceField(
+            queryset=self.fields["camera_back"].queryset,
+            choices_groupby="status",
+        )
+        self.fields["project"] = GroupedModelChoiceField(
+            queryset=self.fields["project"].queryset,
+            choices_groupby="status",
+        )
 
     class Meta:
         model = Roll
