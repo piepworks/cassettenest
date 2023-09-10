@@ -2,6 +2,7 @@
     <div class="field">
         <label>Film</label>
         <p class="field__input-placeholder">{{ roll.film }}</p>
+        <input type="hidden" name="film" value="{{ roll.film.id }}">
     </div>
 {% endif %}
 {% include 'components/form-field.html' with field=form.started_on %}

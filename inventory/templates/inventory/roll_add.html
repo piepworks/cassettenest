@@ -17,10 +17,7 @@
         <p class="col-span-3">Or <a href="{% url 'rolls-add' %}">add rolls to storage</a>.</p>
     </div>
 
-    <div class="field">
-        <label for="id_film">Film</label>
-        {% include 'inventory/_film-selector.html' %}
-    </div>
+    {% include 'components/form-field.html' with field=form.film %}
 
     <div class="field">
         <p class="col-span-3">

@@ -51,6 +51,8 @@ from .forms import (
     UploadCSVForm,
     FrameForm,
     CameraOrBackLoadForm,
+    ProjectFilmForm,
+    ProjectCameraForm,
 )
 from .utils import (
     development_statuses,
@@ -1230,6 +1232,7 @@ def project_detail(request, pk):
         Camera.objects.filter(owner=owner)
         .exclude(pk__in=project.cameras.values_list("pk", flat=True))
         .exclude(status="unavailable")
+        .order_by("status")
     )
     cameras_empty = project.cameras.filter(status="empty").exclude(multiple_backs=True)
 
@@ -1294,6 +1297,7 @@ def project_detail(request, pk):
             "stock__manufacturer__name",
             "format",
         )
+        .exclude(stock=None)
     )
 
     roll_logbook = (
@@ -1368,15 +1372,20 @@ def project_detail(request, pk):
             ],
         }
 
+    film_form = ProjectFilmForm(film_counts=film_available_count)
+    camera_form = ProjectCameraForm(cameras=cameras_to_add)
+
     context = {
         "owner": owner,
         "project": project,
         "cameras_to_add": cameras_to_add,
         "cameras": cameras,
+        "camera_form": camera_form,
         "total_film_count": total_film_count,
         "total_rolls": total_film_count.count(),
         "film_counts": film_counts,
         "film_available_count": film_available_count,
+        "film_form": film_form,
         "format_counts": format_counts,
         "loaded_roll_list": loaded_roll_list,
         "roll_logbook": roll_logbook,
@@ -1509,6 +1518,7 @@ def rolls_add(request):
         Film.objects.all()
         .exclude(Q(personal=True) & ~Q(added_by=request.user))
         .order_by("stock")
+        .exclude(stock=None)
     )
 
     if request.method == "POST":
@@ -1538,9 +1548,12 @@ def rolls_add(request):
 
         return redirect(reverse("inventory"))
     else:
+        form = RollsAddForm()
+        form.fields["film"].queryset = films_queryset
+
         context = {
             "films": films_queryset,
-            "form": RollsAddForm,
+            "form": form,
             "wc_needed": True,
         }
 
@@ -1556,6 +1569,7 @@ def roll_add(request):
         Film.objects.all()
         .exclude(Q(personal=True) & ~Q(added_by=owner))
         .order_by("stock")
+        .exclude(stock=None)
     )
 
     if request.method == "POST":
@@ -1595,6 +1609,7 @@ def roll_add(request):
         form.fields["camera_back"].queryset = CameraBack.objects.filter(
             camera__owner=owner
         )
+        form.fields["film"].queryset = films
         form.fields["project"].queryset = Project.objects.filter(owner=owner)
         status_choices = Roll._meta.get_field("status").flatchoices
         del status_choices[0:2]  # remove storage & loaded
@@ -2403,6 +2418,7 @@ def camera_or_back_load(request, pk, back_pk=None):
                     "stock__type",
                     "stock__manufacturer",
                 )
+                .exclude(stock=None)
             )
             if camera_or_back.format:
                 film_counts = film_counts.filter(format=camera_or_back.format)
