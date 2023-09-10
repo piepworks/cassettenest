@@ -1378,13 +1378,13 @@ def project_detail(request, pk):
     context = {
         "owner": owner,
         "project": project,
-        "cameras_to_add": cameras_to_add,  # delete?
+        "cameras_to_add": cameras_to_add,
         "cameras": cameras,
         "camera_form": camera_form,
         "total_film_count": total_film_count,
         "total_rolls": total_film_count.count(),
         "film_counts": film_counts,
-        "film_available_count": film_available_count,  # delete?
+        "film_available_count": film_available_count,
         "film_form": film_form,
         "format_counts": format_counts,
         "loaded_roll_list": loaded_roll_list,
