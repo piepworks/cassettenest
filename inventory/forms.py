@@ -196,6 +196,20 @@ class ProjectFilmForm(ModelForm):
         fields = ["film"]
 
 
+class ProjectCameraForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.cameras = kwargs.pop("cameras")
+        super(ProjectCameraForm, self).__init__(*args, **kwargs)
+        self.fields["cameras"] = GroupedModelChoiceField(
+            queryset=self.cameras.order_by("status"),
+            choices_groupby="status",
+        )
+
+    class Meta:
+        model = Project
+        fields = ["cameras"]
+
+
 class JournalForm(ModelForm):
     class Meta:
         model = Journal

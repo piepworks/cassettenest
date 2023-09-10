@@ -52,6 +52,7 @@ from .forms import (
     FrameForm,
     CameraOrBackLoadForm,
     ProjectFilmForm,
+    ProjectCameraForm,
 )
 from .utils import (
     development_statuses,
@@ -1231,6 +1232,7 @@ def project_detail(request, pk):
         Camera.objects.filter(owner=owner)
         .exclude(pk__in=project.cameras.values_list("pk", flat=True))
         .exclude(status="unavailable")
+        .order_by("status")
     )
     cameras_empty = project.cameras.filter(status="empty").exclude(multiple_backs=True)
 
@@ -1371,16 +1373,18 @@ def project_detail(request, pk):
         }
 
     film_form = ProjectFilmForm(film_counts=film_available_count)
+    camera_form = ProjectCameraForm(cameras=cameras_to_add)
 
     context = {
         "owner": owner,
         "project": project,
-        "cameras_to_add": cameras_to_add,
+        "cameras_to_add": cameras_to_add,  # delete?
         "cameras": cameras,
+        "camera_form": camera_form,
         "total_film_count": total_film_count,
         "total_rolls": total_film_count.count(),
         "film_counts": film_counts,
-        "film_available_count": film_available_count,
+        "film_available_count": film_available_count,  # delete?
         "film_form": film_form,
         "format_counts": format_counts,
         "loaded_roll_list": loaded_roll_list,

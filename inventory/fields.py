@@ -10,8 +10,6 @@ from django.forms.models import ModelChoiceIterator, ModelChoiceField
 
 
 class GroupedModelChoiceIterator(ModelChoiceIterator):
-    """ """
-
     def __init__(self, field, groupby):
         self.groupby = groupby
         super().__init__(field)
@@ -24,7 +22,7 @@ class GroupedModelChoiceIterator(ModelChoiceIterator):
         if not queryset._prefetch_related_lookups:
             queryset = queryset.iterator()
         for group, objs in groupby(queryset, self.groupby):
-            yield (group, [self.choice(obj) for obj in objs])
+            yield (group.title(), [self.choice(obj) for obj in objs])
 
 
 class GroupedModelChoiceField(ModelChoiceField):

@@ -9,5 +9,6 @@ if [[ $CREATE_USER && $CREATE_USER -eq "True" ]]; then
     fi
 fi
 
+npm run build
 venv/bin/python manage.py collectstatic --noinput
 DEBUG=False venv/bin/python manage.py runserver
