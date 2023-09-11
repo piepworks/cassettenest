@@ -1493,7 +1493,7 @@ def project_camera_update(request, pk):
     )
     project = get_object_or_404(Project, id=pk, owner=request.user)
     camera = get_object_or_404(
-        Camera, id=request.POST.get("camera", ""), owner=request.user
+        Camera, id=request.POST.get("cameras", ""), owner=request.user
     )
     action = request.POST.get("action", "")
 

@@ -22,14 +22,14 @@
     {% capture as remove_text silent %}{% if item|model_name == 'Camera' %}{{ item }}{% else %}{{ item.camera }}{% endif %}{% endcapture %}
     <form onsubmit="return confirmRemove('{{ remove_text }} from {{ project.name }}')" class="print:hidden ml-5" action="{% url 'project-camera-update' project.id %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="camera" value="{% if item|model_name == 'Camera' %}{{ item.id }}{% else %}{{ item.camera.id }}{% endif %}">
+        <input type="hidden" name="cameras" value="{% if item|model_name == 'Camera' %}{{ item.id }}{% else %}{{ item.camera.id }}{% endif %}">
         <input type="hidden" name="action" value="remove">
         <button class="destructive">Remove</button>
     </form>
     {% elif project %}
     <form onsubmit="return confirmRemove('{{ item.camera }} and all its backs from {{ project.name }}')" class="print:hidden ml-5" action="{% url 'project-camera-update' project.id %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="camera" value="{{ item.camera.id }}">
+        <input type="hidden" name="cameras" value="{{ item.camera.id }}">
         <input type="hidden" name="action" value="remove">
         <button class="destructive">Remove</button>
     </form>

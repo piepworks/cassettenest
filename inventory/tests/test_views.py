@@ -1863,7 +1863,7 @@ class ProjectTests(TestCase):
         response = self.client.post(
             reverse("project-camera-update", args=(project.id,)),
             data={
-                "camera": camera.id,
+                "cameras": camera.id,
                 "action": "add",
             },
         )
@@ -1879,7 +1879,7 @@ class ProjectTests(TestCase):
         response = self.client.post(
             reverse("project-camera-update", args=(project.id,)),
             data={
-                "camera": camera.id,
+                "cameras": camera.id,
                 "action": "remove",
             },
         )
@@ -1894,7 +1894,7 @@ class ProjectTests(TestCase):
         response = self.client.post(
             reverse("project-camera-update", args=(project.id,)),
             data={
-                "camera": camera.id,
+                "cameras": camera.id,
                 "action": "not-an-action",
             },
         )
