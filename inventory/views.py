@@ -2324,6 +2324,7 @@ def camera_or_back_load(request, pk, back_pk=None):
     owner = request.user
     current_project = None
     camera = get_object_or_404(Camera, id=pk, owner=owner)
+    current_projects = camera.project_set.filter(status="current")
     if back_pk:
         camera_back = get_object_or_404(CameraBack, id=back_pk, camera__owner=owner)
         camera_or_back = camera_back
@@ -2383,8 +2384,6 @@ def camera_or_back_load(request, pk, back_pk=None):
         else:
             return redirect(reverse("roll-detail", args=(roll.id,)))
     else:
-        projects = Project.objects.filter(owner=owner, status="current")
-
         # Querystring
         if request.GET.get("project"):
             current_project = get_project_or_none(
@@ -2432,7 +2431,7 @@ def camera_or_back_load(request, pk, back_pk=None):
             "camera_back": camera_back,
             "camera_or_back": camera_or_back,
             "current_project": current_project,
-            "projects": projects,
+            "projects": current_projects,
             "film_counts": film_counts.exists(),
         }
 
