@@ -23,6 +23,9 @@
                 <table>
                     <thead>
                         <tr>
+                            {% if project %}
+                            <th></th>
+                            {% endif %}
                             <th class="text-left">Film Stock</th>
                             <th class="text-left">Type</th>
                             <th class="text-left">Format</th>
@@ -32,6 +35,18 @@
                     <tbody>
                     {% for film in film_counts %}
                         <tr>
+                            {% if project %}
+                            <td>
+                                <form onsubmit="return confirmRemove('all rolls of {{ film }} from {{ project.name }}')" class="remove" action="{% url 'project-rolls-remove' project.id %}" method="post">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="film" value="{{ film.id }}">
+                                    <button class="destructive" title="Remove rolls">
+                                        <span class="sr-only">Remove rolls</span>
+                                        {% include 'svg/heroicons/x.svg' with class="h-3 w-3 text-white" %}
+                                    </button>
+                                </form>
+                            </td>
+                            {% endif %}
                             {% include 'components/film.html' %}
                         </tr>
                     {% endfor %}

@@ -976,8 +976,22 @@
     }
   }
 
-  .section-tabbed {
-    form { @apply space-y-0; }
+  /* Remove items from a project */
+  form.remove {
+    @apply space-y-0;
+
+    button {
+      @apply
+        print:hidden
+        flex
+        items-center
+        justify-center
+        rounded-full
+        p-2
+        border-0
+        focus:ring-2
+        focus:ring-white
+    }
   }
 
   /* Form bits */

@@ -20,18 +20,24 @@
 <li class="flex items-center hover:bg-stone-100 dark:hover:bg-stone-700 transition-colors">
     {% if project and not item.camera_back and item|model_name != 'CameraBack' %}
     {% capture as remove_text silent %}{% if item|model_name == 'Camera' %}{{ item }}{% else %}{{ item.camera }}{% endif %}{% endcapture %}
-    <form onsubmit="return confirmRemove('{{ remove_text }} from {{ project.name }}')" class="print:hidden ml-5" action="{% url 'project-camera-update' project.id %}" method="post">
+    <form onsubmit="return confirmRemove('{{ remove_text }} from {{ project.name }}')" class="remove ml-5" action="{% url 'project-camera-update' project.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="cameras" value="{% if item|model_name == 'Camera' %}{{ item.id }}{% else %}{{ item.camera.id }}{% endif %}">
         <input type="hidden" name="action" value="remove">
-        <button class="destructive">Remove</button>
+        <button class="destructive" title="Remove camera">
+            <span class="sr-only">Remove camera</span>
+            {% include 'svg/heroicons/x.svg' with class="h-3 w-3 text-white" %}
+        </button>
     </form>
     {% elif project %}
-    <form onsubmit="return confirmRemove('{{ item.camera }} and all its backs from {{ project.name }}')" class="print:hidden ml-5" action="{% url 'project-camera-update' project.id %}" method="post">
+    <form onsubmit="return confirmRemove('{{ item.camera }} and all its backs from {{ project.name }}')" class="remove ml-5" action="{% url 'project-camera-update' project.id %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="cameras" value="{{ item.camera.id }}">
         <input type="hidden" name="action" value="remove">
-        <button class="destructive">Remove</button>
+        <button class="destructive" title="Remove camera">
+            <span class="sr-only">Remove camera</span>
+            {% include 'svg/heroicons/x.svg' with class="h-3 w-3 text-white" %}
+        </button>
     </form>
     {% endif %}
     <a
