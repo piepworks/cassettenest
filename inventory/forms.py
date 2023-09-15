@@ -94,6 +94,7 @@ class RollForm(ModelForm):
         self.fields["camera"] = GroupedModelChoiceField(
             queryset=self.fields["camera"].queryset,
             choices_groupby="status",
+            required=False,
         )
         self.fields["camera_back"] = GroupedModelChoiceField(
             queryset=self.fields["camera_back"].queryset,
