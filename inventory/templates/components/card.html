@@ -24,7 +24,7 @@
         {% csrf_token %}
         <input type="hidden" name="cameras" value="{% if item|model_name == 'Camera' %}{{ item.id }}{% else %}{{ item.camera.id }}{% endif %}">
         <input type="hidden" name="action" value="remove">
-        <button class="destructive" title="Remove camera">
+        <button title="Remove camera">
             <span class="sr-only">Remove camera</span>
             {% include 'svg/heroicons/x.svg' with class="h-3 w-3 text-white" %}
         </button>
@@ -34,7 +34,7 @@
         {% csrf_token %}
         <input type="hidden" name="cameras" value="{{ item.camera.id }}">
         <input type="hidden" name="action" value="remove">
-        <button class="destructive" title="Remove camera">
+        <button title="Remove camera">
             <span class="sr-only">Remove camera</span>
             {% include 'svg/heroicons/x.svg' with class="h-3 w-3 text-white" %}
         </button>
