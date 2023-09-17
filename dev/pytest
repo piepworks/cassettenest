@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Run all the tests as fast as possible
+# (other than the standalone Playwright ones: `npx playwright test`)
+
+pytest -n auto inventory/tests --runplaywright
