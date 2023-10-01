@@ -26,7 +26,7 @@ certifi==2023.7.22
     #   sentry-sdk
 cfgv==3.4.0
     # via pre-commit
-charset-normalizer==3.2.0
+charset-normalizer==3.3.0
     # via requests
 click==8.1.7
     # via
@@ -87,7 +87,7 @@ environs[django]==9.5.0
     # via -r requirements.in
 execnet==2.0.2
     # via pytest-xdist
-executing==1.2.0
+executing==2.0.0
     # via stack-data
 filelock==3.12.4
     # via virtualenv
@@ -99,13 +99,13 @@ greenlet==2.0.2
     # via playwright
 gunicorn==21.2.0
     # via -r requirements.in
-identify==2.5.29
+identify==2.5.30
     # via pre-commit
 idna==3.4
     # via requests
 iniconfig==2.0.0
     # via pytest
-ipython==8.15.0
+ipython==8.16.0
     # via -r requirements.in
 jedi==0.19.0
     # via ipython
@@ -125,7 +125,7 @@ mypy-extensions==1.0.0
     # via black
 nodeenv==1.8.0
     # via pre-commit
-packaging==23.1
+packaging==23.2
     # via
     #   black
     #   build
@@ -158,9 +158,9 @@ pre-commit==3.4.0
     # via -r requirements.in
 prompt-toolkit==3.0.39
     # via ipython
-psycopg[binary]==3.1.11
+psycopg[binary]==3.1.12
     # via -r requirements.in
-psycopg-binary==3.1.11
+psycopg-binary==3.1.12
     # via psycopg
 ptyprocess==0.7.0
     # via pexpect
@@ -227,13 +227,13 @@ sqlparse==0.4.4
     # via
     #   django
     #   django-debug-toolbar
-stack-data==0.6.2
+stack-data==0.6.3
     # via ipython
 text-unidecode==1.3
     # via python-slugify
 tinycss2==1.1.1
     # via bleach
-traitlets==5.10.0
+traitlets==5.10.1
     # via
     #   ipython
     #   matplotlib-inline
@@ -248,7 +248,7 @@ urllib3==2.0.5
     #   sentry-sdk
 virtualenv==20.24.5
     # via pre-commit
-wcwidth==0.2.6
+wcwidth==0.2.8
     # via prompt-toolkit
 webencodings==0.5.1
     # via
