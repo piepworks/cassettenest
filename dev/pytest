@@ -3,4 +3,5 @@
 # Run all the tests as fast as possible
 # (other than the standalone Playwright ones: `npx playwright test`)
 
+echo "Running: pytest -n auto inventory/tests --runplaywright\n"
 pytest -n auto inventory/tests --runplaywright
