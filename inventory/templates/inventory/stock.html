@@ -4,7 +4,11 @@
 {% block title %}Film Stock: {{ stock }}{% endblock %}
 
 {% block content %}
-    <h1><a href="{% url 'stocks' %}">Film Stocks</a> &gt; <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> {{ stock.name }}</h1>
+    <h1>
+        <a href="{% url 'stocks' %}">Film Stocks</a>
+        {% include 'svg/heroicons/chevron-right.svg' with class='h-10 w-10 inline-block' %}
+        <a href="{% url 'stocks-manufacturer' manufacturer.slug %}">{{ manufacturer.name }}</a> {{ stock.name }}
+    </h1>
 
     {% if stock.added_by %}
         <div class="notes sm:flex gap-3 sm:items-center bg-white shadow-lg dark:shadow-none dark:bg-stone-900 rounded-xl py-4 px-6">

@@ -3,7 +3,8 @@
 {% endif %}
 
 {% if film.stock %}
-    <a href="{% url 'stocks' %}">Film Stocks</a> &gt;
+    <a href="{% url 'stocks' %}">Film Stocks</a>
+    {% include 'svg/heroicons/chevron-right.svg' with class='w-10 h-10 inline-block' %}
     <a href="{% url 'stocks-manufacturer' film.stock.manufacturer.slug %}">{{ film.stock.manufacturer }}</a>
     <a href="{{ film.stock.get_absolute_url }}">{{ film.stock.name }}</a> in {{ film.get_format_display }}
 {% else %}

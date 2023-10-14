@@ -5,7 +5,10 @@
         {% if manufacturer %}</a>{% endif %}
     </span>
     <span id="manufacturer-name">
-        {% if manufacturer %} &gt; {{ manufacturer }}{% endif %}
+        {% if manufacturer %}
+            {% include 'svg/heroicons/chevron-right.svg' with class='w-10 h-10 inline-block' %}
+            {{ manufacturer }}
+        {% endif %}
     </span>
 </h1>
 
