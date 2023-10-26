@@ -13,6 +13,11 @@
       dark:print:text-black;
 
     --folded-corner: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0% 80%);
+    background-image: url('/static/img/grain-light.png');
+
+    @media (prefers-color-scheme: dark) {
+      background-image: url('/static/img/grain.png');
+    }
   }
 
   ::selection {
