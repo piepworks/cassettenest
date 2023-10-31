@@ -186,6 +186,8 @@ urlpatterns = [
     path("import/projects", views.ImportProjectsView.as_view(), name="import-projects"),
     path("import/journals", views.ImportJournalsView.as_view(), name="import-journals"),
     path("import/frames", views.ImportFramesView.as_view(), name="import-frames"),
+    # Ko-fi
+    path("kofi-webhooks", views.kofi_webhooks, name="kofi-webhooks"),
     # Paddle
     path("paddle-webhooks", views.paddle_webhooks, name="paddle-webhooks"),
     path("subscription-update", views.subscription_update, name="subscription-update"),

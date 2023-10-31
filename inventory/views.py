@@ -500,6 +500,18 @@ def subscription_created(request):
 
 @require_POST
 @csrf_exempt
+def kofi_webhooks(request):
+    # https://ko-fi.com/manage/webhooks
+
+    strdata = request.POST.get("data")
+    jsondata = json.loads(strdata)
+    print(jsondata.get("type"))
+
+    return HttpResponse(status=200)
+
+
+@require_POST
+@csrf_exempt
 def paddle_webhooks(request):
     forwarded_for = "{}".format(request.META.get("HTTP_X_FORWARDED_FOR"))
 
