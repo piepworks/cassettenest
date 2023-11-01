@@ -503,9 +503,12 @@ def subscription_created(request):
 def kofi_webhooks(request):
     # https://ko-fi.com/manage/webhooks
 
-    strdata = request.POST.get("data")
-    jsondata = json.loads(strdata)
-    print(jsondata.get("type"))
+    payload = json.loads(request.POST.get("data"))
+
+    if not payload.get("verification_token") == settings.KOFI_VERIFICATION_TOKEN:
+        return HttpResponseForbidden("Permission denied.")
+
+    print(payload.get("type"))
 
     return HttpResponse(status=200)
 
