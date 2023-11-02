@@ -5,6 +5,7 @@
     <title>{% block title %}{% endblock %}{% if request.path != index_url %} / {% endif %}Cassette Nest</title>
     <meta name="description" content="An easy and fun way to build an lifelong archive of metadata about your film photography." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="version" content="4.0.0" />
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
     <link rel="stylesheet" href="{% static 'tailwind.css' %}" />
     {% include 'partials/pwa-meta.html' %}
