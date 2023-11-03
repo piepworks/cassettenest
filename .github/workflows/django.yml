@@ -42,6 +42,7 @@ jobs:
           PADDLE_STANDARD_ANNUAL: ${{ secrets.PADDLE_STANDARD_ANNUAL }}
           PADDLE_AWESOME_ANNUAL: ${{ secrets.PADDLE_AWESOME_ANNUAL }}
           PADDLE_PUBLIC_KEY: ${{ secrets.PADDLE_PUBLIC_KEY }}
+          KOFI_VERIFICATION_TOKEN: ${{ secrets.KOFI_VERIFICATION_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_SAMPLE_RATE: ${{ env.SENTRY_SAMPLE_RATE }}
           DEFAULT_FROM_EMAIL: ${{ env.DEFAULT_FROM_EMAIL }}
