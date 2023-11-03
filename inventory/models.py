@@ -5,9 +5,8 @@ from django.urls import reverse
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
-from .utils import status_number, film_types, film_formats, is_active, push_pull_to_db
+from .utils import status_number, film_types, film_formats, push_pull_to_db
 
 
 class Profile(models.Model):
@@ -16,18 +15,6 @@ class Profile(models.Model):
         LIGHT = ("light", _("Light"))
         DARK = ("dark", _("Dark"))
 
-    SUBSCRIPTION_STATUS_CHOICES = (
-        ("none", "Never had a subscription"),
-        # https://developer.paddle.com/reference/platform-parameters/event-statuses
-        ("active", "Subscribed"),
-        (
-            "trialing",
-            "Trial period",
-        ),  # We don't use this since we have our own trial functionality.
-        ("past_due", "Past-Due"),
-        ("paused", "Paused"),  # We don't use this, but we could I guess.
-        ("deleted", "Canceled"),
-    )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     timezone = models.CharField(
         max_length=40,
@@ -40,63 +27,9 @@ class Profile(models.Model):
         choices=ColorModes.choices,
         default=ColorModes.AUTO,
     )
-    subscription_status = models.CharField(
-        max_length=20, choices=SUBSCRIPTION_STATUS_CHOICES, default="none"
-    )
-    friend = models.BooleanField(
-        default=False, help_text="This account doesn’t need a subscription."
-    )
-    paddle_user_id = models.IntegerField(null=True, blank=True)
-    paddle_subscription_id = models.IntegerField(
-        null=True, blank=True, help_text="Unique for each user."
-    )
-    paddle_subscription_plan_id = models.IntegerField(
-        null=True, blank=True, help_text="Which of our defined plans."
-    )
-    paddle_cancel_url = models.URLField(
-        max_length=200, blank=True, help_text="Self-service cancel URL"
-    )
-    paddle_update_url = models.URLField(
-        max_length=200, blank=True, help_text="Self-service update URL"
-    )
-    paddle_cancellation_date = models.DateField(
-        null=True,
-        blank=True,
-        help_text="When a canceled subscription becomes inactive.",
-    )
 
     def __str__(self):
         return "Settings for %s" % self.user
-
-    @cached_property
-    def has_active_subscription(self):
-        if self.user.is_staff or self.friend:
-            return True
-        elif self.subscription_status not in ["none", "paused", "deleted"]:
-            return True
-        elif self.paddle_cancellation_date and self.subscription_status == "deleted":
-            if self.paddle_cancellation_date > datetime.date.today():
-                return True
-            else:
-                return False
-        else:
-            return False
-
-    @property
-    def account_active(self):
-        return is_active(self.user)
-
-    @property
-    def trial_days_remaining(self):
-        today = datetime.date.today()
-        date_joined = self.user.date_joined.date()
-        trial_duration = int(settings.SUBSCRIPTION_TRIAL_DURATION)
-
-        return trial_duration - (today - date_joined).days
-
-    @property
-    def trial_period(self):
-        return self.trial_days_remaining > 0
 
 
 @receiver(post_save, sender=User)

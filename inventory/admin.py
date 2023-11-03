@@ -14,7 +14,6 @@ from .models import (
     Roll,
     Frame,
 )
-from .utils_paddle import paddle_plan_name
 from .forms import FilmForm
 
 
@@ -147,14 +146,6 @@ class ProfileInline(admin.StackedInline):
     model = Profile
     can_delete = False
     verbose_name_plural = "profile"
-    readonly_fields = ("plan_name",)
-
-    def plan_name(self, instance):
-        if instance.paddle_subscription_plan_id:
-            return f"{paddle_plan_name(instance.paddle_subscription_plan_id)} = {instance.paddle_subscription_plan_id}"
-
-    plan_name.short_description = "Paddle plan name"
-    plan_name.empty_value_display = "None"
 
 
 class UserAdmin(BaseUserAdmin):
@@ -165,16 +156,11 @@ class UserAdmin(BaseUserAdmin):
         "rolls",
         "cameras",
         "is_active",
-        "has_active_subscription",
-        "subscription_status",
         "timezone",
         "short_last_login",
         "short_date_joined",
     )
-    list_filter = (
-        "profile__subscription_status",
-        "is_active",
-    )
+    list_filter = ("is_active",)
     ordering = ("-last_login",)
 
     def get_queryset(self, request):
@@ -209,18 +195,6 @@ class UserAdmin(BaseUserAdmin):
         return obj.profile.timezone
 
     timezone.admin_order_field = "profile__timezone"
-
-    def has_active_subscription(self, obj):
-        return obj.profile.has_active_subscription
-
-    has_active_subscription.short_description = "Subscribed"
-    has_active_subscription.boolean = True
-
-    def subscription_status(self, obj):
-        return obj.profile.subscription_status
-
-    subscription_status.short_description = "Sub status"
-    subscription_status.admin_order_field = "profile__subscription_status"
 
     def rolls(self, obj):
         return obj.roll_count

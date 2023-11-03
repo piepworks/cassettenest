@@ -27,18 +27,5 @@
             <a href="{% url 'settings' %}">Add your email address</a>
         </li>
         {% endif %}
-        <li class="flex small:items-center">
-            {% include 'inventory/_status-check.html' with check=user.profile.has_active_subscription %}
-            <div class="flex items-start sm:items-center{% if user.profile.trial_days_remaining >= 0 %} sm:gap-3 flex-wrap{% else %} gap-3 {% endif %}">
-                <a class="flex-shrink-0" href="{% url 'settings' %}#subscription">Choose a plan</a>
-                {% if not user.profile.has_active_subscription %}
-                    {% if user.profile.trial_days_remaining >= 0 %}
-                        <span class="pt-1 text-xs text-stone-400">You have <b>{{ user.profile.trial_days_remaining }} days</b> left in your free trial.</span>
-                    {% else %}
-                        <span class="p-1 px-3 -skew-x-12 text-xs text-stone-900 bg-gold-light">Your free trial is over. Please choose a plan to continue using Cassette Nest!</span>
-                    {% endif %}
-                {% endif %}
-            </div>
-        </li>
     </ol>
 </section>

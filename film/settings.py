@@ -88,7 +88,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "inventory.context_processors.subscription_banner",
             ],
         },
     },
@@ -171,18 +170,6 @@ EMAIL_PORT = env("EMAIL_PORT")
 EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
 EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
-
-SUBSCRIPTION_TRIAL = env.bool("SUBSCRIPTION_TRIAL", default=False)
-SUBSCRIPTION_TRIAL_DURATION = env("SUBSCRIPTION_TRIAL_DURATION")
-
-# Paddle
-PADDLE_LIVE_MODE = env.bool("PADDLE_LIVE_MODE", default=False)
-PADDLE_VENDOR_ID = env("PADDLE_VENDOR_ID")
-PADDLE_VENDOR_AUTH_CODE = env("PADDLE_VENDOR_AUTH_CODE")
-PADDLE_PUBLIC_KEY = env("PADDLE_PUBLIC_KEY")
-PADDLE_STANDARD_MONTHLY = env("PADDLE_STANDARD_MONTHLY")
-PADDLE_STANDARD_ANNUAL = env("PADDLE_STANDARD_ANNUAL")
-PADDLE_AWESOME_ANNUAL = env("PADDLE_AWESOME_ANNUAL")
 
 # Ko-fi
 KOFI_VERIFICATION_TOKEN = env("KOFI_VERIFICATION_TOKEN")

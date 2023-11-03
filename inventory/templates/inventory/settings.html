@@ -7,8 +7,6 @@
 {% block content %}
 <h1>Settings</h1>
 
-<div id="subscription">{% include 'inventory/_settings-subscription.html' %}</div>
-
 <form method="post">
     {% csrf_token %}
     {% for field in user_form %}
@@ -52,7 +50,6 @@
 {% endif %}
 
 {% flag 'import-data' %}
-{% if user.profile.account_active %}
 <dl id="import" class="data-import-export">
     <dt>Import previously exported data</dt>
     <dd>
@@ -72,13 +69,10 @@
         </ul>
     </dd>
 </dl>
-{% endif %}
 {% endflag %}
 {% endblock %}
 
 {% block page_js %}
-    <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
-    {% include 'inventory/_settings-subscription-js.html' %}
     <script>
         const previewColorModeChange = mode => {
            if (mode === 'light' && isDarkMode()) {
