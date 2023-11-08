@@ -368,7 +368,17 @@ def kofi_webhooks(request):
     if not payload.get("verification_token") == settings.KOFI_VERIFICATION_TOKEN:
         return HttpResponseForbidden("Permission denied.")
 
-    print(payload.get("type"))
+    try:
+        user = User.objects.get(email=payload.get("email"))
+    except User.DoesNotExist:
+        user = None
+
+    if user:
+        user.profile.donation = True
+        user.save()
+        print("User found and donation set to True.")
+    else:
+        print("User not found.")
 
     return HttpResponse(status=200)
 

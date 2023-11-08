@@ -27,6 +27,10 @@ class Profile(models.Model):
         choices=ColorModes.choices,
         default=ColorModes.AUTO,
     )
+    donation = models.BooleanField(
+        default=False,
+        help_text="This person has given us money",
+    )
 
     def __str__(self):
         return "Settings for %s" % self.user
