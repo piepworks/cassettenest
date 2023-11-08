@@ -12,7 +12,7 @@ def test_login_page(test_server):
 
 @pytest.mark.playwright()
 def test_create_account(test_server):
-    test_server.get_by_role("link", name="start your 14-day free trial").click()
+    test_server.get_by_role("link", name="create an account").click()
     username = "".join(random.choice(string.ascii_letters) for i in range(5))
     test_server.get_by_label("Username").fill(username)
     test_server.get_by_label("Email").fill(f"{username}@example.com")
