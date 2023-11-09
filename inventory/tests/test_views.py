@@ -1,14 +1,17 @@
 import datetime
 import io
 import csv
+import pytest
 import pytz
 import logging
+import json
 from django.test import TestCase, override_settings, RequestFactory
 from django.urls import reverse
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.utils import timezone
+from django.conf import settings
 from django import urls
 from pyquery import PyQuery as pq
 from freezegun import freeze_time
@@ -2552,3 +2555,55 @@ def test_503_page(client):
     d = pq(response.content)
 
     assert d("title").text() == "Be right back! / Cassette Nest"
+
+
+@override_settings(STORAGES=staticfiles_storage)
+@pytest.mark.django_db
+def test_kofi_webhook_user_not_found(client):
+    payload = {
+        "type": "Donation",
+        "email": "test@example.com",
+        "verification_token": settings.KOFI_VERIFICATION_TOKEN,
+    }
+
+    response = client.post(
+        reverse("kofi-webhooks"),
+        {"data": json.dumps(payload)},
+    )
+
+    assert response.status_code == 200
+
+
+@override_settings(STORAGES=staticfiles_storage)
+@pytest.mark.django_db
+def test_kofi_webhook_user_found(client):
+    user = baker.make(User)
+    payload = {
+        "type": "Donation",
+        "email": user.email,
+        "verification_token": settings.KOFI_VERIFICATION_TOKEN,
+    }
+
+    response = client.post(
+        reverse("kofi-webhooks"),
+        {"data": json.dumps(payload)},
+    )
+
+    assert response.status_code == 200
+
+
+@override_settings(STORAGES=staticfiles_storage)
+@pytest.mark.django_db
+def test_kofi_webhook_invalid_token(client):
+    payload = {
+        "type": "Donation",
+        "email": "test@example.com",
+        "verification_token": "invalid",
+    }
+
+    response = client.post(
+        reverse("kofi-webhooks"),
+        {"data": json.dumps(payload)},
+    )
+
+    assert response.status_code == 403
