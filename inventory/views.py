@@ -290,12 +290,6 @@ def marketing_site(request):
 
 
 @login_required
-def account_inactive(request):
-    context = {}
-    return render(request, "account-inactive.html", context)
-
-
-@login_required
 def account_settings(request):
     if request.method == "POST":
         user_form = UserForm(request.POST, instance=request.user)

@@ -17,9 +17,7 @@
         {% endif %}
     {% endcapture %}
 
-    {% if user.profile.account_active %}
-        {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True additional_buttons=additional_buttons %}
-    {% endif %}
+    {% include 'inventory/_heading-buttons.html' with item=camera_back parent_item=camera url='camera-back' name='camera back' prevent_delete=True additional_buttons=additional_buttons %}
 </div>
 {% endblock header %}
 

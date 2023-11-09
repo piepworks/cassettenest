@@ -14,7 +14,6 @@ urlpatterns = [
     # Users
     path("innards/", admin.site.urls),
     path("marketing-site", views.marketing_site, name="marketing-site"),
-    path("account-inactive", views.account_inactive, name="account-inactive"),
     # PWA goodies
     path(
         "sw.js",
