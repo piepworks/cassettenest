@@ -1,11 +1,9 @@
 <p><a href="{% url 'stocks' %}">View all Film Stocks</a> <small><a href="https://cassettenest.com/docs/stocks">(What is this?)</a></small></p>
 
-{% if user.profile.account_active %}
 <div class="flex flex-wrap gap-3 my-3">
     <a class="button primary" href="{% url 'rolls-add' %}">Add rolls to storage</a>
     <a class="button" href="{% url 'roll-add' %}">Add a roll to your logbook</a>
 </div>
-{% endif %}
 
 {% if total_rolls %}
 <h2 class="print:hidden text-xl font-semibold mt-6 mb-3">Filters</h2>

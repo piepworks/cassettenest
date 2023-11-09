@@ -14,7 +14,6 @@ urlpatterns = [
     # Users
     path("innards/", admin.site.urls),
     path("marketing-site", views.marketing_site, name="marketing-site"),
-    path("account-inactive", views.account_inactive, name="account-inactive"),
     # PWA goodies
     path(
         "sw.js",
@@ -186,12 +185,8 @@ urlpatterns = [
     path("import/projects", views.ImportProjectsView.as_view(), name="import-projects"),
     path("import/journals", views.ImportJournalsView.as_view(), name="import-journals"),
     path("import/frames", views.ImportFramesView.as_view(), name="import-frames"),
-    # Paddle
-    path("paddle-webhooks", views.paddle_webhooks, name="paddle-webhooks"),
-    path("subscription-update", views.subscription_update, name="subscription-update"),
-    path(
-        "subscription-created", views.subscription_created, name="subscription-created"
-    ),
+    # Ko-fi
+    path("kofi-webhooks", views.kofi_webhooks, name="kofi-webhooks"),
     # Session Goodies
     path(
         "session/sidebar-status",

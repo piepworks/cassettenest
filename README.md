@@ -43,17 +43,7 @@ Once everything's set up, the next time you want to run it:
 
 ## Deployment
 
-Copy [your public Paddle key](https://vendors.paddle.com/public-key) to your clipboard.
-
-Set that secret on Fly:
-
-```shell
-fly secrets set PADDLE_PUBLIC_KEY="[paste public key here]
-[long string spanning multiple lines]
-…[make sure to add this ending quotation mark]"
-```
-
-Then set the rest of your secrets in one go:
+Then set your secrets in one go:
 
 ```shell
 fly secrets import < fly.env

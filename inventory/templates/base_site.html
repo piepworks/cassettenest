@@ -5,6 +5,7 @@
     <title>{% block title %}{% endblock %}{% if request.path != index_url %} / {% endif %}Cassette Nest</title>
     <meta name="description" content="An easy and fun way to build an lifelong archive of metadata about your film photography." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="version" content="4.5.0" />
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
     <link rel="stylesheet" href="{% static 'tailwind.css' %}" />
     {% include 'partials/pwa-meta.html' %}
@@ -25,13 +26,6 @@
         <div class="flex flex-col{% if request.path != patterns_url %} md:w-0 flex-1 overflow-hidden min-h-screen{% endif %}">
             {% if user.is_authenticated %}{% include '_hamburger.html' %}{% endif %}
             <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
-                {% if user.is_authenticated %}
-                    {% if subscription_banner != '' and request.path != patterns_url %}
-                    <div class="print:hidden px-6 py-4 mb-4 md:mb-0 subscription-banner{% if subscription_banner.status != 'none' %} {{ subscription_banner.status }}{% endif %}">
-                        {{ subscription_banner.message | safe }}
-                    </div>
-                    {% endif %}
-                {% endif %}
                 <main class="pt-2 md:pt-6 pb-16">
                     {% spaceless %}
                     <div class="print:hidden main-header max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8 space-y-8">
@@ -50,7 +44,12 @@
                                     <li><a href="https://cassettenest.com/policies/terms/">Terms of Service</a></li>
                                     <li><a href="https://cassettenest.com/policies/privacy/">Privacy Policy</a></li>
                                 </ul>
-                                <p class="text-stone-400 dark:text-stone-600 print:text-stone-800 xl:text-center print:xl:text-left">v4</p>
+                                <p class="mt-3 xl:text-center">
+                                    <a href="https://ko-fi.com/piepworks" target="_blank" class="inline-flex items-center space-x-2">
+                                        {% include 'svg/ko-fi.svg' with class='inline w-5 h-5' %}
+                                        <span>Support Cassette Nest on Ko-fi</span>
+                                    </a>
+                                </p>
                             </div>
                         </footer>
                     </div>

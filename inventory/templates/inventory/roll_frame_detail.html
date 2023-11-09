@@ -11,9 +11,7 @@
         <h1>Frame #{{ frame.number }} of <a href="{% url 'roll-detail' frame.roll.id %}">{{ frame.roll }}</a></h1>
     </div>
 
-    {% if user.profile.account_active %}
-        {% include 'inventory/_heading-buttons.html' with item=frame key=frame.number parent_item=frame.roll url='roll-frame' name='frame' %}
-    {% endif %}
+    {% include 'inventory/_heading-buttons.html' with item=frame key=frame.number parent_item=frame.roll url='roll-frame' name='frame' %}
 </div>
 {% endblock %}
 

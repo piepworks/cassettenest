@@ -1,9 +1,10 @@
 import datetime
 import io
 import csv
+import pytest
 import pytz
 import logging
-from unittest import mock
+import json
 from django.test import TestCase, override_settings, RequestFactory
 from django.urls import reverse
 from django.contrib.auth.models import User, AnonymousUser
@@ -24,14 +25,12 @@ from inventory.models import (
     CameraBack,
     Project,
     Journal,
-    Profile,
     Film,
     Frame,
     Stock,
     Manufacturer,
 )
 from inventory.utils import status_number, bulk_status_next_keys, status_description
-from inventory.utils_paddle import paddle_plan_name
 
 staticfiles_storage = {
     "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"}
@@ -220,28 +219,6 @@ class SettingsTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertIn("Username: This field is required.", messages)
-
-    def test_plan_display(self):
-        plan = settings.PADDLE_STANDARD_MONTHLY
-        profile = Profile.objects.get(user=self.user)
-        profile.paddle_subscription_plan_id = plan
-        profile.subscription_status = "active"
-        profile.save()
-
-        response = self.client.get(reverse("settings"))
-
-        self.assertContains(
-            response,
-            f"You’re currently subscribed to the <b>{paddle_plan_name(plan)}</b> plan.",
-        )
-
-    def test_friend_mode(self):
-        profile = Profile.objects.get(user=self.user)
-        profile.friend = True
-        profile.save()
-
-        response = self.client.get(reverse("settings"))
-        self.assertContains(response, "You’re a friend of Piepworks")
 
 
 @override_settings(STORAGES=staticfiles_storage)
@@ -1284,316 +1261,6 @@ class FilmRollsTests(TestCase):
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Viewing rolls in project")
-
-
-@override_settings(STORAGES=staticfiles_storage)
-class SubscriptionTests(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.username = "test"
-        cls.password = "secret"
-        cls.email = "test@example.com"
-        cls.user = User.objects.create_user(
-            username=cls.username,
-            password=cls.password,
-            email=cls.email,
-            id=1,
-        )
-
-    def setUp(self):
-        self.client.login(
-            username=self.username,
-            password=self.password,
-        )
-
-        # Reduce the log level to avoid errors like "not found."
-        logger = logging.getLogger("django.request")
-        self.previous_level = logger.getEffectiveLevel()
-        logger.setLevel(logging.ERROR)
-
-    def tearDown(self):
-        # Reset the log level back to normal.
-        logger = logging.getLogger("django.request")
-        logger.setLevel(self.previous_level)
-
-    def test_subscription_success_page(self):
-        plan = settings.PADDLE_STANDARD_MONTHLY
-
-        response = self.client.get(
-            reverse("subscription-created") + f"?plan={plan}", follow=True
-        )
-
-        self.assertContains(
-            response, f"You’re subscribed to the {paddle_plan_name(plan)} plan!"
-        )
-
-    def test_subscription_success_page_with_incorrect_plan_id(self):
-        plan = "12345"
-
-        response = self.client.get(
-            reverse("subscription-created") + f"?plan={plan}", follow=True
-        )
-
-        self.assertContains(response, "You’re subscribed!")
-
-    def test_webhook_subscription_created(self):
-        fake_webhook_value = {
-            "alert_name": "subscription_created",
-            "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
-            "status": "active",
-            "email": self.email,
-            "cancel_url": "https://example.com",
-            "update_url": "https://example.com",
-        }
-
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(
-                    reverse("paddle-webhooks"), data=fake_webhook_value
-                )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_update_plan(self):
-        fake_webhook_value = {
-            "alert_name": "subscription_updated",
-            "old_subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
-            "subscription_plan_id": settings.PADDLE_STANDARD_ANNUAL,
-            "status": "active",
-            "email": self.email,
-            "cancel_url": "https://example.com",
-            "update_url": "https://example.com",
-        }
-
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(
-                    reverse("paddle-webhooks"), data=fake_webhook_value
-                )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_update_misc(self):
-        fake_webhook_value = {
-            "alert_name": "subscription_updated",
-            "old_subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
-            "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
-            "status": "active",
-            "email": self.email,
-            "cancel_url": "https://example.com",
-            "update_url": "https://example.com",
-        }
-
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(
-                    reverse("paddle-webhooks"), data=fake_webhook_value
-                )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_cancelled(self):
-        fake_webhook_value = {
-            "alert_name": "subscription_cancelled",
-            "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
-            "cancellation_effective_date": datetime.date.today(),
-            "status": "deleted",
-            "email": self.email,
-        }
-
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(
-                    reverse("paddle-webhooks"), data=fake_webhook_value
-                )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_payment_succeeded(self):
-        fake_webhook_value = {
-            "alert_name": "subscription_payment_succeeded",
-            "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
-            "cancellation_effective_date": datetime.date.today(),
-            "status": "active",
-            "email": self.email,
-        }
-
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(
-                    reverse("paddle-webhooks"), data=fake_webhook_value
-                )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_payment_failed(self):
-        fake_webhook_value = {
-            "alert_name": "subscription_payment_failed",
-            "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
-            "cancellation_effective_date": datetime.date.today(),
-            "status": "active",
-            "email": self.email,
-        }
-
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(
-                    reverse("paddle-webhooks"), data=fake_webhook_value
-                )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_subscription_payment_refunded(self):
-        fake_webhook_value = {
-            "alert_name": "subscription_payment_refunded",
-            "subscription_plan_id": settings.PADDLE_STANDARD_MONTHLY,
-            "cancellation_effective_date": datetime.date.today(),
-            "status": "active",
-            "email": self.email,
-        }
-
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(
-                    reverse("paddle-webhooks"), data=fake_webhook_value
-                )
-
-        self.assertEqual(response.status_code, 200)
-
-    def test_webhook_invalid_ip_address(self):
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=False):
-            response = self.client.post(reverse("paddle-webhooks"))
-
-        self.assertEqual(response.status_code, 403)
-
-    def test_webhook_invalid_webhook(self):
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=False):
-                response = self.client.post(reverse("paddle-webhooks"))
-
-        self.assertEqual(response.status_code, 400)
-
-    def test_webhook_without_alert_name(self):
-        with mock.patch("inventory.views.is_valid_ip_address", return_value=True):
-            with mock.patch("inventory.views.is_valid_webhook", return_value=True):
-                response = self.client.post(
-                    reverse("paddle-webhooks"), data={"email": self.email}
-                )
-
-        self.assertEqual(response.status_code, 400)
-
-    def test_subscription_update_success(self):
-        plan = settings.PADDLE_STANDARD_MONTHLY
-        fake_return_value = mock.Mock()
-        fake_return_value.json = mock.Mock(return_value={"success": True})
-
-        with mock.patch(
-            "inventory.views.requests.post", return_value=fake_return_value
-        ):
-            response = self.client.post(
-                reverse("subscription-update"), data={"plan": plan}, follow=True
-            )
-
-        self.assertContains(
-            response, f"Your plan is now set to {paddle_plan_name(plan)}."
-        )
-
-    def test_subscription_update_with_error(self):
-        plan = settings.PADDLE_STANDARD_MONTHLY
-        error_message = "You ain’t did it."
-        fake_return_value = mock.Mock()
-        fake_return_value.json = mock.Mock(
-            return_value={
-                "success": False,
-                "error": {"message": error_message},
-            }
-        )
-
-        with mock.patch(
-            "inventory.views.requests.post", return_value=fake_return_value
-        ):
-            response = self.client.post(
-                reverse("subscription-update"), data={"plan": plan}, follow=True
-            )
-
-        self.assertContains(
-            response,
-            f"There was a problem changing plans. “{error_message}” Please try again.",
-        )
-
-    def test_subscription_update_with_invalid_plan(self):
-        plan = "12345"
-        fake_return_value = mock.Mock()
-        fake_return_value.json = mock.Mock(return_value={"success": True})
-
-        with mock.patch(
-            "inventory.views.requests.post", return_value=fake_return_value
-        ):
-            response = self.client.post(
-                reverse("subscription-update"), data={"plan": plan}, follow=True
-            )
-
-        self.assertContains(
-            response, "There was a problem changing plans. Please try again."
-        )
-
-
-@freeze_time(datetime.datetime.now())
-@override_settings(STORAGES=staticfiles_storage)
-class SubscriptionBannerTests(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.username = "test"
-        cls.password = "secret"
-        cls.user = User.objects.create_user(
-            username=cls.username,
-            password=cls.password,
-        )
-
-    def setUp(self):
-        self.client.login(
-            username=self.username,
-            password=self.password,
-        )
-
-    def test_subscription_banner_not_subscribed(self):
-        self.user.profile.subscription_status = "none"
-        self.user.profile.save()
-
-        response = self.client.get(reverse("settings"))
-        self.assertContains(
-            response,
-            f"You have {settings.SUBSCRIPTION_TRIAL_DURATION} days left in your free trial.",
-        )
-
-    def test_subscription_banner_cancelled(self):
-        self.user.profile.subscription_status = "deleted"
-        self.user.profile.save()
-
-        response = self.client.get(reverse("index"))
-
-        self.assertContains(response, "Your subscription has been cancelled.")
-
-    def test_subscription_banner_past_due(self):
-        self.user.profile.subscription_status = "past_due"
-        self.user.profile.save()
-
-        response = self.client.get(reverse("index"))
-
-        self.assertContains(
-            response, "Looks like there’s a problem with your subscription."
-        )
-
-    def test_subscription_banner_cancelling(self):
-        self.user.profile.subscription_status = "deleted"
-        self.user.profile.paddle_cancellation_date = (
-            datetime.date.today() + datetime.timedelta(days=1)
-        )
-        self.user.profile.save()
-
-        response = self.client.get(reverse("index"))
-
-        self.assertContains(response, "Your subscription is scheduled to be canceled.")
 
 
 @override_settings(STORAGES=staticfiles_storage)
@@ -2838,44 +2505,6 @@ class StockAddTests(TestCase):
 
 
 @override_settings(STORAGES=staticfiles_storage)
-class SubscriptionRequirementTests(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.active_user = User.objects.create_user("active")
-        trial_duration = datetime.timedelta(
-            days=int(settings.SUBSCRIPTION_TRIAL_DURATION)
-        )
-        with freeze_time(datetime.date.today() - trial_duration):
-            cls.inactive_user = User.objects.create_user("inactive")
-
-        film = baker.make(Film, stock=baker.make(Stock))
-        cls.roll1 = baker.make(Roll, owner=cls.active_user, film=film)
-        cls.roll2 = baker.make(Roll, owner=cls.inactive_user, film=film)
-
-    def test_account_inactive_page(self):
-        self.client.force_login(self.inactive_user)
-        response = self.client.get(reverse("account-inactive"))
-        self.assertEqual(response.status_code, 200)
-
-    def test_account_inactive_page_redirect(self):
-        self.client.force_login(self.active_user)
-        response = self.client.get(reverse("account-inactive"))
-        self.assertEqual(response.status_code, 302)
-
-    def test_hidden_edit_controls(self):
-        self.client.force_login(self.inactive_user)
-        response = self.client.get(reverse("roll-detail", args=(self.roll2.id,)))
-        self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, 'class="action"')
-
-    def test_visible_edit_controls(self):
-        self.client.force_login(self.active_user)
-        response = self.client.get(reverse("roll-detail", args=(self.roll1.id,)))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'class="action"')
-
-
-@override_settings(STORAGES=staticfiles_storage)
 class SidebarTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -2926,3 +2555,55 @@ def test_503_page(client):
     d = pq(response.content)
 
     assert d("title").text() == "Be right back! / Cassette Nest"
+
+
+@override_settings(STORAGES=staticfiles_storage)
+@pytest.mark.django_db
+def test_kofi_webhook_user_not_found(client):
+    payload = {
+        "type": "Donation",
+        "email": "test@example.com",
+        "verification_token": settings.KOFI_VERIFICATION_TOKEN,
+    }
+
+    response = client.post(
+        reverse("kofi-webhooks"),
+        {"data": json.dumps(payload)},
+    )
+
+    assert response.status_code == 200
+
+
+@override_settings(STORAGES=staticfiles_storage)
+@pytest.mark.django_db
+def test_kofi_webhook_user_found(client):
+    user = baker.make(User)
+    payload = {
+        "type": "Donation",
+        "email": user.email,
+        "verification_token": settings.KOFI_VERIFICATION_TOKEN,
+    }
+
+    response = client.post(
+        reverse("kofi-webhooks"),
+        {"data": json.dumps(payload)},
+    )
+
+    assert response.status_code == 200
+
+
+@override_settings(STORAGES=staticfiles_storage)
+@pytest.mark.django_db
+def test_kofi_webhook_invalid_token(client):
+    payload = {
+        "type": "Donation",
+        "email": "test@example.com",
+        "verification_token": "invalid",
+    }
+
+    response = client.post(
+        reverse("kofi-webhooks"),
+        {"data": json.dumps(payload)},
+    )
+
+    assert response.status_code == 403

@@ -4,9 +4,7 @@ module.exports = {
     node: true,
     browser: true,
   },
-  globals: {
-    Paddle: 'readonly',
-  },
+  globals: {},
   extends: 'eslint:recommended',
   parserOptions: {
     sourceType: 'module',
@@ -15,7 +13,7 @@ module.exports = {
   rules: {
     indent: ['error', 2],
     'linebreak-style': ['error', 'unix'],
-    quotes: ['error', 'single', { 'allowTemplateLiterals': true }],
+    quotes: ['error', 'single', { allowTemplateLiterals: true }],
     semi: ['error', 'always'],
-  }
+  },
 };

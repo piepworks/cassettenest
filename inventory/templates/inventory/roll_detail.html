@@ -19,9 +19,7 @@
         <h1 class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">{{ roll }}</h1>
         {% endif %}
     </div>
-    {% if user.profile.account_active %}
-        {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
-    {% endif %}
+    {% include 'inventory/_heading-buttons.html' with item=roll url='roll' name='roll' %}
 </div>
 {% endblock header %}
 
@@ -140,12 +138,10 @@
 </div>
 {% endif %}
 
-{% if user.profile.account_active %}
 <div class="action">
     <p><a class="button" href="{% url 'roll-frame-add' roll.id %}">Add a new frame</a></p>
     <p><small><a href="https://cassettenest.com/docs/frames">Learn more about frames.</a></small></p>
 </div>
-{% endif %}
 
 {% if frames %}
 <div class="frames">

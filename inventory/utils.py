@@ -1,4 +1,3 @@
-import datetime
 from django.core.mail import send_mail
 from django.db.models import Count, Q
 from django.utils.encoding import force_str
@@ -163,38 +162,6 @@ def available_types(request, Stock, type_names, type_choices, manufacturer):
         type_choices[t["type"]] = force_str(type_names[t["type"]], strings_only=True)
 
     return type_choices
-
-
-def is_active(user):
-    """
-    For use with `user_passes_test` decorator.
-    Example:
-
-    @user_passes_test(is_active, login_url=reverse_lazy('trial-expired'), redirect_field_name=None)
-    """
-    if user.is_authenticated:
-        status = user.profile.subscription_status
-        trial_active = user.profile.trial_period
-
-        if user.is_staff or user.profile.friend:
-            return True
-        elif trial_active:
-            return True
-        elif status not in ["none", "paused", "deleted"]:
-            return True
-        elif user.profile.paddle_cancellation_date and status == "deleted":
-            if user.profile.paddle_cancellation_date > datetime.date.today():
-                return True
-            else:
-                return False
-        else:
-            return False
-    else:
-        return False
-
-
-def is_inactive(user):
-    return not is_active(user)
 
 
 def push_pull_to_form(push_pull):

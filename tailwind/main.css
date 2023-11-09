@@ -13,6 +13,11 @@
       dark:print:text-black;
 
     --folded-corner: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0% 80%);
+    background-image: url('/static/img/grain-light.png');
+
+    @media (prefers-color-scheme: dark) {
+      background-image: url('/static/img/grain-dark-2.png');
+    }
   }
 
   ::selection {
@@ -286,9 +291,10 @@
   #menu-inner {
     @apply
       md:w-64
-      bg-stone-800
       dark:bg-stone-900
       transition-all;
+    background-color: theme(colors.stone.800);
+    background-image: url('/static/img/grain-dark-2.png');
 
     #menu-desktop-toggle {
       margin-bottom: calc(env(safe-area-inset-bottom) * 3);
@@ -1063,18 +1069,6 @@
       gap-3;
   }
 
-  .subscription-settings {
-    @apply
-      space-y-4
-      p-6
-      bg-stone-200
-      dark:bg-stone-700
-      rounded-lg
-      my-6;
-
-    h3 { @apply mb-0 pb-0; }
-  }
-
   .data-import-export {
     @apply
       text-sm
@@ -1101,49 +1095,6 @@
         pl-3
         pr-4;
     }
-  }
-
-  .subscription-banner {
-    @apply
-      text-blue-50
-      bg-blue-500;
-
-    a {
-      @apply
-        text-blue-50
-        px-1
-        hover:py-1
-        hover:no-underline
-        hover:bg-blue-600;
-    }
-
-    &.trial-over,
-    &.deleted {
-      @apply
-        text-stone-600
-        bg-yellow-400;
-
-      a {
-        @apply
-          text-stone-600
-          hover:bg-yellow-500;
-      }
-    }
-
-    /* stylelint-disable selector-class-pattern */
-    &.paused,
-    &.past_due {
-      @apply
-        text-red-50
-        bg-red-500;
-
-      a {
-        @apply
-          text-red-50
-          hover:bg-red-600;
-      }
-    }
-    /* stylelint-enable selector-class-pattern */
   }
 
   .htmx-indicator {

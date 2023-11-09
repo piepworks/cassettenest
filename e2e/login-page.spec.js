@@ -9,8 +9,6 @@ test('log in and registration pages', async ({ page }) => {
 
   // Expect a title "to contain" a substring.
   await expect(page).toHaveTitle('Log in / Cassette Nest');
-  await page
-    .getByRole('link', { name: 'start your 14-day free trial' })
-    .click();
+  await page.getByRole('link', { name: 'create an account' }).click();
   await expect(page).toHaveURL(/.*register/);
 });
