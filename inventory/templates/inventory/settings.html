@@ -8,10 +8,17 @@
 <h1>Settings</h1>
 
 <div class="bg-white dark:bg-stone-900 rounded-md p-4">
-    <a class="flex items-center gap-3" href="https://ko-fi.com/piepworks" target="_blank">
-        {% include 'svg/ko-fi.svg' with class='inline w-10 h-10' %}
-        Donate on Ko-fi to help support Cassette Nest!
-    </a>
+    {% if user.profile.donation %}
+        <div class="flex items-center gap-3">
+            {% include 'svg/heroicons/heart.svg' with class='inline-block h-5 w-5 text-green-500' %}
+            <p>Thank you for donating!</p>
+        </div>
+    {% else %}
+        <a class="flex items-center gap-3" href="https://ko-fi.com/piepworks" target="_blank">
+            {% include 'svg/ko-fi.svg' with class='inline w-10 h-10' %}
+            Donate on Ko-fi to help support Cassette Nest!
+        </a>
+    {% endif %}
 </div>
 
 <form method="post">
