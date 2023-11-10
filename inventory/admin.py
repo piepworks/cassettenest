@@ -156,11 +156,15 @@ class UserAdmin(BaseUserAdmin):
         "rolls",
         "cameras",
         "is_active",
+        "donation",
         "timezone",
         "short_last_login",
         "short_date_joined",
     )
-    list_filter = ("is_active",)
+    list_filter = (
+        "is_active",
+        "profile__donation",
+    )
     ordering = ("-last_login",)
 
     def get_queryset(self, request):
@@ -195,6 +199,12 @@ class UserAdmin(BaseUserAdmin):
         return obj.profile.timezone
 
     timezone.admin_order_field = "profile__timezone"
+
+    def donation(self, obj):
+        return obj.profile.donation
+
+    donation.admin_order_field = "profile__donation"
+    donation.boolean = True
 
     def rolls(self, obj):
         return obj.roll_count
