@@ -5,6 +5,7 @@ import sentry_sdk
 from pytz import common_timezones
 from django.core.management.utils import get_random_secret_key
 from sentry_sdk.integrations.django import DjangoIntegration
+from warnings import filterwarnings
 
 env = Env()
 # Read .env into os.environ
@@ -189,3 +190,8 @@ MAINTENANCE_MODE = env.bool("MAINTENANCE_MODE", default=False)
 
 # django-registration
 ACCOUNT_ACTIVATION_DAYS = 2
+
+filterwarnings(
+    "ignore", "The FORMS_URLFIELD_ASSUME_HTTPS transitional setting is deprecated."
+)
+FORMS_URLFIELD_ASSUME_HTTPS = True
