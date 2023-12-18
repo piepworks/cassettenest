@@ -1,19 +1,17 @@
 /* {% load static %} */
 /* global importScripts, workbox */
-importScripts(`{% static 'js/vendor/workbox-v6.5.4/workbox-sw.js' %}`);
+importScripts(`{% static 'js/vendor/workbox-v7.0.0/workbox-sw.js' %}`);
 
 workbox.setConfig({
-  modulePathPrefix: '{% get_static_prefix %}js/vendor/workbox-v6.5.4',
+  modulePathPrefix: '{% get_static_prefix %}js/vendor/workbox-v7.0.0',
 });
 
 workbox.routing.registerRoute(
-  ({request}) => request.destination === 'image',
+  ({ request }) => request.destination === 'image',
   new workbox.strategies.CacheFirst()
 );
 
-workbox.routing.setDefaultHandler(
-  new workbox.strategies.NetworkFirst()
-);
+workbox.routing.setDefaultHandler(new workbox.strategies.NetworkFirst());
 
 workbox.recipes.offlineFallback({
   pageFallback: `{% url 'offline' %}`,
