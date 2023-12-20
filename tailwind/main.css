@@ -42,10 +42,12 @@
       hover:underline;
 
     @media print {
-      &::after {
+      &:not(.print-no-href)::after {
         content: " (" attr(href) ")";
-        opacity: 0.3;
+        opacity: 0.5;
       }
+
+      &.print-no-href { text-decoration: none; }
     }
   }
 

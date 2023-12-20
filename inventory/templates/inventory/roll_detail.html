@@ -149,15 +149,15 @@
     <table>
         <thead>
             <tr>
-                <th class="entry-number">#</th>
-                <th class="entry-date">Date</th>
+                <th class="entry-number w-24 print:w-12">#</th>
+                <th class="entry-date w-36 print:w-32">Date</th>
                 <th class="entry-notes">Notes</th>
             </tr>
         </thead>
         <tbody>
             {% for frame in frames %}
             <tr>
-                <td><a href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
+                <td><a class="print-no-href" href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
                 <td title="{{ frame.date|date:'l, F j, Y' }}">
                     <span class="print:hidden">{{ frame.date|date:'M j' }}</span>
                     <span class="hidden print:inline">{{ frame.date|date:'M j, Y' }}</span>
