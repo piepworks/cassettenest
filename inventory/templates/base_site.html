@@ -33,6 +33,12 @@
                         {% block header %}{% endblock %}
                     </div>
                     {% endspaceless %}
+                    <div class="hidden print:block max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 mb-10">
+                        <h1 class="flex items-center space-x-3">
+                            <img class="h-12 w-12" height="48" width="48" src="{% static 'img/icon.svg' %}" alt="Cassette Nest" title="Cassette Nest" />
+                            <span>Cassette Nest</span>
+                        </h1>
+                    </div>
                     <div class="main-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
                         {% block content %}{% endblock %}
 

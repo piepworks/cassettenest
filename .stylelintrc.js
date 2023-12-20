@@ -1,8 +1,6 @@
 module.exports = {
   extends: 'stylelint-config-standard',
   rules: {
-    indentation: 2,
-    'string-quotes': 'single',
     'declaration-empty-line-before': 'never',
     'no-descending-specificity': null,
     // Tailwind-related rules:
@@ -22,8 +20,6 @@ module.exports = {
     ],
     'at-rule-empty-line-before': null,
     'value-keyword-case': null,
-    'number-leading-zero': null,
-    'number-no-trailing-zeros': null,
     // -----------------------
   },
   ignoreFiles: ['static/tailwind.css'],

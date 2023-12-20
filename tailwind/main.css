@@ -13,10 +13,13 @@
       dark:print:text-black;
 
     --folded-corner: polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0% 80%);
-    background-image: url('/static/img/grain-light.png');
 
-    @media (prefers-color-scheme: dark) {
-      background-image: url('/static/img/grain-dark-2.png');
+    @media not print {
+      background-image: url('/static/img/grain-light.png');
+
+      @media (prefers-color-scheme: dark) {
+        background-image: url('/static/img/grain-dark-2.png');
+      }
     }
   }
 
@@ -37,6 +40,13 @@
       hover:text-blue-500
       dark:hover:text-blue-300
       hover:underline;
+
+    @media print {
+      &::after {
+        content: " (" attr(href) ")";
+        opacity: 0.3;
+      }
+    }
   }
 
   /* So Safari doesn't always highlight the logo on every page load.
