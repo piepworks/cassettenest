@@ -44,7 +44,8 @@
     @media print {
       &:not(.print-no-href)::after {
         content: " (" attr(href) ")";
-        opacity: 0.5;
+        color: theme(colors.stone.400);
+        text-decoration: none;
       }
 
       &.print-no-href { text-decoration: none; }
@@ -180,7 +181,8 @@
         font-bold
         leading-7
         sm:text-3xl
-        sm:truncate;
+        sm:truncate
+        sm:print:text-5xl;
     }
 
     h3 {
@@ -286,15 +288,6 @@
       @apply
         flex-1
         min-w-0;
-    }
-
-    h1 {
-      @apply
-        text-2xl
-        font-bold
-        leading-7
-        sm:text-3xl
-        sm:truncate;
     }
 
     form { @apply space-y-0; }
