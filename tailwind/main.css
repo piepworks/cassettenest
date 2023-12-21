@@ -46,6 +46,7 @@
         content: " (" attr(href) ")";
         color: theme(colors.stone.400);
         text-decoration: none;
+        font-size: theme(fontSize.xs);
       }
 
       &.print-no-href { text-decoration: none; }
@@ -512,6 +513,13 @@
           dark:hover:text-stone-900
           hover:bg-stone-900
           dark:hover:bg-white;
+
+        /* Wrap the `href` to make things in the `.stats` section look more tidy */
+        @media print {
+          &:not(.print-no-href)::after {
+            display: block;
+          }
+        }
       }
     }
   }
