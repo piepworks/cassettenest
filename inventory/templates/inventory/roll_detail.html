@@ -163,7 +163,7 @@
                     {% include 'components/frame-row.html' with frame=row.frames|first roll_id=roll.id class='summary' summary=True %}
                     {# nested frames rows #}
                     {% for frame in row.frames %}
-                        {% include 'components/frame-row.html' with frame=frame roll_id=roll.id class='nested hidden' %}
+                        {% include 'components/frame-row.html' with frame=frame roll_id=roll.id class='nested' %}
                     {% endfor %}
                 {% endif %}
             {% endfor %}

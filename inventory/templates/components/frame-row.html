@@ -1,9 +1,21 @@
-<tr{% if class %} class="{{ class }}"{% endif %}>
+<tr
+    {% if class %}
+        class="{{ class }}"
+        {% if class == 'nested' %}
+            _="on load add .hidden to me"
+        {% endif %}
+    {% endif %}>
     <td>
         {% if summary %}
-            {{ frame_range }}
+            <a class="print-no-href" href="{% url 'roll-frame-detail' roll.id frame.number %}"
+                _="on click
+                    halt the event
+                    toggle .hidden on .nested
+                ">
+                {{ frame_range }}
+            </a>
         {% else %}
-            <a class="print-no-href" href="{% url 'roll-frame-detail' roll_id frame.number %}">{{ frame.number }}</a>
+            <a class="print-no-href" href="{% url 'roll-frame-detail' roll.id frame.number %}">{{ frame.number }}</a>
         {% endif %}
     </td>
     <td title="{{ frame.date|date:'l, F j, Y' }}">
