@@ -1,5 +1,5 @@
 {% extends 'base_site.html' %}
-{% load markdown_extras %}
+{% load markdown_extras capture_tags %}
 
 {% block title %}{{ roll }}{% endblock %}
 
@@ -143,29 +143,29 @@
 
 {% if frames %}
 <div class="frames break-before-page">
-    <h3>Frames</h3>
+    <h3 id="frames">Frames</h3>
     <table>
         <thead>
             <tr>
-                <th class="entry-number w-24 print:w-12">#</th>
+                <th class="entry-number w-24 print:w-20">#</th>
                 <th class="entry-date w-36 print:w-32">Date</th>
                 <th class="entry-notes">Notes</th>
             </tr>
         </thead>
         <tbody>
-            {% for frame in frames %}
-            <tr>
-                <td><a class="print-no-href" href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
-                <td title="{{ frame.date|date:'l, F j, Y' }}">
-                    <span class="print:hidden">{{ frame.date|date:'M j' }}</span>
-                    <span class="hidden print:inline">{{ frame.date|date:'M j, Y' }}</span>
-                </td>
-                <td class="entry-notes">
-                    {% if frame.notes %}
-                        {{ frame.notes|markdown }}
-                    {% endif %}
-                </td>
-            </tr>
+            {% for row in frames_truncated %}
+                {% if row.frames|first == row.frames|last %}
+                    {# regular row #}
+                    {% include 'components/frame-row.html' with frame=row.frames|first %}
+                {% else %}
+                    {# summary row #}
+                    {% capture as frame_range silent %}{{ row.frames|first|get_item:'number' }}&ndash;{{ row.frames|last|get_item:'number' }}{% endcapture %}
+                    {% include 'components/frame-row.html' with frame=row.frames|first class='summary' summary=True %}
+                    {# nested frames rows #}
+                    {% for frame in row.frames %}
+                        {% include 'components/frame-row.html' with frame=frame class='nested' %}
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
         </tbody>
     </table>

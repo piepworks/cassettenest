@@ -915,9 +915,26 @@
       &.entry-notes * { @apply inline; }
     }
 
-    tbody tr:last-child {
-      th,
-      td { @apply border-b-0; }
+    tbody tr {
+      &:last-child {
+        th,
+        td { @apply border-b-0; }
+      }
+
+      &.summary td {
+        @apply
+          bg-stone-200
+          dark:bg-stone-900
+          border-b-4;
+      }
+
+      &.nested td {
+        @apply
+          print:hidden
+          border-0
+          bg-stone-200
+          dark:bg-stone-700
+      }
     }
   }
 
