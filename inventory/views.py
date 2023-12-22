@@ -1699,8 +1699,6 @@ def roll_detail(request, pk):
                 }
             )
 
-    # print(frames_truncated)
-
     context = {
         "owner": owner,
         "roll": roll,

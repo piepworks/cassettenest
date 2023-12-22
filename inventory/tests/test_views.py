@@ -1907,6 +1907,19 @@ class RollViewTests(TestCase):
             password=self.password,
         )
 
+    def test_roll_detail(self):
+        roll = baker.make(Roll, owner=self.user)
+        # Add multiple rolls to cover the `frames_truncated` business
+        baker.make(
+            Frame,
+            roll=roll,
+            date=datetime.date.today(),
+            notes="notes",
+            _quantity=2,
+        )
+        response = self.client.get(reverse("roll-detail", args=(roll.id,)))
+        self.assertEqual(response.status_code, 200)
+
     def test_roll_edit_get(self):
         roll = baker.make(Roll, owner=self.user)
         response = self.client.get(reverse("roll-edit", args=(roll.id,)))
