@@ -1669,12 +1669,45 @@ def roll_detail(request, pk):
     journal_entries = Journal.objects.filter(roll=roll).order_by("date")
     frames = Frame.objects.filter(roll=roll).order_by("number")
 
+    # A truncated version of the frames object with frames combined and the
+    # number set to the frame ranges if the frames have the same date and notes.
+    frames_truncated = []
+    for frame in frames:
+        if frames_truncated and (
+            frame.date == frames_truncated[-1]["date"]
+            and frame.notes == frames_truncated[-1]["notes"]
+        ):
+            frames_truncated[-1]["frames"].append(
+                {
+                    "number": frame.number,
+                    "date": frame.date,
+                    "notes": frame.notes,
+                }
+            )
+        else:
+            frames_truncated.append(
+                {
+                    "date": frame.date,
+                    "notes": frame.notes,
+                    "frames": [
+                        {
+                            "number": frame.number,
+                            "date": frame.date,
+                            "notes": frame.notes,
+                        }
+                    ],
+                }
+            )
+
+    # print(frames_truncated)
+
     context = {
         "owner": owner,
         "roll": roll,
         "development_statuses": development_statuses,
         "journal_entries": journal_entries,
         "frames": frames,
+        "frames_truncated": frames_truncated,
         "js_needed": True,
     }
 

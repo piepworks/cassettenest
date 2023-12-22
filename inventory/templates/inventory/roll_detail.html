@@ -153,6 +153,22 @@
             </tr>
         </thead>
         <tbody>
+            {% for row in frames_truncated %}
+                <hr>
+                {% if row.frames|first == row.frames|last %}
+                    <div>
+                        frame:
+                        {% for frame in row.frames %}
+                            {{ frame.number }}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div>frames: {{ row.frames|first|get_item:'number' }}&ndash;{{ row.frames|last|get_item:'number' }}</div>
+                {% endif %}
+                {# <div>{{ frame.notes|markdown }}</div> #}
+                <div>date: {{ row.date|date:'l, F j, Y' }}</div>
+            {% endfor %}
+
             {% for frame in frames %}
             <tr>
                 <td><a class="print-no-href" href="{% url 'roll-frame-detail' frame.roll.id frame.number %}">{{ frame.number }}</a></td>
