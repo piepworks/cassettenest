@@ -1,0 +1,18 @@
+<tr{% if class %} class="{{ class }}"{% endif %}>
+    <td>
+        {% if summary %}
+            {{ frame_range }}
+        {% else %}
+            <a class="print-no-href" href="{% url 'roll-frame-detail' roll_id frame.number %}">{{ frame.number }}</a>
+        {% endif %}
+    </td>
+    <td title="{{ frame.date|date:'l, F j, Y' }}">
+        <span class="print:hidden">{{ frame.date|date:'M j' }}</span>
+        <span class="hidden print:inline">{{ frame.date|date:'M j, Y' }}</span>
+    </td>
+    <td class="entry-notes">
+        {% if frame.notes %}
+            {{ frame.notes|markdown }}
+        {% endif %}
+    </td>
+</tr>
