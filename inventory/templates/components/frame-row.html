@@ -9,9 +9,8 @@
         {% if summary %}
             <a class="print-no-href" href="{% url 'roll-frame-detail' roll.id frame.number %}"
                 _="on click
-                    halt the event
-                    toggle .hidden on .nested
-                ">
+                   halt the event
+                   toggle .hidden on .nested">
                 {{ frame_range }}
             </a>
         {% else %}
