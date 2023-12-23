@@ -1704,7 +1704,6 @@ def roll_detail(request, pk):
         "roll": roll,
         "development_statuses": development_statuses,
         "journal_entries": journal_entries,
-        "frames": frames,
         "frames_truncated": frames_truncated,
         "js_needed": True,
     }
