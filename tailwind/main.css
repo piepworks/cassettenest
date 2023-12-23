@@ -915,12 +915,15 @@
       &.entry-notes * { @apply inline; }
     }
 
-    tbody tr {
-      &:last-child {
-        th,
-        td { @apply border-b-0; }
+    tbody:last-child tr:last-child {
+      th, td {
+        @apply
+          border-b-0
+          dark:border-b-0;
       }
+    }
 
+    tbody tr {
       &.summary td {
         @apply
           bg-stone-200
@@ -931,7 +934,6 @@
       &.nested td {
         @apply
           print:hidden
-          border-0
           bg-stone-200
           dark:bg-stone-700
       }
