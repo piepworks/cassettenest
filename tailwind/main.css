@@ -297,10 +297,13 @@
   #menu-inner {
     @apply
       md:w-64
-      dark:bg-stone-900
       transition-all;
     background-color: theme(colors.stone.800);
     background-image: url('/static/img/grain-dark-2.png');
+
+    @media (prefers-color-scheme: dark) {
+      background-color: theme(colors.stone.900);
+    }
 
     #menu-desktop-toggle {
       margin-bottom: calc(env(safe-area-inset-bottom) * 3);
