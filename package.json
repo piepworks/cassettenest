@@ -11,16 +11,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trey/cassettenest.git"
+    "url": "git+https://github.com/piepworks/cassettenest.git"
   },
   "keywords": [],
   "author": "Trey Piepmeier <trey@treypiepmeier.com> (https://piep.works/)",
   "license": "UNLICENSED",
   "private": true,
   "bugs": {
-    "url": "https://github.com/trey/cassettenest/issues"
+    "url": "https://github.com/piepworks/cassettenest-roadmap/issues"
   },
-  "homepage": "https://github.com/trey/cassettenest#readme",
+  "homepage": "https://github.com/piepworks/cassettenest#readme",
   "devDependencies": {
     "@playwright/test": "^1.36.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
