@@ -6,25 +6,23 @@ A way for analog photographers to track their film use from box to binder.
 
 [cassettenest.com](http://cassettenest.com)
 
-Copyright &copy; 2016-2023 Piepworks LLC. All rights reserved.
+Copyright &copy; 2016-2024 Piepworks LLC. All rights reserved.
 
 ## Local Setup
 
 1. Create a new a `.env` file based on [the example](example-local.env).
-2. `dev/bootstrap`
-3. `python manage.py migrate`
-4. `pre-commit install`
+2. `just bootstrap`
 
 ## Development
 
 - Get [stylelint](https://stylelint.io/) setup (only in your editor for now).
     - `npm i`
 - Running Python tests
-    - `pytest`
-        - Just run tests.
-    - `dev/coverage`
+    - `just pytest`
+        - Run all the tests as fast as possible.
+    - `just coverage`
         - Run tests and generate a coverage report.
-    - `npx playwright test`
+    - `just playwright`
         - Run [Playwright](https://playwright.dev) UI tests.
 
 ---

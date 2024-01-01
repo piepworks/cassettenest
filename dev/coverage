@@ -1,3 +1,0 @@
-#!/bin/sh
-
-venv/bin/pytest -n auto --cov=inventory --cov-report=html
