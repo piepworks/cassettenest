@@ -113,7 +113,7 @@ ipython==8.19.0
     # via -r requirements.in
 jedi==0.19.1
     # via ipython
-lxml==4.9.4
+lxml==5.0.0
     # via pyquery
 markdown==3.5.1
     # via -r requirements.in
@@ -185,7 +185,7 @@ pyproject-hooks==1.0.0
     # via build
 pyquery==2.0.0
     # via -r requirements.in
-pytest==7.4.3
+pytest==7.4.4
     # via
     #   pytest-base-url
     #   pytest-cov
