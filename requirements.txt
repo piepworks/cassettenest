@@ -52,7 +52,7 @@ dj-database-url==2.1.0
     #   environs
 dj-email-url==1.0.6
     # via environs
-django==5.0
+django==5.0.1
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -95,7 +95,7 @@ executing==2.0.1
     # via stack-data
 filelock==3.13.1
     # via virtualenv
-flake8==6.1.0
+flake8==7.0.0
     # via -r requirements.in
 freezegun==1.4.0
     # via -r requirements.in
@@ -177,7 +177,7 @@ pycryptodome==3.19.1
     # via -r requirements.in
 pyee==11.0.1
     # via playwright
-pyflakes==3.1.0
+pyflakes==3.2.0
     # via flake8
 pygments==2.17.2
     # via ipython
@@ -235,7 +235,7 @@ text-unidecode==1.3
     # via python-slugify
 tinycss2==1.1.1
     # via bleach
-traitlets==5.14.0
+traitlets==5.14.1
     # via
     #   ipython
     #   matplotlib-inline
