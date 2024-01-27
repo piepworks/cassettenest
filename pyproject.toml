@@ -7,3 +7,9 @@ DJANGO_SETTINGS_MODULE = "film.settings_playwright"
 python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
 # Delete the following line as soon as possible:
 filterwarnings = "ignore:pkg_resources is deprecated as an API"
+
+[tool.pyright]
+# For Zed's Pyright
+venvPath = "."
+venv = "venv"
+reportGeneralTypeIssues = false
