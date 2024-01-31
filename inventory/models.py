@@ -87,7 +87,7 @@ class Stock(models.Model):
             The name of the film stock itself without the manufacturer’s name (unless that’s part of the film’s name.)
         """,
     )
-    slug = models.SlugField(max_length=50)
+    slug = models.SlugField(max_length=50, unique=True)
     iso = models.PositiveSmallIntegerField(default=100, verbose_name="ISO")
     url = models.URLField(
         max_length=200,
