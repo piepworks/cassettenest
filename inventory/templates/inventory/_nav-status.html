@@ -86,10 +86,13 @@
         </li>
         {% endif %}
         <li{% if request.session.sidebar == 'closed' %} title="Log out"{% endif %}>
-            <a href="{% url 'logout' %}" onclick="return confirm('Do you want to log out?')">
-                {% include 'svg/heroicons/power.svg' %}
-                <span>Log out</span>
-            </a>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button onclick="return confirm('Do you want to log out?')">
+                    {% include 'svg/heroicons/power.svg' %}
+                    <span>Log out</span>
+                </button>
+            </form>
         </li>
     </ul>
 </div>

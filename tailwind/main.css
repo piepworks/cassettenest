@@ -326,6 +326,7 @@
     }
 
     ul {
+      button,
       a {
         @apply
           p-2
@@ -338,7 +339,12 @@
           hover:text-white;
       }
 
+      form {
+        @apply flex flex-grow space-y-0;
+      }
+
       li,
+      button,
       a {
         @apply
           text-stone-300
@@ -347,7 +353,8 @@
           text-lg
           md:text-sm
           font-medium
-          rounded-md;
+          rounded-md
+          cursor-pointer;
       }
     }
 
@@ -379,7 +386,8 @@
 
       li {
         &,
-        a { @apply md:justify-center; }
+        a,
+        button { @apply md:justify-center; }
 
         svg {
           @apply
