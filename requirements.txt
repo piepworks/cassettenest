@@ -52,7 +52,7 @@ dj-database-url==2.1.0
     #   environs
 dj-email-url==1.0.6
     # via environs
-django==5.0.1
+django==5.0.2
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -152,7 +152,7 @@ platformdirs==4.2.0
     # via
     #   black
     #   virtualenv
-playwright==1.41.1
+playwright==1.41.2
     # via pytest-playwright
 pluggy==1.4.0
     # via pytest
@@ -160,9 +160,9 @@ pre-commit==3.6.0
     # via -r requirements.in
 prompt-toolkit==3.0.43
     # via ipython
-psycopg[binary]==3.1.17
+psycopg[binary]==3.1.18
     # via -r requirements.in
-psycopg-binary==3.1.17
+psycopg-binary==3.1.18
     # via psycopg
 ptyprocess==0.7.0
     # via pexpect
@@ -208,7 +208,7 @@ python-dotenv==1.0.1
     # via
     #   -r requirements.in
     #   environs
-python-slugify==8.0.3
+python-slugify==8.0.4
     # via pytest-playwright
 pytz==2024.1
     # via -r requirements.in
@@ -218,7 +218,7 @@ requests==2.31.0
     # via
     #   -r requirements.in
     #   pytest-base-url
-sentry-sdk==1.40.0
+sentry-sdk==1.40.2
     # via -r requirements.in
 six==1.16.0
     # via
