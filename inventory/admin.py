@@ -166,6 +166,7 @@ class UserAdmin(BaseUserAdmin):
         "profile__donation",
     )
     ordering = ("-last_login",)
+    actions = ["deactivate_user", "activate_user"]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -230,6 +231,16 @@ class UserAdmin(BaseUserAdmin):
         return obj.project_count
 
     projects.admin_order_field = "project_count"
+
+    def deactivate_user(self, request, queryset):
+        queryset.update(is_active=False)
+
+    deactivate_user.short_description = "Deactivate selected users"
+
+    def activate_user(self, request, queryset):
+        queryset.update(is_active=True)
+
+    activate_user.short_description = "Activate selected users"
 
 
 class FrameAdmin(admin.ModelAdmin):
