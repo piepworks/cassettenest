@@ -588,6 +588,45 @@ def inventory(request):
     )
     total_rolls = total_film_count.count()
 
+    inventory_rolls = {
+        "c41": total_film_count.filter(stock__type="c41"),
+        "bw": total_film_count.filter(stock__type="bw"),
+        "e6": total_film_count.filter(stock__type="e6"),
+        "135": {
+            "all": total_film_count.filter(format=135),
+            "c41": total_film_count.filter(format=135, stock__type="c41"),
+            "bw": total_film_count.filter(format=135, stock__type="bw"),
+            "e6": total_film_count.filter(format=135, stock__type="e6"),
+        },
+        "120": {
+            "all": total_film_count.filter(format=120),
+            "c41": total_film_count.filter(format=120, stock__type="c41"),
+            "bw": total_film_count.filter(format=120, stock__type="bw"),
+            "e6": total_film_count.filter(format=120, stock__type="e6"),
+        },
+    }
+
+    inventory_counts = {
+        "all": total_rolls,
+        "135": inventory_rolls["135"]["all"].count(),
+        "120": inventory_rolls["120"]["all"].count(),
+        "c41": {
+            "all": inventory_rolls["c41"].count(),
+            "135": inventory_rolls["135"]["c41"].count(),
+            "120": inventory_rolls["120"]["c41"].count(),
+        },
+        "bw": {
+            "all": inventory_rolls["bw"].count(),
+            "135": inventory_rolls["135"]["bw"].count(),
+            "120": inventory_rolls["120"]["bw"].count(),
+        },
+        "e6": {
+            "all": inventory_rolls["e6"].count(),
+            "135": inventory_rolls["135"]["e6"].count(),
+            "120": inventory_rolls["120"]["e6"].count(),
+        },
+    }
+
     # Querystring filters.
     if request.GET.get("format") and request.GET.get("format") != "all":
         filters["format"] = request.GET.get("format")
@@ -637,6 +676,7 @@ def inventory(request):
     context = {
         "total_film_count": total_film_count,
         "total_rolls": total_rolls,
+        "inventory_counts": inventory_counts,
         "film_counts": film_counts,
         "format_counts": format_counts,
         "type_counts": type_counts,
@@ -1478,65 +1518,71 @@ def film_rolls(request, stock=None, format=None, slug=None):
         rolls_history = rolls_history.filter(project=current_project)
 
     rolls_storage_table = {
-        "headings": ["Added on", "Project"]
-        if not current_project
-        else ["Added on", ""],
+        "headings": (
+            ["Added on", "Project"] if not current_project else ["Added on", ""]
+        ),
         "rows": [
-            {
-                "columns": [
-                    {
-                        "title": roll.created_at.strftime("%B %d, %Y"),
-                        "href": reverse("roll-detail", args=(roll.id,)),
-                    },
-                    {
-                        "title": roll.project.name if roll.project else None,
-                        "href": f"?project={roll.project.id}" if roll.project else None,
-                    },
-                ]
-            }
-            if roll.project and not current_project
-            else {
-                "columns": [
-                    {
-                        "title": roll.created_at.strftime("%B %d, %Y"),
-                        "href": reverse("roll-detail", args=(roll.id,)),
-                    },
-                    "",
-                ],
-            }
+            (
+                {
+                    "columns": [
+                        {
+                            "title": roll.created_at.strftime("%B %d, %Y"),
+                            "href": reverse("roll-detail", args=(roll.id,)),
+                        },
+                        {
+                            "title": roll.project.name if roll.project else None,
+                            "href": (
+                                f"?project={roll.project.id}" if roll.project else None
+                            ),
+                        },
+                    ]
+                }
+                if roll.project and not current_project
+                else {
+                    "columns": [
+                        {
+                            "title": roll.created_at.strftime("%B %d, %Y"),
+                            "href": reverse("roll-detail", args=(roll.id,)),
+                        },
+                        "",
+                    ],
+                }
+            )
             for roll in rolls_storage
         ],
     }
 
     rolls_history_table = {
-        "headings": ["Year", "Code", "Project"]
-        if not current_project
-        else ["Code", ""],
+        "headings": (
+            ["Year", "Code", "Project"] if not current_project else ["Code", ""]
+        ),
         "rows": [
-            {
-                "columns": [
-                    roll.started_on.strftime("%Y"),
-                    {
-                        "title": roll.code,
-                        "href": reverse("roll-detail", args=(roll.id,)),
-                    },
-                    {
-                        "title": roll.project.name,
-                        "href": f"?project={roll.project.id}",
-                    },
-                ],
-            }
-            if roll.project and not current_project
-            else {
-                "columns": [
-                    roll.started_on.strftime("%Y"),
-                    {
-                        "title": roll.code,
-                        "href": reverse("roll-detail", args=(roll.id,)),
-                    },
-                    "",
-                ],
-            }
+            (
+                {
+                    "columns": [
+                        roll.started_on.strftime("%Y"),
+                        {
+                            "title": roll.code,
+                            "href": reverse("roll-detail", args=(roll.id,)),
+                        },
+                        {
+                            "title": roll.project.name,
+                            "href": f"?project={roll.project.id}",
+                        },
+                    ],
+                }
+                if roll.project and not current_project
+                else {
+                    "columns": [
+                        roll.started_on.strftime("%Y"),
+                        {
+                            "title": roll.code,
+                            "href": reverse("roll-detail", args=(roll.id,)),
+                        },
+                        "",
+                    ],
+                }
+            )
             for roll in rolls_history
         ],
     }

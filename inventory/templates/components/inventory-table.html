@@ -1,0 +1,44 @@
+<div class="ready-summary">
+    <table>
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>35mm</th>
+                <th>120</th>
+                <th class="totals">Totals</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <th>C41 <span class="compact">Color</span></th>
+                <td></td>
+                <td>{{ inventory_counts.c41.135|default:'' }}</td>
+                <td>{{ inventory_counts.c41.120|default:'' }}</td>
+                <td>{{ inventory_counts.c41.all|default:'' }}</td>
+            </tr>
+            <tr>
+                <th><span class="hidden md:inline">Black and White</span> <span class="md:hidden">B&W</span></th>
+                <td></td>
+                <td>{{ inventory_counts.bw.135|default:'' }}</td>
+                <td>{{ inventory_counts.bw.120|default:'' }}</td>
+                <td>{{ inventory_counts.bw.all|default:'' }}</td>
+            </tr>
+            <tr>
+                <th>E6 <span class="compact">Color Reversal</span></th>
+                <td></td>
+                <td>{{ inventory_counts.e6.135|default:'' }}</td>
+                <td>{{ inventory_counts.e6.120|default:'' }}</td>
+                <td>{{ inventory_counts.e6.all|default:'' }}</td>
+            </tr>
+            <tr class="totals">
+                <th>Totals</th>
+                <td></td>
+                <td>{{ inventory_counts.135|default:'' }}</td>
+                <td>{{ inventory_counts.120|default:'' }}</td>
+                <td class="grand"><b>{{ inventory_counts.all }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
