@@ -93,7 +93,7 @@ filelock==3.14.0
     # via virtualenv
 flake8==7.0.0
     # via -r requirements.in
-freezegun==1.5.0
+freezegun==1.5.1
     # via -r requirements.in
 greenlet==3.0.3
     # via playwright
@@ -109,7 +109,7 @@ ipython==8.24.0
     # via -r requirements.in
 jedi==0.19.1
     # via ipython
-lxml==5.2.1
+lxml==5.2.2
     # via pyquery
 markdown==3.6
     # via -r requirements.in
@@ -144,21 +144,21 @@ pip-lock==2.11.0
     # via -r requirements.in
 pip-tools==7.4.1
     # via -r requirements.in
-platformdirs==4.2.1
+platformdirs==4.2.2
     # via
     #   black
     #   virtualenv
-playwright==1.43.0
+playwright==1.44.0
     # via pytest-playwright
 pluggy==1.5.0
     # via pytest
-pre-commit==3.7.0
+pre-commit==3.7.1
     # via -r requirements.in
 prompt-toolkit==3.0.43
     # via ipython
-psycopg[binary]==3.1.18
+psycopg[binary]==3.1.19
     # via -r requirements.in
-psycopg-binary==3.1.18
+psycopg-binary==3.1.19
     # via psycopg
 ptyprocess==0.7.0
     # via pexpect
@@ -183,7 +183,7 @@ pyproject-hooks==1.1.0
     #   pip-tools
 pyquery==2.0.0
     # via -r requirements.in
-pytest==8.2.0
+pytest==8.2.1
     # via
     #   pytest-base-url
     #   pytest-cov
@@ -212,11 +212,11 @@ pytz==2024.1
     # via -r requirements.in
 pyyaml==6.0.1
     # via pre-commit
-requests==2.31.0
+requests==2.32.1
     # via
     #   -r requirements.in
     #   pytest-base-url
-sentry-sdk==2.1.1
+sentry-sdk==2.2.1
     # via -r requirements.in
 six==1.16.0
     # via
@@ -247,7 +247,7 @@ urllib3==2.2.1
     # via
     #   requests
     #   sentry-sdk
-virtualenv==20.26.1
+virtualenv==20.26.2
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit
