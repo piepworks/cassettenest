@@ -12,7 +12,7 @@ asgiref==3.8.1
     #   django-htmx
 asttokens==2.4.1
     # via stack-data
-autopep8==2.1.0
+autopep8==2.1.1
     # via -r requirements.in
 black==24.4.2
     # via -r requirements.in
@@ -34,7 +34,7 @@ click==8.1.7
     #   pip-tools
 confusable-homoglyphs==3.3.1
     # via django-registration
-coverage[toml]==7.5.1
+coverage[toml]==7.5.2
     # via pytest-cov
 cssselect==1.2.0
     # via pyquery
@@ -71,7 +71,7 @@ django-capture-tag==1.0
     # via -r requirements.in
 django-cors-headers==4.3.1
     # via -r requirements.in
-django-debug-toolbar==4.3.0
+django-debug-toolbar==4.4.2
     # via -r requirements.in
 django-extensions==3.2.3
     # via -r requirements.in
@@ -212,11 +212,11 @@ pytz==2024.1
     # via -r requirements.in
 pyyaml==6.0.1
     # via pre-commit
-requests==2.32.1
+requests==2.32.2
     # via
     #   -r requirements.in
     #   pytest-base-url
-sentry-sdk==2.2.1
+sentry-sdk==2.3.1
     # via -r requirements.in
 six==1.16.0
     # via
@@ -237,7 +237,7 @@ traitlets==5.14.3
     # via
     #   ipython
     #   matplotlib-inline
-typing-extensions==4.11.0
+typing-extensions==4.12.0
     # via
     #   dj-database-url
     #   ipython
