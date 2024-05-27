@@ -1,7 +1,14 @@
+default:
+  @just --list
+
 setup-venv:
   python3 -m venv --prompt cn venv
   venv/bin/pip install -U pip setuptools wheel
   venv/bin/python -m pip install -r requirements.txt
+
+reset-venv:
+  rm -rf .venv
+  just setup-venv
 
 bootstrap: setup-venv
   venv/bin/python manage.py migrate
@@ -15,7 +22,7 @@ update-venv:
 shell:
   venv/bin/python manage.py shell
 
-# Run all the tests as fast as possible (other than the standalone Playwright ones: `just playwright`)
+# Run all the tests (other than front-end Playwright) as fast as possible
 pytest:
   pytest -n auto inventory/tests --runplaywright
 
@@ -48,3 +55,7 @@ coverage:
 # Open the coverage report in Firefox
 coverage-html:
   open -a firefox -g `pwd`/htmlcov/index.html
+
+dev:
+  source venv/bin/activate
+  npm run dev

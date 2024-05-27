@@ -6,7 +6,7 @@
     "watch:tailwind": "postcss tailwind/main.css -o static/tailwind.css --watch --verbose",
     "build:tailwind": "NODE_ENV=production postcss tailwind/main.css -o static/tailwind.css",
     "dj": "python manage.py runserver",
-    "start": "npm-run-all --parallel watch:tailwind dj",
+    "dev": "npm-run-all --parallel watch:tailwind dj",
     "build": "npm-run-all build:*"
   },
   "repository": {
