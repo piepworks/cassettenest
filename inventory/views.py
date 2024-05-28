@@ -22,6 +22,7 @@ from django_registration.backends.activation.views import (
     ActivationView as BaseActivationView,
     RegistrationView as BaseRegistrationView,
 )
+from honeypot.decorators import check_honeypot
 from itertools import chain
 from .models import (
     Camera,
@@ -3280,6 +3281,7 @@ class ActivationView(BaseActivationView):
         return reverse("account-verified", args=(user.id,))
 
 
+@method_decorator(check_honeypot, name="post")
 class RegistrationView(BaseRegistrationView):
     def get(self, request, *args, **kwargs):
         if self.request.user.is_authenticated:

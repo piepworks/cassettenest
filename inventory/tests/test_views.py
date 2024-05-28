@@ -241,6 +241,7 @@ class RegisterTests(TestCase):
                 "password1": password,
                 "password2": password,
                 "email": email,
+                "phonenumber": "",
             },
         )
 
@@ -254,6 +255,7 @@ class RegisterTests(TestCase):
                 "password1": "password",
                 "password2": "password",
                 "email": "test@example.com",
+                "phonenumber": "",
             },
         )
 

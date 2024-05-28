@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "waffle",
     "corsheaders",
     "widget_tweaks",
+    "honeypot",
     "django_htmx",
     "django_browser_reload",
     "django_extensions",
@@ -195,3 +196,5 @@ filterwarnings(
     "ignore", "The FORMS_URLFIELD_ASSUME_HTTPS transitional setting is deprecated."
 )
 FORMS_URLFIELD_ASSUME_HTTPS = True
+
+HONEYPOT_FIELD_NAME = "phonenumber"

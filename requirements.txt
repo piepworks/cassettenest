@@ -57,6 +57,7 @@ django==5.0.6
     #   django-cors-headers
     #   django-debug-toolbar
     #   django-extensions
+    #   django-honeypot
     #   django-htmx
     #   django-registration
     #   django-waffle
@@ -74,6 +75,8 @@ django-cors-headers==4.3.1
 django-debug-toolbar==4.4.2
     # via -r requirements.in
 django-extensions==3.2.3
+    # via -r requirements.in
+django-honeypot==1.2.0
     # via -r requirements.in
 django-htmx==1.17.3
     # via -r requirements.in
