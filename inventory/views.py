@@ -371,9 +371,6 @@ def kofi_webhooks(request):
     if user:
         user.profile.donation = True
         user.save()
-        print("User found and donation set to True.")
-    else:
-        print("User not found.")
 
     return HttpResponse(status=200)
 
