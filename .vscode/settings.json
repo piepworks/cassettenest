@@ -15,4 +15,5 @@
         "*.js": "javascript",
         "*.svg": "django-html",
     },
+    "python.analysis.exclude": ["venv"],
 }
