@@ -12,7 +12,7 @@ asgiref==3.8.1
     #   django-htmx
 asttokens==2.4.1
     # via stack-data
-autopep8==2.3.0
+autopep8==2.3.1
     # via -r requirements.in
 black==24.4.2
     # via -r requirements.in
@@ -34,7 +34,7 @@ click==8.1.7
     #   pip-tools
 confusable-homoglyphs==3.3.1
     # via django-registration
-coverage[toml]==7.5.3
+coverage[toml]==7.5.4
     # via pytest-cov
 cssselect==1.2.0
     # via pyquery
@@ -64,13 +64,13 @@ django==5.0.6
     #   model-bakery
 django-bleach==3.1.0
     # via -r requirements.in
-django-browser-reload==1.12.1
+django-browser-reload==1.13.0
     # via -r requirements.in
 django-cache-url==3.4.5
     # via environs
 django-capture-tag==1.0
     # via -r requirements.in
-django-cors-headers==4.3.1
+django-cors-headers==4.4.0
     # via -r requirements.in
 django-debug-toolbar==4.4.2
     # via -r requirements.in
@@ -78,7 +78,7 @@ django-extensions==3.2.3
     # via -r requirements.in
 django-honeypot==1.2.0
     # via -r requirements.in
-django-htmx==1.17.3
+django-htmx==1.18.0
     # via -r requirements.in
 django-registration==3.4
     # via -r requirements.in
@@ -92,7 +92,7 @@ execnet==2.1.1
     # via pytest-xdist
 executing==2.0.1
     # via stack-data
-filelock==3.15.1
+filelock==3.15.4
     # via virtualenv
 flake8==7.1.0
     # via -r requirements.in
@@ -219,7 +219,7 @@ requests==2.32.3
     # via
     #   -r requirements.in
     #   pytest-base-url
-sentry-sdk==2.5.1
+sentry-sdk==2.6.0
     # via -r requirements.in
 six==1.16.0
     # via
@@ -250,7 +250,7 @@ urllib3==2.2.2
     # via
     #   requests
     #   sentry-sdk
-virtualenv==20.26.2
+virtualenv==20.26.3
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit
@@ -260,7 +260,7 @@ webencodings==0.5.1
     #   tinycss2
 wheel==0.43.0
     # via pip-tools
-whitenoise==6.6.0
+whitenoise==6.7.0
     # via -r requirements.in
 
 # The following packages are considered to be unsafe in a requirements file:
