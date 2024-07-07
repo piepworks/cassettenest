@@ -31,6 +31,7 @@ playwright:
 
 # Update all Python packages
 update-packages:
+  venv/bin/python -m pip install --upgrade pip
   pip-compile --upgrade --resolver=backtracking
   venv/bin/python -m pip install -r requirements.txt
 
