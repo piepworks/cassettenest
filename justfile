@@ -40,6 +40,11 @@ update-a-package package:
   pip-compile -P {{ package }} --resolver=backtracking
   venv/bin/python -m pip install -r requirements.txt
 
+# Update Python and Node stuff
+update: update-packages
+  npm update
+  npm outdated
+
 build-statick-files:
   venv/bin/python manage.py tailwind build
   venv/bin/python manage.py collectstatic --noinput
