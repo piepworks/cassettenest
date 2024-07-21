@@ -165,7 +165,7 @@ psycopg-binary==3.2.1
     # via psycopg
 ptyprocess==0.7.0
     # via pexpect
-pure-eval==0.2.2
+pure-eval==0.2.3
     # via stack-data
 pycodestyle==2.12.0
     # via
@@ -186,7 +186,7 @@ pyproject-hooks==1.1.0
     #   pip-tools
 pyquery==2.0.0
     # via -r requirements.in
-pytest==8.2.2
+pytest==8.3.1
     # via
     #   pytest-base-url
     #   pytest-cov
@@ -219,14 +219,14 @@ requests==2.32.3
     # via
     #   -r requirements.in
     #   pytest-base-url
-sentry-sdk==2.9.0
+sentry-sdk==2.10.0
     # via -r requirements.in
 six==1.16.0
     # via
     #   asttokens
     #   bleach
     #   python-dateutil
-sqlparse==0.5.0
+sqlparse==0.5.1
     # via
     #   django
     #   django-debug-toolbar
