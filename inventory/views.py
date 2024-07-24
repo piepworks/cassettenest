@@ -1605,7 +1605,6 @@ def stock_add(request):
 
         if form.is_valid():
             if form.cleaned_data["new_manufacturer"]:
-                # Create new manufactuter and get a reference to it.
                 new_manufacturer = form.cleaned_data["new_manufacturer"]
                 try:
                     with transaction.atomic():
