@@ -2486,7 +2486,12 @@ def camera_add(request):
             camera = form.save(commit=False)
             camera.status = "unavailable" if unavailable else "empty"
             camera.owner = request.user
-            camera.save()
+
+            try:
+                camera.save()
+            except IntegrityError:
+                messages.error(request, "You already have a camera with that name")
+                return redirect("camera-add")
 
             success_message = "Camera added!"
             if camera.multiple_backs:
