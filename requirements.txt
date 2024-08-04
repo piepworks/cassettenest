@@ -14,7 +14,7 @@ asttokens==2.4.1
     # via stack-data
 autopep8==2.3.1
     # via -r requirements.in
-black==24.4.2
+black==24.8.0
     # via -r requirements.in
 bleach[css]==5.0.1
     # via django-bleach
@@ -76,7 +76,7 @@ django-debug-toolbar==4.4.6
     # via -r requirements.in
 django-extensions==3.2.3
     # via -r requirements.in
-django-honeypot==1.2.0
+django-honeypot==1.2.1
     # via -r requirements.in
 django-htmx==1.18.0
     # via -r requirements.in
@@ -155,7 +155,7 @@ playwright==1.45.1
     # via pytest-playwright
 pluggy==1.5.0
     # via pytest
-pre-commit==3.7.1
+pre-commit==3.8.0
     # via -r requirements.in
 prompt-toolkit==3.0.47
     # via ipython
@@ -219,7 +219,7 @@ requests==2.32.3
     # via
     #   -r requirements.in
     #   pytest-base-url
-sentry-sdk==2.11.0
+sentry-sdk==2.12.0
     # via -r requirements.in
 six==1.16.0
     # via
@@ -258,7 +258,7 @@ webencodings==0.5.1
     # via
     #   bleach
     #   tinycss2
-wheel==0.43.0
+wheel==0.44.0
     # via pip-tools
 whitenoise==6.7.0
     # via -r requirements.in
