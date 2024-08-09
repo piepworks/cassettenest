@@ -34,7 +34,7 @@ click==8.1.7
     #   pip-tools
 confusable-homoglyphs==3.3.1
     # via django-registration
-coverage[toml]==7.6.0
+coverage[toml]==7.6.1
     # via pytest-cov
 cssselect==1.2.0
     # via pyquery
@@ -48,7 +48,7 @@ dj-database-url==2.2.0
     #   environs
 dj-email-url==1.0.6
     # via environs
-django==5.0.7
+django==5.1
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -78,7 +78,7 @@ django-extensions==3.2.3
     # via -r requirements.in
 django-honeypot==1.2.1
     # via -r requirements.in
-django-htmx==1.18.0
+django-htmx==1.19.0
     # via -r requirements.in
 django-registration==3.4
     # via -r requirements.in
@@ -94,7 +94,7 @@ executing==2.0.1
     # via stack-data
 filelock==3.15.4
     # via virtualenv
-flake8==7.1.0
+flake8==7.1.1
     # via -r requirements.in
 freezegun==1.5.1
     # via -r requirements.in
@@ -122,7 +122,7 @@ matplotlib-inline==0.1.7
     # via ipython
 mccabe==0.7.0
     # via flake8
-model-bakery==1.18.2
+model-bakery==1.19.1
     # via -r requirements.in
 mypy-extensions==1.0.0
     # via black
@@ -167,7 +167,7 @@ ptyprocess==0.7.0
     # via pexpect
 pure-eval==0.2.3
     # via stack-data
-pycodestyle==2.12.0
+pycodestyle==2.12.1
     # via
     #   -r requirements.in
     #   autopep8
@@ -213,7 +213,7 @@ python-slugify==8.0.4
     # via pytest-playwright
 pytz==2024.1
     # via -r requirements.in
-pyyaml==6.0.1
+pyyaml==6.0.2
     # via pre-commit
 requests==2.32.3
     # via
