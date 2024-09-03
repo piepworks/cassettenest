@@ -20,7 +20,7 @@ bleach[css]==5.0.1
     # via django-bleach
 build==1.2.1
     # via pip-tools
-certifi==2024.7.4
+certifi==2024.8.30
     # via
     #   requests
     #   sentry-sdk
@@ -90,7 +90,7 @@ environs[django]==11.0.0
     # via -r requirements.in
 execnet==2.1.1
     # via pytest-xdist
-executing==2.0.1
+executing==2.1.0
     # via stack-data
 filelock==3.15.4
     # via virtualenv
@@ -108,7 +108,7 @@ idna==3.8
     # via requests
 iniconfig==2.0.0
     # via pytest
-ipython==8.26.0
+ipython==8.27.0
     # via -r requirements.in
 jedi==0.19.1
     # via ipython
@@ -184,7 +184,7 @@ pyproject-hooks==1.1.0
     # via
     #   build
     #   pip-tools
-pyquery==2.0.0
+pyquery==2.0.1
     # via -r requirements.in
 pytest==8.3.2
     # via
@@ -197,7 +197,7 @@ pytest-base-url==2.1.0
     # via pytest-playwright
 pytest-cov==5.0.0
     # via -r requirements.in
-pytest-django==4.8.0
+pytest-django==4.9.0
     # via -r requirements.in
 pytest-playwright==0.5.1
     # via -r requirements.in
