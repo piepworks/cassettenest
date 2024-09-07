@@ -16,4 +16,5 @@
         "*.svg": "django-html",
     },
     "python.analysis.exclude": ["venv"],
+    "python.testing.pytestEnabled": true
 }
