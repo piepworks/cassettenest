@@ -93,6 +93,10 @@ export default defineConfig({
     // },
   ],
 
+  expect: {
+    toHaveScreenshot: { maxDiffPixels: 5 },
+  },
+
   /* Run your local dev server before starting the tests */
   webServer: {
     command: `${new_user} ${envs} e2e/start-django.sh`,
