@@ -116,7 +116,7 @@ def send_email_to_trey(subject, message):
         subject=subject,
         message=message,
         from_email="trey@cassettenest.com",
-        recipient_list=["boss@treylabs.com"],
+        recipient_list=["trey@piepworks.com"],
     )
 
 
