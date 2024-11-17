@@ -34,7 +34,7 @@ click==8.1.7
     #   pip-tools
 confusable-homoglyphs==3.3.1
     # via django-registration
-coverage[toml]==7.6.4
+coverage[toml]==7.6.7
     # via pytest-cov
 cssselect==1.2.0
     # via pyquery
@@ -82,11 +82,11 @@ django-htmx==1.21.0
     # via -r requirements.in
 django-registration==5.1.0
     # via -r requirements.in
-django-waffle==4.1.0
+django-waffle==4.2.0
     # via -r requirements.in
 django-widget-tweaks==1.5.0
     # via -r requirements.in
-environs[django]==11.0.0
+environs[django]==11.2.0
     # via -r requirements.in
 execnet==2.1.1
     # via pytest-xdist
@@ -110,7 +110,7 @@ iniconfig==2.0.0
     # via pytest
 ipython==8.29.0
     # via -r requirements.in
-jedi==0.19.1
+jedi==0.19.2
     # via ipython
 lxml==5.3.0
     # via pyquery
@@ -226,7 +226,7 @@ six==1.16.0
     #   asttokens
     #   bleach
     #   python-dateutil
-sqlparse==0.5.1
+sqlparse==0.5.2
     # via
     #   django
     #   django-debug-toolbar
