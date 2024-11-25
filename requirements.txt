@@ -34,7 +34,7 @@ click==8.1.7
     #   pip-tools
 confusable-homoglyphs==3.3.1
     # via django-registration
-coverage[toml]==7.6.7
+coverage[toml]==7.6.8
     # via pytest-cov
 cssselect==1.2.0
     # via pyquery
@@ -86,7 +86,7 @@ django-waffle==4.2.0
     # via -r requirements.in
 django-widget-tweaks==1.5.0
     # via -r requirements.in
-environs[django]==11.2.0
+environs[django]==11.2.1
     # via -r requirements.in
 execnet==2.1.1
     # via pytest-xdist
@@ -151,7 +151,7 @@ platformdirs==4.3.6
     # via
     #   black
     #   virtualenv
-playwright==1.48.0
+playwright==1.49.0
     # via pytest-playwright
 pluggy==1.5.0
     # via pytest
@@ -199,7 +199,7 @@ pytest-cov==6.0.0
     # via -r requirements.in
 pytest-django==4.9.0
     # via -r requirements.in
-pytest-playwright==0.5.2
+pytest-playwright==0.6.1
     # via -r requirements.in
 pytest-xdist==3.6.1
     # via -r requirements.in
@@ -219,7 +219,7 @@ requests==2.32.3
     # via
     #   -r requirements.in
     #   pytest-base-url
-sentry-sdk==2.18.0
+sentry-sdk==2.19.0
     # via -r requirements.in
 six==1.16.0
     # via
@@ -258,7 +258,7 @@ webencodings==0.5.1
     # via
     #   bleach
     #   tinycss2
-wheel==0.45.0
+wheel==0.45.1
     # via pip-tools
 whitenoise==6.8.2
     # via -r requirements.in
