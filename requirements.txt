@@ -20,7 +20,7 @@ bleach[css]==5.0.1
     # via django-bleach
 build==1.2.2.post1
     # via pip-tools
-certifi==2024.8.30
+certifi==2024.12.14
     # via
     #   requests
     #   sentry-sdk
@@ -151,7 +151,7 @@ platformdirs==4.3.6
     # via
     #   black
     #   virtualenv
-playwright==1.49.0
+playwright==1.49.1
     # via pytest-playwright
 pluggy==1.5.0
     # via pytest
@@ -225,7 +225,7 @@ six==1.17.0
     # via
     #   bleach
     #   python-dateutil
-sqlparse==0.5.2
+sqlparse==0.5.3
     # via
     #   django
     #   django-debug-toolbar
