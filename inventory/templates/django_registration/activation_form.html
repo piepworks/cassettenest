@@ -1,0 +1,15 @@
+{% extends 'registration/base.html' %}
+
+{% block title %}Complete your account activation{% endblock title %}
+
+{% block content %}
+  <h1>Complete your account activation</h1>
+
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+      {% include 'components/form-field-plain.html' with field=field %}
+    {% endfor %}
+    <button class="primary">Activate your account</button>
+  </form>
+{% endblock content %}
