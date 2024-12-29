@@ -3278,8 +3278,11 @@ def account_verified(request, user_id):
 
 
 class ActivationView(BaseActivationView):
-    def get_success_url(self, user):
-        return reverse("account-verified", args=(user.id,))
+    def get_success_url(self, user=None):
+        if not user:
+            messages.error(self.request, "Something is amiss.")
+            return reverse("index")
+        return reverse("account-verified", args=(user.pk,))
 
 
 @method_decorator(check_honeypot, name="post")

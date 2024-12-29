@@ -44,6 +44,16 @@ urlpatterns = [
         views.RegistrationView.as_view(),
         name="django_registration_register",
     ),
+    path(
+        "accounts/activate/",
+        views.ActivationView.as_view(),
+        name="django_registration_activate",
+    ),
+    path(
+        "account-verified/<int:user_id>",
+        views.account_verified,
+        name="account-verified",
+    ),
     path("accounts/", include("django_registration.backends.activation.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     # Static pages
