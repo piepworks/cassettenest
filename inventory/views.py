@@ -1662,17 +1662,19 @@ def stock_add(request):
 
             current_site = get_current_site(request)
             if "new_manufacturer" in locals():
-                message_addendum = f"""“{new_manufacturer}” is a new manufacturer.\n
-                    https://{current_site}{reverse('admin:inventory_manufacturer_change', args=(manufacturer.id,))}
-                """
+                message_addendum = (
+                    f"“{new_manufacturer}” is a new manufacturer.\n\n"
+                    f"https://{current_site}{reverse('admin:inventory_manufacturer_change', args=(manufacturer.id,))}"
+                )
             else:
                 message_addendum = ""
             send_email_to_trey(
                 subject="New film stock added!",
-                message=f"""{request.user} added “{stock} (in {format_message}).”\n
-                    https://{current_site}{reverse('admin:inventory_stock_change', args=(stock.id,))}\n
-                    {message_addendum}
-                """,
+                message=(
+                    f"{request.user} added “{stock} (in {format_message}).”\n\n"
+                    f"https://{current_site}{reverse('admin:inventory_stock_change', args=(stock.id,))}\n\n"
+                    f"{message_addendum}"
+                ),
             )
 
             film_id_to_add = Film.objects.filter(stock=stock).first().id
@@ -3267,9 +3269,10 @@ def account_verified(request, user_id):
 
     send_email_to_trey(
         subject="New Cassette Nest user!",
-        message=f"""{user.username} / {user.email} signed up!\n
-            https://{get_current_site(request)}{reverse('admin:auth_user_change', args=(user.id,))}
-        """,
+        message=(
+            f"{user.username} / {user.email} signed up!\n\n"
+            f"https://{get_current_site(request)}{reverse('admin:auth_user_change', args=(user.id,))}"
+        ),
     )
 
     login(request, user)
