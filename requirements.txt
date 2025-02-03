@@ -14,13 +14,13 @@ asttokens==3.0.0
     # via stack-data
 autopep8==2.3.2
     # via -r requirements.in
-black==24.10.0
+black==25.1.0
     # via -r requirements.in
 bleach[css]==5.0.1
     # via django-bleach
 build==1.2.2.post1
     # via pip-tools
-certifi==2024.12.14
+certifi==2025.1.31
     # via
     #   requests
     #   sentry-sdk
@@ -108,7 +108,7 @@ idna==3.10
     # via requests
 iniconfig==2.0.0
     # via pytest
-ipython==8.31.0
+ipython==8.32.0
     # via -r requirements.in
 jedi==0.19.2
     # via ipython
@@ -116,7 +116,7 @@ lxml==5.3.0
     # via pyquery
 markdown==3.7
     # via -r requirements.in
-marshmallow==3.26.0
+marshmallow==3.26.1
     # via environs
 matplotlib-inline==0.1.7
     # via ipython
@@ -151,7 +151,7 @@ platformdirs==4.3.6
     # via
     #   black
     #   virtualenv
-playwright==1.49.1
+playwright==1.50.0
     # via pytest-playwright
 pluggy==1.5.0
     # via pytest
@@ -174,7 +174,7 @@ pycodestyle==2.12.1
     #   flake8
 pycryptodome==3.21.0
     # via -r requirements.in
-pyee==12.0.0
+pyee==12.1.1
     # via playwright
 pyflakes==3.2.0
     # via flake8
@@ -199,7 +199,7 @@ pytest-cov==6.0.0
     # via -r requirements.in
 pytest-django==4.9.0
     # via -r requirements.in
-pytest-playwright==0.6.2
+pytest-playwright==0.7.0
     # via -r requirements.in
 pytest-xdist==3.6.1
     # via -r requirements.in
@@ -211,7 +211,7 @@ python-dotenv==1.0.1
     #   environs
 python-slugify==8.0.4
     # via pytest-playwright
-pytz==2024.2
+pytz==2025.1
     # via -r requirements.in
 pyyaml==6.0.2
     # via pre-commit
