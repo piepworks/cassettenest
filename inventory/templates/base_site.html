@@ -9,9 +9,6 @@
     <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
     <link rel="stylesheet" href="{% static 'tailwind.css' %}" />
     {% include 'partials/pwa-meta.html' %}
-    {% if not user.is_authenticated and not debug %}
-    <script async defer data-domain="app.cassettenest.com" src="https://plausible.io/js/plausible.js"></script>
-    {% endif %}
     {% if wc_needed %}
     <script type="module" src="{% static 'js/vendor/wc/@github/markdown-toolbar-element/index.js' %}"></script>
     {% endif %}
