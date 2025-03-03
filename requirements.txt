@@ -38,7 +38,7 @@ coverage[toml]==7.6.12
     # via pytest-cov
 cssselect==1.2.0
     # via pyquery
-decorator==5.1.1
+decorator==5.2.1
     # via ipython
 distlib==0.3.9
     # via virtualenv
@@ -102,14 +102,16 @@ greenlet==3.1.1
     # via playwright
 gunicorn==23.0.0
     # via -r requirements.in
-identify==2.6.7
+identify==2.6.8
     # via pre-commit
 idna==3.10
     # via requests
 iniconfig==2.0.0
     # via pytest
-ipython==8.32.0
+ipython==9.0.1
     # via -r requirements.in
+ipython-pygments-lexers==1.1.1
+    # via ipython
 jedi==0.19.2
     # via ipython
 lxml==5.3.1
@@ -122,7 +124,7 @@ matplotlib-inline==0.1.7
     # via ipython
 mccabe==0.7.0
     # via flake8
-model-bakery==1.20.3
+model-bakery==1.20.4
     # via -r requirements.in
 mypy-extensions==1.0.0
     # via black
@@ -159,9 +161,9 @@ pre-commit==4.1.0
     # via -r requirements.in
 prompt-toolkit==3.0.50
     # via ipython
-psycopg[binary]==3.2.4
+psycopg[binary]==3.2.5
     # via -r requirements.in
-psycopg-binary==3.2.4
+psycopg-binary==3.2.5
     # via psycopg
 ptyprocess==0.7.0
     # via pexpect
@@ -179,14 +181,16 @@ pyee==12.1.1
 pyflakes==3.2.0
     # via flake8
 pygments==2.19.1
-    # via ipython
+    # via
+    #   ipython
+    #   ipython-pygments-lexers
 pyproject-hooks==1.2.0
     # via
     #   build
     #   pip-tools
 pyquery==2.0.1
     # via -r requirements.in
-pytest==8.3.4
+pytest==8.3.5
     # via
     #   pytest-base-url
     #   pytest-cov
