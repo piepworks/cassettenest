@@ -3,7 +3,7 @@
     {% for message in messages %}
     <div class="rounded-md p-4{% if message.tags %} {{ message.tags }}{% endif %}">
         <div class="flex">
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
                 {% include 'svg/heroicons/x-circle.svg' with class='error-icon' %}
                 {% include 'svg/heroicons/check-circle.svg' with class='success-icon' %}
                 {% include 'svg/heroicons/information-circle.svg' with class='info-icon' %}
@@ -28,7 +28,7 @@
 <div class="messages print:hidden">
     <div class="rounded-md error p-4">
         <div class="flex">
-            <div class="flex-shrink-0">
+            <div class="shrink-0">
                 {% include 'svg/heroicons/x-circle.svg' with class='error-icon' %}
             </div>
             <div class="ml-3 text-sm">

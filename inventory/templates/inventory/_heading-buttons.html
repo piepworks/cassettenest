@@ -1,4 +1,4 @@
-<div class="actions mt-4 flex-shrink-0 flex items-end md:mt-0 md:ml-4 space-x-3">
+<div class="actions mt-4 shrink-0 flex items-end md:mt-0 md:ml-4 space-x-3">
     {% if parent_item %}
         {% if key or key is 0 %}
             <a aria-label="Edit {{ name }}" title="Edit {{ name }}" class="button" href="{% url url|add:'-edit' parent_item.id key %}">

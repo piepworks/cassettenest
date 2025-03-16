@@ -19,7 +19,7 @@ sm:block  md:block  lg:block  xl:block
             hx-target="{{ target }}"
             hx-indicator=".htmx-indicator"
             class="flex">
-            <select name="{{ name }}" id="id_{{ name }}_select" class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+            <select name="{{ name }}" id="id_{{ name }}_select" class="block dark:bg-stone-700 dark:text-stone-200 w-full pl-3 pr-10 py-2 text-base border-stone-300 dark:border-stone-400 focus:outline-hidden focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
                 {% for tab in tabs %}
                 <option value="{{ tab }}"{% if tab|stringformat:'s' == current_tab %} selected{% endif %}>{{ tab|title }}{% if tab|stringformat:'s' == 'all' %} {{ plural|title }}{% endif %} ({{ tabs|get_item:tab }})</option>
                 {% endfor %}

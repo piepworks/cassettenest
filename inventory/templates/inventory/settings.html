@@ -49,10 +49,10 @@
                 {% if v %}
                     <li>
                         <div class="flex w-0 flex-1 items-center">
-                            {% include 'svg/heroicons/paper-clip.svg' with class='h-5 w-5 flex-shrink-0 text-stone-400 dark:text-stone-500' %}
+                            {% include 'svg/heroicons/paper-clip.svg' with class='h-5 w-5 shrink-0 text-stone-400 dark:text-stone-500' %}
                             <span class="ml-2 w-0 flex-1 truncate">Your {% if k == 'camera-backs' %}camera backs{% else %}{{ k }}{% endif %}</span>
                         </div>
-                        <div class="ml-4 flex-shrink-0">
+                        <div class="ml-4 shrink-0">
                             <a href="{% url 'export-'|add:k %}">Download</a>
                         </div>
                     </li>
@@ -74,7 +74,7 @@
                         <div class="flex flex-wrap items-center gap-3 sm:gap-0">
                             <div class="w-full sm:w-auto sm:basis-1/4">{{ import }}</div>
                             {% csrf_token %}
-                            <div class="flex-grow">{{ csv_form.csv }}</div>
+                            <div class="grow">{{ csv_form.csv }}</div>
                             <button>Upload</button>
                         </div>
                     </form>

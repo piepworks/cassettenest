@@ -62,7 +62,7 @@
      I don't love this. Remove it as soon as we find a better solution. */
   a {
     @apply
-      focus:outline-none
+      focus:outline-hidden
       focus-visible:outline-blue-500;
   }
 
@@ -114,7 +114,7 @@
       rounded-md
       shadow-sm
       placeholder-stone-400
-      focus:outline-none
+      focus:outline-hidden
       sm:text-sm
       focus:placeholder-stone-400;
   }
@@ -232,7 +232,7 @@
         hover:bg-stone-50
         dark:hover:bg-stone-700
         dark:hover:border-stone-600
-        focus:outline-none
+        focus:outline-hidden
         focus:ring-2
         focus:ring-offset-2
         focus:ring-offset-stone-100
@@ -321,7 +321,7 @@
         text-stone-400
         mr-4
         md:mr-3
-        flex-shrink-0
+        shrink-0
         h-8
         w-8
         md:h-6
@@ -337,7 +337,7 @@
           p-2
           no-underline
           text-stone-300
-          flex-grow
+          grow
           whitespace-nowrap
           hover:bg-stone-700
           dark:hover:bg-stone-800
@@ -345,7 +345,7 @@
       }
 
       form {
-        @apply flex flex-grow space-y-0;
+        @apply flex grow space-y-0;
       }
 
       li,

@@ -21,7 +21,7 @@
         {% if user.is_authenticated and request.path != patterns_url %}{% include '_menu.html' %}{% endif %}
         <div class="flex print:block flex-col{% if request.path != patterns_url %} md:w-0 flex-1 overflow-hidden min-h-screen{% endif %}">
             {% if user.is_authenticated %}{% include '_hamburger.html' %}{% endif %}
-            <div class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
+            <div class="flex-1 relative z-0 overflow-y-auto focus:outline-hidden">
                 <main class="pt-2 md:pt-6 pb-16">
                     <div class="hidden print:block max-w-7xl mx-auto mb-6 md:mb-8 px-4 sm:px-6 lg:px-8">
                         <div class="flex items-center space-x-3">
