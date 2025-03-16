@@ -16,5 +16,5 @@
         "*.svg": "django-html",
     },
     "python.testing.pytestEnabled": true,
-    "css.validate": false
+    "css.lint.unknownAtRules": "ignore"
 }
