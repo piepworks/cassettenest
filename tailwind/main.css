@@ -828,6 +828,7 @@
         mb-6
         pb-2
         border-b-2
+        border-stone-200
         dark:border-b-stone-500;
 
       a { @apply no-underline; }
