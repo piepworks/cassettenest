@@ -313,7 +313,12 @@
     #menu-desktop-toggle {
       margin-bottom: calc(env(safe-area-inset-bottom) * 3);
 
-      button:hover svg { color: var(--color-stone-300); }
+      button {
+        cursor: pointer;
+        color: var(--color-stone-600);
+
+        &:hover svg { color: var(--color-stone-300); }
+      }
     }
 
     li svg {
