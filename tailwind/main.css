@@ -183,9 +183,8 @@
 
     h1 {
       @apply
-        text-2xl
+        text-2xl/7
         font-bold
-        leading-7
         sm:text-3xl
         sm:print:text-5xl;
     }
