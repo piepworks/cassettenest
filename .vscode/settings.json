@@ -15,6 +15,6 @@
         "*.js": "javascript",
         "*.svg": "django-html",
     },
-    "python.analysis.exclude": ["venv"],
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "css.validate": false
 }
