@@ -112,7 +112,7 @@
       py-2
       border
       rounded-md
-      shadow-sm
+      shadow-xs
       placeholder-stone-400
       focus:outline-hidden
       sm:text-sm
@@ -141,7 +141,7 @@
       h-4
       w-4
       text-blue-600
-      rounded;
+      rounded-sm
   }
 
   input[type='number'] {
@@ -219,7 +219,7 @@
         border-stone-300
         dark:border-stone-500
         rounded-md
-        shadow-sm
+        shadow-xs
         text-sm
         font-medium
         text-stone-700
