@@ -2,6 +2,7 @@
 @plugin '@tailwindcss/typography';
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/aspect-ratio';
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --color-gold-light: #f5d327;
