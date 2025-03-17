@@ -178,6 +178,7 @@
 
 @layer components {
   @import './components/forms';
+  @import './components/reminder-square';
 
   .page-heading {
     @apply md:flex
@@ -343,66 +344,6 @@
         text-blue-600
         dark:text-blue-300
         dark:print:text-black;
-    }
-  }
-
-  .type-empty {
-    @apply border-2 border-dashed rounded-lg bg-transparent border-stone-300 dark:border-stone-500;
-
-    .reminder-iso {
-      @apply text-stone-300 dark:text-stone-500;
-    }
-  }
-
-  .type-c41 {
-    @apply bg-blue-500 dark:bg-blue-600;
-
-    .fold {
-      @apply bg-blue-300 dark:bg-blue-400;
-    }
-    .reminder-type {
-      @apply text-blue-300 dark:text-blue-400;
-    }
-    .reminder-iso {
-      @apply text-white;
-    }
-    .reminder-push-pull {
-      @apply text-blue-300 dark:text-blue-400;
-    }
-  }
-
-  .type-bw {
-    @apply bg-stone-400 dark:bg-stone-500;
-
-    .fold {
-      @apply bg-stone-300 dark:bg-stone-400;
-    }
-
-    .reminder-type {
-      @apply text-stone-300 dark:text-stone-400;
-    }
-    .reminder-iso {
-      @apply text-white;
-    }
-    .reminder-push-pull {
-      @apply text-stone-300 dark:text-stone-400;
-    }
-  }
-
-  .type-e6 {
-    @apply bg-purple-600;
-
-    .fold {
-      @apply bg-purple-400;
-    }
-    .reminder-type {
-      @apply text-purple-400;
-    }
-    .reminder-iso {
-      @apply text-white;
-    }
-    .reminder-push-pull {
-      @apply text-purple-400;
     }
   }
 
@@ -1131,7 +1072,7 @@
     clip-path: var(--folded-corner);
 
     .fold {
-      @apply block;
+      display: block;
     }
   }
 }
@@ -1141,7 +1082,7 @@
     clip-path: none;
 
     .fold {
-      @apply hidden;
+      display: none;
     }
   }
 }
