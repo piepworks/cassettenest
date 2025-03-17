@@ -1,5 +1,5 @@
 /* global htmxFade */
-window.htmxFade = function (opacity) {
+window.htmxFade = (opacity) => {
   const elements = document.getElementsByClassName('htmx-replace');
   for (let i = 0; i < elements.length; i++) {
     elements[i].style.opacity = opacity;

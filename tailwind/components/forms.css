@@ -1,4 +1,6 @@
-form { @apply space-y-6; }
+form {
+  @apply space-y-6;
+}
 
 input[type='text'],
 input[type='email'],
@@ -10,8 +12,7 @@ input[type='radio'],
 input[type='url'],
 select,
 textarea {
-  @apply
-    border-stone-300
+  @apply border-stone-300
     focus:ring-2
     focus:ring-offset-2
     focus:ring-blue-500
@@ -27,8 +28,7 @@ input[type='number'],
 input[type='url'],
 select,
 textarea {
-  @apply
-    max-w-full
+  @apply max-w-full
     text-stone-800
     block
     px-3
@@ -41,14 +41,17 @@ textarea {
     focus:placeholder-stone-400;
 }
 
-textarea { @apply w-full; }
+textarea {
+  @apply w-full;
+}
 
-select { @apply pr-8; }
+select {
+  @apply pr-8;
+}
 
 input[type='date'] {
-  @apply
-    /* To keep things vertically centered in Safari: */
-    flex
+  /* To keep things vertically centered in Safari: */
+  @apply flex
     align-middle
     min-w-[6rem];
 }
@@ -59,18 +62,16 @@ input[type='radio'] {
 }
 
 input[type='checkbox'] {
-  @apply
-    h-4
+  @apply h-4
     w-4
     text-blue-600
-    rounded-sm
+    rounded-sm;
 }
 
 input[type='number'] {
   appearance: textfield;
 
-  @apply
-    max-w-[5rem]
+  @apply max-w-[5rem]
     rounded-none
     text-center
     font-bold
@@ -94,8 +95,12 @@ input[type='number'] {
 }
 
 fieldset {
-  legend { @apply mb-2; }
+  legend {
+    @apply mb-2;
+  }
 
   select,
-  input[type='number'] { @apply inline; }
+  input[type='number'] {
+    @apply inline;
+  }
 }

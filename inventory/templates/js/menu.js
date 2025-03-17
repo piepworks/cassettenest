@@ -18,7 +18,7 @@ window.cnMenu = {
       'opacity-0',
       'fixed',
       'inset-0',
-      'bg-opacity-75'
+      'bg-opacity-75',
     );
     this.content.classList.add('-translate-x-full', 'max-w-xs');
     this.openButton.classList.remove('hidden');
@@ -32,9 +32,9 @@ window.cnMenu = {
     // a bit of a blip when it happens.
     document.removeEventListener(
       'htmx:historyRestore',
-      window.desktopToggleSetup
+      window.desktopToggleSetup,
     );
-    window.desktopToggleSetup = function () {
+    window.desktopToggleSetup = () => {
       fetch('{% url "session-sidebar-status" %}', {
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
       })

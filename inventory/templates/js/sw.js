@@ -8,7 +8,7 @@ workbox.setConfig({
 
 workbox.routing.registerRoute(
   ({ request }) => request.destination === 'image',
-  new workbox.strategies.CacheFirst()
+  new workbox.strategies.CacheFirst(),
 );
 
 workbox.routing.setDefaultHandler(new workbox.strategies.NetworkFirst());

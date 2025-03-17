@@ -10,8 +10,7 @@
 
 @layer base {
   body {
-    @apply
-      bg-stone-100
+    @apply bg-stone-100
       dark:bg-stone-800
       print:bg-white
       text-stone-900
@@ -30,16 +29,14 @@
   }
 
   ::selection {
-    @apply
-      text-stone-800;
+    @apply text-stone-800;
 
     background: var(--color-gold);
   }
 
   a,
   button.link {
-    @apply
-      text-blue-600
+    @apply text-blue-600
       dark:text-blue-400
       print:text-stone-800
       dark:print:text-black
@@ -50,27 +47,27 @@
 
     @media print {
       &:not(.print-no-href)::after {
-        content: " (" attr(href) ")";
+        content: ' (' attr(href) ')';
         color: var(--color-stone-400);
         text-decoration: none;
         font-size: var(--text-sm);
       }
 
-      &.print-no-href { text-decoration: none; }
+      &.print-no-href {
+        text-decoration: none;
+      }
     }
   }
 
   /* So Safari doesn't always highlight the logo on every page load.
      I don't love this. Remove it as soon as we find a better solution. */
   a {
-    @apply
-      focus:outline-hidden
+    @apply focus:outline-hidden
       focus-visible:outline-blue-500;
   }
 
   button.link {
-    @apply
-      p-0
+    @apply p-0
       bg-transparent
       hover:bg-transparent
       border-none
@@ -78,19 +75,19 @@
   }
 
   main {
-    .main-header:empty { display: none; }
+    .main-header:empty {
+      display: none;
+    }
 
     h1 {
-      @apply
-        text-2xl/7
+      @apply text-2xl/7
         font-bold
         sm:text-3xl
         sm:print:text-5xl;
     }
 
     h3 {
-      @apply
-        text-lg
+      @apply text-lg
         font-medium
         leading-6
         border-b-4
@@ -106,8 +103,7 @@
     .button {
       touch-action: manipulation;
 
-      @apply
-        print:hidden
+      @apply print:hidden
         cursor-pointer
         inline-flex
         items-center
@@ -146,31 +142,29 @@
         dark:disabled:bg-transparent;
 
       &,
-      &:hover { @apply no-underline; }
+      &:hover {
+        @apply no-underline;
+      }
 
       &.primary,
       &.destructive {
-        @apply
-          border-transparent
+        @apply border-transparent
           text-white
           hover:text-white;
       }
 
       &.primary {
-        @apply
-          bg-blue-600
+        @apply bg-blue-600
           hover:bg-blue-700;
       }
 
       &.destructive {
-        @apply
-          bg-red-600
+        @apply bg-red-600
           hover:bg-red-700;
       }
 
       &.gold {
-        @apply
-          hover:bg-black
+        @apply hover:bg-black
           text-yellow-900
           hover:text-white
           border-transparent;
@@ -185,23 +179,22 @@
   @import './components/forms';
 
   .page-heading {
-    @apply
-      md:flex
+    @apply md:flex
       md:items-center
       md:justify-between;
 
     .inner {
-      @apply
-        flex-1
+      @apply flex-1
         min-w-0;
     }
 
-    form { @apply space-y-0; }
+    form {
+      @apply space-y-0;
+    }
   }
 
   #menu-inner {
-    @apply
-      md:w-64
+    @apply md:w-64
       transition-all;
     background-color: var(--color-stone-800);
     background-image: url('/static/img/grain-dark-2.png');
@@ -217,13 +210,14 @@
         cursor: pointer;
         color: var(--color-stone-600);
 
-        &:hover svg { color: var(--color-stone-300); }
+        &:hover svg {
+          color: var(--color-stone-300);
+        }
       }
     }
 
     li svg {
-      @apply
-        text-stone-400
+      @apply text-stone-400
         mr-4
         md:mr-3
         shrink-0
@@ -232,14 +226,15 @@
         md:h-6
         md:w-6;
 
-      &.admin { color: var(--color-gold); }
+      &.admin {
+        color: var(--color-gold);
+      }
     }
 
     ul {
       button,
       a {
-        @apply
-          p-2
+        @apply p-2
           no-underline
           text-stone-300
           grow
@@ -256,8 +251,7 @@
       li,
       button,
       a {
-        @apply
-          text-stone-300
+        @apply text-stone-300
           flex
           items-center
           text-lg
@@ -269,55 +263,62 @@
     }
 
     li.current {
-      @apply
-        p-2
+      @apply p-2
         bg-stone-900
         dark:bg-black
         text-white;
 
-      a { @apply -m-2; }
+      a {
+        @apply -m-2;
+      }
 
-      svg { @apply text-stone-300; }
+      svg {
+        @apply text-stone-300;
+      }
     }
 
     &.collapsed {
       @apply md:w-20;
 
-      #menu-desktop-toggle { @apply rotate-180; }
+      #menu-desktop-toggle {
+        @apply rotate-180;
+      }
 
       ul {
-        @apply
-          md:space-y-4
+        @apply md:space-y-4
           md:mx-1
           md:mt-8;
 
-        &.secondary { @apply md:mt-14; }
+        &.secondary {
+          @apply md:mt-14;
+        }
       }
 
       li {
         &,
         a,
-        button { @apply md:justify-center; }
+        button {
+          @apply md:justify-center;
+        }
 
         svg {
-          @apply
-            md:w-7
+          @apply md:w-7
             md:h-7
             md:mr-0;
         }
 
-        span { @apply md:hidden; }
+        span {
+          @apply md:hidden;
+        }
 
         &.current a {
-          @apply
-            md:mx-0
+          @apply md:mx-0
             md:-my-3;
         }
 
         a,
         &.current {
-          @apply
-            md:py-3
+          @apply md:py-3
             md:px-0;
         }
       }
@@ -326,8 +327,7 @@
 
   .tabs {
     a {
-      @apply
-        border-transparent
+      @apply border-transparent
         text-stone-500
         dark:text-stone-400
         dark:print:text-black
@@ -338,8 +338,7 @@
     }
 
     a.current {
-      @apply
-        border-blue-400
+      @apply border-blue-400
         text-blue-600
         dark:text-blue-300
         dark:print:text-black;
@@ -349,47 +348,71 @@
   .type-empty {
     @apply border-2 border-dashed rounded-lg bg-transparent border-stone-300 dark:border-stone-500;
 
-    .reminder-iso { @apply text-stone-300 dark:text-stone-500; }
+    .reminder-iso {
+      @apply text-stone-300 dark:text-stone-500;
+    }
   }
 
   .type-c41 {
     @apply bg-blue-500 dark:bg-blue-600;
 
-    .fold { @apply bg-blue-300 dark:bg-blue-400; }
-    .reminder-type { @apply text-blue-300 dark:text-blue-400; }
-    .reminder-iso { @apply text-white; }
-    .reminder-push-pull { @apply text-blue-300 dark:text-blue-400; }
+    .fold {
+      @apply bg-blue-300 dark:bg-blue-400;
+    }
+    .reminder-type {
+      @apply text-blue-300 dark:text-blue-400;
+    }
+    .reminder-iso {
+      @apply text-white;
+    }
+    .reminder-push-pull {
+      @apply text-blue-300 dark:text-blue-400;
+    }
   }
 
   .type-bw {
     @apply bg-stone-400 dark:bg-stone-500;
 
-    .fold { @apply bg-stone-300 dark:bg-stone-400; }
+    .fold {
+      @apply bg-stone-300 dark:bg-stone-400;
+    }
 
-    .reminder-type { @apply text-stone-300 dark:text-stone-400; }
-    .reminder-iso { @apply text-white; }
-    .reminder-push-pull { @apply text-stone-300 dark:text-stone-400; }
+    .reminder-type {
+      @apply text-stone-300 dark:text-stone-400;
+    }
+    .reminder-iso {
+      @apply text-white;
+    }
+    .reminder-push-pull {
+      @apply text-stone-300 dark:text-stone-400;
+    }
   }
 
   .type-e6 {
     @apply bg-purple-600;
 
-    .fold { @apply bg-purple-400; }
-    .reminder-type { @apply text-purple-400; }
-    .reminder-iso { @apply text-white; }
-    .reminder-push-pull { @apply text-purple-400; }
+    .fold {
+      @apply bg-purple-400;
+    }
+    .reminder-type {
+      @apply text-purple-400;
+    }
+    .reminder-iso {
+      @apply text-white;
+    }
+    .reminder-push-pull {
+      @apply text-purple-400;
+    }
   }
 
   .stats {
-    @apply
-      grid
+    @apply grid
       grid-cols-1
       gap-5
       sm:grid-cols-2;
 
     > div {
-      @apply
-        px-4
+      @apply px-4
         print:px-0
         py-5
         bg-white
@@ -403,8 +426,7 @@
     }
 
     dt {
-      @apply
-        text-sm
+      @apply text-sm
         font-medium
         text-stone-500
         dark:text-stone-300
@@ -412,22 +434,19 @@
     }
 
     dd {
-      @apply
-        mt-1
+      @apply mt-1
         text-3xl
         font-semibold;
 
       &,
       a {
-        @apply
-          text-stone-900
+        @apply text-stone-900
           dark:text-white
           dark:print:text-black;
       }
 
       a {
-        @apply
-          hover:no-underline
+        @apply hover:no-underline
           hover:text-white
           dark:hover:text-stone-900
           hover:bg-stone-900
@@ -447,19 +466,16 @@
     @apply mt-10;
 
     > div {
-      @apply
-        border-stone-200
+      @apply border-stone-200
         dark:border-stone-600;
 
       .dl {
-        @apply
-          sm:divide-y
+        @apply sm:divide-y
           sm:divide-stone-200
           sm:dark:divide-stone-600;
 
         dl {
-          @apply
-            py-4
+          @apply py-4
             sm:py-5
             sm:grid
             sm:grid-cols-3
@@ -467,15 +483,13 @@
         }
 
         dt {
-          @apply
-            text-sm
+          @apply text-sm
             font-medium
             dark:print:text-black;
         }
 
         dd {
-          @apply
-            mt-1
+          @apply mt-1
             text-sm
             sm:mt-0
             sm:col-span-2
@@ -484,9 +498,13 @@
             dark:prose-invert
             dark:print:text-black;
 
-          a { @apply dark:print:text-black; }
+          a {
+            @apply dark:print:text-black;
+          }
 
-          p:first-child { @apply mt-0; }
+          p:first-child {
+            @apply mt-0;
+          }
         }
       }
     }
@@ -494,15 +512,13 @@
 
   .logbook {
     table {
-      @apply
-        min-w-full
+      @apply min-w-full
         divide-y
         divide-stone-200
         dark:divide-stone-600;
 
       thead th {
-        @apply
-          px-6
+        @apply px-6
           py-3
           text-left
           text-xs
@@ -515,20 +531,17 @@
       tbody {
         tr {
           &:nth-child(odd) {
-            @apply
-              bg-white
+            @apply bg-white
               dark:bg-stone-900;
           }
 
           &:nth-child(even) {
-            @apply
-              bg-transparent;
+            @apply bg-transparent;
           }
         }
 
         td {
-          @apply
-            px-6
+          @apply px-6
             py-4
             whitespace-nowrap
             text-sm
@@ -541,14 +554,15 @@
   }
 
   .pagination nav {
-    button { @apply rounded-none; }
+    button {
+      @apply rounded-none;
+    }
 
     a,
     .ellipsis,
     .current,
     button[disabled] {
-      @apply
-        no-underline
+      @apply no-underline
         relative
         inline-flex
         items-center
@@ -568,15 +582,20 @@
         dark:hover:bg-black;
 
       &:first-child,
-      &:last-child { @apply px-2; }
+      &:last-child {
+        @apply px-2;
+      }
 
-      &:first-child { @apply rounded-l-md; }
+      &:first-child {
+        @apply rounded-l-md;
+      }
 
-      &:last-child { @apply rounded-r-md; }
+      &:last-child {
+        @apply rounded-r-md;
+      }
 
       &.current {
-        @apply
-          z-10
+        @apply z-10
           bg-blue-50
           dark:bg-blue-500
           border-blue-500
@@ -589,8 +608,7 @@
     }
 
     button[disabled] {
-      @apply
-        text-stone-300
+      @apply text-stone-300
         hover:text-stone-300
         dark:text-stone-700
         hover:dark:text-stone-700;
@@ -598,16 +616,14 @@
 
     .ellipsis,
     button[disabled] {
-      @apply
-        hover:bg-white
+      @apply hover:bg-white
         dark:hover:bg-stone-900;
     }
   }
 
   .registration {
     h2 {
-      @apply
-        mt-6
+      @apply mt-6
         mb-4
         text-center
         text-3xl
@@ -617,16 +633,21 @@
     p {
       @apply mt-4 text-sm;
 
-      &:only-of-type { @apply text-center; }
+      &:only-of-type {
+        @apply text-center;
+      }
 
-      &.policies { @apply text-left pt-6; }
+      &.policies {
+        @apply text-left pt-6;
+      }
     }
 
-    input { @apply w-full; }
+    input {
+      @apply w-full;
+    }
 
     a {
-      @apply
-        font-medium
+      @apply font-medium
         text-blue-600
         dark:text-blue-400
         hover:text-blue-500
@@ -634,51 +655,46 @@
     }
 
     .action button {
-      @apply
-        w-full
+      @apply w-full
         flex
         justify-center;
     }
   }
 
   .messages {
-    svg { @apply hidden; }
+    svg {
+      @apply hidden;
+    }
 
     .success {
-      @apply
-        bg-green-200
+      @apply bg-green-200
         dark:bg-green-500;
 
       &,
       a {
-        @apply
-          text-green-700
+        @apply text-green-700
           dark:text-green-800;
       }
 
       .success-icon {
-        @apply
-          block
+        @apply block
           text-green-500
           dark:text-green-800;
       }
     }
 
     .error {
-      @apply
-        bg-red-100
+      @apply bg-red-100
         dark:bg-red-400;
 
       &,
       a {
-        @apply
-          text-red-700
+        @apply text-red-700
           dark:text-red-800;
       }
 
       .error-icon {
-        @apply
-          block
+        @apply block
           text-red-400
           dark:text-red-700;
       }
@@ -687,33 +703,28 @@
     .warning {
       &,
       a {
-        @apply
-          bg-yellow-200
+        @apply bg-yellow-200
           text-yellow-700;
       }
 
       .warning-icon {
-        @apply
-          block
+        @apply block
           text-yellow-500
           dark:text-yellow-600;
       }
     }
 
     .info {
-      @apply
-        bg-blue-100;
+      @apply bg-blue-100;
 
       &,
       a {
-        @apply
-          dark:bg-blue-200
+        @apply dark:bg-blue-200
           text-blue-700;
       }
 
       .info-icon {
-        @apply
-          block
+        @apply block
           text-blue-400
           dark:text-blue-600;
       }
@@ -722,8 +733,7 @@
 
   .patterns {
     section > h2 {
-      @apply
-        text-xl
+      @apply text-xl
         font-bold
         mb-6
         pb-2
@@ -731,10 +741,14 @@
         border-stone-200
         dark:border-b-stone-500;
 
-      a { @apply no-underline; }
+      a {
+        @apply no-underline;
+      }
     }
 
-    .field { @apply my-6; }
+    .field {
+      @apply my-6;
+    }
 
     button.icon svg,
     .button.icon svg {
@@ -743,8 +757,7 @@
   }
 
   .markdown-toolbar {
-    @apply
-      justify-between
+    @apply justify-between
       bg-stone-300
       dark:bg-stone-600
       rounded-t-md
@@ -753,8 +766,7 @@
       -mb-1;
 
     svg {
-      @apply
-        h-4
+      @apply h-4
         w-4
         fill-stone-500
         dark:fill-stone-300
@@ -767,8 +779,7 @@
     @apply flex;
 
     button {
-      @apply
-        border-4
+      @apply border-4
         text-stone-50
         dark:text-stone-100
         enabled:hover:text-stone-50
@@ -789,13 +800,14 @@
         md:text-xl
         md:border-2;
 
-      &.hidden { display: none; }
+      &.hidden {
+        display: none;
+      }
 
       &.left {
         border-right-style: solid;
 
-        @apply
-          rounded-l-full
+        @apply rounded-l-full
           pl-6
           dark:border-r-transparent;
       }
@@ -803,16 +815,14 @@
       &.right {
         border-left-style: solid;
 
-        @apply
-          rounded-r-full
+        @apply rounded-r-full
           pr-6
           dark:border-l-transparent;
       }
     }
 
     input {
-      @apply
-        border-y-4
+      @apply border-y-4
         md:border-y-2
         border-x-0
         border-stone-400
@@ -826,35 +836,34 @@
   .journal-entries table {
     th,
     td {
-      @apply
-        border-b
+      @apply border-b
         border-stone-300
         dark:border-stone-600;
 
-      &.entry-notes * { @apply inline; }
+      &.entry-notes * {
+        @apply inline;
+      }
     }
 
     tbody:last-child tr:last-child {
-      th, td {
-        @apply
-          border-b-0
+      th,
+      td {
+        @apply border-b-0
           dark:border-b-0;
       }
     }
 
     tbody tr {
       &.summary td {
-        @apply
-          bg-stone-200
+        @apply bg-stone-200
           dark:bg-stone-900
           border-b-4;
       }
 
       &.nested td {
-        @apply
-          print:hidden
+        @apply print:hidden
           bg-stone-200
-          dark:bg-stone-700
+          dark:bg-stone-700;
       }
     }
   }
@@ -863,8 +872,7 @@
     @apply overflow-x-auto;
 
     .compact {
-      @apply
-        hidden
+      @apply hidden
         md:inline;
     }
 
@@ -872,40 +880,39 @@
       @apply min-w-full;
 
       td {
-        @apply
-          text-right
+        @apply text-right
           px-4;
       }
 
       th,
       td {
-        @apply
-          whitespace-nowrap
+        @apply whitespace-nowrap
           py-3;
 
         &:last-child {
-          @apply
-            border-l
+          @apply border-l
             pl-4
             pr-0;
         }
       }
 
       .push-pull {
-        @apply
-          text-stone-400
+        @apply text-stone-400
           dark:text-stone-500;
       }
 
       thead th {
-        @apply
-          text-right
+        @apply text-right
           pr-4;
 
-        &:last-child { @apply pr-0; }
+        &:last-child {
+          @apply pr-0;
+        }
       }
 
-      tbody th { @apply text-left; }
+      tbody th {
+        @apply text-left;
+      }
     }
   }
 
@@ -914,18 +921,20 @@
     @apply overflow-x-auto;
 
     table {
-      @apply
-        w-full
+      @apply w-full
         table-fixed;
 
-      thead th { @apply text-left; }
+      thead th {
+        @apply text-left;
+      }
 
       th,
-      td { @apply p-2; }
+      td {
+        @apply p-2;
+      }
 
       td {
-        @apply
-          whitespace-nowrap
+        @apply whitespace-nowrap
           overflow-hidden
           text-ellipsis
           print:whitespace-normal;
@@ -938,8 +947,7 @@
     @apply space-y-0;
 
     button {
-      @apply
-        print:hidden
+      @apply print:hidden
         flex
         items-center
         justify-center
@@ -954,36 +962,36 @@
         focus:ring-white;
 
       svg {
-        @apply
-          text-stone-800
+        @apply text-stone-800
           dark:text-stone-50;
       }
 
-      &:hover svg { @apply text-red-50; }
+      &:hover svg {
+        @apply text-red-50;
+      }
     }
   }
 
   .section-tabbed form.remove button {
-    @apply
-      bg-stone-200
+    @apply bg-stone-200
       hover:bg-red-500
       dark:bg-stone-500
       dark:hover:bg-red-700;
 
     svg {
-      @apply
-        text-stone-700
+      @apply text-stone-700
         dark:text-white;
     }
 
-    &:hover svg { @apply text-red-50; }
+    &:hover svg {
+      @apply text-red-50;
+    }
   }
 
   /* Form bits */
 
   .field {
-    @apply
-      sm:grid
+    @apply sm:grid
       sm:grid-cols-3
       sm:items-start
       sm:gap-4
@@ -993,26 +1001,25 @@
       sm:pb-5;
 
     &.last {
-      @apply
-        border-none
+      @apply border-none
         pb-0;
     }
 
     label {
-      @apply
-        mb-2
+      @apply mb-2
         sm:mb-0
         block
         text-sm
-        font-medium
+        font-medium;
     }
   }
 
-  .progressive-field-wrapper { @apply space-y-6; }
+  .progressive-field-wrapper {
+    @apply space-y-6;
+  }
 
   .action {
-    @apply
-      print:hidden
+    @apply print:hidden
       pt-6
       flex
       flex-wrap
@@ -1021,14 +1028,12 @@
   }
 
   .data-import-export {
-    @apply
-      text-sm
+    @apply text-sm
       font-medium
       space-y-2;
 
     ul {
-      @apply
-        divide-y
+      @apply divide-y
         divide-stone-300
         dark:divide-stone-600
         rounded-md
@@ -1038,8 +1043,7 @@
     }
 
     li {
-      @apply
-        flex
+      @apply flex
         items-center
         justify-between
         py-3
@@ -1052,40 +1056,46 @@
     display: none;
     align-self: end;
     justify-content: center;
-
-    .htmx-request& {
-      display: flex;
-    }
+  }
+  .htmx-request.htmx-indicator {
+    display: flex;
   }
 }
 
 @layer utilities {
   .js-required,
-  .has-js .no-js { @apply hidden; }
+  .has-js .no-js {
+    @apply hidden;
+  }
 
-  .has-js .js-required { @apply block; }
+  .has-js .js-required {
+    @apply block;
+  }
 
-  .has-js .js-required.markdown-toolbar { @apply flex; }
+  .has-js .js-required.markdown-toolbar {
+    @apply flex;
+  }
 
-  .has-js .js-required.color-preference { @apply grid; }
+  .has-js .js-required.color-preference {
+    @apply grid;
+  }
 
-  .has-js textarea { @apply rounded-t-none; }
+  .has-js textarea {
+    @apply rounded-t-none;
+  }
 
   .text-subdued {
-    @apply
-      text-stone-500
+    @apply text-stone-500
       dark:text-stone-400;
+  }
 
-    a& {
-      @apply
-        hover:text-stone-700
+  a.text-subdued {
+    @apply hover:text-stone-700
         dark:hover:text-stone-100;
-    }
   }
 
   .fix-this {
-    @apply
-      p-6
+    @apply p-6
       border-pink-400
       dark:border-pink-600
       border-4
@@ -1094,8 +1104,7 @@
   }
 
   .button-inactive {
-    @apply
-      border-stone-400
+    @apply border-stone-400
       text-stone-400
       hover:text-stone-400
       bg-stone-100
@@ -1107,7 +1116,9 @@
       hover:dark:bg-stone-800;
   }
 
-  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 
   .text-gold {
     color: var(--color-gold);
@@ -1118,14 +1129,18 @@
   .reminder-square:not(.type-empty) {
     clip-path: var(--folded-corner);
 
-    .fold { @apply block; }
+    .fold {
+      @apply block;
+    }
   }
 }
 
-  @utility unfolded {
-    .reminder-square:not(.type-empty) {
+@utility unfolded {
+  .reminder-square:not(.type-empty) {
     clip-path: none;
 
-    .fold { @apply hidden; }
+    .fold {
+      @apply hidden;
     }
   }
+}
