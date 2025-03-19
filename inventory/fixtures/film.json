@@ -1,564 +1,564 @@
 [
-{
+  {
     "model": "inventory.film",
     "pk": 1,
     "fields": {
-        "name": "Portra 400",
-        "slug": "portra-400",
-        "manufacturer": 2,
-        "type": "c41",
-        "iso": 400,
-        "format": "135",
-        "created_at": "2018-03-04T00:25:40.986Z",
-        "updated_at": "2018-03-04T00:25:40.986Z"
+      "name": "Portra 400",
+      "slug": "portra-400",
+      "manufacturer": 2,
+      "type": "c41",
+      "iso": 400,
+      "format": "135",
+      "created_at": "2018-03-04T00:25:40.986Z",
+      "updated_at": "2018-03-04T00:25:40.986Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 2,
     "fields": {
-        "name": "Portra 160",
-        "slug": "portra-160",
-        "manufacturer": 2,
-        "type": "c41",
-        "iso": 160,
-        "format": "135",
-        "created_at": "2018-03-04T00:33:03.028Z",
-        "updated_at": "2018-03-04T00:33:03.028Z"
+      "name": "Portra 160",
+      "slug": "portra-160",
+      "manufacturer": 2,
+      "type": "c41",
+      "iso": 160,
+      "format": "135",
+      "created_at": "2018-03-04T00:33:03.028Z",
+      "updated_at": "2018-03-04T00:33:03.028Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 3,
     "fields": {
-        "name": "P30",
-        "slug": "p30",
-        "manufacturer": 5,
-        "type": "bw",
-        "iso": 80,
-        "format": "135",
-        "created_at": "2018-03-04T00:35:31.733Z",
-        "updated_at": "2018-03-04T00:37:15.472Z"
+      "name": "P30",
+      "slug": "p30",
+      "manufacturer": 5,
+      "type": "bw",
+      "iso": 80,
+      "format": "135",
+      "created_at": "2018-03-04T00:35:31.733Z",
+      "updated_at": "2018-03-04T00:37:15.472Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 4,
     "fields": {
-        "name": "Portra 800",
-        "slug": "portra-800",
-        "manufacturer": 2,
-        "type": "c41",
-        "iso": 800,
-        "format": "135",
-        "created_at": "2018-03-04T00:47:25.806Z",
-        "updated_at": "2018-03-04T00:47:25.806Z"
+      "name": "Portra 800",
+      "slug": "portra-800",
+      "manufacturer": 2,
+      "type": "c41",
+      "iso": 800,
+      "format": "135",
+      "created_at": "2018-03-04T00:47:25.806Z",
+      "updated_at": "2018-03-04T00:47:25.806Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 5,
     "fields": {
-        "name": "Provia 100F",
-        "slug": "provia-100f",
-        "manufacturer": 1,
-        "type": "e6",
-        "iso": 100,
-        "format": "135",
-        "created_at": "2018-03-04T00:47:51.590Z",
-        "updated_at": "2018-03-04T00:47:51.590Z"
+      "name": "Provia 100F",
+      "slug": "provia-100f",
+      "manufacturer": 1,
+      "type": "e6",
+      "iso": 100,
+      "format": "135",
+      "created_at": "2018-03-04T00:47:51.590Z",
+      "updated_at": "2018-03-04T00:47:51.590Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 6,
     "fields": {
-        "name": "Pro 400H",
-        "slug": "pro-400h",
-        "manufacturer": 1,
-        "type": "c41",
-        "iso": 400,
-        "format": "135",
-        "created_at": "2018-03-04T00:54:44.434Z",
-        "updated_at": "2018-03-04T00:54:44.434Z"
+      "name": "Pro 400H",
+      "slug": "pro-400h",
+      "manufacturer": 1,
+      "type": "c41",
+      "iso": 400,
+      "format": "135",
+      "created_at": "2018-03-04T00:54:44.434Z",
+      "updated_at": "2018-03-04T00:54:44.434Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 7,
     "fields": {
-        "name": "Portra 400",
-        "slug": "portra-400-120",
-        "manufacturer": 2,
-        "type": "c41",
-        "iso": 400,
-        "format": "120",
-        "created_at": "2018-03-04T19:58:38.021Z",
-        "updated_at": "2018-03-04T19:58:38.021Z"
+      "name": "Portra 400",
+      "slug": "portra-400-120",
+      "manufacturer": 2,
+      "type": "c41",
+      "iso": 400,
+      "format": "120",
+      "created_at": "2018-03-04T19:58:38.021Z",
+      "updated_at": "2018-03-04T19:58:38.021Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 8,
     "fields": {
-        "name": "Portra 160",
-        "slug": "portra-160-120",
-        "manufacturer": 2,
-        "type": "c41",
-        "iso": 160,
-        "format": "120",
-        "created_at": "2018-03-11T15:05:18.915Z",
-        "updated_at": "2018-03-11T15:05:18.915Z"
+      "name": "Portra 160",
+      "slug": "portra-160-120",
+      "manufacturer": 2,
+      "type": "c41",
+      "iso": 160,
+      "format": "120",
+      "created_at": "2018-03-11T15:05:18.915Z",
+      "updated_at": "2018-03-11T15:05:18.915Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 9,
     "fields": {
-        "name": "800T",
-        "slug": "800t-135",
-        "manufacturer": 3,
-        "type": "c41",
-        "iso": 800,
-        "format": "135",
-        "created_at": "2018-05-24T13:21:07.430Z",
-        "updated_at": "2018-05-24T13:21:07.430Z"
+      "name": "800T",
+      "slug": "800t-135",
+      "manufacturer": 3,
+      "type": "c41",
+      "iso": 800,
+      "format": "135",
+      "created_at": "2018-05-24T13:21:07.430Z",
+      "updated_at": "2018-05-24T13:21:07.430Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 10,
     "fields": {
-        "name": "Tri-X 400",
-        "slug": "tri-x-400-135",
-        "manufacturer": 2,
-        "type": "bw",
-        "iso": 400,
-        "format": "135",
-        "created_at": "2018-07-08T23:20:50.150Z",
-        "updated_at": "2018-07-08T23:20:50.150Z"
+      "name": "Tri-X 400",
+      "slug": "tri-x-400-135",
+      "manufacturer": 2,
+      "type": "bw",
+      "iso": 400,
+      "format": "135",
+      "created_at": "2018-07-08T23:20:50.150Z",
+      "updated_at": "2018-07-08T23:20:50.150Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 11,
     "fields": {
-        "name": "Tri-X 400",
-        "slug": "tri-x-400-120",
-        "manufacturer": 2,
-        "type": "bw",
-        "iso": 400,
-        "format": "120",
-        "created_at": "2018-07-08T23:21:06.167Z",
-        "updated_at": "2018-07-08T23:21:06.168Z"
+      "name": "Tri-X 400",
+      "slug": "tri-x-400-120",
+      "manufacturer": 2,
+      "type": "bw",
+      "iso": 400,
+      "format": "120",
+      "created_at": "2018-07-08T23:21:06.167Z",
+      "updated_at": "2018-07-08T23:21:06.168Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 12,
     "fields": {
-        "name": "Provia 100F",
-        "slug": "provia-100f-120",
-        "manufacturer": 1,
-        "type": "e6",
-        "iso": 100,
-        "format": "120",
-        "created_at": "2018-08-10T13:12:22.138Z",
-        "updated_at": "2018-08-10T13:12:22.138Z"
+      "name": "Provia 100F",
+      "slug": "provia-100f-120",
+      "manufacturer": 1,
+      "type": "e6",
+      "iso": 100,
+      "format": "120",
+      "created_at": "2018-08-10T13:12:22.138Z",
+      "updated_at": "2018-08-10T13:12:22.138Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 13,
     "fields": {
-        "name": "StreetPan 400",
-        "slug": "streetpan-400-135",
-        "manufacturer": 4,
-        "type": "bw",
-        "iso": 400,
-        "format": "135",
-        "created_at": "2018-09-29T21:55:33.322Z",
-        "updated_at": "2018-09-29T21:55:33.322Z"
+      "name": "StreetPan 400",
+      "slug": "streetpan-400-135",
+      "manufacturer": 4,
+      "type": "bw",
+      "iso": 400,
+      "format": "135",
+      "created_at": "2018-09-29T21:55:33.322Z",
+      "updated_at": "2018-09-29T21:55:33.322Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 14,
     "fields": {
-        "name": "StreetPan 400",
-        "slug": "streetpan-400-120",
-        "manufacturer": 4,
-        "type": "bw",
-        "iso": 400,
-        "format": "120",
-        "created_at": "2018-09-29T21:56:00.421Z",
-        "updated_at": "2018-09-29T21:56:00.421Z"
+      "name": "StreetPan 400",
+      "slug": "streetpan-400-120",
+      "manufacturer": 4,
+      "type": "bw",
+      "iso": 400,
+      "format": "120",
+      "created_at": "2018-09-29T21:56:00.421Z",
+      "updated_at": "2018-09-29T21:56:00.421Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 15,
     "fields": {
-        "name": "800T",
-        "slug": "800t-120",
-        "manufacturer": 3,
-        "type": "c41",
-        "iso": 800,
-        "format": "120",
-        "created_at": "2018-09-29T21:58:19.373Z",
-        "updated_at": "2018-09-29T21:58:19.374Z"
+      "name": "800T",
+      "slug": "800t-120",
+      "manufacturer": 3,
+      "type": "c41",
+      "iso": 800,
+      "format": "120",
+      "created_at": "2018-09-29T21:58:19.373Z",
+      "updated_at": "2018-09-29T21:58:19.374Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 16,
     "fields": {
-        "name": "T-Max P3200",
-        "slug": "t-max-p3200-135",
-        "manufacturer": 2,
-        "type": "bw",
-        "iso": 3200,
-        "format": "135",
-        "created_at": "2018-09-29T22:00:51.614Z",
-        "updated_at": "2018-09-29T22:03:50.798Z"
+      "name": "T-Max P3200",
+      "slug": "t-max-p3200-135",
+      "manufacturer": 2,
+      "type": "bw",
+      "iso": 3200,
+      "format": "135",
+      "created_at": "2018-09-29T22:00:51.614Z",
+      "updated_at": "2018-09-29T22:03:50.798Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 17,
     "fields": {
-        "name": "T-Max 100",
-        "slug": "t-max-100-135",
-        "manufacturer": 2,
-        "type": "bw",
-        "iso": 100,
-        "format": "135",
-        "created_at": "2018-09-29T22:03:28.390Z",
-        "updated_at": "2018-09-29T22:03:28.390Z"
+      "name": "T-Max 100",
+      "slug": "t-max-100-135",
+      "manufacturer": 2,
+      "type": "bw",
+      "iso": 100,
+      "format": "135",
+      "created_at": "2018-09-29T22:03:28.390Z",
+      "updated_at": "2018-09-29T22:03:28.390Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 18,
     "fields": {
-        "name": "T-Max 100",
-        "slug": "t-max-100-120",
-        "manufacturer": 2,
-        "type": "bw",
-        "iso": 100,
-        "format": "120",
-        "created_at": "2018-09-29T22:03:39.179Z",
-        "updated_at": "2018-09-29T22:03:39.179Z"
+      "name": "T-Max 100",
+      "slug": "t-max-100-120",
+      "manufacturer": 2,
+      "type": "bw",
+      "iso": 100,
+      "format": "120",
+      "created_at": "2018-09-29T22:03:39.179Z",
+      "updated_at": "2018-09-29T22:03:39.179Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 19,
     "fields": {
-        "name": "T-Max 400",
-        "slug": "t-max-400-135",
-        "manufacturer": 2,
-        "type": "bw",
-        "iso": 400,
-        "format": "135",
-        "created_at": "2018-09-29T22:17:31.469Z",
-        "updated_at": "2018-09-29T22:17:31.469Z"
+      "name": "T-Max 400",
+      "slug": "t-max-400-135",
+      "manufacturer": 2,
+      "type": "bw",
+      "iso": 400,
+      "format": "135",
+      "created_at": "2018-09-29T22:17:31.469Z",
+      "updated_at": "2018-09-29T22:17:31.469Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 20,
     "fields": {
-        "name": "T-Max 400",
-        "slug": "t-max-400-120",
-        "manufacturer": 2,
-        "type": "bw",
-        "iso": 400,
-        "format": "120",
-        "created_at": "2018-09-29T22:17:44.780Z",
-        "updated_at": "2018-09-29T22:17:44.780Z"
+      "name": "T-Max 400",
+      "slug": "t-max-400-120",
+      "manufacturer": 2,
+      "type": "bw",
+      "iso": 400,
+      "format": "120",
+      "created_at": "2018-09-29T22:17:44.780Z",
+      "updated_at": "2018-09-29T22:17:44.780Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 21,
     "fields": {
-        "name": "Ektar 100",
-        "slug": "ektar-100-135",
-        "manufacturer": 2,
-        "type": "c41",
-        "iso": 100,
-        "format": "135",
-        "created_at": "2018-09-29T22:19:40.368Z",
-        "updated_at": "2018-09-29T22:19:40.368Z"
+      "name": "Ektar 100",
+      "slug": "ektar-100-135",
+      "manufacturer": 2,
+      "type": "c41",
+      "iso": 100,
+      "format": "135",
+      "created_at": "2018-09-29T22:19:40.368Z",
+      "updated_at": "2018-09-29T22:19:40.368Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 22,
     "fields": {
-        "name": "Ektar 100",
-        "slug": "ektar-100-120",
-        "manufacturer": 2,
-        "type": "c41",
-        "iso": 100,
-        "format": "120",
-        "created_at": "2018-09-29T22:19:52.211Z",
-        "updated_at": "2018-09-29T22:19:52.211Z"
+      "name": "Ektar 100",
+      "slug": "ektar-100-120",
+      "manufacturer": 2,
+      "type": "c41",
+      "iso": 100,
+      "format": "120",
+      "created_at": "2018-09-29T22:19:52.211Z",
+      "updated_at": "2018-09-29T22:19:52.211Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 23,
     "fields": {
-        "name": "HP5",
-        "slug": "hp5-135",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 400,
-        "format": "135",
-        "created_at": "2018-09-29T22:24:50.464Z",
-        "updated_at": "2018-09-29T22:24:50.464Z"
+      "name": "HP5",
+      "slug": "hp5-135",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 400,
+      "format": "135",
+      "created_at": "2018-09-29T22:24:50.464Z",
+      "updated_at": "2018-09-29T22:24:50.464Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 24,
     "fields": {
-        "name": "HP5",
-        "slug": "hp5-120",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 400,
-        "format": "120",
-        "created_at": "2018-09-29T22:25:04.526Z",
-        "updated_at": "2018-09-29T22:25:04.526Z"
+      "name": "HP5",
+      "slug": "hp5-120",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 400,
+      "format": "120",
+      "created_at": "2018-09-29T22:25:04.526Z",
+      "updated_at": "2018-09-29T22:25:04.526Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 25,
     "fields": {
-        "name": "FP4",
-        "slug": "fp4-135",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 125,
-        "format": "135",
-        "created_at": "2018-09-29T22:26:04.040Z",
-        "updated_at": "2018-09-29T22:26:04.040Z"
+      "name": "FP4",
+      "slug": "fp4-135",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 125,
+      "format": "135",
+      "created_at": "2018-09-29T22:26:04.040Z",
+      "updated_at": "2018-09-29T22:26:04.040Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 26,
     "fields": {
-        "name": "FP4",
-        "slug": "fp4-120",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 125,
-        "format": "120",
-        "created_at": "2018-09-29T22:27:58.683Z",
-        "updated_at": "2018-09-29T22:27:58.683Z"
+      "name": "FP4",
+      "slug": "fp4-120",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 125,
+      "format": "120",
+      "created_at": "2018-09-29T22:27:58.683Z",
+      "updated_at": "2018-09-29T22:27:58.683Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 27,
     "fields": {
-        "name": "Pan F",
-        "slug": "pan-f-135",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 50,
-        "format": "135",
-        "created_at": "2018-09-29T22:37:59.258Z",
-        "updated_at": "2018-09-29T22:37:59.258Z"
+      "name": "Pan F",
+      "slug": "pan-f-135",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 50,
+      "format": "135",
+      "created_at": "2018-09-29T22:37:59.258Z",
+      "updated_at": "2018-09-29T22:37:59.258Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 28,
     "fields": {
-        "name": "Pan F",
-        "slug": "pan-f-120",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 50,
-        "format": "120",
-        "created_at": "2018-09-29T22:38:11.223Z",
-        "updated_at": "2018-09-29T22:38:11.223Z"
+      "name": "Pan F",
+      "slug": "pan-f-120",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 50,
+      "format": "120",
+      "created_at": "2018-09-29T22:38:11.223Z",
+      "updated_at": "2018-09-29T22:38:11.223Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 29,
     "fields": {
-        "name": "Delta 100",
-        "slug": "delta-100-135",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 100,
-        "format": "135",
-        "created_at": "2018-09-29T22:38:57.163Z",
-        "updated_at": "2018-09-29T22:38:57.163Z"
+      "name": "Delta 100",
+      "slug": "delta-100-135",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 100,
+      "format": "135",
+      "created_at": "2018-09-29T22:38:57.163Z",
+      "updated_at": "2018-09-29T22:38:57.163Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 30,
     "fields": {
-        "name": "Delta 100",
-        "slug": "delta-100-120",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 100,
-        "format": "120",
-        "created_at": "2018-09-29T22:39:10.055Z",
-        "updated_at": "2018-09-29T22:39:10.055Z"
+      "name": "Delta 100",
+      "slug": "delta-100-120",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 100,
+      "format": "120",
+      "created_at": "2018-09-29T22:39:10.055Z",
+      "updated_at": "2018-09-29T22:39:10.055Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 31,
     "fields": {
-        "name": "Delta 400",
-        "slug": "delta-400-135",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 400,
-        "format": "135",
-        "created_at": "2018-09-29T22:39:20.398Z",
-        "updated_at": "2018-09-29T22:39:20.398Z"
+      "name": "Delta 400",
+      "slug": "delta-400-135",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 400,
+      "format": "135",
+      "created_at": "2018-09-29T22:39:20.398Z",
+      "updated_at": "2018-09-29T22:39:20.398Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 32,
     "fields": {
-        "name": "Delta 400",
-        "slug": "delta-400-120",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 400,
-        "format": "120",
-        "created_at": "2018-09-29T22:39:33.979Z",
-        "updated_at": "2018-09-29T22:39:33.979Z"
+      "name": "Delta 400",
+      "slug": "delta-400-120",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 400,
+      "format": "120",
+      "created_at": "2018-09-29T22:39:33.979Z",
+      "updated_at": "2018-09-29T22:39:33.979Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 33,
     "fields": {
-        "name": "Delta 3200",
-        "slug": "delta-3200-120",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 3200,
-        "format": "120",
-        "created_at": "2018-09-29T22:39:46.452Z",
-        "updated_at": "2018-09-29T22:39:46.452Z"
+      "name": "Delta 3200",
+      "slug": "delta-3200-120",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 3200,
+      "format": "120",
+      "created_at": "2018-09-29T22:39:46.452Z",
+      "updated_at": "2018-09-29T22:39:46.452Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 34,
     "fields": {
-        "name": "SFX 200",
-        "slug": "sfx-200-135",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 200,
-        "format": "135",
-        "created_at": "2018-09-29T22:40:43.985Z",
-        "updated_at": "2018-09-29T22:40:43.985Z"
+      "name": "SFX 200",
+      "slug": "sfx-200-135",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 200,
+      "format": "135",
+      "created_at": "2018-09-29T22:40:43.985Z",
+      "updated_at": "2018-09-29T22:40:43.985Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.film",
     "pk": 35,
     "fields": {
-        "name": "SFX 200",
-        "slug": "sfx-200-120",
-        "manufacturer": 6,
-        "type": "bw",
-        "iso": 200,
-        "format": "120",
-        "created_at": "2018-09-29T22:40:55.379Z",
-        "updated_at": "2018-09-29T22:40:55.379Z"
+      "name": "SFX 200",
+      "slug": "sfx-200-120",
+      "manufacturer": 6,
+      "type": "bw",
+      "iso": 200,
+      "format": "120",
+      "created_at": "2018-09-29T22:40:55.379Z",
+      "updated_at": "2018-09-29T22:40:55.379Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.manufacturer",
     "pk": 1,
     "fields": {
-        "name": "Fujifilm",
-        "slug": "fujifilm",
-        "url": "",
-        "description": "",
-        "created_at": "2018-03-04T00:14:02.328Z",
-        "updated_at": "2018-03-04T00:14:02.328Z"
+      "name": "Fujifilm",
+      "slug": "fujifilm",
+      "url": "",
+      "description": "",
+      "created_at": "2018-03-04T00:14:02.328Z",
+      "updated_at": "2018-03-04T00:14:02.328Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.manufacturer",
     "pk": 2,
     "fields": {
-        "name": "Kodak",
-        "slug": "kodak",
-        "url": "",
-        "description": "",
-        "created_at": "2018-03-04T00:15:04.451Z",
-        "updated_at": "2018-03-04T00:15:04.451Z"
+      "name": "Kodak",
+      "slug": "kodak",
+      "url": "",
+      "description": "",
+      "created_at": "2018-03-04T00:15:04.451Z",
+      "updated_at": "2018-03-04T00:15:04.451Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.manufacturer",
     "pk": 3,
     "fields": {
-        "name": "CineStill",
-        "slug": "cinestill",
-        "url": "",
-        "description": "",
-        "created_at": "2018-03-04T00:15:12.548Z",
-        "updated_at": "2018-03-04T00:15:12.548Z"
+      "name": "CineStill",
+      "slug": "cinestill",
+      "url": "",
+      "description": "",
+      "created_at": "2018-03-04T00:15:12.548Z",
+      "updated_at": "2018-03-04T00:15:12.548Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.manufacturer",
     "pk": 4,
     "fields": {
-        "name": "JCH",
-        "slug": "jch",
-        "url": "",
-        "description": "",
-        "created_at": "2018-03-04T00:15:20.671Z",
-        "updated_at": "2018-03-04T00:15:20.671Z"
+      "name": "JCH",
+      "slug": "jch",
+      "url": "",
+      "description": "",
+      "created_at": "2018-03-04T00:15:20.671Z",
+      "updated_at": "2018-03-04T00:15:20.671Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.manufacturer",
     "pk": 5,
     "fields": {
-        "name": "Ferrania",
-        "slug": "ferrania",
-        "url": "",
-        "description": "",
-        "created_at": "2018-03-04T00:15:24.856Z",
-        "updated_at": "2018-03-13T02:14:03.165Z"
+      "name": "Ferrania",
+      "slug": "ferrania",
+      "url": "",
+      "description": "",
+      "created_at": "2018-03-04T00:15:24.856Z",
+      "updated_at": "2018-03-13T02:14:03.165Z"
     }
-},
-{
+  },
+  {
     "model": "inventory.manufacturer",
     "pk": 6,
     "fields": {
-        "name": "Ilford",
-        "slug": "ilford",
-        "url": "https://www.ilfordphoto.com",
-        "description": "",
-        "created_at": "2018-09-29T22:24:18.128Z",
-        "updated_at": "2018-09-29T22:24:18.128Z"
+      "name": "Ilford",
+      "slug": "ilford",
+      "url": "https://www.ilfordphoto.com",
+      "description": "",
+      "created_at": "2018-09-29T22:24:18.128Z",
+      "updated_at": "2018-09-29T22:24:18.128Z"
     }
-}
+  }
 ]

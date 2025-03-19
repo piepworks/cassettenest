@@ -31,7 +31,7 @@
             </dd>
         </dl>
         {% if camera_back.status == 'loaded' %}
-            <a href="{% url 'roll-detail' roll.id %}" class="py-1 no-underline hover:no-underline folded hover:unfolded md:unfolded md:hover:folded focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-stone-600 focus:ring-blue-500 rounded">
+            <a href="{% url 'roll-detail' roll.id %}" class="py-1 no-underline hover:no-underline folded hover:unfolded md:unfolded md:hover:folded focus:outline-hidden focus:ring-2 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-stone-600 focus:ring-blue-500">
                 {% include 'components/reminder.html' with item=roll %}
             </a>
         {% endif %}

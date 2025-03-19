@@ -1,5 +1,5 @@
 // @ts-check
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('stocks filter reset', async ({ page }) => {
   await page.goto('./stocks');
@@ -10,6 +10,6 @@ test('stocks filter reset', async ({ page }) => {
     .selectOption('kodak');
   await page.getByRole('link', { name: 'Reset filters' }).click();
   await expect(
-    page.getByRole('combobox', { name: 'Manufacturer:' })
+    page.getByRole('combobox', { name: 'Manufacturer:' }),
   ).toHaveValue('all');
 });

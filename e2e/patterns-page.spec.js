@@ -1,5 +1,5 @@
 // @ts-check
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('patterns page / light mode', async ({ page }) => {
   await page.goto('./patterns');

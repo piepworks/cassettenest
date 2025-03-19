@@ -32,7 +32,7 @@
     </div>
     <div class="hidden sm:flex flex-col items-center min-w-full">
         {# Desktop #}
-        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+        <nav class="relative z-0 inline-flex rounded-md shadow-xs -space-x-px" aria-label="Pagination">
             {% if page_obj.has_previous %}
                 <a id="logbook_pagination_desktop_{{ page_obj.previous_page_number }}" hx-get="?page={{ page_obj.previous_page_number }}{% if sectiontab_querystring %}&{{ sectiontab_querystring }}{% endif %}" href="?page={{ page_obj.previous_page_number }}{% if sectiontab_querystring %}&{{ sectiontab_querystring }}{% endif %}">{% include 'svg/heroicons/chevron-left.svg' %}</a></li>
             {% else %}

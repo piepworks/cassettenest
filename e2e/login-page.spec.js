@@ -1,5 +1,5 @@
 // @ts-check
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 // Don't use default, logged-in state
 test.use({ storageState: { cookies: [], origins: [] } });

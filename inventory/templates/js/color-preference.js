@@ -1,15 +1,18 @@
-window.isDarkMode = () => window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+window.isDarkMode = () =>
+  window.matchMedia?.('(prefers-color-scheme: dark)').matches;
 
 window.cnDarkMode = {
-  run: function (fn) {
-    if (!window.matchMedia) { return; }
+  run: (fn) => {
+    if (!window.matchMedia) {
+      return;
+    }
     const query = window.matchMedia('(prefers-color-scheme: dark)');
     fn(query.matches);
-    query.addEventListener('change', event => fn(event.matches));
+    query.addEventListener('change', (event) => fn(event.matches));
   },
 
-  set: function() {
-    this.run(isDarkMode => {
+  set: function () {
+    this.run((isDarkMode) => {
       if (isDarkMode) {
         document.documentElement.classList.add('dark');
       } else {

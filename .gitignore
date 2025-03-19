@@ -1,6 +1,6 @@
 venv/
 *.css
-!/tailwind/main.css
+!/tailwind/**/*.css
 staticfiles/
 node_modules/
 *.sqlite*
