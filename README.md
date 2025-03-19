@@ -2,11 +2,13 @@
 
 [![codecov](https://codecov.io/gh/piepworks/cassettenest/branch/main/graph/badge.svg?token=jRevCZkCfH)](https://codecov.io/gh/piepworks/cassettenest)
 
+<a href="https://cottonbureau.com/people/piepworks"><img src="https://cottonbureau.com/mockup?vid=9982515&hash=fa91&w=1024" alt="Cassette Nest t-shirt" width="300" height="auto" /></a>
+
 A way for analog photographers to track their film use from box to binder.
 
 [cassettenest.com](http://cassettenest.com)
 
-Copyright &copy; 2016-2024 Piepworks LLC. All rights reserved.
+Copyright &copy; 2016-2025 Piepworks LLC. All rights reserved.
 
 ## Local Setup
 
@@ -15,8 +17,6 @@ Copyright &copy; 2016-2024 Piepworks LLC. All rights reserved.
 
 ## Development
 
-- Get [stylelint](https://stylelint.io/) setup (only in your editor for now).
-    - `npm i`
 - Running Python tests
     - `just pytest`
         - Run all the tests as fast as possible.
