@@ -11,4 +11,5 @@ fi
 
 npm run build
 venv/bin/python manage.py collectstatic --noinput
+venv/bin/python manage.py color_preference --user $PLAYWRIGHT_USERNAME
 DEBUG=False venv/bin/python manage.py runserver
