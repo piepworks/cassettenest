@@ -23,7 +23,7 @@
     @media not print {
       background-image: url('/static/img/grain-light.png');
 
-      @media (prefers-color-scheme: dark) {
+      @variant dark {
         background-image: url('/static/img/grain-dark-2.png');
       }
     }
@@ -201,7 +201,7 @@
     background-color: var(--color-stone-800);
     background-image: url('/static/img/grain-dark-2.png');
 
-    @media (prefers-color-scheme: dark) {
+    @variant dark {
       background-color: var(--color-stone-900);
     }
 
