@@ -60,7 +60,7 @@ coverage:
 
 # Open the coverage report in Firefox
 coverage-html:
-  open -a firefox -g `pwd`/htmlcov/index.html
+  open -a "Firefox Developer Edition" -g `pwd`/htmlcov/index.html
 
 dev:
   source venv/bin/activate
