@@ -48,7 +48,7 @@ dj-database-url==2.3.0
     #   environs
 dj-email-url==1.0.6
     # via environs
-django==5.1.7
+django==5.1.8
     # via
     #   -r requirements.in
     #   dj-database-url
@@ -74,13 +74,13 @@ django-cors-headers==4.7.0
     # via -r requirements.in
 django-debug-toolbar==5.1.0
     # via -r requirements.in
-django-extensions==3.2.3
+django-extensions==4.1
     # via -r requirements.in
 django-honeypot==1.2.1
     # via -r requirements.in
 django-htmx==1.23.0
     # via -r requirements.in
-django-registration==5.1.0
+django-registration==5.2.1
     # via -r requirements.in
 django-waffle==4.2.0
     # via -r requirements.in
@@ -108,15 +108,15 @@ idna==3.10
     # via requests
 iniconfig==2.1.0
     # via pytest
-ipython==9.0.2
+ipython==9.1.0
     # via -r requirements.in
 ipython-pygments-lexers==1.1.1
     # via ipython
 jedi==0.19.2
     # via ipython
-lxml==5.3.1
+lxml==5.3.2
     # via pyquery
-markdown==3.7
+markdown==3.8
     # via -r requirements.in
 marshmallow==3.26.1
     # via environs
@@ -199,9 +199,9 @@ pytest==8.3.5
     #   pytest-xdist
 pytest-base-url==2.1.0
     # via pytest-playwright
-pytest-cov==6.0.0
+pytest-cov==6.1.1
     # via -r requirements.in
-pytest-django==4.10.0
+pytest-django==4.11.1
     # via -r requirements.in
 pytest-playwright==0.7.0
     # via -r requirements.in
@@ -223,7 +223,7 @@ requests==2.32.3
     # via
     #   -r requirements.in
     #   pytest-base-url
-sentry-sdk==2.25.0
+sentry-sdk==2.26.0
     # via -r requirements.in
 six==1.17.0
     # via
@@ -243,17 +243,17 @@ traitlets==5.14.3
     # via
     #   ipython
     #   matplotlib-inline
-typing-extensions==4.13.0
+typing-extensions==4.13.2
     # via
     #   dj-database-url
     #   ipython
     #   psycopg
     #   pyee
-urllib3==2.3.0
+urllib3==2.4.0
     # via
     #   requests
     #   sentry-sdk
-virtualenv==20.29.3
+virtualenv==20.30.0
     # via pre-commit
 wcwidth==0.2.13
     # via prompt-toolkit
